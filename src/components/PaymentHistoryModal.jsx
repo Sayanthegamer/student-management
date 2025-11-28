@@ -55,8 +55,9 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                     <tr>
                                         <th className="p-4 border-b border-gray-200">Date</th>
                                         <th className="p-4 border-b border-gray-200">Month</th>
-                                        <th className="p-4 border-b border-gray-200 text-right">Amount</th>
+                                        <th className="p-4 border-b border-gray-200 text-right">Fee</th>
                                         <th className="p-4 border-b border-gray-200 text-right">Fine</th>
+                                        <th className="p-4 border-b border-gray-200 text-right">Total</th>
                                         <th className="p-4 border-b border-gray-200">Remarks</th>
                                     </tr>
                                 </thead>
@@ -71,11 +72,14 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                     {payment.month}
                                                 </span>
                                             </td>
-                                            <td className="p-4 text-gray-800 font-bold text-right">
+                                            <td className="p-4 text-gray-800 text-right">
                                                 ₹{Number(payment.amount).toLocaleString()}
                                             </td>
                                             <td className="p-4 text-red-600 text-right font-medium">
                                                 {payment.fine > 0 ? `+₹${payment.fine}` : '-'}
+                                            </td>
+                                            <td className="p-4 text-emerald-600 font-bold text-right">
+                                                ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                             </td>
                                             <td className="p-4 text-gray-500 text-sm max-w-[200px] truncate" title={payment.remarks}>
                                                 {payment.remarks || '-'}
@@ -85,12 +89,15 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                 </tbody>
                                 <tfoot className="bg-gray-50 font-bold text-gray-800">
                                     <tr>
-                                        <td colSpan="2" className="p-4 text-right border-t border-gray-200">Total Paid:</td>
+                                        <td colSpan="2" className="p-4 text-right border-t border-gray-200">Totals:</td>
                                         <td className="p-4 text-right border-t border-gray-200 text-indigo-600">
                                             ₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount), 0).toLocaleString()}
                                         </td>
                                         <td className="p-4 text-right border-t border-gray-200 text-red-600">
                                             ₹{sortedHistory.reduce((sum, p) => sum + Number(p.fine || 0), 0).toLocaleString()}
+                                        </td>
+                                        <td className="p-4 text-right border-t border-gray-200 text-emerald-600 text-lg">
+                                            ₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}
                                         </td>
                                         <td className="border-t border-gray-200"></td>
                                     </tr>

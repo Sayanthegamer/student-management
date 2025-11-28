@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Edit2, Trash2, Search, Plus, IndianRupee } from 'lucide-react';
 import FeePaymentModal from './FeePaymentModal';
+import CustomMonthPicker from './CustomMonthPicker';
+import Pagination from './Pagination';
 
 const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -14,9 +16,11 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [selectedStudentForFee, setSelectedStudentForFee] = useState(null);
 
     const getFeeStatusForMonth = (student, month) => {
-        if (!student.feeHistory) return 'Pending';
-        const payment = student.feeHistory.find(p => p.month === month);
-        return payment ? 'Paid' : 'Pending';
+        const isPaid = student.feeHistory?.some(p => p.month === month);
+        if (isPaid) return 'Paid';
+
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        return month < currentMonth ? 'Overdue' : 'Pending';
     };
 
     // Get unique classes and sections for filters
@@ -60,6 +64,22 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
             if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
             return 0;
         });
+
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
+    // Reset pagination when filters change
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, filterClass, filterSection, filterFeeStatus, filterMonth]);
+
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+    const currentStudents = filteredStudents.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     const handlePayFeeClick = (student) => {
         setSelectedStudentForFee(student);
@@ -121,6 +141,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     <option value="">All Status</option>
                     <option value="Paid">Paid</option>
                     <option value="Pending">Pending</option>
+                    <option value="Overdue">Overdue</option>
                 </select>
 
                 {/* Sorting */}
@@ -145,11 +166,9 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <div className="w-px h-8 bg-slate-200 mx-1"></div>
 
                 <div>
-                    <input
-                        type="month"
+                    <CustomMonthPicker
                         value={filterMonth}
-                        onChange={(e) => setFilterMonth(e.target.value)}
-                        className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto cursor-pointer"
+                        onChange={setFilterMonth}
                     />
                 </div>
             </div>
@@ -167,7 +186,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                        {filteredStudents.map(student => {
+                        {currentStudents.map(student => {
                             const status = getFeeStatusForMonth(student, filterMonth);
                             return (
                                 <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
@@ -178,7 +197,9 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                         <span
                                             className={`px-2.5 py-1 rounded-md text-xs font-bold border ${status === 'Paid'
                                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
-                                                : 'bg-amber-50 text-amber-700 border-amber-100'
+                                                : status === 'Overdue'
+                                                    ? 'bg-rose-50 text-rose-700 border-rose-100'
+                                                    : 'bg-amber-50 text-amber-700 border-amber-100'
                                                 }`}
                                         >
                                             {status}
@@ -212,7 +233,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 </tr>
                             );
                         })}
-                        {filteredStudents.length === 0 && (
+                        {currentStudents.length === 0 && (
                             <tr>
                                 <td colSpan="5" className="p-12 text-center text-slate-400">
                                     <div className="flex flex-col items-center gap-2">
@@ -228,7 +249,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
             {/* Mobile Card View */}
             <div className="flex md:hidden flex-col gap-4">
-                {filteredStudents.map(student => {
+                {currentStudents.map(student => {
                     const status = getFeeStatusForMonth(student, filterMonth);
                     return (
                         <div key={student.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -240,7 +261,9 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 <span
                                     className={`px-2.5 py-1 rounded-md text-xs font-bold border ${status === 'Paid'
                                         ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
-                                        : 'bg-amber-50 text-amber-700 border-amber-100'
+                                        : status === 'Overdue'
+                                            ? 'bg-rose-50 text-rose-700 border-rose-100'
+                                            : 'bg-amber-50 text-amber-700 border-amber-100'
                                         }`}
                                 >
                                     {status}
@@ -272,12 +295,20 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         </div>
                     );
                 })}
-                {filteredStudents.length === 0 && (
+                {currentStudents.length === 0 && (
                     <div className="p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
                         No students found.
                     </div>
                 )}
             </div>
+
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={filteredStudents.length}
+                itemsPerPage={itemsPerPage}
+            />
 
             {showPaymentModal && selectedStudentForFee && (
                 <FeePaymentModal

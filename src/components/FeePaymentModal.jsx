@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Save } from 'lucide-react';
+import CustomDatePicker from './CustomDatePicker';
+import CustomMonthPicker from './CustomMonthPicker';
 
 const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
@@ -11,6 +13,33 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [fine, setFine] = useState(0);
     const [remarks, setRemarks] = useState('');
     const [error, setError] = useState('');
+
+    // Helper to calculate fine for a specific month
+    const calculateFineForMonth = (monthStr, payDateStr) => {
+        const payDate = new Date(payDateStr);
+        const [year, month] = monthStr.split('-').map(Number);
+        const deadline = new Date(year, month - 1, 20); // Deadline is 20th of the month
+
+        // If paid on or before deadline, no fine
+        if (payDate <= deadline) {
+            return 0;
+        }
+
+        // Check if paid in the same month after deadline (21st to end of month)
+        if (payDate.getFullYear() === year && payDate.getMonth() === month - 1) {
+            return 30; // Same month after deadline: 30 rupees
+        }
+
+        // Calculate how many months late
+        const paymentMonth = new Date(payDate.getFullYear(), payDate.getMonth(), 1);
+        const dueMonth = new Date(year, month - 1, 1);
+
+        const monthsDiff = (paymentMonth.getFullYear() - dueMonth.getFullYear()) * 12
+            + (paymentMonth.getMonth() - dueMonth.getMonth());
+
+        // Simple fine structure: 50 * number of months late
+        return Math.max(0, 50 * monthsDiff);
+    };
 
     // Auto-calculate fine when date or month changes
     useEffect(() => {
@@ -26,19 +55,6 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             }
         }
 
-        const calculateFineForMonth = (monthStr) => {
-            const payDate = new Date(paymentDate);
-            const [year, month] = monthStr.split('-').map(Number);
-            const deadline = new Date(year, month - 1, 10);
-
-            if (payDate > deadline) {
-                const diffTime = Math.abs(payDate - deadline);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                return diffDays * 10;
-            }
-            return 0;
-        };
-
         if (isMultiMonth && endMonth) {
             if (endMonth < selectedMonth) {
                 setError('End month cannot be before start month');
@@ -52,12 +68,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
             while (current <= end) {
                 const monthStr = current.toISOString().slice(0, 7);
-                totalFine += calculateFineForMonth(monthStr);
+                totalFine += calculateFineForMonth(monthStr, paymentDate);
                 current.setMonth(current.getMonth() + 1);
             }
             setFine(totalFine);
         } else {
-            setFine(calculateFineForMonth(selectedMonth));
+            setFine(calculateFineForMonth(selectedMonth, paymentDate));
         }
 
     }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate]);
@@ -73,35 +89,40 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
             while (current <= end) {
                 const monthStr = current.toISOString().slice(0, 7);
+                const monthFine = calculateFineForMonth(monthStr, paymentDate);
 
-                // Calculate fine for this specific month
-                const [year, month] = monthStr.split('-').map(Number);
-                const deadline = new Date(year, month - 1, 10);
-                const payDate = new Date(paymentDate);
-                let monthFine = 0;
-                if (payDate > deadline) {
-                    const diffTime = Math.abs(payDate - deadline);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    monthFine = diffDays * 10;
-                }
+                // Check if it's an advance payment (paid before start of the month)
+                const monthStart = new Date(current.getFullYear(), current.getMonth(), 1);
+                const payDateObj = new Date(paymentDate);
+                const isAdvance = payDateObj < monthStart;
+
+                const finalRemarks = remarks + (isAdvance ? ' (Advance)' : '') + ' (Multi-month payment)';
 
                 payments.push({
                     date: paymentDate,
                     month: monthStr,
                     amount: Number(amount),
                     fine: monthFine,
-                    remarks: remarks + ` (Multi-month payment)`
+                    remarks: finalRemarks
                 });
                 current.setMonth(current.getMonth() + 1);
             }
             onSave(student.id, payments);
         } else {
+            // Check if it's an advance payment
+            const [year, month] = selectedMonth.split('-').map(Number);
+            const monthStart = new Date(year, month - 1, 1);
+            const payDateObj = new Date(paymentDate);
+            const isAdvance = payDateObj < monthStart;
+
+            const finalRemarks = remarks + (isAdvance ? ' (Advance)' : '');
+
             onSave(student.id, {
                 date: paymentDate,
                 month: selectedMonth,
                 amount: Number(amount),
                 fine: Number(fine),
-                remarks
+                remarks: finalRemarks
             });
         }
     };
@@ -134,19 +155,17 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
                     <div>
-                        <label>Payment Date</label>
-                        <input
-                            type="date"
+                        <CustomDatePicker
+                            label="Payment Date"
                             value={paymentDate}
-                            onChange={(e) => setPaymentDate(e.target.value)}
-                            className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                            onChange={setPaymentDate}
                             required
                         />
                     </div>
 
                     <div>
                         <div className="flex justify-between items-center mb-2">
-                            <label>For Month</label>
+                            <label className="block text-slate-600 text-sm font-medium">For Month</label>
                             <label className="text-xs flex items-center gap-1 cursor-pointer select-none">
                                 <input
                                     type="checkbox"
@@ -156,24 +175,24 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 Pay Multiple Months
                             </label>
                         </div>
-                        <div className="flex gap-3">
-                            <input
-                                type="month"
-                                value={selectedMonth}
-                                onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
-                                required
-                            />
+                        <div className="flex gap-3 items-start">
+                            <div className="flex-1">
+                                <CustomMonthPicker
+                                    value={selectedMonth}
+                                    onChange={setSelectedMonth}
+                                    required
+                                />
+                            </div>
                             {isMultiMonth && (
                                 <>
-                                    <span className="self-center text-gray-500">to</span>
-                                    <input
-                                        type="month"
-                                        value={endMonth}
-                                        onChange={(e) => setEndMonth(e.target.value)}
-                                        className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
-                                        required
-                                    />
+                                    <span className="self-center text-gray-500 pt-8">to</span>
+                                    <div className="flex-1">
+                                        <CustomMonthPicker
+                                            value={endMonth}
+                                            onChange={setEndMonth}
+                                            required
+                                        />
+                                    </div>
                                 </>
                             )}
                         </div>

@@ -22,6 +22,19 @@ A student management application built with React and Vite. This system provides
 - **Fee Status Tracking**: Visual indicators for paid, pending, and overdue fees
 - **Multiple Payment Methods**: Support for Cash, Bank Transfer, UPI, and Check payments
 - **Payment Receipts**: Detailed payment history with transaction dates and amounts
+- **Automatic Fine Calculation**:
+  - **Deadline**: 20th of each month
+  - **No Fine**: Payment on or before the 20th
+  - **₹30**: Payment after 20th but within the same month
+  - **Late Payment**: ₹50 × number of months late
+    - Example (1 month late): ₹50
+    - Example (3 months late): ₹150
+  - **Multi-Month Payments**: Sum of fines for each individual month
+    - Example (Paying for 3 missed months): 
+      - Month 1 (3 months late): ₹150
+      - Month 2 (2 months late): ₹100
+      - Month 3 (1 month late): ₹50
+      - Total Fine: ₹300
 
 ### 🎓 Admission Management
 - **Admission Status Tracking**: Monitor pending, approved, and rejected admissions

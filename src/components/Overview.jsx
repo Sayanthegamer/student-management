@@ -29,7 +29,7 @@ const Overview = ({ students }) => {
     const feesCollected = students.reduce((total, student) => {
         // Calculate based on PAYMENT DATE (Cash Flow), not the fee month
         const paidThisMonth = student.feeHistory?.filter(p => p.date && p.date.startsWith(currentMonth));
-        const totalForStudent = paidThisMonth ? paidThisMonth.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0) : 0;
+        const totalForStudent = paidThisMonth ? paidThisMonth.reduce((sum, p) => sum + (parseFloat(p.amount) || 0) + (parseFloat(p.fine) || 0), 0) : 0;
         return total + totalForStudent;
     }, 0);
 
@@ -56,7 +56,7 @@ const Overview = ({ students }) => {
                     subtext="Active students in database"
                 />
                 <StatCard
-                    title="Fees Collected"
+                    title="Total Collected"
                     value={`₹${feesCollected.toLocaleString()}`}
                     icon={IndianRupee}
                     colorClass="bg-emerald-100 text-emerald-600"

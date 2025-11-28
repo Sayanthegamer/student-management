@@ -54,7 +54,7 @@ const PaymentHistory = ({ students }) => {
 
     const getTotalPaid = (student) => {
         if (!student.feeHistory) return 0;
-        return student.feeHistory.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+        return student.feeHistory.reduce((sum, p) => sum + (Number(p.amount) || 0) + (Number(p.fine) || 0), 0);
     };
 
     const getLastPaymentDate = (student) => {
@@ -128,7 +128,7 @@ const PaymentHistory = ({ students }) => {
                             <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Name</th>
                             <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Class/Sec</th>
                             <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Roll No</th>
-                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Total Paid</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Total Amount</th>
                             <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Last Payment</th>
                             <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider text-right">Action</th>
                         </tr>

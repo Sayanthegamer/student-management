@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Search, FileText, AlertTriangle, Filter } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import CustomDatePicker from './CustomDatePicker';
+
+import Pagination from './Pagination';
 
 const TransferCertificate = ({ students, onUpdateStudent }) => {
     const [view, setView] = useState('active'); // 'active' or 'transferred'
@@ -10,6 +13,10 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
     const [sortBy, setSortBy] = useState('name'); // name, rollNo
     const [sortOrder, setSortOrder] = useState('asc'); // asc, desc
 
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [showIssueModal, setShowIssueModal] = useState(false);
     const [tcDetails, setTcDetails] = useState({
@@ -18,6 +25,11 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
         dateOfLeaving: new Date().toISOString().slice(0, 10),
         remarks: ''
     });
+
+    // Reset pagination when filters change
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, filterClass, filterSection, view]);
 
     // Get unique classes and sections for filters
     const classes = [...new Set(students.map(s => s.class))].sort();
@@ -72,6 +84,13 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
             if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
             return 0;
         });
+
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+    const currentStudents = filteredStudents.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     const handleIssueClick = (student) => {
         setSelectedStudent(student);
@@ -194,7 +213,7 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                        {filteredStudents.map(student => (
+                        {currentStudents.map(student => (
                             <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
                                 <td className="p-4 font-medium text-slate-700">{student.name}</td>
                                 <td className="p-4 text-slate-500">{student.class} - {student.section}</td>
@@ -218,7 +237,7 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                                 </td>
                             </tr>
                         ))}
-                        {filteredStudents.length === 0 && (
+                        {currentStudents.length === 0 && (
                             <tr>
                                 <td colSpan="5" className="p-12 text-center text-slate-400">
                                     <div className="flex flex-col items-center gap-2">
@@ -238,6 +257,14 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                     * History only shows students transferred in the last 3 months.
                 </p>
             )}
+
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={filteredStudents.length}
+                itemsPerPage={itemsPerPage}
+            />
 
             {showIssueModal && selectedStudent && (
                 <IssueTCModal
@@ -277,12 +304,10 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
 
                 <div className="flex flex-col gap-4">
                     <div>
-                        <label className="block mb-2 text-gray-600 text-sm font-medium">Date of Leaving</label>
-                        <input
-                            type="date"
+                        <CustomDatePicker
+                            label="Date of Leaving"
                             value={tcDetails.dateOfLeaving}
-                            onChange={e => setTcDetails({ ...tcDetails, dateOfLeaving: e.target.value })}
-                            className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white focus:ring-2 focus:ring-indigo-500"
+                            onChange={val => setTcDetails({ ...tcDetails, dateOfLeaving: val })}
                         />
                     </div>
                     <div>

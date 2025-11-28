@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Save, X } from 'lucide-react';
+import CustomDatePicker from './CustomDatePicker';
 
 const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const [formData, setFormData] = useState(initialData || {
@@ -152,13 +153,11 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </h3>
                     <div className="flex flex-col gap-5">
                         <div>
-                            <label className="block mb-2 text-slate-600 text-sm font-medium">Admission Date</label>
-                            <input
-                                type="date"
-                                name="admissionDate"
+                            <CustomDatePicker
+                                label="Admission Date"
                                 value={formData.admissionDate}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
+                                onChange={(val) => handleChange({ target: { name: 'admissionDate', value: val } })}
+                                required
                             />
                         </div>
 
