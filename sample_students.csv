@@ -1,16 +1,16 @@
-name,class,section,rollNo,feesAmount,feesStatus,fine,admissionDate,admissionStatus
-Aarav Patel,Play School,A,1,350,Paid,0,2024-04-01,Confirmed
-Vivaan Singh,Nursury,A,1,440,Pending,0,2024-04-02,Confirmed
-Aditya Sharma,kg-1,A,1,440,Paid,0,2024-04-03,Confirmed
-Vihaan Gupta,kg-1,B,1,440,Overdue,50,2024-04-03,Confirmed
-Arjun Kumar,kg-2,A,1,440,Paid,0,2024-04-04,Confirmed
-Sai Iyer,1,A,1,480,Paid,0,2024-04-05,Confirmed
-Reyansh Verma,1,A,2,480,Pending,0,2024-04-05,Confirmed
-Ayaan Reddy,2,A,1,490,Paid,0,2024-04-06,Confirmed
-Krishna Das,2,B,1,490,Overdue,100,2024-04-06,Provisional
-Ishaan Malhotra,3,A,1,510,Paid,0,2024-04-07,Confirmed
-Shaurya Joshi,3,A,2,510,Pending,0,2024-04-07,Confirmed
-Atharv Mishra,4,A,1,520,Paid,0,2024-04-08,Confirmed
-Rohan Jain,4,A,2,520,Paid,0,2024-04-08,Confirmed
-Ananya Kaur,Play School,B,1,350,Paid,0,2024-04-10,Confirmed
-Diya Rao,Nursury,B,1,440,Pending,0,2024-04-11,Confirmed
+id,name,class,section,rollNo,feesAmount,feesStatus,fine,admissionDate,admissionStatus
+1,Aarav Patel,Play School,A,1,350,Paid,0,2024-04-01,Confirmed
+2,Vivaan Singh,Nursury,A,1,440,Pending,0,2024-04-02,Confirmed
+3,Aditya Sharma,kg-1,A,1,440,Paid,0,2024-04-03,Confirmed
+4,Vihaan Gupta,kg-1,B,1,440,Overdue,50,2024-04-03,Confirmed
+5,Arjun Kumar,kg-2,A,1,440,Paid,0,2024-04-04,Confirmed
+6,Sai Iyer,1,A,1,480,Paid,0,2024-04-05,Confirmed
+7,Reyansh Verma,1,A,2,480,Pending,0,2024-04-05,Confirmed
+8,Ayaan Reddy,2,A,1,490,Paid,0,2024-04-06,Confirmed
+9,Krishna Das,2,B,1,490,Overdue,100,2024-04-06,Provisional
+10,Ishaan Malhotra,3,A,1,510,Paid,0,2024-04-07,Confirmed
+11,Shaurya Joshi,3,A,2,510,Pending,0,2024-04-07,Confirmed
+12,Atharv Mishra,4,A,1,520,Paid,0,2024-04-08,Confirmed
+13,Rohan Jain,4,A,2,520,Paid,0,2024-04-08,Confirmed
+14,Ananya Kaur,Play School,B,1,350,Paid,0,2024-04-10,Confirmed
+15,Diya Rao,Nursury,B,1,440,Pending,0,2024-04-11,Confirmed

@@ -169,7 +169,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
                     Ensure your CSV file includes these headers (case-sensitive):
                 </p>
                 <div className="flex flex-wrap gap-2">
-                    {['name', 'class', 'section', 'rollNo', 'feesAmount', 'feesStatus', 'fine', 'admissionDate', 'admissionStatus'].map(field => (
+                    {['id', 'name', 'class', 'section', 'rollNo', 'feesAmount', 'feesStatus', 'fine', 'admissionDate', 'admissionStatus'].map(field => (
                         <span key={field} className="px-2 py-1 bg-white border border-slate-200 rounded text-xs font-mono text-slate-600">
                             {field}
                         </span>
