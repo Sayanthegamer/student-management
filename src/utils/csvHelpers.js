@@ -2,11 +2,14 @@
  * Converts an array of student objects to a CSV string.
  * Handles nested objects/arrays by serializing them to JSON strings.
  */
+/**
+ * Converts an array of student objects to a CSV string.
+ * Handles nested objects/arrays by serializing them to a readable string format.
+ */
 export const convertToCSV = (data) => {
     if (!data || !data.length) return '';
 
     // Get all unique keys from the first object to form headers
-    // We assume all objects have similar structure, or at least the first one is representative
     const headers = Object.keys(data[0]);
 
     const csvRows = [];
@@ -24,10 +27,40 @@ export const convertToCSV = (data) => {
                 return '';
             }
 
-            // Handle objects/arrays (like feeHistory, tcDetails)
+            // Handle Fee History (Array of Objects)
+            if (header === 'feeHistory' && Array.isArray(val)) {
+                if (val.length === 0) return '';
+                // Format: Date: 2023-10-27 (Month: 2023-10) - ₹500 | ...
+                const formatted = val.map(payment => {
+                    const parts = [];
+                    if (payment.date) parts.push(`Date: ${payment.date}`);
+                    if (payment.month) parts.push(`Month: ${payment.month}`);
+                    if (payment.amount) parts.push(`Amt: ${payment.amount}`);
+                    if (payment.fine) parts.push(`Fine: ${payment.fine}`);
+                    if (payment.remarks) parts.push(`Rem: ${payment.remarks}`);
+                    return parts.join(', ');
+                }).join(' | ');
+
+                return `"${formatted}"`;
+            }
+
+            // Handle TC Details (Object)
+            if (header === 'tcDetails' && typeof val === 'object') {
+                // Format: Issued: 2023-10-27, Reason: ...
+                const parts = [];
+                if (val.issueDate) parts.push(`Issued: ${val.issueDate}`);
+                if (val.dateOfLeaving) parts.push(`Leaving: ${val.dateOfLeaving}`);
+                if (val.reason) parts.push(`Reason: ${val.reason}`);
+                if (val.conduct) parts.push(`Conduct: ${val.conduct}`);
+                if (val.remarks) parts.push(`Rem: ${val.remarks}`);
+
+                const formatted = parts.join(', ');
+                return `"${formatted}"`;
+            }
+
+            // Handle other objects/arrays (Fallback to JSON)
             if (typeof val === 'object') {
                 const jsonString = JSON.stringify(val);
-                // Escape quotes by doubling them
                 const escaped = jsonString.replace(/"/g, '""');
                 return `"${escaped}"`;
             }
@@ -51,7 +84,7 @@ export const convertToCSV = (data) => {
 
 /**
  * Parses a CSV string back into an array of student objects.
- * Deserializes nested JSON strings back into objects/arrays.
+ * Deserializes nested custom formats back into objects/arrays.
  */
 export const parseCSV = (csvText) => {
     const lines = csvText.split('\n');
@@ -88,6 +121,56 @@ export const parseCSV = (csvText) => {
         return values;
     };
 
+    // Helper to parse Fee History string
+    const parseFeeHistory = (str) => {
+        if (!str) return [];
+        // Try JSON first (backward compatibility)
+        if (str.startsWith('[') || str.startsWith('{')) {
+            try { return JSON.parse(str); } catch (e) { /* ignore */ }
+        }
+
+        return str.split(' | ').map(paymentStr => {
+            const payment = {};
+            // Split by comma, but be careful about potential commas in values (though we control format)
+            // Simple split by ", " should work for our generated format
+            const parts = paymentStr.split(', ');
+            parts.forEach(part => {
+                const [key, ...valParts] = part.split(': ');
+                const val = valParts.join(': '); // Rejoin in case value had ": "
+
+                if (key === 'Date') payment.date = val;
+                else if (key === 'Month') payment.month = val;
+                else if (key === 'Amt') payment.amount = Number(val);
+                else if (key === 'Fine') payment.fine = Number(val);
+                else if (key === 'Rem') payment.remarks = val;
+            });
+            return payment;
+        });
+    };
+
+    // Helper to parse TC Details string
+    const parseTCDetails = (str) => {
+        if (!str) return null;
+        // Try JSON first
+        if (str.startsWith('{')) {
+            try { return JSON.parse(str); } catch (e) { /* ignore */ }
+        }
+
+        const tc = {};
+        const parts = str.split(', ');
+        parts.forEach(part => {
+            const [key, ...valParts] = part.split(': ');
+            const val = valParts.join(': ');
+
+            if (key === 'Issued') tc.issueDate = val;
+            else if (key === 'Leaving') tc.dateOfLeaving = val;
+            else if (key === 'Reason') tc.reason = val;
+            else if (key === 'Conduct') tc.conduct = val;
+            else if (key === 'Rem') tc.remarks = val;
+        });
+        return Object.keys(tc).length > 0 ? tc : null;
+    };
+
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
@@ -98,17 +181,21 @@ export const parseCSV = (csvText) => {
         headers.forEach((header, index) => {
             let val = values[index];
 
-            // Try to parse JSON for complex fields (arrays/objects)
-            // We look for typical JSON starts like [ or {
-            if (val && (val.startsWith('[') || val.startsWith('{'))) {
-                try {
-                    val = JSON.parse(val);
-                } catch (e) {
-                    // Keep as string if parse fails
+            if (header === 'feeHistory') {
+                obj[header] = parseFeeHistory(val);
+            } else if (header === 'tcDetails') {
+                obj[header] = parseTCDetails(val);
+            } else {
+                // Try to parse JSON for other complex fields if any
+                if (val && (val.startsWith('[') || val.startsWith('{'))) {
+                    try {
+                        val = JSON.parse(val);
+                    } catch (e) {
+                        // Keep as string if parse fails
+                    }
                 }
+                obj[header] = val;
             }
-
-            obj[header] = val;
         });
 
         result.push(obj);
