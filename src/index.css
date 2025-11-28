@@ -21,13 +21,150 @@ body {
 /* Glassmorphism Utilities replaced by inline Tailwind classes */
 
 .btn {
-  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold cursor-pointer transition-all active:scale-95;
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold cursor-pointer transition-all duration-200 active:scale-95 hover:scale-[1.02];
 }
 
 .btn-primary {
-  @apply bg-indigo-600 text-white shadow-md hover:bg-indigo-700;
+  @apply bg-indigo-600 text-white shadow-md hover:bg-indigo-700 hover:shadow-lg;
 }
 
 .btn-danger {
   @apply bg-red-500 text-white hover:bg-red-600;
+}
+
+/* ============================================
+   ANIMATION KEYFRAMES
+============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+============================================ */
+
+/* Page transitions */
+.page-enter {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-duration: 150ms;
+}
+
+/* Apply page transitions to main content */
+main>div {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Table row hover with smooth highlight */
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+/* Card hover effects */
+.glass-panel,
+[class*="bg-white"] {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Input focus animations */
+input:focus,
+select:focus,
+textarea:focus {
+  transition: all 0.2s ease-out;
+}
+
+/* Stagger animation for lists */
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading shimmer effect */
+.shimmer {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }

@@ -107,8 +107,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     };
 
     return createPortal(
-        <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto flex flex-col p-5">
-            <div className="bg-white/95 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-lg p-6 mx-auto relative my-auto">
+        <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto flex flex-col p-5 modal-backdrop">
+            <div className="bg-white/95 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-lg p-6 mx-auto relative my-auto scale-in">
                 <div className="flex justify-between items-center mb-5">
                     <h3 className="m-0 text-gray-800 text-lg font-bold">Record Fee Payment</h3>
                     <button onClick={onClose} className="btn bg-transparent p-2 hover:bg-black/5">
