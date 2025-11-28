@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Download, Upload, AlertTriangle, CheckCircle, Database } from 'lucide-react';
 import { saveStudents } from '../utils/storage';
+import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 
 const DataManagement = ({ students, onImportSuccess }) => {
     const [importStatus, setImportStatus] = useState(null); // 'success', 'error', 'loading'
@@ -8,19 +9,20 @@ const DataManagement = ({ students, onImportSuccess }) => {
 
     const handleExport = () => {
         try {
-            const dataStr = JSON.stringify(students, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
+            // Convert to CSV
+            const csvData = convertToCSV(students);
+            const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
 
             const link = document.createElement('a');
             link.href = url;
-            link.download = `student_backup_${new Date().toISOString().slice(0, 10)}.json`;
+            link.download = `student_backup_${new Date().toISOString().slice(0, 10)}.csv`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
 
-            setMessage('Data exported successfully!');
+            setMessage('Data exported successfully as CSV!');
             setImportStatus('success');
             setTimeout(() => {
                 setImportStatus(null);
@@ -37,13 +39,13 @@ const DataManagement = ({ students, onImportSuccess }) => {
         try {
             // Only create backup if there's existing data
             if (students && students.length > 0) {
-                const dataStr = JSON.stringify(students, null, 2);
-                const blob = new Blob([dataStr], { type: 'application/json' });
+                const csvData = convertToCSV(students);
+                const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
                 const url = URL.createObjectURL(blob);
 
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `auto_backup_before_import_${new Date().toISOString().slice(0, 10)}_${Date.now()}.json`;
+                link.download = `auto_backup_before_import_${new Date().toISOString().slice(0, 10)}_${Date.now()}.csv`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -68,31 +70,40 @@ const DataManagement = ({ students, onImportSuccess }) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
-                const json = JSON.parse(e.target.result);
+                const content = e.target.result;
+                let parsedData;
+
+                // Determine file type based on extension or content
+                if (file.name.endsWith('.json')) {
+                    parsedData = JSON.parse(content);
+                } else {
+                    // Assume CSV for .csv or other extensions
+                    parsedData = parseCSV(content);
+                }
 
                 // Basic Validation
-                if (!Array.isArray(json)) {
+                if (!Array.isArray(parsedData)) {
                     throw new Error('Invalid file format: Data must be an array of students.');
                 }
 
                 // Check first item for required fields (loose check)
-                if (json.length > 0 && (!json[0].id || !json[0].name)) {
+                if (parsedData.length > 0 && (!parsedData[0].id || !parsedData[0].name)) {
                     throw new Error('Invalid data structure: Missing required student fields.');
                 }
 
                 // Attempt to save to localStorage
-                saveStudents(json);
-                onImportSuccess(json); // Update App state
+                saveStudents(parsedData);
+                onImportSuccess(parsedData); // Update App state
 
                 setImportStatus('success');
-                setMessage(`✓ Auto-backup created. Successfully imported ${json.length} student records.`);
+                setMessage(`✓ Auto-backup created. Successfully imported ${parsedData.length} student records.`);
             } catch (err) {
                 console.error(err);
                 setImportStatus('error');
                 if (err.name === 'QuotaExceededError' || err.message.includes('quota')) {
                     setMessage('Storage Limit Exceeded: The file is too large for the browser\'s local storage.');
                 } else if (err instanceof SyntaxError) {
-                    setMessage('Invalid JSON file. Please check the file content.');
+                    setMessage('Invalid file format. Please check the file content.');
                 } else {
                     setMessage(err.message || 'Failed to import data.');
                 }
@@ -115,11 +126,12 @@ const DataManagement = ({ students, onImportSuccess }) => {
                         Export Data
                     </h3>
                     <p className="text-slate-500 mb-6 text-sm leading-relaxed">
-                        Download a backup of all student records, including fee history.
-                        Keep this file safe to restore your data later.
+                        Download a backup of all student records in <strong>CSV (Excel)</strong> format.
+                        <br />
+                        Includes fee history and other details.
                     </p>
                     <button onClick={handleExport} className="btn btn-primary w-full justify-center shadow-indigo-200">
-                        Download JSON Backup
+                        Download CSV Backup
                     </button>
                 </div>
 
@@ -129,7 +141,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
                         Import Data
                     </h3>
                     <p className="text-slate-500 mb-6 text-sm leading-relaxed">
-                        Restore student records from a backup file.
+                        Restore student records from a backup file (.csv or .json).
                         <span className="block mt-2 text-amber-600 font-medium text-xs bg-amber-50 p-2 rounded border border-amber-100">
                             Note: Auto-backup created before import.
                         </span>
@@ -140,12 +152,32 @@ const DataManagement = ({ students, onImportSuccess }) => {
                         Select Backup File
                         <input
                             type="file"
-                            accept=".json"
+                            accept=".csv,.json"
                             onChange={handleImport}
                             className="hidden"
                         />
                     </label>
                 </div>
+            </div>
+
+            <div className="mt-8 bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 className="text-slate-800 mt-0 text-base font-bold mb-3 flex items-center gap-2">
+                    <AlertTriangle size={18} className="text-amber-500" />
+                    CSV Format Guide
+                </h3>
+                <p className="text-slate-500 text-sm mb-3">
+                    Ensure your CSV file includes these headers (case-sensitive):
+                </p>
+                <div className="flex flex-wrap gap-2">
+                    {['name', 'class', 'section', 'rollNo', 'feesAmount', 'feesStatus', 'fine', 'admissionDate', 'admissionStatus'].map(field => (
+                        <span key={field} className="px-2 py-1 bg-white border border-slate-200 rounded text-xs font-mono text-slate-600">
+                            {field}
+                        </span>
+                    ))}
+                </div>
+                <p className="text-slate-400 text-xs mt-3 italic">
+                    * Complex fields like 'feeHistory' should be valid JSON strings if included.
+                </p>
             </div>
 
             {importStatus && (
