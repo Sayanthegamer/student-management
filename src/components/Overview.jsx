@@ -1,24 +1,22 @@
 import React from 'react';
 import { Users, IndianRupee, AlertCircle, UserPlus } from 'lucide-react';
 
-const StatCard = ({ title, value, icon: Icon, color, subtext }) => (
-    <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-6 flex flex-col gap-3">
+const StatCard = ({ title, value, icon: Icon, colorClass, subtext }) => (
+    <div className="bg-white rounded-2xl p-6 flex flex-col gap-4 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
         <div className="flex justify-between items-start">
             <div>
-                <p className="m-0 text-gray-500 text-sm font-medium">{title}</p>
-                <h3 className="mt-2 text-3xl text-gray-800 font-semibold">{value}</h3>
+                <p className="m-0 text-slate-500 text-sm font-medium tracking-wide uppercase">{title}</p>
+                <h3 className="mt-1 text-3xl text-slate-800 font-bold tracking-tight">{value}</h3>
             </div>
-            <div
-                className="p-3 rounded-xl"
-                style={{
-                    background: color + '20',
-                    color: color
-                }}
-            >
-                <Icon size={24} />
+            <div className={`p-3 rounded-xl ${colorClass} bg-opacity-10`}>
+                <Icon size={24} className="opacity-90" />
             </div>
         </div>
-        {subtext && <p className="m-0 text-xs text-gray-500">{subtext}</p>}
+        {subtext && (
+            <div className="flex items-center gap-2 pt-2 border-t border-slate-50">
+                <p className="m-0 text-xs text-slate-400 font-medium">{subtext}</p>
+            </div>
+        )}
     </div>
 );
 
@@ -54,36 +52,39 @@ const Overview = ({ students }) => {
                     title="Total Students"
                     value={totalStudents}
                     icon={Users}
-                    color="#4f46e5"
+                    colorClass="bg-indigo-100 text-indigo-600"
                     subtext="Active students in database"
                 />
                 <StatCard
                     title="Fees Collected"
                     value={`₹${feesCollected.toLocaleString()}`}
                     icon={IndianRupee}
-                    color="#10b981"
+                    colorClass="bg-emerald-100 text-emerald-600"
                     subtext={`For ${new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}`}
                 />
                 <StatCard
                     title="Pending Fees"
                     value={pendingFeesCount}
                     icon={AlertCircle}
-                    color="#f59e0b"
+                    colorClass="bg-amber-100 text-amber-600"
                     subtext="Students yet to pay this month"
                 />
                 <StatCard
                     title="New Admissions"
                     value={newAdmissions}
                     icon={UserPlus}
-                    color="#ec4899"
+                    colorClass="bg-pink-100 text-pink-600"
                     subtext={`Joined in ${currentYear}`}
                 />
             </div>
 
-            <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-6">
-                <h3 className="m-0 mb-4 text-gray-800 text-lg font-semibold">Recent Activities</h3>
-                <div className="text-gray-500 italic">
-                    Activity log coming soon...
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+                <h3 className="m-0 mb-6 text-slate-800 text-xl font-bold flex items-center gap-2">
+                    Recent Activities
+                    <span className="text-xs font-normal text-slate-400 bg-slate-100 px-2 py-1 rounded-full">Coming Soon</span>
+                </h3>
+                <div className="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                    <p className="text-slate-400 font-medium">Activity log is under development</p>
                 </div>
             </div>
         </div>
