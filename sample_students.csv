@@ -1,0 +1,6 @@
+id,name,class,section,rollNo,feesAmount,feesStatus,fine,admissionDate,admissionStatus,feeHistory
+e4d3c2b1-a0f9-48e7-b6c5-d4e3f2a1b0c9,Aarav Sharma,10,A,1,5000,Paid,0,2024-04-01,Confirmed,"Date: 2024-04-05, Month: 2024-04, Amt: 5000, Rem: Cash | Date: 2024-05-02, Month: 2024-05, Amt: 5000, Rem: UPI"
+f5e4d3c2-b1a0-49f8-c7d6-e5f4g3h2i1j0,Vivaan Gupta,10,A,2,5000,Pending,0,2024-04-02,Confirmed,"Date: 2024-04-10, Month: 2024-04, Amt: 5000, Fine: 50, Rem: Late Fee"
+g6f5e4d3-c2b1-50g9-d8e7-f6g5h4i3j2k1,Diya Patel,10,B,1,5000,Paid,0,2024-04-01,Confirmed,"Date: 2024-04-05, Month: 2024-04, Amt: 5000, Rem: Cheque | Date: 2024-05-05, Month: 2024-05, Amt: 5000, Rem: UPI | Date: 2024-06-05, Month: 2024-06, Amt: 5000, Rem: UPI"
+h7g6f5e4-d3c2-61h0-e9f8-g7h6i5j4k3l2,Aditya Singh,9,A,15,4500,Overdue,100,2024-04-15,Provisional,
+i8h7g6f5-e4d3-72i1-f0g9-h8i7j6k5l4m3,Ananya Reddy,9,B,8,4500,Paid,0,2024-04-10,Confirmed,"Date: 2024-04-12, Month: 2024-04, Amt: 4500, Rem: Cash"
