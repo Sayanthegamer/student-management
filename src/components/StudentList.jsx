@@ -73,25 +73,24 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     };
 
     return (
-        <div className="glass-panel" style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
-                <h2 style={{ margin: 0, color: '#1f2937' }}>Student Records</h2>
+        <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-5 max-w-5xl mx-auto">
+            <div className="flex justify-between items-center mb-5 flex-wrap gap-2">
+                <h2 className="m-0 text-gray-800 text-xl font-bold">Student Records</h2>
                 <button onClick={onAdd} className="btn btn-primary">
                     <Plus size={20} />
                     Add Student
                 </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
-                <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-                    <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }} />
+            <div className="flex gap-2 mb-5 flex-wrap items-center">
+                <div className="relative flex-1 min-w-[200px]">
+                    <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                     <input
                         type="text"
                         placeholder="Search..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="glass-input"
-                        style={{ paddingLeft: '40px' }}
+                        className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 pl-10"
                     />
                 </div>
 
@@ -99,8 +98,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterClass}
                     onChange={(e) => setFilterClass(e.target.value)}
-                    className="glass-input"
-                    style={{ width: 'auto', minWidth: '100px' }}
+                    className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[100px]"
                 >
                     <option value="">All Classes</option>
                     {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -109,8 +107,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterSection}
                     onChange={(e) => setFilterSection(e.target.value)}
-                    className="glass-input"
-                    style={{ width: 'auto', minWidth: '100px' }}
+                    className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[100px]"
                 >
                     <option value="">All Sections</option>
                     {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
@@ -119,8 +116,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterFeeStatus}
                     onChange={(e) => setFilterFeeStatus(e.target.value)}
-                    className="glass-input"
-                    style={{ width: 'auto', minWidth: '120px' }}
+                    className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[120px]"
                 >
                     <option value="">All Status</option>
                     <option value="Paid">Paid</option>
@@ -131,8 +127,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="glass-input"
-                    style={{ width: 'auto' }}
+                    className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto"
                 >
                     <option value="name">Sort: Name</option>
                     <option value="rollNo">Sort: Roll No</option>
@@ -141,72 +136,71 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
                 <button
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                    className="btn"
-                    style={{ background: 'rgba(255,255,255,0.5)', padding: '10px' }}
+                    className="btn bg-white/50 p-2.5"
                     title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                 >
                     {sortOrder === 'asc' ? '↓' : '↑'}
                 </button>
 
-                <div style={{ width: '1px', height: '30px', background: 'rgba(0,0,0,0.1)', margin: '0 8px' }}></div>
+                <div className="w-px h-8 bg-black/10 mx-2"></div>
 
                 <div>
                     <input
                         type="month"
                         value={filterMonth}
                         onChange={(e) => setFilterMonth(e.target.value)}
-                        className="glass-input"
-                        style={{ width: 'auto' }}
+                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto"
                     />
                 </div>
             </div>
 
             {/* Desktop Table View */}
-            <div className="desktop-view">
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <div className="hidden md:block overflow-x-auto">
+                <table className="w-full border-collapse">
                     <thead>
-                        <tr style={{ borderBottom: '2px solid #e5e7eb', textAlign: 'left' }}>
-                            <th style={{ padding: '12px' }}>Name</th>
-                            <th style={{ padding: '12px' }}>Class/Sec</th>
-                            <th style={{ padding: '12px' }}>Roll No</th>
-                            <th style={{ padding: '12px' }}>Fees ({filterMonth})</th>
-                            <th style={{ padding: '12px' }}>Actions</th>
+                        <tr className="border-b-2 border-gray-200 text-left">
+                            <th className="p-3 font-semibold text-gray-700">Name</th>
+                            <th className="p-3 font-semibold text-gray-700">Class/Sec</th>
+                            <th className="p-3 font-semibold text-gray-700">Roll No</th>
+                            <th className="p-3 font-semibold text-gray-700">Fees ({filterMonth})</th>
+                            <th className="p-3 font-semibold text-gray-700">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredStudents.map(student => {
                             const status = getFeeStatusForMonth(student, filterMonth);
                             return (
-                                <tr key={student.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                                    <td style={{ padding: '12px', fontWeight: '500' }}>{student.name}</td>
-                                    <td style={{ padding: '12px' }}>{student.class} - {student.section}</td>
-                                    <td style={{ padding: '12px' }}>{student.rollNo}</td>
-                                    <td style={{ padding: '12px' }}>
-                                        <span style={{
-                                            padding: '4px 8px',
-                                            borderRadius: '12px',
-                                            fontSize: '12px',
-                                            fontWeight: '600',
-                                            background: status === 'Paid' ? '#d1fae5' : '#fef3c7',
-                                            color: status === 'Paid' ? '#065f46' : '#92400e'
-                                        }}>
+                                <tr key={student.id} className="border-b border-gray-100 hover:bg-white/30 transition-colors">
+                                    <td className="p-3 font-medium text-gray-800">{student.name}</td>
+                                    <td className="p-3 text-gray-600">{student.class} - {student.section}</td>
+                                    <td className="p-3 text-gray-600">{student.rollNo}</td>
+                                    <td className="p-3">
+                                        <span
+                                            className={`px-2 py-1 rounded-xl text-xs font-semibold ${status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                                                }`}
+                                        >
                                             {status}
                                         </span>
                                     </td>
-                                    <td style={{ padding: '12px' }}>
-                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                    <td className="p-3">
+                                        <div className="flex gap-2">
                                             <button
                                                 onClick={() => handlePayFeeClick(student)}
-                                                className="btn"
+                                                className="btn p-1.5 bg-green-100 text-green-800 hover:bg-green-200"
                                                 title="Pay Fees"
-                                                style={{ padding: '6px', background: '#d1fae5', color: '#065f46' }}
                                             >
                                                 <IndianRupee size={16} />
                                             </button>
-                                            <button onClick={() => onEdit(student)} className="btn" style={{ padding: '6px', background: '#e0e7ff', color: '#4338ca' }}>
+                                            <button
+                                                onClick={() => onEdit(student)}
+                                                className="btn p-1.5 bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                                            >
                                                 <Edit2 size={16} />
                                             </button>
-                                            <button onClick={() => onDelete(student.id)} className="btn" style={{ padding: '6px', background: '#fee2e2', color: '#991b1b' }}>
+                                            <button
+                                                onClick={() => onDelete(student.id)}
+                                                className="btn p-1.5 bg-red-100 text-red-800 hover:bg-red-200"
+                                            >
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>
@@ -216,7 +210,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         })}
                         {filteredStudents.length === 0 && (
                             <tr>
-                                <td colSpan="5" style={{ padding: '24px', textAlign: 'center', color: '#6b7280' }}>
+                                <td colSpan="5" className="p-6 text-center text-gray-500">
                                     No students found.
                                 </td>
                             </tr>
@@ -226,41 +220,42 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
             </div>
 
             {/* Mobile Card View */}
-            <div className="mobile-view" style={{ display: 'none', flexDirection: 'column', gap: '16px' }}>
+            <div className="flex md:hidden flex-col gap-4">
                 {filteredStudents.map(student => {
                     const status = getFeeStatusForMonth(student, filterMonth);
                     return (
-                        <div key={student.id} style={{ background: 'rgba(255,255,255,0.6)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.4)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                        <div key={student.id} className="bg-white/60 p-4 rounded-xl border border-white/40 shadow-sm">
+                            <div className="flex justify-between items-start mb-2">
                                 <div>
-                                    <h3 style={{ margin: 0, fontSize: '18px', color: '#1f2937' }}>{student.name}</h3>
-                                    <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '14px' }}>Class: {student.class}-{student.section} | Roll: {student.rollNo}</p>
+                                    <h3 className="m-0 text-lg font-semibold text-gray-800">{student.name}</h3>
+                                    <p className="m-0 mt-1 text-sm text-gray-500">Class: {student.class}-{student.section} | Roll: {student.rollNo}</p>
                                 </div>
-                                <span style={{
-                                    padding: '4px 8px',
-                                    borderRadius: '12px',
-                                    fontSize: '12px',
-                                    fontWeight: '600',
-                                    background: status === 'Paid' ? '#d1fae5' : '#fef3c7',
-                                    color: status === 'Paid' ? '#065f46' : '#92400e'
-                                }}>
+                                <span
+                                    className={`px-2 py-1 rounded-xl text-xs font-semibold ${status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                                        }`}
+                                >
                                     {status}
                                 </span>
                             </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-                                <div style={{ display: 'flex', gap: '8px' }}>
+                            <div className="flex justify-end items-center mt-3 pt-3 border-t border-black/5">
+                                <div className="flex gap-2">
                                     <button
                                         onClick={() => handlePayFeeClick(student)}
-                                        className="btn"
-                                        style={{ padding: '8px', background: '#d1fae5', color: '#065f46' }}
+                                        className="btn p-2 bg-green-100 text-green-800 hover:bg-green-200"
                                     >
                                         <IndianRupee size={18} />
                                     </button>
-                                    <button onClick={() => onEdit(student)} className="btn" style={{ padding: '8px', background: '#e0e7ff', color: '#4338ca' }}>
+                                    <button
+                                        onClick={() => onEdit(student)}
+                                        className="btn p-2 bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                                    >
                                         <Edit2 size={18} />
                                     </button>
-                                    <button onClick={() => onDelete(student.id)} className="btn" style={{ padding: '8px', background: '#fee2e2', color: '#991b1b' }}>
+                                    <button
+                                        onClick={() => onDelete(student.id)}
+                                        className="btn p-2 bg-red-100 text-red-800 hover:bg-red-200"
+                                    >
                                         <Trash2 size={18} />
                                     </button>
                                 </div>
@@ -269,18 +264,11 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     );
                 })}
                 {filteredStudents.length === 0 && (
-                    <div style={{ padding: '24px', textAlign: 'center', color: '#6b7280' }}>
+                    <div className="p-6 text-center text-gray-500">
                         No students found.
                     </div>
                 )}
             </div>
-
-            <style>{`
-        @media (max-width: 768px) {
-          .desktop-view { display: none; }
-          .mobile-view { display: flex !important; }
-        }
-      `}</style>
 
             {showPaymentModal && selectedStudentForFee && (
                 <FeePaymentModal

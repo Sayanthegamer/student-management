@@ -103,40 +103,33 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
     };
 
     const IssueTCModal = () => createPortal(
-        <div style={{
-            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(5px)',
-            display: 'flex', justifyContent: 'center', alignItems: 'center',
-            zIndex: 1000
-        }}>
-            <div className="glass-panel" style={{ background: 'white', padding: '32px', width: '90%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
-                <h3 style={{ marginTop: 0, color: '#1f2937', borderBottom: '1px solid #e5e7eb', paddingBottom: '16px' }}>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
+            <div className="glass-panel bg-white p-8 w-[90%] max-w-lg max-h-[90vh] overflow-y-auto">
+                <h3 className="mt-0 text-gray-800 border-b border-gray-200 pb-4 text-xl font-bold">
                     Issue Transfer Certificate
                 </h3>
 
-                <div style={{ marginBottom: '20px' }}>
-                    <p style={{ margin: '0 0 8px', fontWeight: 'bold', fontSize: '18px' }}>{selectedStudent.name}</p>
-                    <p style={{ margin: 0, color: '#6b7280' }}>Class: {selectedStudent.class} - {selectedStudent.section} | Roll: {selectedStudent.rollNo}</p>
+                <div className="mb-5">
+                    <p className="m-0 mb-2 font-bold text-lg text-gray-800">{selectedStudent.name}</p>
+                    <p className="m-0 text-gray-500">Class: {selectedStudent.class} - {selectedStudent.section} | Roll: {selectedStudent.rollNo}</p>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="flex flex-col gap-4">
                     <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: '#4b5563', fontSize: '14px' }}>Date of Leaving</label>
+                        <label className="block mb-2 text-gray-600 text-sm font-medium">Date of Leaving</label>
                         <input
                             type="date"
                             value={tcDetails.dateOfLeaving}
                             onChange={e => setTcDetails({ ...tcDetails, dateOfLeaving: e.target.value })}
-                            className="glass-input"
-                            style={{ width: '100%' }}
+                            className="glass-input w-full"
                         />
                     </div>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: '#4b5563', fontSize: '14px' }}>Reason for Leaving</label>
+                        <label className="block mb-2 text-gray-600 text-sm font-medium">Reason for Leaving</label>
                         <select
                             value={tcDetails.reason}
                             onChange={e => setTcDetails({ ...tcDetails, reason: e.target.value })}
-                            className="glass-input"
-                            style={{ width: '100%' }}
+                            className="glass-input w-full"
                         >
                             <option>Completed Course</option>
                             <option>Parent's Transfer</option>
@@ -145,41 +138,37 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                         </select>
                     </div>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: '#4b5563', fontSize: '14px' }}>Conduct</label>
+                        <label className="block mb-2 text-gray-600 text-sm font-medium">Conduct</label>
                         <input
                             type="text"
                             value={tcDetails.conduct}
                             onChange={e => setTcDetails({ ...tcDetails, conduct: e.target.value })}
-                            className="glass-input"
-                            style={{ width: '100%' }}
+                            className="glass-input w-full"
                         />
                     </div>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: '#4b5563', fontSize: '14px' }}>Remarks</label>
+                        <label className="block mb-2 text-gray-600 text-sm font-medium">Remarks</label>
                         <input
                             type="text"
                             value={tcDetails.remarks}
                             onChange={e => setTcDetails({ ...tcDetails, remarks: e.target.value })}
-                            className="glass-input"
+                            className="glass-input w-full"
                             placeholder="Optional..."
-                            style={{ width: '100%' }}
                         />
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '12px', marginTop: '32px' }}>
+                <div className="flex gap-3 mt-8">
                     <button
                         onClick={handleConfirmIssue}
-                        className="btn"
-                        style={{ flex: 1, background: '#fee2e2', color: '#991b1b', justifyContent: 'center' }}
+                        className="btn flex-1 bg-red-100 text-red-800 justify-center hover:bg-red-200"
                     >
                         <AlertTriangle size={18} />
                         Confirm Issue TC
                     </button>
                     <button
                         onClick={() => setShowIssueModal(false)}
-                        className="btn"
-                        style={{ flex: 1, background: '#f3f4f6', color: '#374151', justifyContent: 'center' }}
+                        className="btn flex-1 bg-gray-100 text-gray-700 justify-center hover:bg-gray-200"
                     >
                         Cancel
                     </button>
@@ -190,62 +179,52 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
     );
 
     return (
-        <div style={{ padding: '24px', maxWidth: '1000px', margin: '0 auto' }}>
-            <h2 style={{ color: 'white', marginBottom: '24px', fontSize: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="p-6 max-w-5xl mx-auto">
+            <h2 className="text-white mb-6 text-2xl flex items-center gap-3 font-bold">
                 <FileText size={28} />
                 Transfer Certificate (TC)
             </h2>
 
-            <div className="glass-panel" style={{ padding: '20px' }}>
+            <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-5">
                 {/* View Toggle */}
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '1px solid rgba(0,0,0,0.1)', paddingBottom: '16px' }}>
+                <div className="flex gap-2 mb-6 border-b border-black/10 pb-4">
                     <button
                         onClick={() => setView('active')}
-                        className="btn"
-                        style={{
-                            background: view === 'active' ? '#4f46e5' : 'transparent',
-                            color: view === 'active' ? 'white' : '#6b7280',
-                            borderRadius: '20px',
-                            padding: '8px 20px',
-                            border: view === 'active' ? 'none' : '1px solid transparent'
-                        }}
+                        className={`btn rounded-full px-5 py-2 border transition-all ${view === 'active'
+                            ? 'bg-indigo-600 text-white border-transparent'
+                            : 'bg-transparent text-gray-500 border-transparent hover:bg-black/5'
+                            }`}
                     >
                         Issue TC (Active)
                     </button>
                     <button
                         onClick={() => setView('transferred')}
-                        className="btn"
-                        style={{
-                            background: view === 'transferred' ? '#4f46e5' : 'transparent',
-                            color: view === 'transferred' ? 'white' : '#6b7280',
-                            borderRadius: '20px',
-                            padding: '8px 20px',
-                            border: view === 'transferred' ? 'none' : '1px solid transparent'
-                        }}
+                        className={`btn rounded-full px-5 py-2 border transition-all ${view === 'transferred'
+                            ? 'bg-indigo-600 text-white border-transparent'
+                            : 'bg-transparent text-gray-500 border-transparent hover:bg-black/5'
+                            }`}
                     >
                         History (Transferred)
                     </button>
                 </div>
 
                 {/* Filters & Controls */}
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-                        <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }} />
+                <div className="flex gap-2 mb-5 flex-wrap items-center">
+                    <div className="relative flex-1 min-w-[200px]">
+                        <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                         <input
                             type="text"
                             placeholder="Search Student..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="glass-input"
-                            style={{ paddingLeft: '40px' }}
+                            className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 pl-10"
                         />
                     </div>
 
                     <select
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
-                        className="glass-input"
-                        style={{ width: 'auto', minWidth: '100px' }}
+                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[100px]"
                     >
                         <option value="">All Classes</option>
                         {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -254,8 +233,7 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                     <select
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
-                        className="glass-input"
-                        style={{ width: 'auto', minWidth: '100px' }}
+                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[100px]"
                     >
                         <option value="">All Sections</option>
                         {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
@@ -264,8 +242,7 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="glass-input"
-                        style={{ width: 'auto' }}
+                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto"
                     >
                         <option value="name">Sort: Name</option>
                         <option value="rollNo">Sort: Roll No</option>
@@ -274,8 +251,7 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
 
                     <button
                         onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                        className="btn"
-                        style={{ background: 'rgba(255,255,255,0.5)', padding: '10px' }}
+                        className="btn bg-white/50 p-2.5"
                         title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                     >
                         {sortOrder === 'asc' ? '↓' : '↑'}
@@ -283,37 +259,36 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                 </div>
 
                 {/* Table View */}
-                <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
                         <thead>
-                            <tr style={{ borderBottom: '2px solid #e5e7eb', textAlign: 'left' }}>
-                                <th style={{ padding: '12px' }}>Name</th>
-                                <th style={{ padding: '12px' }}>Class/Sec</th>
-                                <th style={{ padding: '12px' }}>Roll No</th>
-                                <th style={{ padding: '12px' }}>{view === 'active' ? 'Admission Date' : 'Date of Leaving'}</th>
-                                <th style={{ padding: '12px' }}>{view === 'active' ? 'Action' : 'Reason'}</th>
+                            <tr className="border-b-2 border-gray-200 text-left">
+                                <th className="p-3 font-semibold text-gray-700">Name</th>
+                                <th className="p-3 font-semibold text-gray-700">Class/Sec</th>
+                                <th className="p-3 font-semibold text-gray-700">Roll No</th>
+                                <th className="p-3 font-semibold text-gray-700">{view === 'active' ? 'Admission Date' : 'Date of Leaving'}</th>
+                                <th className="p-3 font-semibold text-gray-700">{view === 'active' ? 'Action' : 'Reason'}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredStudents.map(student => (
-                                <tr key={student.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                                    <td style={{ padding: '12px', fontWeight: '500' }}>{student.name}</td>
-                                    <td style={{ padding: '12px' }}>{student.class} - {student.section}</td>
-                                    <td style={{ padding: '12px' }}>{student.rollNo}</td>
-                                    <td style={{ padding: '12px' }}>
+                                <tr key={student.id} className="border-b border-gray-100 hover:bg-white/30 transition-colors">
+                                    <td className="p-3 font-medium text-gray-800">{student.name}</td>
+                                    <td className="p-3 text-gray-600">{student.class} - {student.section}</td>
+                                    <td className="p-3 text-gray-600">{student.rollNo}</td>
+                                    <td className="p-3 text-gray-600">
                                         {view === 'active' ? student.admissionDate : student.tcDetails?.dateOfLeaving}
                                     </td>
-                                    <td style={{ padding: '12px' }}>
+                                    <td className="p-3">
                                         {view === 'active' ? (
                                             <button
                                                 onClick={() => handleIssueClick(student)}
-                                                className="btn"
-                                                style={{ padding: '6px 12px', background: '#fee2e2', color: '#991b1b', fontSize: '13px' }}
+                                                className="btn px-3 py-1.5 bg-red-100 text-red-800 text-sm hover:bg-red-200"
                                             >
                                                 Issue TC
                                             </button>
                                         ) : (
-                                            <span style={{ color: '#6b7280', fontSize: '14px' }}>
+                                            <span className="text-gray-500 text-sm">
                                                 {student.tcDetails?.reason || 'N/A'}
                                             </span>
                                         )}
@@ -322,7 +297,7 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                             ))}
                             {filteredStudents.length === 0 && (
                                 <tr>
-                                    <td colSpan="5" style={{ padding: '40px', textAlign: 'center', color: '#6b7280' }}>
+                                    <td colSpan="5" className="p-10 text-center text-gray-500">
                                         {view === 'active'
                                             ? 'No active students found matching your filters.'
                                             : 'No transferred students found in the last 3 months.'}
@@ -333,7 +308,7 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                     </table>
                 </div>
                 {view === 'transferred' && (
-                    <p style={{ textAlign: 'center', fontSize: '12px', color: '#9ca3af', marginTop: '16px', fontStyle: 'italic' }}>
+                    <p className="text-center text-xs text-gray-400 mt-4 italic">
                         * History only shows students transferred in the last 3 months.
                     </p>
                 )}

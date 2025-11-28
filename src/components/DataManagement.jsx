@@ -77,16 +77,16 @@ const DataManagement = ({ students, onImportSuccess }) => {
     };
 
     return (
-        <div style={{ padding: '24px', maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ color: 'white', marginBottom: '24px', fontSize: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="p-6 max-w-3xl mx-auto">
+            <h2 className="text-white mb-6 text-2xl flex items-center gap-3 font-bold">
                 <Database size={28} />
                 Data Management
             </h2>
 
-            <div className="glass-panel" style={{ padding: '32px' }}>
-                <div style={{ marginBottom: '32px' }}>
-                    <h3 style={{ color: '#1f2937', marginTop: 0 }}>Export Data</h3>
-                    <p style={{ color: '#6b7280', marginBottom: '16px' }}>
+            <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-8">
+                <div className="mb-8">
+                    <h3 className="text-gray-800 mt-0 text-xl font-bold mb-2">Export Data</h3>
+                    <p className="text-gray-500 mb-4">
                         Download a backup of all student records, including fee history.
                         Keep this file safe to restore your data later.
                     </p>
@@ -96,38 +96,32 @@ const DataManagement = ({ students, onImportSuccess }) => {
                     </button>
                 </div>
 
-                <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '32px' }}>
-                    <h3 style={{ color: '#1f2937', marginTop: 0 }}>Import Data</h3>
-                    <p style={{ color: '#6b7280', marginBottom: '16px' }}>
+                <div className="border-t border-black/10 pt-8">
+                    <h3 className="text-gray-800 mt-0 text-xl font-bold mb-2">Import Data</h3>
+                    <p className="text-gray-500 mb-4">
                         Restore student records from a backup file.
                         <br />
-                        <strong style={{ color: '#ef4444' }}>Warning: This will replace all current data!</strong>
+                        <strong className="text-red-500">Warning: This will replace all current data!</strong>
                     </p>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                        <label className="btn" style={{ background: '#e0e7ff', color: '#4338ca', cursor: 'pointer' }}>
+                    <div className="flex items-center gap-4 flex-wrap">
+                        <label className="btn bg-indigo-100 text-indigo-700 cursor-pointer hover:bg-indigo-200">
                             <Upload size={20} />
                             Select Backup File
                             <input
                                 type="file"
                                 accept=".json"
                                 onChange={handleImport}
-                                style={{ display: 'none' }}
+                                className="hidden"
                             />
                         </label>
                     </div>
 
                     {importStatus && (
-                        <div style={{
-                            marginTop: '20px',
-                            padding: '16px',
-                            borderRadius: '8px',
-                            background: importStatus === 'error' ? '#fee2e2' : '#d1fae5',
-                            color: importStatus === 'error' ? '#991b1b' : '#065f46',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px'
-                        }}>
+                        <div
+                            className={`mt-5 p-4 rounded-lg flex items-center gap-3 ${importStatus === 'error' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                                }`}
+                        >
                             {importStatus === 'error' ? <AlertTriangle size={20} /> : <CheckCircle size={20} />}
                             <span>{message}</span>
                         </div>

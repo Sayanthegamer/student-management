@@ -25,20 +25,20 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     };
 
     return (
-        <div className="glass-panel" style={{ padding: '24px', maxWidth: '600px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h2 style={{ margin: 0, color: '#1f2937' }}>{initialData ? 'Edit Student' : 'Add New Student'}</h2>
-                <button onClick={onCancel} className="btn" style={{ background: 'transparent', padding: '8px' }}>
-                    <X size={24} color="#4b5563" />
+        <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-6 max-w-2xl mx-auto">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="m-0 text-gray-800 text-xl font-bold">{initialData ? 'Edit Student' : 'Add New Student'}</h2>
+                <button onClick={onCancel} className="btn bg-transparent p-2 hover:bg-black/5">
+                    <X size={24} className="text-gray-600" />
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
                 {/* Personal Details */}
                 <section>
-                    <h3 style={{ color: '#4f46e5', marginBottom: '16px', fontSize: '18px' }}>Personal Details</h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <h3 className="text-indigo-600 mb-4 text-lg font-medium">Personal Details</h3>
+                    <div className="flex flex-col gap-4">
                         <div>
                             <label>Full Name</label>
                             <input
@@ -46,13 +46,13 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                 placeholder="e.g. Rahul Kumar"
                                 required
                             />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label>Class</label>
                                 <input
@@ -60,7 +60,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     name="class"
                                     value={formData.class}
                                     onChange={handleChange}
-                                    className="glass-input"
+                                    className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                     placeholder="10"
                                     required
                                 />
@@ -72,7 +72,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     name="section"
                                     value={formData.section}
                                     onChange={handleChange}
-                                    className="glass-input"
+                                    className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                     placeholder="A"
                                     required
                                 />
@@ -86,7 +86,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="rollNo"
                                 value={formData.rollNo}
                                 onChange={handleChange}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                 placeholder="e.g. 21"
                                 required
                             />
@@ -96,8 +96,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
                 {/* Fees Details */}
                 <section>
-                    <h3 style={{ color: '#4f46e5', marginBottom: '16px', fontSize: '18px' }}>Fees & Fine</h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <h3 className="text-indigo-600 mb-4 text-lg font-medium">Fees & Fine</h3>
+                    <div className="flex flex-col gap-4">
                         <div>
                             <label>Fees Amount (₹)</label>
                             <input
@@ -105,7 +105,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="feesAmount"
                                 value={formData.feesAmount}
                                 onChange={handleChange}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                 placeholder="5000"
                             />
                         </div>
@@ -116,7 +116,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="feesStatus"
                                 value={formData.feesStatus}
                                 onChange={handleChange}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                             >
                                 <option value="Paid">Paid</option>
                                 <option value="Pending">Pending</option>
@@ -131,7 +131,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="fine"
                                 value={formData.fine}
                                 onChange={handleChange}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                 placeholder="0"
                             />
                         </div>
@@ -140,8 +140,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
                 {/* Admission Details */}
                 <section>
-                    <h3 style={{ color: '#4f46e5', marginBottom: '16px', fontSize: '18px' }}>Admission</h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <h3 className="text-indigo-600 mb-4 text-lg font-medium">Admission</h3>
+                    <div className="flex flex-col gap-4">
                         <div>
                             <label>Admission Date</label>
                             <input
@@ -149,7 +149,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="admissionDate"
                                 value={formData.admissionDate}
                                 onChange={handleChange}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                             />
                         </div>
 
@@ -159,7 +159,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="admissionStatus"
                                 value={formData.admissionStatus}
                                 onChange={handleChange}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                             >
                                 <option value="Confirmed">Confirmed</option>
                                 <option value="Provisional">Provisional</option>
@@ -169,8 +169,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </div>
                 </section>
 
-                <div style={{ marginTop: '24px' }}>
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '16px', fontSize: '18px' }}>
+                <div className="mt-6">
+                    <button type="submit" className="btn btn-primary w-full p-4 text-lg">
                         <Save size={20} />
                         Save Student
                     </button>
@@ -179,29 +179,29 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
             </form>
 
             {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
-                <div style={{ marginTop: '32px', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '24px' }}>
-                    <h3 style={{ color: '#4f46e5', marginBottom: '16px', fontSize: '18px' }}>Fee Payment History</h3>
-                    <div style={{ overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+                <div className="mt-8 border-t border-black/10 pt-6">
+                    <h3 className="text-indigo-600 mb-4 text-lg font-medium">Fee Payment History</h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full border-collapse text-sm">
                             <thead>
-                                <tr style={{ background: 'rgba(255,255,255,0.5)', textAlign: 'left' }}>
-                                    <th style={{ padding: '8px' }}>Date</th>
-                                    <th style={{ padding: '8px' }}>Month</th>
-                                    <th style={{ padding: '8px' }}>Amount</th>
-                                    <th style={{ padding: '8px' }}>Fine</th>
-                                    <th style={{ padding: '8px' }}>Remarks</th>
+                                <tr className="bg-white/50 text-left">
+                                    <th className="p-2">Date</th>
+                                    <th className="p-2">Month</th>
+                                    <th className="p-2">Amount</th>
+                                    <th className="p-2">Fine</th>
+                                    <th className="p-2">Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {initialData.feeHistory.map((payment) => (
-                                    <tr key={payment.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-                                        <td style={{ padding: '8px' }}>{payment.date}</td>
-                                        <td style={{ padding: '8px' }}>{payment.month}</td>
-                                        <td style={{ padding: '8px' }}>₹{payment.amount}</td>
-                                        <td style={{ padding: '8px', color: payment.fine > 0 ? '#dc2626' : 'inherit' }}>
+                                    <tr key={payment.id} className="border-b border-black/5">
+                                        <td className="p-2">{payment.date}</td>
+                                        <td className="p-2">{payment.month}</td>
+                                        <td className="p-2">₹{payment.amount}</td>
+                                        <td className={`p-2 ${payment.fine > 0 ? 'text-red-600' : ''}`}>
                                             {payment.fine > 0 ? `₹${payment.fine}` : '-'}
                                         </td>
-                                        <td style={{ padding: '8px', color: '#6b7280' }}>{payment.remarks || '-'}</td>
+                                        <td className="p-2 text-gray-500">{payment.remarks || '-'}</td>
                                     </tr>
                                 ))}
                             </tbody>

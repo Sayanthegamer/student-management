@@ -24,12 +24,6 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             const admMonthStr = student.admissionDate.slice(0, 7);
 
             if (selectedMonth < admMonthStr) {
-                // Warning only, don't block
-                // setError(`Note: Payment is for ${selectedMonth}, before admission in ${admMonthStr}`);
-                // Actually, user wants to allow this. Let's just clear error or show a non-blocking warning?
-                // Let's show a warning in the UI but NOT set 'error' state which disables the button.
-                // We'll use a separate 'warning' state if needed, or just allow it.
-                // For now, let's just allow it silently or maybe add a remark?
                 setError('');
             } else {
                 setError('');
@@ -81,12 +75,6 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             let current = new Date(selectedMonth + '-01');
             const end = new Date(endMonth + '-01');
 
-            // Calculate number of months to split amount if needed, or just use amount per month?
-            // Assuming 'amount' entered is PER MONTH based on typical school flows, 
-            // OR total amount? Let's assume Amount is PER MONTH for simplicity and clarity.
-            // Actually, usually you pay a total. But if I enter 5000 and select 2 months, is it 2500 each or 5000 each?
-            // Let's assume Amount is PER MONTH.
-
             while (current <= end) {
                 const monthStr = current.toISOString().slice(0, 7);
 
@@ -123,40 +111,21 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     };
 
     return createPortal(
-        <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 10000,
-            overflowY: 'auto', // Scrollable container
-            display: 'flex',
-            flexDirection: 'column', // Stack for margin: auto to work
-            padding: '20px'
-        }}>
-            <div className="glass-panel" style={{
-                width: '100%',
-                maxWidth: '500px',
-                padding: '24px',
-                background: 'rgba(255, 255, 255, 0.95)',
-                margin: 'auto', // Centers vertically and horizontally if space allows
-                position: 'relative'
-            }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <h3 style={{ margin: 0, color: '#1f2937' }}>Record Fee Payment</h3>
-                    <button onClick={onClose} className="btn" style={{ padding: '8px', background: 'transparent' }}>
+        <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto flex flex-col p-5">
+            <div className="bg-white/95 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-lg p-6 mx-auto relative my-auto">
+                <div className="flex justify-between items-center mb-5">
+                    <h3 className="m-0 text-gray-800 text-lg font-bold">Record Fee Payment</h3>
+                    <button onClick={onClose} className="btn bg-transparent p-2 hover:bg-black/5">
                         <X size={24} />
                     </button>
                 </div>
 
-                <div style={{ marginBottom: '20px', padding: '12px', background: '#f3f4f6', borderRadius: '8px' }}>
-                    <p style={{ margin: '0 0 4px', fontWeight: 'bold' }}>{student.name}</p>
-                    <p style={{ margin: 0, fontSize: '14px', color: '#6b7280' }}>Class: {student.class}-{student.section}</p>
+                <div className="mb-5 p-3 bg-gray-100 rounded-lg">
+                    <p className="m-0 mb-1 font-bold text-gray-800">{student.name}</p>
+                    <p className="m-0 text-sm text-gray-500">Class: {student.class}-{student.section}</p>
                 </div>
 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
                     <div>
                         <label>Payment Date</label>
@@ -164,15 +133,15 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                             type="date"
                             value={paymentDate}
                             onChange={(e) => setPaymentDate(e.target.value)}
-                            className="glass-input"
+                            className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                             required
                         />
                     </div>
 
                     <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <div className="flex justify-between items-center mb-2">
                             <label>For Month</label>
-                            <label style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                            <label className="text-xs flex items-center gap-1 cursor-pointer select-none">
                                 <input
                                     type="checkbox"
                                     checked={isMultiMonth}
@@ -181,38 +150,38 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 Pay Multiple Months
                             </label>
                         </div>
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div className="flex gap-3">
                             <input
                                 type="month"
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                 required
                             />
                             {isMultiMonth && (
                                 <>
-                                    <span style={{ alignSelf: 'center' }}>to</span>
+                                    <span className="self-center text-gray-500">to</span>
                                     <input
                                         type="month"
                                         value={endMonth}
                                         onChange={(e) => setEndMonth(e.target.value)}
-                                        className="glass-input"
+                                        className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                         required
                                     />
                                 </>
                             )}
                         </div>
-                        {error && <p style={{ color: '#dc2626', fontSize: '12px', marginTop: '4px' }}>{error}</p>}
+                        {error && <p className="text-red-600 text-xs mt-1">{error}</p>}
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label>Amount (₹) {isMultiMonth ? '/ Month' : ''}</label>
                             <input
                                 type="number"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
-                                className="glass-input"
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                                 required
                             />
                         </div>
@@ -222,9 +191,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 type="number"
                                 value={fine}
                                 onChange={(e) => setFine(e.target.value)}
-                                className="glass-input"
-                                readOnly // Auto-calculated
-                                style={{ background: '#f9fafb' }}
+                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 bg-gray-50"
+                                readOnly
                             />
                         </div>
                     </div>
@@ -235,16 +203,15 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                             type="text"
                             value={remarks}
                             onChange={(e) => setRemarks(e.target.value)}
-                            className="glass-input"
+                            className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
                             placeholder="e.g. Cash / UPI"
                         />
                     </div>
 
-                    <div style={{ marginTop: '12px' }}>
+                    <div className="mt-3">
                         <button
                             type="submit"
-                            className="btn btn-primary"
-                            style={{ width: '100%', opacity: error ? 0.5 : 1, cursor: error ? 'not-allowed' : 'pointer' }}
+                            className={`btn btn-primary w-full ${error ? 'opacity-50 cursor-not-allowed' : ''}`}
                             disabled={!!error}
                         >
                             <Save size={18} />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Overview from './components/Overview';
 import StudentList from './components/StudentList';
@@ -10,9 +11,8 @@ import { getStudents, addStudent, updateStudent, deleteStudent, addFeePayment } 
 
 function App() {
   const [students, setStudents] = useState([]);
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'students', 'admission', 'data', 'tc'
-  const [view, setView] = useState('list'); // 'list' or 'form' (for student management)
   const [editingStudent, setEditingStudent] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setStudents(getStudents());
@@ -21,12 +21,12 @@ function App() {
   // Student Management Handlers
   const handleAddClick = () => {
     setEditingStudent(null);
-    setView('form');
+    navigate('/students/new');
   };
 
   const handleEditClick = (student) => {
     setEditingStudent(student);
-    setView('form');
+    navigate('/students/edit');
   };
 
   const handleDeleteClick = (id) => {
@@ -44,7 +44,7 @@ function App() {
       const updated = addStudent(studentData);
       setStudents(updated);
     }
-    setView('list');
+    navigate('/students');
   };
 
   const handleUpdateStudent = (updatedStudent) => {
@@ -58,8 +58,8 @@ function App() {
   };
 
   const handleCancel = () => {
-    setView('list');
     setEditingStudent(null);
+    navigate('/students');
   };
 
   const handleImportSuccess = (importedData) => {
@@ -67,51 +67,45 @@ function App() {
     alert('Data imported successfully!');
   };
 
-  // Render Content based on Active Tab
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return <Overview students={students} />;
-      case 'admission':
-        return <AdmissionStatus students={students} />;
-      case 'tc':
-        return <TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} />;
-      case 'data':
-        return <DataManagement students={students} onImportSuccess={handleImportSuccess} />;
-      case 'students':
-        return view === 'list' ? (
-          <StudentList
-            students={students}
-            onAdd={handleAddClick}
-            onEdit={handleEditClick}
-            onDelete={handleDeleteClick}
-            onPayFee={handlePayFee}
-          />
-        ) : (
-          <StudentForm
-            onSave={handleSave}
-            onCancel={handleCancel}
-            initialData={editingStudent}
-          />
-        );
-      default:
-        return <Overview students={students} />;
-    }
-  };
-
   return (
-    <div className="app-container" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+    <div className="app-container flex h-screen overflow-hidden">
       {/* Sidebar */}
-      <div style={{ width: '260px', flexShrink: 0, padding: '16px' }}>
-        <Sidebar activeTab={activeTab} onTabChange={(tab) => {
-          setActiveTab(tab);
-          setView('list'); // Reset view when switching tabs
-        }} />
+      <div className="w-[260px] flex-shrink-0 p-4">
+        <Sidebar />
       </div>
 
       {/* Main Content */}
-      <main style={{ flex: 1, overflowY: 'auto', position: 'relative' }}>
-        {renderContent()}
+      <main className="flex-1 overflow-y-auto relative">
+        <Routes>
+          <Route path="/" element={<Navigate to="/overview" replace />} />
+          <Route path="/overview" element={<Overview students={students} />} />
+          <Route path="/students" element={
+            <StudentList
+              students={students}
+              onAdd={handleAddClick}
+              onEdit={handleEditClick}
+              onDelete={handleDeleteClick}
+              onPayFee={handlePayFee}
+            />
+          } />
+          <Route path="/students/new" element={
+            <StudentForm
+              onSave={handleSave}
+              onCancel={handleCancel}
+              initialData={null}
+            />
+          } />
+          <Route path="/students/edit" element={
+            <StudentForm
+              onSave={handleSave}
+              onCancel={handleCancel}
+              initialData={editingStudent}
+            />
+          } />
+          <Route path="/admission" element={<AdmissionStatus students={students} />} />
+          <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} />} />
+          <Route path="/data" element={<DataManagement students={students} onImportSuccess={handleImportSuccess} />} />
+        </Routes>
       </main>
     </div>
   );

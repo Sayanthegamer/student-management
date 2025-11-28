@@ -2,22 +2,23 @@ import React from 'react';
 import { Users, IndianRupee, AlertCircle, UserPlus } from 'lucide-react';
 
 const StatCard = ({ title, value, icon: Icon, color, subtext }) => (
-    <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+    <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-6 flex flex-col gap-3">
+        <div className="flex justify-between items-start">
             <div>
-                <p style={{ margin: 0, color: '#6b7280', fontSize: '14px', fontWeight: '500' }}>{title}</p>
-                <h3 style={{ margin: '8px 0 0', fontSize: '28px', color: '#1f2937' }}>{value}</h3>
+                <p className="m-0 text-gray-500 text-sm font-medium">{title}</p>
+                <h3 className="mt-2 text-3xl text-gray-800 font-semibold">{value}</h3>
             </div>
-            <div style={{
-                background: color + '20',
-                padding: '12px',
-                borderRadius: '12px',
-                color: color
-            }}>
+            <div
+                className="p-3 rounded-xl"
+                style={{
+                    background: color + '20',
+                    color: color
+                }}
+            >
                 <Icon size={24} />
             </div>
         </div>
-        {subtext && <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>{subtext}</p>}
+        {subtext && <p className="m-0 text-xs text-gray-500">{subtext}</p>}
     </div>
 );
 
@@ -45,15 +46,10 @@ const Overview = ({ students }) => {
     ).length;
 
     return (
-        <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
-            <h2 style={{ color: 'white', marginBottom: '24px', fontSize: '24px' }}>Dashboard Overview</h2>
+        <div className="p-6 max-w-7xl mx-auto">
+            <h2 className="text-white mb-6 text-2xl font-bold">Dashboard Overview</h2>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                gap: '24px',
-                marginBottom: '32px'
-            }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <StatCard
                     title="Total Students"
                     value={totalStudents}
@@ -84,9 +80,9 @@ const Overview = ({ students }) => {
                 />
             </div>
 
-            <div className="glass-panel" style={{ padding: '24px' }}>
-                <h3 style={{ margin: '0 0 16px', color: '#1f2937' }}>Recent Activities</h3>
-                <div style={{ color: '#6b7280', fontStyle: 'italic' }}>
+            <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-6">
+                <h3 className="m-0 mb-4 text-gray-800 text-lg font-semibold">Recent Activities</h3>
+                <div className="text-gray-500 italic">
                     Activity log coming soon...
                 </div>
             </div>
