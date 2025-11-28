@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, IndianRupee, FileText } from 'lucide-react';
 
 const PaymentHistoryModal = ({ student, onClose }) => {
     const history = student.feeHistory || [];
+    const [isClosing, setIsClosing] = useState(false);
 
     // Sort history by date (newest first)
     const sortedHistory = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            onClose();
+            setIsClosing(false);
+        }, 200);
+    };
+
     return createPortal(
-        <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4 backdrop-blur-sm modal-backdrop">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden scale-in">
+        <div className={`fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4 backdrop-blur-sm modal-backdrop ${isClosing ? 'closing' : ''}`}>
+            <div className={`bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
                 {/* Header */}
                 <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
@@ -24,7 +33,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                         </p>
                     </div>
                     <button
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-500 hover:text-gray-700"
                     >
                         <X size={24} />
