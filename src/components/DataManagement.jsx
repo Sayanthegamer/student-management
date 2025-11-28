@@ -102,59 +102,65 @@ const DataManagement = ({ students, onImportSuccess }) => {
     };
 
     return (
-        <div className="p-6 max-w-3xl mx-auto">
-            <h2 className="text-white mb-6 text-2xl flex items-center gap-3 font-bold">
-                <Database size={28} />
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 max-w-4xl mx-auto">
+            <h2 className="text-slate-800 mb-8 text-2xl flex items-center gap-3 font-bold tracking-tight">
+                <Database size={28} className="text-indigo-600" />
                 Data Management
             </h2>
 
-            <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-8">
-                <div className="mb-8">
-                    <h3 className="text-gray-800 mt-0 text-xl font-bold mb-2">Export Data</h3>
-                    <p className="text-gray-500 mb-4">
+            <div className="grid md:grid-cols-2 gap-8">
+                <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                    <h3 className="text-slate-800 mt-0 text-lg font-bold mb-3 flex items-center gap-2">
+                        <Download size={20} className="text-indigo-600" />
+                        Export Data
+                    </h3>
+                    <p className="text-slate-500 mb-6 text-sm leading-relaxed">
                         Download a backup of all student records, including fee history.
                         Keep this file safe to restore your data later.
                     </p>
-                    <button onClick={handleExport} className="btn btn-primary">
-                        <Download size={20} />
-                        Export JSON
+                    <button onClick={handleExport} className="btn btn-primary w-full justify-center shadow-indigo-200">
+                        Download JSON Backup
                     </button>
                 </div>
 
-                <div className="border-t border-black/10 pt-8">
-                    <h3 className="text-gray-800 mt-0 text-xl font-bold mb-2">Import Data</h3>
-                    <p className="text-gray-500 mb-4">
+                <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                    <h3 className="text-slate-800 mt-0 text-lg font-bold mb-3 flex items-center gap-2">
+                        <Upload size={20} className="text-emerald-600" />
+                        Import Data
+                    </h3>
+                    <p className="text-slate-500 mb-6 text-sm leading-relaxed">
                         Restore student records from a backup file.
-                        <br />
-                        <strong className="text-amber-600">Note: Your current data will be automatically backed up before import.</strong>
-                        <br />
-                        <strong className="text-red-500">Warning: This will replace all current data!</strong>
+                        <span className="block mt-2 text-amber-600 font-medium text-xs bg-amber-50 p-2 rounded border border-amber-100">
+                            Note: Auto-backup created before import.
+                        </span>
                     </p>
 
-                    <div className="flex items-center gap-4 flex-wrap">
-                        <label className="btn bg-indigo-100 text-indigo-700 cursor-pointer hover:bg-indigo-200">
-                            <Upload size={20} />
-                            Select Backup File
-                            <input
-                                type="file"
-                                accept=".json"
-                                onChange={handleImport}
-                                className="hidden"
-                            />
-                        </label>
-                    </div>
-
-                    {importStatus && (
-                        <div
-                            className={`mt-5 p-4 rounded-lg flex items-center gap-3 ${importStatus === 'error' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-                                }`}
-                        >
-                            {importStatus === 'error' ? <AlertTriangle size={20} /> : <CheckCircle size={20} />}
-                            <span>{message}</span>
-                        </div>
-                    )}
+                    <label className="btn bg-white text-slate-700 border border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-slate-300 w-full justify-center shadow-sm transition-all">
+                        <Upload size={18} />
+                        Select Backup File
+                        <input
+                            type="file"
+                            accept=".json"
+                            onChange={handleImport}
+                            className="hidden"
+                        />
+                    </label>
                 </div>
             </div>
+
+            {importStatus && (
+                <div
+                    className={`mt-8 p-4 rounded-xl flex items-start gap-3 border ${importStatus === 'error'
+                        ? 'bg-rose-50 text-rose-800 border-rose-100'
+                        : 'bg-emerald-50 text-emerald-800 border-emerald-100'
+                        }`}
+                >
+                    <div className="mt-0.5">
+                        {importStatus === 'error' ? <AlertTriangle size={20} /> : <CheckCircle size={20} />}
+                    </div>
+                    <span className="font-medium text-sm">{message}</span>
+                </div>
+            )}
         </div>
     );
 };

@@ -73,24 +73,24 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     };
 
     return (
-        <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-5 max-w-5xl mx-auto">
-            <div className="flex justify-between items-center mb-5 flex-wrap gap-2">
-                <h2 className="m-0 text-gray-800 text-xl font-bold">Student Records</h2>
-                <button onClick={onAdd} className="btn btn-primary">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-w-6xl mx-auto">
+            <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+                <h2 className="m-0 text-slate-800 text-2xl font-bold tracking-tight">Student Records</h2>
+                <button onClick={onAdd} className="btn btn-primary shadow-indigo-200">
                     <Plus size={20} />
                     Add Student
                 </button>
             </div>
 
-            <div className="flex gap-2 mb-5 flex-wrap items-center">
-                <div className="relative flex-1 min-w-[200px]">
-                    <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+            <div className="flex gap-3 mb-6 flex-wrap items-center">
+                <div className="relative flex-1 min-w-[240px]">
+                    <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                         type="text"
-                        placeholder="Search..."
+                        placeholder="Search by Name, Roll No..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 pl-10"
+                        className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 pl-10"
                     />
                 </div>
 
@@ -98,7 +98,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterClass}
                     onChange={(e) => setFilterClass(e.target.value)}
-                    className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[100px]"
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[120px]"
                 >
                     <option value="">All Classes</option>
                     {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -107,7 +107,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterSection}
                     onChange={(e) => setFilterSection(e.target.value)}
-                    className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[100px]"
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[120px]"
                 >
                     <option value="">All Sections</option>
                     {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
@@ -116,7 +116,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterFeeStatus}
                     onChange={(e) => setFilterFeeStatus(e.target.value)}
-                    className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[120px]"
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[130px]"
                 >
                     <option value="">All Status</option>
                     <option value="Paid">Paid</option>
@@ -127,7 +127,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto"
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto"
                 >
                     <option value="name">Sort: Name</option>
                     <option value="rollNo">Sort: Roll No</option>
@@ -136,71 +136,73 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
                 <button
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                    className="btn bg-white/50 p-2.5"
+                    className="btn bg-slate-50 border border-slate-200 p-2.5 text-slate-600 hover:bg-slate-100"
                     title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                 >
                     {sortOrder === 'asc' ? '↓' : '↑'}
                 </button>
 
-                <div className="w-px h-8 bg-black/10 mx-2"></div>
+                <div className="w-px h-8 bg-slate-200 mx-1"></div>
 
                 <div>
                     <input
                         type="month"
                         value={filterMonth}
                         onChange={(e) => setFilterMonth(e.target.value)}
-                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto"
+                        className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto cursor-pointer"
                     />
                 </div>
             </div>
 
             {/* Desktop Table View */}
-            <div className="hidden md:block overflow-x-auto">
-                <table className="w-full border-collapse">
-                    <thead>
-                        <tr className="border-b-2 border-gray-200 text-left">
-                            <th className="p-3 font-semibold text-gray-700">Name</th>
-                            <th className="p-3 font-semibold text-gray-700">Class/Sec</th>
-                            <th className="p-3 font-semibold text-gray-700">Roll No</th>
-                            <th className="p-3 font-semibold text-gray-700">Fees ({filterMonth})</th>
-                            <th className="p-3 font-semibold text-gray-700">Actions</th>
+            <div className="hidden md:block overflow-hidden rounded-xl border border-slate-200">
+                <table className="w-full border-collapse text-left">
+                    <thead className="bg-slate-50">
+                        <tr>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Name</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Class/Sec</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Roll No</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Fees ({filterMonth})</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-slate-100">
                         {filteredStudents.map(student => {
                             const status = getFeeStatusForMonth(student, filterMonth);
                             return (
-                                <tr key={student.id} className="border-b border-gray-100 hover:bg-white/30 transition-colors">
-                                    <td className="p-3 font-medium text-gray-800">{student.name}</td>
-                                    <td className="p-3 text-gray-600">{student.class} - {student.section}</td>
-                                    <td className="p-3 text-gray-600">{student.rollNo}</td>
-                                    <td className="p-3">
+                                <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
+                                    <td className="p-4 font-medium text-slate-700">{student.name}</td>
+                                    <td className="p-4 text-slate-500">{student.class} - {student.section}</td>
+                                    <td className="p-4 text-slate-500">{student.rollNo}</td>
+                                    <td className="p-4">
                                         <span
-                                            className={`px-2 py-1 rounded-xl text-xs font-semibold ${status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                                            className={`px-2.5 py-1 rounded-md text-xs font-bold border ${status === 'Paid'
+                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                                : 'bg-amber-50 text-amber-700 border-amber-100'
                                                 }`}
                                         >
                                             {status}
                                         </span>
                                     </td>
-                                    <td className="p-3">
-                                        <div className="flex gap-2">
+                                    <td className="p-4 text-right">
+                                        <div className="flex gap-2 justify-end">
                                             <button
                                                 onClick={() => handlePayFeeClick(student)}
-                                                className="btn p-1.5 bg-green-100 text-green-800 hover:bg-green-200"
+                                                className="p-2 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors border border-emerald-100"
                                                 title="Pay Fees"
                                             >
                                                 <IndianRupee size={16} />
                                             </button>
                                             <button
                                                 onClick={() => onEdit(student)}
-                                                className="btn p-1.5 bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                                                className="p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors border border-indigo-100"
                                                 title="Edit"
                                             >
                                                 <Edit2 size={16} />
                                             </button>
                                             <button
                                                 onClick={() => onDelete(student.id)}
-                                                className="btn p-1.5 bg-red-100 text-red-800 hover:bg-red-200"
+                                                className="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors border border-rose-100"
                                                 title="Delete"
                                             >
                                                 <Trash2 size={16} />
@@ -212,8 +214,11 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         })}
                         {filteredStudents.length === 0 && (
                             <tr>
-                                <td colSpan="5" className="p-6 text-center text-gray-500">
-                                    No students found.
+                                <td colSpan="5" className="p-12 text-center text-slate-400">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Search size={32} className="opacity-20" />
+                                        <p>No students found matching your criteria.</p>
+                                    </div>
                                 </td>
                             </tr>
                         )}
@@ -226,40 +231,39 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 {filteredStudents.map(student => {
                     const status = getFeeStatusForMonth(student, filterMonth);
                     return (
-                        <div key={student.id} className="bg-white/60 p-4 rounded-xl border border-white/40 shadow-sm">
-                            <div className="flex justify-between items-start mb-2">
+                        <div key={student.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <div className="flex justify-between items-start mb-3">
                                 <div>
-                                    <h3 className="m-0 text-lg font-semibold text-gray-800">{student.name}</h3>
-                                    <p className="m-0 mt-1 text-sm text-gray-500">Class: {student.class}-{student.section} | Roll: {student.rollNo}</p>
+                                    <h3 className="m-0 text-lg font-bold text-slate-800">{student.name}</h3>
+                                    <p className="m-0 mt-1 text-sm text-slate-500 font-medium">Class: {student.class}-{student.section} <span className="mx-1 text-slate-300">|</span> Roll: {student.rollNo}</p>
                                 </div>
                                 <span
-                                    className={`px-2 py-1 rounded-xl text-xs font-semibold ${status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                                    className={`px-2.5 py-1 rounded-md text-xs font-bold border ${status === 'Paid'
+                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                        : 'bg-amber-50 text-amber-700 border-amber-100'
                                         }`}
                                 >
                                     {status}
                                 </span>
                             </div>
 
-                            <div className="flex justify-end items-center mt-3 pt-3 border-t border-black/5">
-                                <div className="flex gap-2">
+                            <div className="flex justify-end items-center mt-4 pt-4 border-t border-slate-100">
+                                <div className="flex gap-3">
                                     <button
                                         onClick={() => handlePayFeeClick(student)}
-                                        className="btn p-2 bg-green-100 text-green-800 hover:bg-green-200"
-                                        title="Pay Fees"
+                                        className="flex-1 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 font-medium text-sm border border-emerald-100 flex items-center gap-2"
                                     >
-                                        <IndianRupee size={18} />
+                                        <IndianRupee size={16} /> Pay
                                     </button>
                                     <button
                                         onClick={() => onEdit(student)}
-                                        className="btn p-2 bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-                                        title="Edit"
+                                        className="p-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100"
                                     >
                                         <Edit2 size={18} />
                                     </button>
                                     <button
                                         onClick={() => onDelete(student.id)}
-                                        className="btn p-2 bg-red-100 text-red-800 hover:bg-red-200"
-                                        title="Delete"
+                                        className="p-2 rounded-lg bg-rose-50 text-rose-600 border border-rose-100"
                                     >
                                         <Trash2 size={18} />
                                     </button>
@@ -269,7 +273,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     );
                 })}
                 {filteredStudents.length === 0 && (
-                    <div className="p-6 text-center text-gray-500">
+                    <div className="p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
                         No students found.
                     </div>
                 )}

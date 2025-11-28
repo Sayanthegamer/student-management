@@ -25,54 +25,57 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     };
 
     return (
-        <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-6 max-w-2xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="m-0 text-gray-800 text-xl font-bold">{initialData ? 'Edit Student' : 'Add New Student'}</h2>
-                <button onClick={onCancel} className="btn bg-transparent p-2 hover:bg-black/5">
-                    <X size={24} className="text-gray-600" />
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 max-w-3xl mx-auto">
+            <div className="flex justify-between items-center mb-8 border-b border-slate-100 pb-4">
+                <h2 className="m-0 text-slate-800 text-2xl font-bold tracking-tight">{initialData ? 'Edit Student' : 'Add New Student'}</h2>
+                <button onClick={onCancel} className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
+                    <X size={24} />
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
 
                 {/* Personal Details */}
                 <section>
-                    <h3 className="text-indigo-600 mb-4 text-lg font-medium">Personal Details</h3>
-                    <div className="flex flex-col gap-4">
+                    <h3 className="text-indigo-600 mb-5 text-lg font-bold flex items-center gap-2">
+                        <span className="w-1.5 h-6 bg-indigo-600 rounded-full"></span>
+                        Personal Details
+                    </h3>
+                    <div className="flex flex-col gap-5">
                         <div>
-                            <label>Full Name</label>
+                            <label className="block mb-2 text-slate-600 text-sm font-medium">Full Name</label>
                             <input
                                 type="text"
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                                 placeholder="e.g. Rahul Kumar"
                                 required
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-5">
                             <div>
-                                <label>Class</label>
+                                <label className="block mb-2 text-slate-600 text-sm font-medium">Class</label>
                                 <input
                                     type="text"
                                     name="class"
                                     value={formData.class}
                                     onChange={handleChange}
-                                    className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                    className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                                     placeholder="10"
                                     required
                                 />
                             </div>
                             <div>
-                                <label>Section</label>
+                                <label className="block mb-2 text-slate-600 text-sm font-medium">Section</label>
                                 <input
                                     type="text"
                                     name="section"
                                     value={formData.section}
                                     onChange={handleChange}
-                                    className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                    className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                                     placeholder="A"
                                     required
                                 />
@@ -80,13 +83,13 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         </div>
 
                         <div>
-                            <label>Roll No.</label>
+                            <label className="block mb-2 text-slate-600 text-sm font-medium">Roll No.</label>
                             <input
                                 type="text"
                                 name="rollNo"
                                 value={formData.rollNo}
                                 onChange={handleChange}
-                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                                 placeholder="e.g. 21"
                                 required
                             />
@@ -96,27 +99,30 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
                 {/* Fees Details */}
                 <section>
-                    <h3 className="text-indigo-600 mb-4 text-lg font-medium">Fees & Fine</h3>
-                    <div className="flex flex-col gap-4">
+                    <h3 className="text-emerald-600 mb-5 text-lg font-bold flex items-center gap-2">
+                        <span className="w-1.5 h-6 bg-emerald-600 rounded-full"></span>
+                        Fees & Fine
+                    </h3>
+                    <div className="flex flex-col gap-5">
                         <div>
-                            <label>Fees Amount (₹)</label>
+                            <label className="block mb-2 text-slate-600 text-sm font-medium">Fees Amount (₹)</label>
                             <input
                                 type="number"
                                 name="feesAmount"
                                 value={formData.feesAmount}
                                 onChange={handleChange}
-                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                                 placeholder="5000"
                             />
                         </div>
 
                         <div>
-                            <label>Fees Status</label>
+                            <label className="block mb-2 text-slate-600 text-sm font-medium">Fees Status</label>
                             <select
                                 name="feesStatus"
                                 value={formData.feesStatus}
                                 onChange={handleChange}
-                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                             >
                                 <option value="Paid">Paid</option>
                                 <option value="Pending">Pending</option>
@@ -125,13 +131,13 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         </div>
 
                         <div>
-                            <label>Fine (₹)</label>
+                            <label className="block mb-2 text-slate-600 text-sm font-medium">Fine (₹)</label>
                             <input
                                 type="number"
                                 name="fine"
                                 value={formData.fine}
                                 onChange={handleChange}
-                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                                 placeholder="0"
                             />
                         </div>
@@ -140,26 +146,29 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
                 {/* Admission Details */}
                 <section>
-                    <h3 className="text-indigo-600 mb-4 text-lg font-medium">Admission</h3>
-                    <div className="flex flex-col gap-4">
+                    <h3 className="text-amber-600 mb-5 text-lg font-bold flex items-center gap-2">
+                        <span className="w-1.5 h-6 bg-amber-600 rounded-full"></span>
+                        Admission
+                    </h3>
+                    <div className="flex flex-col gap-5">
                         <div>
-                            <label>Admission Date</label>
+                            <label className="block mb-2 text-slate-600 text-sm font-medium">Admission Date</label>
                             <input
                                 type="date"
                                 name="admissionDate"
                                 value={formData.admissionDate}
                                 onChange={handleChange}
-                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
                             />
                         </div>
 
                         <div>
-                            <label>Admission Status</label>
+                            <label className="block mb-2 text-slate-600 text-sm font-medium">Admission Status</label>
                             <select
                                 name="admissionStatus"
                                 value={formData.admissionStatus}
                                 onChange={handleChange}
-                                className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500"
+                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
                             >
                                 <option value="Confirmed">Confirmed</option>
                                 <option value="Provisional">Provisional</option>
@@ -169,8 +178,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </div>
                 </section>
 
-                <div className="mt-6">
-                    <button type="submit" className="btn btn-primary w-full p-4 text-lg">
+                <div className="mt-8 pt-6 border-t border-slate-100">
+                    <button type="submit" className="btn btn-primary w-full p-4 text-lg font-bold shadow-indigo-200">
                         <Save size={20} />
                         Save Student
                     </button>
@@ -179,29 +188,32 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
             </form>
 
             {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
-                <div className="mt-8 border-t border-black/10 pt-6">
-                    <h3 className="text-indigo-600 mb-4 text-lg font-medium">Fee Payment History</h3>
-                    <div className="overflow-x-auto">
-                        <table className="w-full border-collapse text-sm">
-                            <thead>
-                                <tr className="bg-white/50 text-left">
-                                    <th className="p-2">Date</th>
-                                    <th className="p-2">Month</th>
-                                    <th className="p-2">Amount</th>
-                                    <th className="p-2">Fine</th>
-                                    <th className="p-2">Remarks</th>
+                <div className="mt-10 border-t border-slate-100 pt-8">
+                    <h3 className="text-slate-800 mb-6 text-lg font-bold flex items-center gap-2">
+                        <span className="w-1.5 h-6 bg-slate-400 rounded-full"></span>
+                        Fee Payment History
+                    </h3>
+                    <div className="overflow-hidden rounded-xl border border-slate-200">
+                        <table className="w-full border-collapse text-sm text-left">
+                            <thead className="bg-slate-50">
+                                <tr>
+                                    <th className="p-3 font-semibold text-slate-600">Date</th>
+                                    <th className="p-3 font-semibold text-slate-600">Month</th>
+                                    <th className="p-3 font-semibold text-slate-600">Amount</th>
+                                    <th className="p-3 font-semibold text-slate-600">Fine</th>
+                                    <th className="p-3 font-semibold text-slate-600">Remarks</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="divide-y divide-slate-100">
                                 {initialData.feeHistory.map((payment) => (
-                                    <tr key={payment.id} className="border-b border-black/5">
-                                        <td className="p-2">{payment.date}</td>
-                                        <td className="p-2">{payment.month}</td>
-                                        <td className="p-2">₹{payment.amount}</td>
-                                        <td className={`p-2 ${payment.fine > 0 ? 'text-red-600' : ''}`}>
+                                    <tr key={payment.id} className="hover:bg-slate-50/50">
+                                        <td className="p-3 text-slate-700">{payment.date}</td>
+                                        <td className="p-3 text-slate-700">{payment.month}</td>
+                                        <td className="p-3 font-medium text-emerald-600">₹{payment.amount}</td>
+                                        <td className={`p-3 ${payment.fine > 0 ? 'text-rose-600 font-medium' : 'text-slate-400'}`}>
                                             {payment.fine > 0 ? `₹${payment.fine}` : '-'}
                                         </td>
-                                        <td className="p-2 text-gray-500">{payment.remarks || '-'}</td>
+                                        <td className="p-3 text-slate-500 italic">{payment.remarks || '-'}</td>
                                     </tr>
                                 ))}
                             </tbody>

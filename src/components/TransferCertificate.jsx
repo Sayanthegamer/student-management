@@ -103,140 +103,141 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
     };
 
     return (
-        <div className="p-6 max-w-5xl mx-auto">
-            <h2 className="text-white mb-6 text-2xl flex items-center gap-3 font-bold">
-                <FileText size={28} />
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-w-6xl mx-auto">
+            <h2 className="text-slate-800 mb-6 text-2xl flex items-center gap-3 font-bold tracking-tight">
+                <FileText size={28} className="text-indigo-600" />
                 Transfer Certificate (TC)
             </h2>
 
-            <div className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-5">
-                {/* View Toggle */}
-                <div className="flex gap-2 mb-6 border-b border-black/10 pb-4">
-                    <button
-                        onClick={() => setView('active')}
-                        className={`btn rounded-full px-5 py-2 border transition-all ${view === 'active'
-                            ? 'bg-indigo-600 text-white border-transparent'
-                            : 'bg-transparent text-gray-500 border-transparent hover:bg-black/5'
-                            }`}
-                    >
-                        Issue TC (Active)
-                    </button>
-                    <button
-                        onClick={() => setView('transferred')}
-                        className={`btn rounded-full px-5 py-2 border transition-all ${view === 'transferred'
-                            ? 'bg-indigo-600 text-white border-transparent'
-                            : 'bg-transparent text-gray-500 border-transparent hover:bg-black/5'
-                            }`}
-                    >
-                        History (Transferred)
-                    </button>
-                </div>
-
-                {/* Filters & Controls */}
-                <div className="flex gap-2 mb-5 flex-wrap items-center">
-                    <div className="relative flex-1 min-w-[200px]">
-                        <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                        <input
-                            type="text"
-                            placeholder="Search Student..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 pl-10"
-                        />
-                    </div>
-
-                    <select
-                        value={filterClass}
-                        onChange={(e) => setFilterClass(e.target.value)}
-                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[100px]"
-                    >
-                        <option value="">All Classes</option>
-                        {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
-                    </select>
-
-                    <select
-                        value={filterSection}
-                        onChange={(e) => setFilterSection(e.target.value)}
-                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[100px]"
-                    >
-                        <option value="">All Sections</option>
-                        {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
-                    </select>
-
-                    <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto"
-                    >
-                        <option value="name">Sort: Name</option>
-                        <option value="rollNo">Sort: Roll No</option>
-                        <option value="class">Sort: Class</option>
-                    </select>
-
-                    <button
-                        onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                        className="btn bg-white/50 p-2.5"
-                        title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-                    >
-                        {sortOrder === 'asc' ? '↓' : '↑'}
-                    </button>
-                </div>
-
-                {/* Table View */}
-                <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                        <thead>
-                            <tr className="border-b-2 border-gray-200 text-left">
-                                <th className="p-3 font-semibold text-gray-700">Name</th>
-                                <th className="p-3 font-semibold text-gray-700">Class/Sec</th>
-                                <th className="p-3 font-semibold text-gray-700">Roll No</th>
-                                <th className="p-3 font-semibold text-gray-700">{view === 'active' ? 'Admission Date' : 'Date of Leaving'}</th>
-                                <th className="p-3 font-semibold text-gray-700">{view === 'active' ? 'Action' : 'Reason'}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredStudents.map(student => (
-                                <tr key={student.id} className="border-b border-gray-100 hover:bg-white/30 transition-colors">
-                                    <td className="p-3 font-medium text-gray-800">{student.name}</td>
-                                    <td className="p-3 text-gray-600">{student.class} - {student.section}</td>
-                                    <td className="p-3 text-gray-600">{student.rollNo}</td>
-                                    <td className="p-3 text-gray-600">
-                                        {view === 'active' ? student.admissionDate : student.tcDetails?.dateOfLeaving}
-                                    </td>
-                                    <td className="p-3">
-                                        {view === 'active' ? (
-                                            <button
-                                                onClick={() => handleIssueClick(student)}
-                                                className="btn px-3 py-1.5 bg-red-100 text-red-800 text-sm hover:bg-red-200"
-                                            >
-                                                Issue TC
-                                            </button>
-                                        ) : (
-                                            <span className="text-gray-500 text-sm">
-                                                {student.tcDetails?.reason || 'N/A'}
-                                            </span>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                            {filteredStudents.length === 0 && (
-                                <tr>
-                                    <td colSpan="5" className="p-10 text-center text-gray-500">
-                                        {view === 'active'
-                                            ? 'No active students found matching your filters.'
-                                            : 'No transferred students found in the last 3 months.'}
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-                {view === 'transferred' && (
-                    <p className="text-center text-xs text-gray-400 mt-4 italic">
-                        * History only shows students transferred in the last 3 months.
-                    </p>
-                )}
+            {/* View Toggle */}
+            <div className="flex gap-2 mb-6 border-b border-slate-100 pb-4">
+                <button
+                    onClick={() => setView('active')}
+                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${view === 'active'
+                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
+                        : 'bg-transparent text-slate-500 hover:bg-slate-50'
+                        }`}
+                >
+                    Issue TC (Active)
+                </button>
+                <button
+                    onClick={() => setView('transferred')}
+                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${view === 'transferred'
+                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
+                        : 'bg-transparent text-slate-500 hover:bg-slate-50'
+                        }`}
+                >
+                    History (Transferred)
+                </button>
             </div>
+
+            {/* Filters & Controls */}
+            <div className="flex gap-3 mb-6 flex-wrap items-center">
+                <div className="relative flex-1 min-w-[240px]">
+                    <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                        type="text"
+                        placeholder="Search Student..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 pl-10"
+                    />
+                </div>
+
+                <select
+                    value={filterClass}
+                    onChange={(e) => setFilterClass(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[120px]"
+                >
+                    <option value="">All Classes</option>
+                    {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
+                </select>
+
+                <select
+                    value={filterSection}
+                    onChange={(e) => setFilterSection(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[120px]"
+                >
+                    <option value="">All Sections</option>
+                    {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
+                </select>
+
+                <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto"
+                >
+                    <option value="name">Sort: Name</option>
+                    <option value="rollNo">Sort: Roll No</option>
+                    <option value="class">Sort: Class</option>
+                </select>
+
+                <button
+                    onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                    className="btn bg-slate-50 border border-slate-200 p-2.5 text-slate-600 hover:bg-slate-100"
+                    title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                >
+                    {sortOrder === 'asc' ? '↓' : '↑'}
+                </button>
+            </div>
+
+            {/* Table View */}
+            <div className="overflow-hidden rounded-xl border border-slate-200">
+                <table className="w-full border-collapse text-left">
+                    <thead className="bg-slate-50">
+                        <tr>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Name</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Class/Sec</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">Roll No</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">{view === 'active' ? 'Admission Date' : 'Date of Leaving'}</th>
+                            <th className="p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider text-right">{view === 'active' ? 'Action' : 'Reason'}</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                        {filteredStudents.map(student => (
+                            <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
+                                <td className="p-4 font-medium text-slate-700">{student.name}</td>
+                                <td className="p-4 text-slate-500">{student.class} - {student.section}</td>
+                                <td className="p-4 text-slate-500">{student.rollNo}</td>
+                                <td className="p-4 text-slate-500">
+                                    {view === 'active' ? student.admissionDate : student.tcDetails?.dateOfLeaving}
+                                </td>
+                                <td className="p-4 text-right">
+                                    {view === 'active' ? (
+                                        <button
+                                            onClick={() => handleIssueClick(student)}
+                                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 text-sm font-medium hover:bg-rose-100 transition-colors border border-rose-100"
+                                        >
+                                            Issue TC
+                                        </button>
+                                    ) : (
+                                        <span className="text-slate-500 text-sm italic">
+                                            {student.tcDetails?.reason || 'N/A'}
+                                        </span>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                        {filteredStudents.length === 0 && (
+                            <tr>
+                                <td colSpan="5" className="p-12 text-center text-slate-400">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Search size={32} className="opacity-20" />
+                                        <p>{view === 'active'
+                                            ? 'No active students found matching your filters.'
+                                            : 'No transferred students found in the last 3 months.'}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+            {view === 'transferred' && (
+                <p className="text-center text-xs text-slate-400 mt-4 italic">
+                    * History only shows students transferred in the last 3 months.
+                </p>
+            )}
 
             {showIssueModal && selectedStudent && (
                 <IssueTCModal

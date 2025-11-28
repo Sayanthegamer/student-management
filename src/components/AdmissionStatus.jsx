@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { CheckCircle, Clock, XCircle, Filter } from 'lucide-react';
 
 const StatusColumn = ({ title, count, color, icon: Icon, students }) => (
-    <div className="flex-1 min-w-[300px]">
+    <div className="flex-1 min-w-[320px] flex flex-col h-full">
         <div
-            className="flex items-center justify-between mb-4 bg-white/15 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-sm"
-            style={{ borderBottom: `4px solid ${color}` }}
+            className="flex items-center justify-between mb-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm sticky top-0 z-10"
+            style={{ borderBottom: `3px solid ${color}` }}
         >
             <div className="flex items-center gap-3">
-                <div className="bg-white p-2 rounded-full flex items-center justify-center shadow-sm">
+                <div className="p-2.5 rounded-lg flex items-center justify-center bg-slate-50">
                     <Icon size={20} color={color} />
                 </div>
-                <h3 className="m-0 text-lg font-semibold text-white tracking-wide">{title}</h3>
+                <h3 className="m-0 text-lg font-bold text-slate-800 tracking-tight">{title}</h3>
             </div>
             <span
                 className="text-white px-3 py-1 rounded-full text-sm font-bold shadow-sm"
@@ -21,25 +21,26 @@ const StatusColumn = ({ title, count, color, icon: Icon, students }) => (
             </span>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 overflow-y-auto pr-2 pb-2 flex-1">
             {students.map(student => (
                 <div
                     key={student.id}
-                    className="bg-white/75 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl p-4"
+                    className="bg-white border border-slate-200 shadow-sm rounded-xl p-4 hover:shadow-md transition-shadow group"
                     style={{ borderLeft: `4px solid ${color}` }}
                 >
-                    <h4 className="m-0 mb-1 text-gray-800 font-medium">{student.name}</h4>
-                    <p className="m-0 text-xs text-gray-500">
+                    <h4 className="m-0 mb-1 text-slate-800 font-bold text-base group-hover:text-indigo-600 transition-colors">{student.name}</h4>
+                    <p className="m-0 text-sm text-slate-500 font-medium">
                         Class: {student.class}-{student.section}
                     </p>
-                    <p className="mt-1 text-xs text-gray-400">
+                    <p className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                        <Clock size={12} />
                         Admitted: {student.admissionDate || 'N/A'}
                     </p>
                 </div>
             ))}
             {students.length === 0 && (
-                <div className="p-6 text-center text-white/50 border-2 border-dashed border-white/10 rounded-xl">
-                    No students
+                <div className="p-8 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
+                    No students found
                 </div>
             )}
         </div>
@@ -65,18 +66,18 @@ const AdmissionStatus = ({ students }) => {
     const cancelled = filteredStudents.filter(s => s.admissionStatus === 'Cancelled');
 
     return (
-        <div className="p-6 max-w-7xl mx-auto h-full flex flex-col">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-white m-0 text-2xl font-bold">Admission Status Board</h2>
+        <div className="p-6 max-w-[1600px] mx-auto h-full flex flex-col">
+            <div className="flex justify-between items-center mb-8">
+                <h2 className="text-slate-800 m-0 text-2xl font-bold tracking-tight">Admission Status Board</h2>
 
                 <div className="flex gap-3">
-                    <div className="flex items-center bg-white/20 rounded-lg px-2">
-                        <Filter size={16} color="white" />
+                    <div className="flex items-center bg-white border border-slate-200 rounded-xl px-3 shadow-sm">
+                        <Filter size={18} className="text-slate-400" />
                     </div>
                     <select
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
-                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[120px] py-2 px-3"
+                        className="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[140px] shadow-sm font-medium"
                     >
                         <option value="">All Classes</option>
                         {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -85,7 +86,7 @@ const AdmissionStatus = ({ students }) => {
                     <select
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
-                        className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-indigo-500 w-auto min-w-[120px] py-2 px-3"
+                        className="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[140px] shadow-sm font-medium"
                     >
                         <option value="">All Sections</option>
                         {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
@@ -93,7 +94,7 @@ const AdmissionStatus = ({ students }) => {
                 </div>
             </div>
 
-            <div className="flex gap-6 overflow-x-auto pb-5 h-[calc(100%-60px)]">
+            <div className="flex gap-6 overflow-x-auto pb-5 h-[calc(100%-80px)] items-start">
                 <StatusColumn
                     title="Confirmed"
                     count={confirmed.length}
