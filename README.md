@@ -1,4 +1,7 @@
-# React + Vite
+# student-management
+a short and simple manager of students
+
+## React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
