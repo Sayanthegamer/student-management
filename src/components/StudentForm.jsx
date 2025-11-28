@@ -15,9 +15,30 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         admissionStatus: 'Confirmed'
     });
 
+    const classFees = {
+        'Play School': '350',
+        'Nursury': '440',
+        'kg-1': '440',
+        'kg-2': '440',
+        '1': '480',
+        '2': '490',
+        '3': '510',
+        '4': '520'
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+
+        if (name === 'class') {
+            const fee = classFees[value] || '';
+            setFormData(prev => ({
+                ...prev,
+                [name]: value,
+                feesAmount: fee
+            }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = (e) => {
@@ -59,15 +80,23 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         <div className="grid grid-cols-2 gap-5">
                             <div>
                                 <label className="block mb-2 text-slate-600 text-sm font-medium">Class</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="class"
                                     value={formData.class}
                                     onChange={handleChange}
                                     className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-                                    placeholder="10"
                                     required
-                                />
+                                >
+                                    <option value="">Select Class</option>
+                                    <option value="Play School">Play School</option>
+                                    <option value="Nursury">Nursury</option>
+                                    <option value="kg-1">kg-1</option>
+                                    <option value="kg-2">kg-2</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
                             </div>
                             <div>
                                 <label className="block mb-2 text-slate-600 text-sm font-medium">Section</label>
