@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  /* Professional Dark Slate Theme */
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+
+  /* Cleaner, more opaque glass for better readability */
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 

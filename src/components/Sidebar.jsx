@@ -13,7 +13,7 @@ const Sidebar = () => {
     ];
 
     return (
-        <div className="sidebar bg-white/10 backdrop-blur-md border-r border-white/20 shadow-lg h-full p-6 flex flex-col gap-8 rounded-r-2xl rounded-l-none border-y-0">
+        <div className="sidebar bg-slate-900/40 backdrop-blur-xl border-r border-white/5 shadow-2xl h-full p-6 flex flex-col gap-8 rounded-r-2xl rounded-l-none border-y-0">
             <div className="flex items-center gap-3 px-3">
                 <div className="bg-white/20 p-2 rounded-xl flex items-center justify-center">
                     <GraduationCap size={28} color="white" />
