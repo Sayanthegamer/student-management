@@ -1,11 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee } from 'lucide-react';
 
 const Sidebar = () => {
     const menuItems = [
         { path: '/overview', label: 'Overview', icon: LayoutDashboard },
         { path: '/students', label: 'Student Management', icon: Users },
+        { path: '/payment-history', label: 'Fee History', icon: IndianRupee },
         { path: '/admission', label: 'Admission Status', icon: ClipboardCheck },
         { path: '/tc', label: 'Transfer Certificate', icon: FileOutput },
         { path: '/data', label: 'Data Management', icon: Database },

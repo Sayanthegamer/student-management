@@ -7,6 +7,7 @@ import StudentForm from './components/StudentForm';
 import AdmissionStatus from './components/AdmissionStatus';
 import DataManagement from './components/DataManagement';
 import TransferCertificate from './components/TransferCertificate';
+import PaymentHistory from './components/PaymentHistory';
 import { getStudents, addStudent, updateStudent, deleteStudent, addFeePayment } from './utils/storage';
 
 function App() {
@@ -98,6 +99,7 @@ function App() {
               initialData={editingStudent}
             />
           } />
+          <Route path="/payment-history" element={<PaymentHistory students={students} />} />
           <Route path="/admission" element={<AdmissionStatus students={students} />} />
           <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} />} />
           <Route path="/data" element={<DataManagement students={students} onImportSuccess={handleImportSuccess} />} />

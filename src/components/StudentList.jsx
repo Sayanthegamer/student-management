@@ -194,12 +194,14 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                             <button
                                                 onClick={() => onEdit(student)}
                                                 className="btn p-1.5 bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                                                title="Edit"
                                             >
                                                 <Edit2 size={16} />
                                             </button>
                                             <button
                                                 onClick={() => onDelete(student.id)}
                                                 className="btn p-1.5 bg-red-100 text-red-800 hover:bg-red-200"
+                                                title="Delete"
                                             >
                                                 <Trash2 size={16} />
                                             </button>
@@ -243,18 +245,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                     <button
                                         onClick={() => handlePayFeeClick(student)}
                                         className="btn p-2 bg-green-100 text-green-800 hover:bg-green-200"
+                                        title="Pay Fees"
                                     >
                                         <IndianRupee size={18} />
                                     </button>
                                     <button
                                         onClick={() => onEdit(student)}
                                         className="btn p-2 bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                                        title="Edit"
                                     >
                                         <Edit2 size={18} />
                                     </button>
                                     <button
                                         onClick={() => onDelete(student.id)}
                                         className="btn p-2 bg-red-100 text-red-800 hover:bg-red-200"
+                                        title="Delete"
                                     >
                                         <Trash2 size={18} />
                                     </button>
