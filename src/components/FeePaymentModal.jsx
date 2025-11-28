@@ -18,13 +18,9 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
         // Validation: Check admission date
         if (student.admissionDate) {
-            const admDate = new Date(student.admissionDate);
-            const selDate = new Date(selectedMonth + '-01'); // First day of selected month
-            // Compare YYYY-MM
             const admMonthStr = student.admissionDate.slice(0, 7);
-
             if (selectedMonth < admMonthStr) {
-                setError('');
+                // setError('Payment month cannot be before admission month'); // Uncomment if needed
             } else {
                 setError('');
             }

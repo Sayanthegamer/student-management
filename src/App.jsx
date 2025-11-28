@@ -10,13 +10,9 @@ import TransferCertificate from './components/TransferCertificate';
 import { getStudents, addStudent, updateStudent, deleteStudent, addFeePayment } from './utils/storage';
 
 function App() {
-  const [students, setStudents] = useState([]);
+  const [students, setStudents] = useState(getStudents());
   const [editingStudent, setEditingStudent] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setStudents(getStudents());
-  }, []);
 
   // Student Management Handlers
   const handleAddClick = () => {

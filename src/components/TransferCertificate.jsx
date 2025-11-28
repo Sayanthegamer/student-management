@@ -102,82 +102,6 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
         alert('Transfer Certificate Issued Successfully!');
     };
 
-    const IssueTCModal = () => createPortal(
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
-            <div className="glass-panel bg-white p-8 w-[90%] max-w-lg max-h-[90vh] overflow-y-auto">
-                <h3 className="mt-0 text-gray-800 border-b border-gray-200 pb-4 text-xl font-bold">
-                    Issue Transfer Certificate
-                </h3>
-
-                <div className="mb-5">
-                    <p className="m-0 mb-2 font-bold text-lg text-gray-800">{selectedStudent.name}</p>
-                    <p className="m-0 text-gray-500">Class: {selectedStudent.class} - {selectedStudent.section} | Roll: {selectedStudent.rollNo}</p>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                    <div>
-                        <label className="block mb-2 text-gray-600 text-sm font-medium">Date of Leaving</label>
-                        <input
-                            type="date"
-                            value={tcDetails.dateOfLeaving}
-                            onChange={e => setTcDetails({ ...tcDetails, dateOfLeaving: e.target.value })}
-                            className="glass-input w-full"
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-gray-600 text-sm font-medium">Reason for Leaving</label>
-                        <select
-                            value={tcDetails.reason}
-                            onChange={e => setTcDetails({ ...tcDetails, reason: e.target.value })}
-                            className="glass-input w-full"
-                        >
-                            <option>Completed Course</option>
-                            <option>Parent's Transfer</option>
-                            <option>Health Issues</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-gray-600 text-sm font-medium">Conduct</label>
-                        <input
-                            type="text"
-                            value={tcDetails.conduct}
-                            onChange={e => setTcDetails({ ...tcDetails, conduct: e.target.value })}
-                            className="glass-input w-full"
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-gray-600 text-sm font-medium">Remarks</label>
-                        <input
-                            type="text"
-                            value={tcDetails.remarks}
-                            onChange={e => setTcDetails({ ...tcDetails, remarks: e.target.value })}
-                            className="glass-input w-full"
-                            placeholder="Optional..."
-                        />
-                    </div>
-                </div>
-
-                <div className="flex gap-3 mt-8">
-                    <button
-                        onClick={handleConfirmIssue}
-                        className="btn flex-1 bg-red-100 text-red-800 justify-center hover:bg-red-200"
-                    >
-                        <AlertTriangle size={18} />
-                        Confirm Issue TC
-                    </button>
-                    <button
-                        onClick={() => setShowIssueModal(false)}
-                        className="btn flex-1 bg-gray-100 text-gray-700 justify-center hover:bg-gray-200"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>,
-        document.body
-    );
-
     return (
         <div className="p-6 max-w-5xl mx-auto">
             <h2 className="text-white mb-6 text-2xl flex items-center gap-3 font-bold">
@@ -314,9 +238,93 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                 )}
             </div>
 
-            {showIssueModal && selectedStudent && <IssueTCModal />}
+            {showIssueModal && selectedStudent && (
+                <IssueTCModal
+                    student={selectedStudent}
+                    tcDetails={tcDetails}
+                    setTcDetails={setTcDetails}
+                    onConfirm={handleConfirmIssue}
+                    onCancel={() => setShowIssueModal(false)}
+                />
+            )}
         </div>
     );
 };
+
+const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel }) => createPortal(
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
+        <div className="bg-white rounded-2xl shadow-xl p-8 w-[90%] max-w-lg max-h-[90vh] overflow-y-auto">
+            <h3 className="mt-0 text-gray-800 border-b border-gray-200 pb-4 text-xl font-bold">
+                Issue Transfer Certificate
+            </h3>
+
+            <div className="mb-5">
+                <p className="m-0 mb-2 font-bold text-lg text-gray-800">{student.name}</p>
+                <p className="m-0 text-gray-500">Class: {student.class} - {student.section} | Roll: {student.rollNo}</p>
+            </div>
+
+            <div className="flex flex-col gap-4">
+                <div>
+                    <label className="block mb-2 text-gray-600 text-sm font-medium">Date of Leaving</label>
+                    <input
+                        type="date"
+                        value={tcDetails.dateOfLeaving}
+                        onChange={e => setTcDetails({ ...tcDetails, dateOfLeaving: e.target.value })}
+                        className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white focus:ring-2 focus:ring-indigo-500"
+                    />
+                </div>
+                <div>
+                    <label className="block mb-2 text-gray-600 text-sm font-medium">Reason for Leaving</label>
+                    <select
+                        value={tcDetails.reason}
+                        onChange={e => setTcDetails({ ...tcDetails, reason: e.target.value })}
+                        className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white focus:ring-2 focus:ring-indigo-500"
+                    >
+                        <option>Completed Course</option>
+                        <option>Parent's Transfer</option>
+                        <option>Health Issues</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block mb-2 text-gray-600 text-sm font-medium">Conduct</label>
+                    <input
+                        type="text"
+                        value={tcDetails.conduct}
+                        onChange={e => setTcDetails({ ...tcDetails, conduct: e.target.value })}
+                        className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white focus:ring-2 focus:ring-indigo-500"
+                    />
+                </div>
+                <div>
+                    <label className="block mb-2 text-gray-600 text-sm font-medium">Remarks</label>
+                    <input
+                        type="text"
+                        value={tcDetails.remarks}
+                        onChange={e => setTcDetails({ ...tcDetails, remarks: e.target.value })}
+                        className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-base outline-none transition-all focus:bg-white focus:ring-2 focus:ring-indigo-500"
+                        placeholder="Optional..."
+                    />
+                </div>
+            </div>
+
+            <div className="flex gap-3 mt-8">
+                <button
+                    onClick={onConfirm}
+                    className="btn flex-1 bg-red-100 text-red-800 justify-center hover:bg-red-200"
+                >
+                    <AlertTriangle size={18} />
+                    Confirm Issue TC
+                </button>
+                <button
+                    onClick={onCancel}
+                    className="btn flex-1 bg-gray-100 text-gray-700 justify-center hover:bg-gray-200"
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>,
+    document.body
+);
 
 export default TransferCertificate;
