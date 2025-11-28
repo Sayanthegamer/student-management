@@ -33,12 +33,37 @@ const DataManagement = ({ students, onImportSuccess }) => {
         }
     };
 
+    const autoBackupBeforeImport = () => {
+        try {
+            // Only create backup if there's existing data
+            if (students && students.length > 0) {
+                const dataStr = JSON.stringify(students, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `auto_backup_before_import_${new Date().toISOString().slice(0, 10)}_${Date.now()}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+        } catch (err) {
+            console.error('Auto-backup failed:', err);
+            // Don't block import if backup fails, just log it
+        }
+    };
+
     const handleImport = (event) => {
         const file = event.target.files[0];
         if (!file) return;
 
+        // Automatically backup current data before importing
+        autoBackupBeforeImport();
+
         setImportStatus('loading');
-        setMessage('Reading file...');
+        setMessage('Creating backup and reading file...');
 
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -60,7 +85,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
                 onImportSuccess(json); // Update App state
 
                 setImportStatus('success');
-                setMessage(`Successfully imported ${json.length} student records.`);
+                setMessage(`✓ Auto-backup created. Successfully imported ${json.length} student records.`);
             } catch (err) {
                 console.error(err);
                 setImportStatus('error');
@@ -100,6 +125,8 @@ const DataManagement = ({ students, onImportSuccess }) => {
                     <h3 className="text-gray-800 mt-0 text-xl font-bold mb-2">Import Data</h3>
                     <p className="text-gray-500 mb-4">
                         Restore student records from a backup file.
+                        <br />
+                        <strong className="text-amber-600">Note: Your current data will be automatically backed up before import.</strong>
                         <br />
                         <strong className="text-red-500">Warning: This will replace all current data!</strong>
                     </p>
