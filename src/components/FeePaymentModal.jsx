@@ -198,8 +198,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                             </label>
                         </div>
 
-                        <div className="flex gap-3 items-center">
-                            <div className="flex-1">
+                        <div className="flex flex-col md:flex-row gap-3 md:items-center">
+                            <div className="w-full md:flex-1">
                                 <CustomMonthPicker
                                     value={selectedMonth}
                                     onChange={setSelectedMonth}
@@ -208,8 +208,9 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                             </div>
                             {isMultiMonth && (
                                 <>
-                                    <span className="text-slate-400 font-medium">to</span>
-                                    <div className="flex-1">
+                                    <span className="text-slate-400 font-medium text-center hidden md:block">to</span>
+                                    <span className="text-slate-400 font-medium text-center md:hidden text-xs uppercase tracking-wider">to</span>
+                                    <div className="w-full md:flex-1">
                                         <CustomMonthPicker
                                             value={endMonth}
                                             onChange={setEndMonth}
