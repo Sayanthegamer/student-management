@@ -146,10 +146,10 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
     return createPortal(
         <div className={`fixed inset-0 bg-slate-900/60 z-50 overflow-y-auto flex flex-col p-4 modal-backdrop ${isClosing ? 'closing' : ''}`}>
-            <div className={`bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-auto relative my-auto overflow-hidden ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div className={`bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-auto relative my-auto flex flex-col max-h-[90vh] ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
                 {/* Header */}
-                <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center flex-shrink-0">
                     <div>
                         <h3 className="m-0 text-slate-800 text-xl font-bold flex items-center gap-2">
                             <IndianRupee size={22} className="text-indigo-600" />
@@ -164,127 +164,130 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-6">
+                <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
 
-                    {/* Payment Date */}
-                    <div>
-                        <CustomDatePicker
-                            label="Payment Date"
-                            value={paymentDate}
-                            onChange={setPaymentDate}
-                            required
-                        />
-                    </div>
-
-                    {/* Month Selection */}
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 transition-all">
-                        <div className="flex justify-between items-center mb-3">
-                            <label className="text-slate-700 text-sm font-bold flex items-center gap-2">
-                                <Calendar size={16} className="text-slate-400" />
-                                {isMultiMonth ? 'Select Duration' : 'Select Month'}
-                            </label>
-
-                            <label className="flex items-center gap-2 cursor-pointer select-none group">
-                                <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isMultiMonth ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300 group-hover:border-indigo-400'}`}>
-                                    {isMultiMonth && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-                                </div>
-                                <input
-                                    type="checkbox"
-                                    checked={isMultiMonth}
-                                    onChange={(e) => setIsMultiMonth(e.target.checked)}
-                                    className="hidden"
-                                />
-                                <span className="text-xs font-medium text-slate-600 group-hover:text-indigo-600 transition-colors">Pay Multiple Months</span>
-                            </label>
+                    {/* Scrollable Content */}
+                    <div className="p-6 flex flex-col gap-6 overflow-y-auto">
+                        {/* Payment Date */}
+                        <div>
+                            <CustomDatePicker
+                                label="Payment Date"
+                                value={paymentDate}
+                                onChange={setPaymentDate}
+                                required
+                            />
                         </div>
 
-                        <div className="flex flex-col md:flex-row gap-3 md:items-center">
-                            <div className="w-full md:flex-1">
-                                <CustomMonthPicker
-                                    value={selectedMonth}
-                                    onChange={setSelectedMonth}
-                                    required
-                                />
-                            </div>
-                            {isMultiMonth && (
-                                <>
-                                    <span className="text-slate-400 font-medium text-center hidden md:block">to</span>
-                                    <span className="text-slate-400 font-medium text-center md:hidden text-xs uppercase tracking-wider">to</span>
-                                    <div className="w-full md:flex-1">
-                                        <CustomMonthPicker
-                                            value={endMonth}
-                                            onChange={setEndMonth}
-                                            required
-                                        />
+                        {/* Month Selection */}
+                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 transition-all">
+                            <div className="flex justify-between items-center mb-3">
+                                <label className="text-slate-700 text-sm font-bold flex items-center gap-2">
+                                    <Calendar size={16} className="text-slate-400" />
+                                    {isMultiMonth ? 'Select Duration' : 'Select Month'}
+                                </label>
+
+                                <label className="flex items-center gap-2 cursor-pointer select-none group">
+                                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isMultiMonth ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300 group-hover:border-indigo-400'}`}>
+                                        {isMultiMonth && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
                                     </div>
-                                </>
+                                    <input
+                                        type="checkbox"
+                                        checked={isMultiMonth}
+                                        onChange={(e) => setIsMultiMonth(e.target.checked)}
+                                        className="hidden"
+                                    />
+                                    <span className="text-xs font-medium text-slate-600 group-hover:text-indigo-600 transition-colors">Pay Multiple Months</span>
+                                </label>
+                            </div>
+
+                            <div className="flex flex-col md:flex-row gap-3 md:items-center">
+                                <div className="w-full md:flex-1">
+                                    <CustomMonthPicker
+                                        value={selectedMonth}
+                                        onChange={setSelectedMonth}
+                                        required
+                                    />
+                                </div>
+                                {isMultiMonth && (
+                                    <>
+                                        <span className="text-slate-400 font-medium text-center hidden md:block">to</span>
+                                        <span className="text-slate-400 font-medium text-center md:hidden text-xs uppercase tracking-wider">to</span>
+                                        <div className="w-full md:flex-1">
+                                            <CustomMonthPicker
+                                                value={endMonth}
+                                                onChange={setEndMonth}
+                                                required
+                                            />
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                            {error && (
+                                <div className="flex items-center gap-2 mt-2 text-rose-600 text-xs font-medium bg-rose-50 p-2 rounded">
+                                    <AlertCircle size={14} />
+                                    {error}
+                                </div>
                             )}
                         </div>
-                        {error && (
-                            <div className="flex items-center gap-2 mt-2 text-rose-600 text-xs font-medium bg-rose-50 p-2 rounded">
-                                <AlertCircle size={14} />
-                                {error}
-                            </div>
-                        )}
-                    </div>
 
-                    {/* Financials */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <div>
-                            <label className="block text-slate-600 text-xs font-bold uppercase tracking-wider mb-1.5">Monthly Fee</label>
-                            <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">₹</span>
-                                <input
-                                    type="number"
-                                    value={amount}
-                                    onChange={(e) => setAmount(e.target.value)}
-                                    className="w-full bg-white border border-slate-200 pl-7 pr-4 py-2.5 rounded-lg text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                                    required
-                                />
+                        {/* Financials */}
+                        <div className="grid grid-cols-2 gap-5">
+                            <div>
+                                <label className="block text-slate-600 text-xs font-bold uppercase tracking-wider mb-1.5">Monthly Fee</label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">₹</span>
+                                    <input
+                                        type="number"
+                                        value={amount}
+                                        onChange={(e) => setAmount(e.target.value)}
+                                        className="w-full bg-white border border-slate-200 pl-7 pr-4 py-2.5 rounded-lg text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                                        required
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <label className="block text-slate-600 text-xs font-bold uppercase tracking-wider mb-1.5">Late Fine</label>
-                            <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">₹</span>
-                                <input
-                                    type="number"
-                                    value={fine}
-                                    onChange={(e) => setFine(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 pl-7 pr-4 py-2.5 rounded-lg text-slate-600 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                                    readOnly
-                                />
+                            <div>
+                                <label className="block text-slate-600 text-xs font-bold uppercase tracking-wider mb-1.5">Late Fine</label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">₹</span>
+                                    <input
+                                        type="number"
+                                        value={fine}
+                                        onChange={(e) => setFine(e.target.value)}
+                                        className="w-full bg-slate-50 border border-slate-200 pl-7 pr-4 py-2.5 rounded-lg text-slate-600 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                                        readOnly
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Remarks */}
-                    <div>
-                        <label className="block text-slate-600 text-xs font-bold uppercase tracking-wider mb-1.5">Remarks</label>
-                        <input
-                            type="text"
-                            value={remarks}
-                            onChange={(e) => setRemarks(e.target.value)}
-                            className="w-full bg-white border border-slate-200 px-4 py-2.5 rounded-lg text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400"
-                            placeholder="e.g. Cash, UPI, Cheque No..."
-                        />
-                    </div>
-
-                    {/* Total Amount Display */}
-                    <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-100 flex justify-between items-center">
+                        {/* Remarks */}
                         <div>
-                            <p className="text-indigo-600 text-xs font-bold uppercase tracking-wider mb-0.5">Total Payable</p>
-                            <p className="text-indigo-900 text-xs opacity-70">Includes fees & fines</p>
+                            <label className="block text-slate-600 text-xs font-bold uppercase tracking-wider mb-1.5">Remarks</label>
+                            <input
+                                type="text"
+                                value={remarks}
+                                onChange={(e) => setRemarks(e.target.value)}
+                                className="w-full bg-white border border-slate-200 px-4 py-2.5 rounded-lg text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400"
+                                placeholder="e.g. Cash, UPI, Cheque No..."
+                            />
                         </div>
-                        <div className="text-right">
-                            <span className="text-2xl font-black text-indigo-700 tracking-tight">
-                                ₹ {totalPayable.toLocaleString()}
-                            </span>
+
+                        {/* Total Amount Display */}
+                        <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-100 flex justify-between items-center">
+                            <div>
+                                <p className="text-indigo-600 text-xs font-bold uppercase tracking-wider mb-0.5">Total Payable</p>
+                                <p className="text-indigo-900 text-xs opacity-70">Includes fees & fines</p>
+                            </div>
+                            <div className="text-right">
+                                <span className="text-2xl font-black text-indigo-700 tracking-tight">
+                                    ₹ {totalPayable.toLocaleString()}
+                                </span>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="pt-2">
+                    {/* Fixed Footer with Action Button */}
+                    <div className="p-4 border-t border-slate-100 bg-slate-50 flex-shrink-0">
                         <button
                             type="submit"
                             className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 transition-all transform active:scale-[0.98] ${error ? 'opacity-50 cursor-not-allowed' : ''}`}
