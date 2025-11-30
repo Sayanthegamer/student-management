@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const Walkthrough = () => {
+const Walkthrough = ({ onOpenMobileMenu }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [spotlightStyle, setSpotlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0 });
@@ -24,6 +24,12 @@ const Walkthrough = () => {
         }
     };
 
+    const openMenuIfMobile = () => {
+        if (window.innerWidth < 768 && onOpenMobileMenu) {
+            onOpenMobileMenu();
+        }
+    };
+
     const steps = [
         {
             title: "Welcome to Student Manager!",
@@ -37,7 +43,10 @@ const Walkthrough = () => {
             description: "See all your key metrics like total students and fee collection at a glance here.",
             target: "a[href='/overview']",
             position: 'right',
-            action: () => navigate('/overview')
+            action: () => {
+                navigate('/overview');
+                openMenuIfMobile();
+            }
         },
         {
             title: "Recent Activities",
@@ -51,7 +60,10 @@ const Walkthrough = () => {
             description: "Add, edit, and view student details. This is where you'll spend most of your time.",
             target: "a[href='/students']",
             position: 'right',
-            action: () => navigate('/students')
+            action: () => {
+                navigate('/students');
+                openMenuIfMobile();
+            }
         },
         {
             title: "Add New Student",
@@ -66,28 +78,40 @@ const Walkthrough = () => {
             description: "Track payments and view history. The system automatically calculates fines!",
             target: "a[href='/payment-history']",
             position: 'right',
-            action: () => navigate('/payment-history')
+            action: () => {
+                navigate('/payment-history');
+                openMenuIfMobile();
+            }
         },
         {
             title: "Admission Status",
             description: "Monitor the status of new admissions (Inquiry, Applied, Admitted, Rejected).",
             target: "a[href='/admission']",
             position: 'right',
-            action: () => navigate('/admission')
+            action: () => {
+                navigate('/admission');
+                openMenuIfMobile();
+            }
         },
         {
             title: "Transfer Certificate",
             description: "Issue TCs to active students and view the history of transferred students.",
             target: "a[href='/tc']",
             position: 'right',
-            action: () => navigate('/tc')
+            action: () => {
+                navigate('/tc');
+                openMenuIfMobile();
+            }
         },
         {
             title: "Data Management",
             description: "Export your data to CSV for backup or import existing records.",
             target: "a[href='/data']",
             position: 'right',
-            action: () => navigate('/data')
+            action: () => {
+                navigate('/data');
+                openMenuIfMobile();
+            }
         },
         {
             title: "You're All Set!",
@@ -251,7 +275,7 @@ const Walkthrough = () => {
                 <h3 className="text-xl font-bold text-slate-800 mb-2">{step.title}</h3>
                 <p className="text-slate-600 mb-6 leading-relaxed">{step.description}</p>
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                     <button
                         onClick={handlePrev}
                         disabled={currentStep === 0}
@@ -260,7 +284,7 @@ const Walkthrough = () => {
                         <ChevronLeft size={16} /> Previous
                     </button>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 hidden sm:flex">
                         {/* Dots indicator */}
                         {steps.map((_, idx) => (
                             <div
@@ -272,7 +296,7 @@ const Walkthrough = () => {
 
                     <button
                         onClick={handleNext}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl text-sm font-bold shadow-lg shadow-indigo-200 flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-indigo-200 flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
                     >
                         {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
                         {currentStep === steps.length - 1 ? <CheckCircle size={16} /> : <ChevronRight size={16} />}
