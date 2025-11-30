@@ -1,68 +1,20 @@
-# Student Management System
+# Student Manager Pro
 
-A student management application built with React and Vite. This system provides comprehensive tools for managing student records, tracking fee payments, handling admissions, and issuing transfer certificates.
+A comprehensive student management application built with React and Vite. This system provides professional-grade tools for managing student records, tracking fee payments, handling admissions, and issuing transfer certificates.
 
 ## ✨ Features
 
 ### 📊 Dashboard Overview
+- **Recent Activities Log**: Real-time tracking of all system actions (Admissions, Fees, TCs)
 - Real-time statistics for total students, active students, and pending admissions
 - Fee collection tracking with total collected and pending amounts
 - Quick access to recent admissions and payment history
 - Visual indicators for key metrics
 
-### 👥 Student Management
-- **Add/Edit Students**: Complete student information management including personal details, academic information, and fee structure
-- **Student List**: Searchable and filterable list with sorting capabilities by name, roll number, class, and section
-- **Student Profiles**: Detailed view of student information with payment history
-- **Delete Students**: Safe deletion with confirmation prompts
+### � Interactive Walkthrough
+- **Guided Tour**: A built-in interactive tour for new users to learn the application features step-by-step.
+- **Spotlight Highlighting**: Visual cues to guide users to important buttons and sections.
 
-### 💰 Fee Management
-- **Fee Payment Processing**: Record fee payments with customizable payment methods
-- **Payment History**: Comprehensive view of all fee transactions across all students
-- **Fee Status Tracking**: Visual indicators for paid, pending, and overdue fees
-- **Multiple Payment Methods**: Support for Cash, Bank Transfer, UPI, and Check payments
-- **Payment Receipts**: Detailed payment history with transaction dates and amounts
-- **Automatic Fine Calculation**:
-  - **Deadline**: 20th of each month
-  - **No Fine**: Payment on or before the 20th
-  - **₹30**: Payment after 20th but within the same month
-  - **Late Payment**: ₹50 × number of months late
-    - Example (1 month late): ₹50
-    - Example (3 months late): ₹150
-  - **Multi-Month Payments**: Sum of fines for each individual month
-    - Example (Paying for 3 missed months): 
-      - Month 1 (3 months late): ₹150
-      - Month 2 (2 months late): ₹100
-      - Month 3 (1 month late): ₹50
-      - Total Fine: ₹300
-
-### 🎓 Admission Management
-- **Admission Status Tracking**: Monitor pending, approved, and rejected admissions
-- **Bulk Actions**: Approve or reject multiple admissions at once
-- **Status Filtering**: View admissions by status (All, Pending, Approved, Rejected)
-- **Admission Details**: Complete applicant information with action buttons
-
-### 📜 Transfer Certificate (TC) Module
-- **Active Students View**: List of all active students with search and filter capabilities
-- **TC Issuance**: Issue transfer certificates with detailed information including:
-  - TC and issue date
-  - Date of leaving and reason for leaving
-  - Academic performance and conduct
-  - Additional remarks
-- **Transfer History**: View students who have been transferred out (last 3 months)
-- **Status Updates**: Automatic status change when TC is issued
-
-### 📁 Data Management
-- **CSV Export**: Export all student data to CSV format for backup or external processing
-- **CSV Import**: Import student data from CSV files with validation
-- **Data Backup**: Easy data export for safekeeping
-- **Bulk Operations**: Import multiple student records at once
-
-## 🛠️ Tech Stack
-
-- **Frontend Framework**: React 19.2.0
-- **Build Tool**: Vite 7.2.4
-- **Routing**: React Router DOM 7.9.6
 - **Styling**: Tailwind CSS 4.1.17
 - **Icons**: Lucide React 0.555.0
 - **Analytics**: Vercel Speed Insights

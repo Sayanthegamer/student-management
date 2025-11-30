@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Save, X } from 'lucide-react';
 import CustomDatePicker from './CustomDatePicker';
+import { logActivity } from '../utils/storage';
 
 const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const [formData, setFormData] = useState(initialData || {
@@ -53,6 +54,13 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (initialData) {
+            logActivity('student', `Updated details for student: ${formData.name}`);
+        } else {
+            logActivity('student', `Admitted new student: ${formData.name} (Class ${formData.class})`);
+        }
+
         onSave(formData);
     };
 

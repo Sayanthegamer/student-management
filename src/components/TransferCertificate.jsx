@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Search, FileText, AlertTriangle, Filter } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import CustomDatePicker from './CustomDatePicker';
-
+import { Search, FileText, AlertTriangle } from 'lucide-react';
 import Pagination from './Pagination';
+import CustomDatePicker from './CustomDatePicker';
+import { logActivity } from '../utils/storage';
 
 const TransferCertificate = ({ students, onUpdateStudent }) => {
     const [view, setView] = useState('active'); // 'active' or 'transferred'
@@ -115,6 +115,7 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
             }
         };
 
+        logActivity('tc', `Issued TC for ${selectedStudent.name} (Class ${selectedStudent.class})`);
         onUpdateStudent(updatedStudent);
         setShowIssueModal(false);
         setSelectedStudent(null);

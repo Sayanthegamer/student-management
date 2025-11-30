@@ -69,3 +69,37 @@ export const addFeePayment = (studentId, paymentDetails) => {
   saveStudents(updatedStudents);
   return updatedStudents;
 };
+
+// --- Activity Logging System ---
+
+const ACTIVITIES_KEY = 'student_management_activities_v1';
+
+export const getActivities = () => {
+  try {
+    const data = localStorage.getItem(ACTIVITIES_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error("Error reading activities", error);
+    return [];
+  }
+};
+
+export const logActivity = (type, description) => {
+  try {
+    const activities = getActivities();
+    const newActivity = {
+      id: crypto.randomUUID(),
+      type, // 'student', 'fee', 'admission', 'tc', 'system'
+      description,
+      timestamp: new Date().toISOString()
+    };
+
+    // Keep only last 50 activities
+    const updatedActivities = [newActivity, ...activities].slice(0, 50);
+    localStorage.setItem(ACTIVITIES_KEY, JSON.stringify(updatedActivities));
+    return updatedActivities;
+  } catch (error) {
+    console.error("Error logging activity", error);
+    return [];
+  }
+};

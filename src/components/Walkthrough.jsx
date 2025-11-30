@@ -40,6 +40,13 @@ const Walkthrough = () => {
             action: () => navigate('/overview')
         },
         {
+            title: "Recent Activities",
+            description: "Keep track of all actions like admissions, fee payments, and TC issuance in real-time.",
+            target: "#recent-activities",
+            position: 'top',
+            action: () => navigate('/overview')
+        },
+        {
             title: "Manage Students",
             description: "Add, edit, and view student details. This is where you'll spend most of your time.",
             target: "a[href='/students']",
@@ -49,8 +56,8 @@ const Walkthrough = () => {
         {
             title: "Add New Student",
             description: "Click the 'Add Student' button to register a new admission.",
-            target: "button", // We'll find the specific button dynamically if needed or use a more specific selector
-            targetText: "Add Student", // Helper to find button by text
+            target: "button",
+            targetText: "Add Student",
             position: 'bottom',
             action: () => navigate('/students')
         },
@@ -62,8 +69,22 @@ const Walkthrough = () => {
             action: () => navigate('/payment-history')
         },
         {
-            title: "Data Backup",
-            description: "Since this is a local demo, don't forget to Export your data regularly to save it!",
+            title: "Admission Status",
+            description: "Monitor the status of new admissions (Inquiry, Applied, Admitted, Rejected).",
+            target: "a[href='/admission']",
+            position: 'right',
+            action: () => navigate('/admission')
+        },
+        {
+            title: "Transfer Certificate",
+            description: "Issue TCs to active students and view the history of transferred students.",
+            target: "a[href='/tc']",
+            position: 'right',
+            action: () => navigate('/tc')
+        },
+        {
+            title: "Data Management",
+            description: "Export your data to CSV for backup or import existing records.",
             target: "a[href='/data']",
             position: 'right',
             action: () => navigate('/data')

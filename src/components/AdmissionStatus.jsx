@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, Clock, XCircle, Filter, Search, MoreVertical } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
+import { logActivity } from '../utils/storage';
 
 const StatusCard = ({ student, color, onMove }) => {
     const [showActions, setShowActions] = useState(false);
@@ -142,6 +143,7 @@ const AdmissionStatus = ({ students, onUpdateStudent }) => {
 
     const handleMoveStudent = (student, newStatus) => {
         if (window.confirm(`Are you sure you want to change status to ${newStatus}?`)) {
+            logActivity('admission', `Changed admission status for ${student.name} to ${newStatus}`);
             onUpdateStudent({ ...student, admissionStatus: newStatus });
         }
     };

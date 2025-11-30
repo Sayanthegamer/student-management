@@ -20,9 +20,9 @@ const Sidebar = () => {
                 </div>
                 <div>
                     <h1 className="m-0 text-lg font-bold text-white leading-none tracking-tight">
-                        Student
+                        Student Manager
                     </h1>
-                    <span className="text-xs text-indigo-300 font-medium tracking-wide uppercase">Manager Pro</span>
+                    <span className="text-xs text-indigo-300 font-medium tracking-wide uppercase">Pro</span>
                 </div>
             </div>
 

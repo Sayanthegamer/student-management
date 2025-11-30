@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X, Save, Calendar, IndianRupee, AlertCircle } from 'lucide-react';
 import CustomDatePicker from './CustomDatePicker';
 import CustomMonthPicker from './CustomMonthPicker';
+import { logActivity } from '../utils/storage';
 
 const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
@@ -90,55 +91,6 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
     }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (error) return;
-
-        if (isMultiMonth && endMonth) {
-            const payments = [];
-            let current = new Date(selectedMonth + '-01');
-            const end = new Date(endMonth + '-01');
-
-            while (current <= end) {
-                const monthStr = current.toISOString().slice(0, 7);
-                const monthFine = calculateFineForMonth(monthStr, paymentDate);
-
-                // Check if it's an advance payment (paid before start of the month)
-                const monthStart = new Date(current.getFullYear(), current.getMonth(), 1);
-                const payDateObj = new Date(paymentDate);
-                const isAdvance = payDateObj < monthStart;
-
-                const finalRemarks = remarks + (isAdvance ? ' (Advance)' : '') + ' (Multi-month payment)';
-
-                payments.push({
-                    date: paymentDate,
-                    month: monthStr,
-                    amount: Number(amount),
-                    fine: monthFine,
-                    remarks: finalRemarks
-                });
-                current.setMonth(current.getMonth() + 1);
-            }
-            onSave(student.id, payments);
-        } else {
-            // Check if it's an advance payment
-            const [year, month] = selectedMonth.split('-').map(Number);
-            const monthStart = new Date(year, month - 1, 1);
-            const payDateObj = new Date(paymentDate);
-            const isAdvance = payDateObj < monthStart;
-
-            const finalRemarks = remarks + (isAdvance ? ' (Advance)' : '');
-
-            onSave(student.id, {
-                date: paymentDate,
-                month: selectedMonth,
-                amount: Number(amount),
-                fine: Number(fine),
-                remarks: finalRemarks
-            });
-        }
-    };
-
     const [isClosing, setIsClosing] = useState(false);
 
     const handleClose = () => {
@@ -147,6 +99,49 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             onClose();
             setIsClosing(false);
         }, 200);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (error) return;
+
+        if (isMultiMonth && endMonth) {
+            let current = new Date(selectedMonth + '-01');
+            const end = new Date(endMonth + '-01');
+
+            while (current <= end) {
+                const monthStr = current.toISOString().slice(0, 7);
+                // Calculate fine for this specific month
+                const monthFine = calculateFineForMonth(monthStr, paymentDate);
+
+                onSave(student.id, {
+                    date: paymentDate,
+                    month: monthStr,
+                    amount: Number(amount),
+                    fine: monthFine,
+                    remarks: remarks
+                });
+
+                current.setMonth(current.getMonth() + 1);
+            }
+
+            // Log activity for multi-month
+            logActivity('fee', `Collected fees from ${student.name} (${selectedMonth} to ${endMonth})`);
+        } else {
+            // Single month payment
+            onSave(student.id, {
+                date: paymentDate,
+                month: selectedMonth,
+                amount: Number(amount),
+                fine: Number(fine),
+                remarks: remarks
+            });
+
+            // Log activity for single month
+            logActivity('fee', `Collected fee ₹${amount} from ${student.name} (${selectedMonth})`);
+        }
+
+        handleClose();
     };
 
     return createPortal(

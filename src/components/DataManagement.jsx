@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Upload, AlertTriangle, CheckCircle, Database } from 'lucide-react';
+import { Download, Upload, AlertTriangle, CheckCircle, Database, Github } from 'lucide-react';
 import { saveStudents } from '../utils/storage';
 import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 
@@ -178,6 +178,18 @@ const DataManagement = ({ students, onImportSuccess }) => {
                 <p className="text-slate-400 text-xs mt-3 italic">
                     * Complex fields like 'feeHistory' should be valid JSON strings if included.
                 </p>
+            </div>
+
+            <div className="mt-8 flex justify-center">
+                <a
+                    href="https://github.com/Sayanthegamer/student-management" // Placeholder, user to update
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors text-sm font-medium"
+                >
+                    <Github size={20} />
+                    Visit Project Repository
+                </a>
             </div>
 
             {importStatus && (
