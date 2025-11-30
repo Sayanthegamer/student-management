@@ -1,5 +1,6 @@
 import React, { useState, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import ErrorBoundary from './components/ErrorBoundary';
 import { getStudents, addStudent, updateStudent, deleteStudent, addFeePayment } from './utils/storage';
@@ -27,6 +28,7 @@ const PageLoader = () => (
 function App() {
   const [students, setStudents] = useState(getStudents());
   const [editingStudent, setEditingStudent] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   // Student Management Handlers
@@ -81,13 +83,38 @@ function App() {
   return (
     <ErrorBoundary>
       <div className="app-container flex h-screen overflow-hidden">
+        {/* Mobile Header */}
+        <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 flex items-center px-4 justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+            >
+              <Menu size={24} />
+            </button>
+            <span className="font-bold text-slate-800 text-lg">Student Manager</span>
+          </div>
+        </div>
+
+        {/* Mobile Sidebar Backdrop */}
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm transition-opacity"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <div className="w-[260px] flex-shrink-0 p-4">
-          <Sidebar />
+        <div className={`
+          fixed inset-y-0 left-0 z-50 w-[280px] md:relative md:w-[260px] md:z-0 flex-shrink-0 md:p-4
+          transition-transform duration-300 ease-in-out
+          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}>
+          <Sidebar onClose={() => setIsMobileMenuOpen(false)} />
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto relative">
+        <main className="flex-1 overflow-y-auto relative pt-16 md:pt-0 w-full">
           <Suspense fallback={<PageLoader />}>
             <Walkthrough />
             <Routes>

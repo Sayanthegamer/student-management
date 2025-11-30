@@ -58,7 +58,7 @@ const Overview = ({ students }) => {
     }, [students]); // Re-fetch when students change (likely triggers activity)
 
     return (
-        <div className="p-6 max-w-7xl mx-auto">
+        <div className="p-4 md:p-6 max-w-7xl mx-auto">
             <h2 className="text-white mb-6 text-2xl font-bold">Dashboard Overview</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

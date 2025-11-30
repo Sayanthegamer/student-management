@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee, X } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ onClose }) => {
     const menuItems = [
         { path: '/overview', label: 'Overview', icon: LayoutDashboard },
         { path: '/students', label: 'Student Management', icon: Users },
@@ -13,7 +13,15 @@ const Sidebar = () => {
     ];
 
     return (
-        <div className="sidebar bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl h-full p-6 flex flex-col gap-8 rounded-2xl text-white">
+        <div className="sidebar bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl h-full p-6 flex flex-col gap-8 rounded-2xl text-white relative">
+            {/* Mobile Close Button */}
+            <button
+                onClick={onClose}
+                className="md:hidden absolute top-4 right-4 p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            >
+                <X size={20} />
+            </button>
+
             <div className="flex items-center gap-4 px-2 py-2">
                 <div className="bg-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-500/30 flex items-center justify-center">
                     <GraduationCap size={24} color="white" />
@@ -34,6 +42,7 @@ const Sidebar = () => {
                         <NavLink
                             key={item.path}
                             to={item.path}
+                            onClick={onClose}
                             className={({ isActive }) => `
                                 relative flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group overflow-hidden
                                 ${isActive
