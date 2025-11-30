@@ -201,8 +201,8 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                 </button>
             </div>
 
-            {/* Table View */}
-            <div className="overflow-hidden rounded-xl border border-slate-200">
+            {/* Table View (Desktop) */}
+            <div className="hidden md:block overflow-hidden rounded-xl border border-slate-200">
                 <table className="w-full border-collapse text-left">
                     <thead className="bg-slate-50">
                         <tr>
@@ -252,6 +252,47 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
                         )}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Card View (Mobile) */}
+            <div className="md:hidden flex flex-col gap-4">
+                {currentStudents.map(student => (
+                    <div key={student.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div className="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 className="font-bold text-slate-800">{student.name}</h3>
+                                <p className="text-sm text-slate-500">Class {student.class}-{student.section} | Roll: {student.rollNo}</p>
+                            </div>
+                            {view === 'active' && (
+                                <button
+                                    onClick={() => handleIssueClick(student)}
+                                    className="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 text-xs font-bold uppercase tracking-wider border border-rose-100"
+                                >
+                                    Issue TC
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="flex items-center justify-between pt-3 border-t border-slate-50 text-sm">
+                            <span className="text-slate-500">
+                                {view === 'active' ? 'Admitted:' : 'Left:'}
+                                <span className="ml-1 font-medium text-slate-700">
+                                    {view === 'active' ? student.admissionDate : student.tcDetails?.dateOfLeaving}
+                                </span>
+                            </span>
+                            {view !== 'active' && (
+                                <span className="text-slate-500 italic">
+                                    {student.tcDetails?.reason || 'N/A'}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                ))}
+                {currentStudents.length === 0 && (
+                    <div className="p-8 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
+                        <p>No students found.</p>
+                    </div>
+                )}
             </div>
             {view === 'transferred' && (
                 <p className="text-center text-xs text-slate-400 mt-4 italic">

@@ -73,7 +73,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
     const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
 
     return (
-        <div className="flex-1 min-w-[320px] flex flex-col h-full bg-slate-50/50 rounded-2xl p-2">
+        <div className="w-full md:w-auto md:flex-1 md:min-w-[320px] flex flex-col h-full bg-slate-50/50 rounded-2xl p-2">
             <div
                 className="flex flex-col mb-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm sticky top-0 z-10"
                 style={{ borderTop: `4px solid ${color}` }}
@@ -239,7 +239,7 @@ const AdmissionStatus = ({ students, onUpdateStudent }) => {
                 </div>
             </div>
 
-            <div className="flex gap-6 overflow-x-auto pb-5 h-full items-start">
+            <div className="flex flex-col md:flex-row gap-6 md:overflow-x-auto pb-5 h-auto md:h-full items-start">
                 <StatusColumn
                     title="Confirmed"
                     count={confirmed.length}
