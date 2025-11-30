@@ -102,8 +102,8 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 </button>
             </div>
 
-            <div className="flex gap-3 mb-6 flex-wrap items-center">
-                <div className="relative flex-1 min-w-[240px]">
+            <div className="grid grid-cols-2 gap-3 mb-6 md:flex md:flex-wrap md:items-center">
+                <div className="relative col-span-2 md:col-span-1 md:flex-1 md:min-w-[240px]">
                     <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                         type="text"
@@ -118,7 +118,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterClass}
                     onChange={(e) => setFilterClass(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[120px]"
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[120px]"
                 >
                     <option value="">All Classes</option>
                     {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -127,7 +127,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterSection}
                     onChange={(e) => setFilterSection(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[120px]"
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[120px]"
                 >
                     <option value="">All Sections</option>
                     {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
@@ -136,7 +136,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={filterFeeStatus}
                     onChange={(e) => setFilterFeeStatus(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[130px]"
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[130px]"
                 >
                     <option value="">All Status</option>
                     <option value="Paid">Paid</option>
@@ -148,7 +148,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto"
+                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto"
                 >
                     <option value="name">Sort: Name</option>
                     <option value="rollNo">Sort: Roll No</option>
@@ -157,15 +157,15 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
                 <button
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                    className="btn bg-slate-50 border border-slate-200 p-2.5 text-slate-600 hover:bg-slate-100"
+                    className="btn bg-slate-50 border border-slate-200 p-2.5 text-slate-600 hover:bg-slate-100 w-full md:w-auto flex justify-center"
                     title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                 >
                     {sortOrder === 'asc' ? '↓' : '↑'}
                 </button>
 
-                <div className="w-px h-8 bg-slate-200 mx-1"></div>
+                <div className="hidden md:block w-px h-8 bg-slate-200 mx-1"></div>
 
-                <div>
+                <div className="col-span-2 md:col-span-1">
                     <CustomMonthPicker
                         value={filterMonth}
                         onChange={setFilterMonth}
