@@ -23,7 +23,17 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         '1': '480',
         '2': '490',
         '3': '510',
-        '4': '520'
+        '4': '520',
+        '5': '540',
+        '6': '560',
+        '7': '580',
+        '8': '600',
+        '9': '650',
+        '10': '700',
+        '11': '800',
+        '12': '900',
+        'UG': '1500',
+        'PG': '2000'
     };
 
     const handleChange = (e) => {
@@ -96,6 +106,16 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                     <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="UG">UG</option>
+                                    <option value="PG">PG</option>
                                 </select>
                             </div>
                             <div>

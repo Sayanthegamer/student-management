@@ -13,14 +13,17 @@ const Sidebar = () => {
     ];
 
     return (
-        <div className="sidebar bg-slate-900/40 backdrop-blur-xl border-r border-white/5 shadow-2xl h-full p-6 flex flex-col gap-8 rounded-r-2xl rounded-l-none border-y-0">
-            <div className="flex items-center gap-3 px-3">
-                <div className="bg-white/20 p-2 rounded-xl flex items-center justify-center">
-                    <GraduationCap size={28} color="white" />
+        <div className="sidebar bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl h-full p-6 flex flex-col gap-8 rounded-2xl text-white">
+            <div className="flex items-center gap-4 px-2 py-2">
+                <div className="bg-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-500/30 flex items-center justify-center">
+                    <GraduationCap size={24} color="white" />
                 </div>
-                <h1 className="m-0 text-lg font-bold text-white leading-tight">
-                    Student<br />Manager
-                </h1>
+                <div>
+                    <h1 className="m-0 text-lg font-bold text-white leading-none tracking-tight">
+                        Student
+                    </h1>
+                    <span className="text-xs text-indigo-300 font-medium tracking-wide uppercase">Manager Pro</span>
+                </div>
             </div>
 
             <nav className="flex flex-col gap-2">
@@ -32,21 +35,40 @@ const Sidebar = () => {
                             key={item.path}
                             to={item.path}
                             className={({ isActive }) => `
-                                flex items-center gap-3 px-4 py-3 rounded-xl text-white transition-all text-[15px]
-                                ${isActive ? 'bg-white/20 font-semibold' : 'bg-transparent font-normal hover:bg-white/10'}
+                                relative flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group overflow-hidden
+                                ${isActive
+                                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/20 font-medium'
+                                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                                }
                             `}
                         >
-                            <Icon size={20} className="opacity-90" />
-                            {item.label}
+                            {({ isActive }) => (
+                                <>
+                                    {isActive && (
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-300 rounded-r-full"></div>
+                                    )}
+                                    <Icon size={20} className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                                    <span className="relative z-10">{item.label}</span>
+                                    {isActive && (
+                                        <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"></div>
+                                    )}
+                                </>
+                            )}
                         </NavLink>
                     );
                 })}
             </nav>
 
-            <div className="mt-auto p-4 bg-black/10 rounded-xl">
-                <p className="m-0 text-xs text-white/60">
-                    © 2025 Student Manager<br />v1.0.0
-                </p>
+            <div className="mt-auto pt-6 border-t border-white/10">
+                <div className="flex items-center gap-3 px-2 opacity-60 hover:opacity-100 transition-opacity cursor-default">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-[10px] font-bold">
+                        SM
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-xs font-medium text-white">Sayan's Project</span>
+                        <span className="text-[10px] text-indigo-300">v1.2.0 • Personal</span>
+                    </div>
+                </div>
             </div>
         </div>
     );

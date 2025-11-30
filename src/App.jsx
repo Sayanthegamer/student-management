@@ -12,6 +12,7 @@ const AdmissionStatus = lazy(() => import('./components/AdmissionStatus'));
 const DataManagement = lazy(() => import('./components/DataManagement'));
 const TransferCertificate = lazy(() => import('./components/TransferCertificate'));
 const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
+const Walkthrough = lazy(() => import('./components/Walkthrough'));
 
 // Loading Fallback Component
 const PageLoader = () => (
@@ -88,6 +89,7 @@ function App() {
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto relative">
           <Suspense fallback={<PageLoader />}>
+            <Walkthrough />
             <Routes>
               <Route path="/" element={<Navigate to="/overview" replace />} />
               <Route path="/overview" element={<Overview students={students} />} />
