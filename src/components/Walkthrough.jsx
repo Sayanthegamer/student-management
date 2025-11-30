@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const Walkthrough = ({ onOpenMobileMenu }) => {
+const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [spotlightStyle, setSpotlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0 });
@@ -30,13 +30,22 @@ const Walkthrough = ({ onOpenMobileMenu }) => {
         }
     };
 
+    const closeMenuIfMobile = () => {
+        if (window.innerWidth < 768 && onCloseMobileMenu) {
+            onCloseMobileMenu();
+        }
+    };
+
     const steps = [
         {
             title: "Welcome to Student Manager!",
             description: "Let's take a quick tour to help you get started with this personal project.",
             target: null,
             position: 'center',
-            action: () => navigate('/overview')
+            action: () => {
+                navigate('/overview');
+                closeMenuIfMobile();
+            }
         },
         {
             title: "Dashboard Overview",
@@ -53,7 +62,10 @@ const Walkthrough = ({ onOpenMobileMenu }) => {
             description: "Keep track of all actions like admissions, fee payments, and TC issuance in real-time.",
             target: "#recent-activities",
             position: 'top',
-            action: () => navigate('/overview')
+            action: () => {
+                navigate('/overview');
+                closeMenuIfMobile();
+            }
         },
         {
             title: "Manage Students",
@@ -71,7 +83,10 @@ const Walkthrough = ({ onOpenMobileMenu }) => {
             target: "button",
             targetText: "Add Student",
             position: 'bottom',
-            action: () => navigate('/students')
+            action: () => {
+                navigate('/students');
+                closeMenuIfMobile();
+            }
         },
         {
             title: "Fee Management",
@@ -118,7 +133,10 @@ const Walkthrough = ({ onOpenMobileMenu }) => {
             description: "Feel free to explore. Remember, this is a safe playground to learn the workflow.",
             target: null,
             position: 'center',
-            action: () => navigate('/overview')
+            action: () => {
+                navigate('/overview');
+                closeMenuIfMobile();
+            }
         }
     ];
 

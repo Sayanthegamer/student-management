@@ -116,7 +116,10 @@ function App() {
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto relative pt-16 md:pt-0 w-full">
           <Suspense fallback={<PageLoader />}>
-            <Walkthrough onOpenMobileMenu={() => setIsMobileMenuOpen(true)} />
+            <Walkthrough
+              onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+              onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
+            />
             <Routes>
               <Route path="/" element={<Navigate to="/overview" replace />} />
               <Route path="/overview" element={<Overview students={students} />} />
