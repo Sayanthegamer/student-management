@@ -50,7 +50,8 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                         </div>
                     ) : (
                         <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
-                            <table className="w-full text-left border-collapse">
+                            {/* Desktop Table View */}
+                            <table className="hidden md:table w-full text-left border-collapse">
                                 <thead className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider font-semibold">
                                     <tr>
                                         <th className="p-4 border-b border-gray-200">Date</th>
@@ -103,6 +104,52 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                     </tr>
                                 </tfoot>
                             </table>
+
+                            {/* Mobile Card View */}
+                            <div className="md:hidden flex flex-col divide-y divide-gray-100">
+                                {sortedHistory.map((payment) => (
+                                    <div key={payment.id} className="p-4 bg-white">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div>
+                                                <p className="text-sm font-bold text-gray-800">{new Date(payment.date).toLocaleDateString()}</p>
+                                                <span className="inline-block mt-1 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs font-bold border border-indigo-100">
+                                                    {payment.month}
+                                                </span>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-lg font-bold text-emerald-600">
+                                                    ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
+                                                </p>
+                                                {payment.fine > 0 && (
+                                                    <p className="text-xs text-red-500 font-medium">
+                                                        Includes ₹{payment.fine} fine
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
+                                            <span>Fee: ₹{Number(payment.amount).toLocaleString()}</span>
+                                            {payment.remarks && (
+                                                <span className="italic max-w-[150px] truncate">{payment.remarks}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                                <div className="bg-gray-50 p-4 border-t border-gray-200">
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="text-sm font-medium text-gray-600">Total Fees</span>
+                                        <span className="font-bold text-indigo-600">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount), 0).toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-sm font-medium text-gray-600">Total Fines</span>
+                                        <span className="font-bold text-red-600">₹{sortedHistory.reduce((sum, p) => sum + Number(p.fine || 0), 0).toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                                        <span className="font-bold text-gray-800">Grand Total</span>
+                                        <span className="text-xl font-bold text-emerald-600">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
