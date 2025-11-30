@@ -142,8 +142,16 @@ const Walkthrough = () => {
                 // Calculate tooltip position
                 let tooltipStyle = {};
                 const tooltipGap = 20;
+                const isMobile = window.innerWidth < 768;
 
-                if (step.position === 'right') {
+                if (isMobile) {
+                    tooltipStyle = {
+                        bottom: '24px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 110
+                    };
+                } else if (step.position === 'right') {
                     tooltipStyle = {
                         top: rect.top + (rect.height / 2),
                         left: rect.right + tooltipGap,
@@ -226,7 +234,7 @@ const Walkthrough = () => {
 
             {/* Tooltip Card */}
             <div
-                className="absolute pointer-events-auto bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full transition-all duration-500 ease-in-out border border-white/20"
+                className="absolute pointer-events-auto bg-white p-6 rounded-2xl shadow-2xl w-[90vw] md:w-full md:max-w-sm transition-all duration-500 ease-in-out border border-white/20"
                 style={tooltipPosition}
             >
                 <div className="flex justify-between items-start mb-4">
