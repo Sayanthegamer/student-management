@@ -211,6 +211,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                 onClick={() => handlePayFeeClick(student)}
                                                 className="p-2 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors border border-emerald-100"
                                                 title="Pay Fees"
+                                                aria-label={`Pay fees for ${student.name}`}
                                             >
                                                 <IndianRupee size={16} />
                                             </button>
@@ -218,6 +219,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                 onClick={() => onEdit(student)}
                                                 className="p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors border border-indigo-100"
                                                 title="Edit"
+                                                aria-label={`Edit ${student.name}`}
                                             >
                                                 <Edit2 size={16} />
                                             </button>
@@ -225,6 +227,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                 onClick={() => onDelete(student.id)}
                                                 className="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors border border-rose-100"
                                                 title="Delete"
+                                                aria-label={`Delete ${student.name}`}
                                             >
                                                 <Trash2 size={16} />
                                             </button>
@@ -275,18 +278,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                     <button
                                         onClick={() => handlePayFeeClick(student)}
                                         className="flex-1 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 font-medium text-sm border border-emerald-100 flex items-center gap-2"
+                                        aria-label={`Pay fees for ${student.name}`}
                                     >
                                         <IndianRupee size={16} /> Pay
                                     </button>
                                     <button
                                         onClick={() => onEdit(student)}
                                         className="p-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100"
+                                        aria-label={`Edit ${student.name}`}
                                     >
                                         <Edit2 size={18} />
                                     </button>
                                     <button
                                         onClick={() => onDelete(student.id)}
                                         className="p-2 rounded-lg bg-rose-50 text-rose-600 border border-rose-100"
+                                        aria-label={`Delete ${student.name}`}
                                     >
                                         <Trash2 size={18} />
                                     </button>
