@@ -77,10 +77,21 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                 </div>
 
                 <button
-                    onClick={() => signOut()}
-                    className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-red-500/10 hover:text-red-400 rounded-xl transition-all duration-300 group w-full text-left"
+                    onClick={() => {
+                        if (syncStatus === 'syncing') {
+                            alert('Please wait for synchronization to finish before signing out.');
+                            return;
+                        }
+                        signOut();
+                    }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group w-full text-left ${
+                        syncStatus === 'syncing'
+                            ? 'text-slate-600 cursor-not-allowed'
+                            : 'text-slate-400 hover:bg-red-500/10 hover:text-red-400'
+                    }`}
+                    title={syncStatus === 'syncing' ? 'Sync in progress...' : 'Sign Out'}
                 >
-                    <LogOut size={20} className="group-hover:scale-110 transition-transform" />
+                    <LogOut size={20} className={syncStatus !== 'syncing' ? "group-hover:scale-110 transition-transform" : ""} />
                     <span>Sign Out</span>
                 </button>
 
