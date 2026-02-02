@@ -1,8 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee, X } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee, X, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import SyncIndicator from './SyncIndicator';
 
-const Sidebar = ({ onClose }) => {
+const Sidebar = ({ onClose, syncStatus }) => {
+    const { signOut, user } = useAuth();
     const menuItems = [
         { path: '/overview', label: 'Overview', icon: LayoutDashboard },
         { path: '/students', label: 'Student Management', icon: Users },
@@ -68,14 +71,26 @@ const Sidebar = ({ onClose }) => {
                 })}
             </nav>
 
-            <div className="mt-auto pt-6 border-t border-white/10">
+            <div className="mt-auto pt-6 border-t border-white/10 flex flex-col gap-4">
+                <div className="px-2">
+                    <SyncIndicator status={syncStatus} darkMode={true} />
+                </div>
+
+                <button
+                    onClick={() => signOut()}
+                    className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-red-500/10 hover:text-red-400 rounded-xl transition-all duration-300 group w-full text-left"
+                >
+                    <LogOut size={20} className="group-hover:scale-110 transition-transform" />
+                    <span>Sign Out</span>
+                </button>
+
                 <div className="flex items-center gap-3 px-2 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-[10px] font-bold">
-                        SM
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-[10px] font-bold text-white">
+                        {user?.email?.[0].toUpperCase() || 'U'}
                     </div>
-                    <div className="flex flex-col">
-                        <span className="text-xs font-medium text-white">Sayan's Project</span>
-                        <span className="text-[10px] text-indigo-300">v1.2.0 • Personal</span>
+                    <div className="flex flex-col overflow-hidden">
+                        <span className="text-xs font-medium text-white truncate max-w-[140px]">{user?.email || 'User'}</span>
+                        <span className="text-[10px] text-indigo-300">Logged in</span>
                     </div>
                 </div>
             </div>
