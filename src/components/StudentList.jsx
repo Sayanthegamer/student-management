@@ -37,7 +37,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
             // Default: Hide 'Transferred' students unless we add a specific filter for them later
             // For now, let's just show Active students
-            const isNotTransferred = student.status !== 'Transferred';
+            const isNotTransferred = student.admissionStatus !== 'Transferred';
 
             let matchesFeeStatus = true;
             if (filterFeeStatus) {
