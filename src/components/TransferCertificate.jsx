@@ -110,7 +110,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
 
         const updatedStudent = {
             ...selectedStudent,
-            status: 'Transferred',
+            admissionStatus: 'Transferred',
             tcDetails: {
                 ...tcDetails,
                 issueDate: currentDate
