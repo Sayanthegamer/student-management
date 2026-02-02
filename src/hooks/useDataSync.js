@@ -8,6 +8,7 @@ export const useDataSync = () => {
   const { user } = useAuth();
   const [students, setStudents] = useState(getStudents());
   const [syncStatus, setSyncStatus] = useState('synced'); // 'synced', 'syncing', 'error', 'unsaved'
+  const [syncError, setSyncError] = useState(null);
 
   // Load from Supabase on mount/auth change
   useEffect(() => {
@@ -15,6 +16,7 @@ export const useDataSync = () => {
 
     const fetchFromCloud = async () => {
       setSyncStatus('syncing');
+      setSyncError(null);
       try {
         const { data: studentsData, error: sError } = await supabase.from('students').select('*');
         if (sError) throw sError;
@@ -22,25 +24,21 @@ export const useDataSync = () => {
         const { data: feesData, error: fError } = await supabase.from('fees').select('*');
         if (fError) throw fError;
 
-        // Merge Strategy:
-        // If Cloud has data, it wins.
-        // If Cloud is empty but Local has data, we keep Local as "unsaved" so user can sync it later (or we could auto-push, but let's be safe).
-
-        if (studentsData.length > 0 || feesData.length > 0) {
-            const merged = denormalizeStudents(studentsData, feesData);
-            saveStudents(merged);
-            setStudents(merged);
-            setSyncStatus('synced');
-        } else if (students.length > 0) {
-             // Cloud empty, local has data.
-             setSyncStatus('unsaved');
-        } else {
-             setSyncStatus('synced');
-        }
+        // "Online Source is Truth" - Always overwrite local with cloud data if connection is successful.
+        // Even if Cloud is empty, we assume that's the truth.
+        const merged = denormalizeStudents(studentsData, feesData);
+        saveStudents(merged);
+        setStudents(merged);
+        setSyncStatus('synced');
 
       } catch (err) {
         console.error("Sync error:", err);
         setSyncStatus('error');
+        // Critical Error on Load
+        setSyncError({
+          message: "Failed to load data from server. Please check your connection.",
+          details: err
+        });
       }
     };
 
@@ -76,6 +74,10 @@ export const useDataSync = () => {
     } catch (err) {
         console.error("Cloud save error", err);
         setSyncStatus('error');
+        setSyncError({
+            message: "Failed to save new student to server.",
+            details: err
+        });
     }
   };
 
@@ -98,6 +100,10 @@ export const useDataSync = () => {
     } catch (err) {
         console.error("Cloud update error", err);
         setSyncStatus('error');
+        setSyncError({
+            message: "Failed to update student on server.",
+            details: err
+        });
     }
   };
 
@@ -118,6 +124,10 @@ export const useDataSync = () => {
     } catch (err) {
         console.error("Cloud delete error", err);
         setSyncStatus('error');
+        setSyncError({
+            message: "Failed to delete student from server.",
+            details: err
+        });
     }
   };
 
@@ -146,6 +156,10 @@ export const useDataSync = () => {
     } catch (err) {
         console.error("Cloud fee error", err);
         setSyncStatus('error');
+        setSyncError({
+            message: "Failed to save fee payment to server.",
+            details: err
+        });
     }
   };
 
@@ -157,35 +171,55 @@ export const useDataSync = () => {
 
     if (!user) return;
 
-    // 2. Cloud Update (Upsert All)
+    // 2. Cloud Update (Batch)
     setSyncStatus('syncing');
     try {
-        // We process in chunks or sequentially to avoid hitting rate limits or packet size limits
-        // For simplicity, sequential loop
-        for (const s of newStudents) {
-            const { student, fees } = normalizeStudent(s);
-            const { error: sError } = await supabase.from('students').upsert(student);
-            if (sError) throw sError;
+        const allStudentsDB = [];
+        const allFeesDB = [];
 
-            if (fees.length > 0) {
-                 const { error: fError } = await supabase.from('fees').upsert(fees);
-                 if (fError) throw fError;
-            }
+        newStudents.forEach(s => {
+          const { student, fees } = normalizeStudent(s);
+          allStudentsDB.push(student);
+          if (fees && fees.length > 0) {
+              allFeesDB.push(...fees);
+          }
+        });
+
+        // Batch Insert Students
+        // Using upsert to handle potential ID collisions or updates if IDs are preserved
+        const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
+        if (sError) throw sError;
+
+        // Batch Insert Fees
+        if (allFeesDB.length > 0) {
+             const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
+             if (fError) throw fError;
         }
+
         setSyncStatus('synced');
     } catch (err) {
         console.error("Cloud import error", err);
         setSyncStatus('error');
+        setSyncError({
+            message: "Failed to import data to server.",
+            details: err
+        });
     }
+  };
+
+  const dismissError = () => {
+    setSyncError(null);
   };
 
   return {
     students,
     syncStatus,
+    syncError,
     addStudent,
     updateStudent,
     deleteStudent,
     addFeePayment,
-    importStudents
+    importStudents,
+    dismissError
   };
 };

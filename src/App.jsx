@@ -9,6 +9,7 @@ import ResetPassword from './components/ResetPassword';
 import { useAuth } from './context/AuthContext';
 import { useDataSync } from './hooks/useDataSync';
 import SyncIndicator from './components/SyncIndicator';
+import SyncErrorModal from './components/SyncErrorModal';
 
 // Lazy Load Components for Performance
 const Overview = lazy(() => import('./components/Overview'));
@@ -32,7 +33,7 @@ const PageLoader = () => (
 
 function App() {
   const { user, loading } = useAuth();
-  const { students, syncStatus, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents } = useDataSync();
+  const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents, dismissError } = useDataSync();
   const [editingStudent, setEditingStudent] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -109,6 +110,7 @@ function App() {
 
   return (
     <ErrorBoundary>
+      <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
       <div className="app-container flex h-screen overflow-hidden">
         {/* Mobile Header */}
         <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 flex items-center px-4 justify-between">
