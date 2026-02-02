@@ -52,7 +52,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             const admMonthStr = student.admissionDate.slice(0, 7);
             if (selectedMonth < admMonthStr) {
                 // setError('Payment month cannot be before admission month'); // Uncomment if needed
-            } else {
+            } else if (error) {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setError('');
             }
         }
@@ -89,7 +90,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         const total = (baseAmount * monthsCount) + calculatedFine;
         setTotalPayable(total);
 
-    }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount]);
+    }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount, error]);
 
     const [isClosing, setIsClosing] = useState(false);
 

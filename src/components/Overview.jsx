@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock } from 'lucide-react';
 import { getActivities } from '../utils/storage';
@@ -44,11 +45,9 @@ const Overview = ({ students }) => {
         student.admissionDate && student.admissionDate.startsWith(currentYear)
     ).length;
 
-    const [activities, setActivities] = useState([]);
+    const [activities, setActivities] = useState(() => getActivities());
 
     useEffect(() => {
-        setActivities(getActivities());
-
         // Optional: Poll for updates every few seconds if real-time feel is needed
         const interval = setInterval(() => {
             setActivities(getActivities());

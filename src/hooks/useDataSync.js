@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent as localUpdateStudent, deleteStudent as localDeleteStudent, addFeePayment as localAddFeePayment } from '../utils/storage';
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
@@ -43,10 +43,9 @@ export const useDataSync = () => {
     };
 
     fetchFromCloud();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const addStudent = async (studentData) => {
+  const addStudent = useCallback(async (studentData) => {
     const id = crypto.randomUUID();
     const newStudent = { ...studentData, id };
 
@@ -79,9 +78,9 @@ export const useDataSync = () => {
             details: err
         });
     }
-  };
+  }, [user]);
 
-  const updateStudent = async (studentData) => {
+  const updateStudent = useCallback(async (studentData) => {
     // 1. Local Update
     const updatedList = localUpdateStudent(studentData);
     setStudents(updatedList);
@@ -105,9 +104,9 @@ export const useDataSync = () => {
             details: err
         });
     }
-  };
+  }, [user]);
 
-  const deleteStudent = async (id) => {
+  const deleteStudent = useCallback(async (id) => {
     // 1. Local Update
     const updatedList = localDeleteStudent(id);
     setStudents(updatedList);
@@ -129,9 +128,9 @@ export const useDataSync = () => {
             details: err
         });
     }
-  };
+  }, [user]);
 
-  const addFeePayment = async (studentId, paymentDetails) => {
+  const addFeePayment = useCallback(async (studentId, paymentDetails) => {
     // paymentDetails can be object or array
     const payments = Array.isArray(paymentDetails) ? paymentDetails : [paymentDetails];
 
@@ -161,9 +160,9 @@ export const useDataSync = () => {
             details: err
         });
     }
-  };
+  }, [user]);
 
-  const importStudents = async (newStudents) => {
+  const importStudents = useCallback(async (newStudents) => {
     // 1. Local Update (Full Replace)
     saveStudents(newStudents);
     setStudents(newStudents);
@@ -205,11 +204,11 @@ export const useDataSync = () => {
             details: err
         });
     }
-  };
+  }, [user]);
 
-  const dismissError = () => {
+  const dismissError = useCallback(() => {
     setSyncError(null);
-  };
+  }, []);
 
   return {
     students,

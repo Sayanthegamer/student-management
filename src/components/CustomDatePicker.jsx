@@ -1,19 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Calendar } from 'lucide-react';
 
 const CustomDatePicker = ({ value, onChange, label, required, className = '' }) => {
-    const [day, setDay] = useState('');
-    const [month, setMonth] = useState('');
-    const [year, setYear] = useState('');
+    // 1. Initialize State
+    const [prevValue, setPrevValue] = useState(value);
 
-    useEffect(() => {
-        if (value) {
-            const [y, m, d] = value.split('-');
-            setYear(y);
-            setMonth(m);
-            setDay(d);
-        }
-    }, [value]);
+    // Helper to parse safely
+    const parse = (v) => {
+        if (!v) return ['', '', ''];
+        const parts = v.split('-');
+        return [parts[0] || '', parts[1] || '', parts[2] || ''];
+    };
+
+    const [initY, initM, initD] = parse(value);
+
+    const [day, setDay] = useState(initD);
+    const [month, setMonth] = useState(initM);
+    const [year, setYear] = useState(initY);
+
+    // 2. Sync State with Props (Adjusting state during rendering)
+    if (value !== prevValue) {
+        setPrevValue(value);
+        const [y, m, d] = parse(value);
+        setYear(y);
+        setMonth(m);
+        setDay(d);
+    }
 
     const months = [
         { value: '01', label: 'January' },
@@ -49,7 +61,7 @@ const CustomDatePicker = ({ value, onChange, label, required, className = '' }) 
         // Validate day if month/year changes
         if (newMonth && newYear) {
             const maxDays = getDaysInMonth(parseInt(newMonth), parseInt(newYear));
-            if (parseInt(newDay) > maxDays) {
+            if (newDay && parseInt(newDay) > maxDays) {
                 newDay = maxDays.toString().padStart(2, '0');
             }
         }

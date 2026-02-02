@@ -126,7 +126,7 @@ export const parseCSV = (csvText) => {
         if (!str) return [];
         // Try JSON first (backward compatibility)
         if (str.startsWith('[') || str.startsWith('{')) {
-            try { return JSON.parse(str); } catch (e) { /* ignore */ }
+            try { return JSON.parse(str); } catch { /* ignore */ }
         }
 
         return str.split(' | ').map(paymentStr => {
@@ -153,7 +153,7 @@ export const parseCSV = (csvText) => {
         if (!str) return null;
         // Try JSON first
         if (str.startsWith('{')) {
-            try { return JSON.parse(str); } catch (e) { /* ignore */ }
+            try { return JSON.parse(str); } catch { /* ignore */ }
         }
 
         const tc = {};
@@ -190,7 +190,7 @@ export const parseCSV = (csvText) => {
                 if (val && (val.startsWith('[') || val.startsWith('{'))) {
                     try {
                         val = JSON.parse(val);
-                    } catch (e) {
+                    } catch {
                         // Keep as string if parse fails
                     }
                 }

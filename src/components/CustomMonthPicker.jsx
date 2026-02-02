@@ -1,16 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const CustomMonthPicker = ({ value, onChange, label, required, className = '' }) => {
-    const [month, setMonth] = useState('');
-    const [year, setYear] = useState('');
+    // 1. Initialize State
+    const [prevValue, setPrevValue] = useState(value);
 
-    useEffect(() => {
-        if (value) {
-            const [y, m] = value.split('-');
-            setYear(y);
-            setMonth(m);
-        }
-    }, [value]);
+    const parse = (v) => {
+        if (!v) return ['', ''];
+        const parts = v.split('-');
+        return [parts[0] || '', parts[1] || ''];
+    };
+
+    const [initY, initM] = parse(value);
+    const [month, setMonth] = useState(initM);
+    const [year, setYear] = useState(initY);
+
+    // 2. Sync State with Props (Adjusting state during rendering)
+    if (value !== prevValue) {
+        setPrevValue(value);
+        const [y, m] = parse(value);
+        setYear(y);
+        setMonth(m);
+    }
 
     const months = [
         { value: '01', label: 'January' },
