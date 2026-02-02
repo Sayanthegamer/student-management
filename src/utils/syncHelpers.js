@@ -157,9 +157,6 @@ export const normalizeStudent = (student) => {
     email: student.email || undefined,
     admission_number: (student.admissionNumber || student.admission_number) || undefined,
 
-    // TC Details - stored as JSON string (Issue 1 fix)
-    tc_details: student.tcDetails ? JSON.stringify(student.tcDetails) : undefined,
-
     // Status change metadata (Issue 4 fix)
     last_status_change_date: statusChangeDateVal,
     last_status_changed_by: student.lastStatusChangedBy || student.last_status_changed_by || undefined,
