@@ -144,7 +144,7 @@ export const normalizeStudent = (student) => {
     // Map camelCase to snake_case
     roll_no: student.rollNo,
     admission_date: admissionDateVal,
-    status: student.admissionStatus || student.status || 'Confirmed', // Map admissionStatus to status column
+    status: student.status || student.admissionStatus || 'Confirmed',  // Check status FIRST
 
     tc_details: student.tcDetails ? JSON.stringify(student.tcDetails) : undefined,
 
