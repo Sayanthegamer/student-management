@@ -12,7 +12,13 @@ export const useDataSync = () => {
 
   // Load from Supabase on mount/auth change
   useEffect(() => {
-    if (!user) return;
+    if (!user || !supabase) {
+      setStudents(getStudents());
+      setSyncStatus('synced');
+      return;
+    }
+
+    let isMounted = true;
 
     const fetchFromCloud = async () => {
       setSyncStatus('syncing');
@@ -26,24 +32,37 @@ export const useDataSync = () => {
 
         // "Online Source is Truth" - Always overwrite local with cloud data if connection is successful.
         // Even if Cloud is empty, we assume that's the truth.
-        const merged = denormalizeStudents(studentsData, feesData);
-        saveStudents(merged);
-        setStudents(merged);
-        setSyncStatus('synced');
+        if (isMounted) {
+          const merged = denormalizeStudents(studentsData, feesData);
+          saveStudents(merged);
+          setStudents(merged);
+          setSyncStatus('synced');
+        }
 
       } catch (err) {
-        console.error("Sync error:", err);
-        setSyncStatus('error');
-        // Critical Error on Load
-        setSyncError({
-          message: "Failed to load data from server. Please check your connection.",
-          details: err
-        });
+        if (isMounted) {
+          console.error("Sync error:", err);
+          setSyncStatus('error');
+          setSyncError({
+            message: "Failed to load data from server. Please check your connection.",
+            details: err
+          });
+
+          setTimeout(() => {
+            if (isMounted && syncStatus === 'error') {
+              setSyncStatus('unsaved');
+            }
+          }, 5000);
+        }
       }
     };
 
     fetchFromCloud();
-  }, [user]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, supabase]);
 
   const addStudent = useCallback(async (studentData) => {
     const id = crypto.randomUUID();
@@ -54,7 +73,10 @@ export const useDataSync = () => {
     setStudents(updatedList);
     setSyncStatus('unsaved');
 
-    if (!user) return;
+    if (!user || !supabase) {
+      console.warn("Supabase not configured - changes saved locally only");
+      return;
+    }
 
     // 2. Cloud Update
     setSyncStatus('syncing');
@@ -73,12 +95,26 @@ export const useDataSync = () => {
     } catch (err) {
         console.error("Cloud save error", err);
         setSyncStatus('error');
+
+        let userMessage = "Failed to save data to server.";
+        if (err.message?.includes('duplicate')) {
+          userMessage = "A student with this ID already exists.";
+        } else if (err.message?.includes('permission')) {
+          userMessage = "You don't have permission to perform this action.";
+        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+          userMessage = "Network error. Please check your connection.";
+        }
+
         setSyncError({
-            message: "Failed to save new student to server.",
+            message: userMessage,
             details: err
         });
+
+        setTimeout(() => {
+          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
     }
-  }, [user]);
+  }, [user, supabase]);
 
   const updateStudent = useCallback(async (studentData) => {
     // 1. Local Update
@@ -86,25 +122,51 @@ export const useDataSync = () => {
     setStudents(updatedList);
     setSyncStatus('unsaved');
 
-    if (!user) return;
+    if (!user || !supabase) {
+      console.warn("Supabase not configured - changes saved locally only");
+      return;
+    }
 
     // 2. Cloud Update
     setSyncStatus('syncing');
     try {
-        const { student } = normalizeStudent(studentData);
-        // We only update the student record, not fees here
+        const { student, fees } = normalizeStudent(studentData);
+
         const { error } = await supabase.from('students').upsert(student);
         if (error) throw error;
+
+        if (fees.length > 0) {
+          const { error: delError } = await supabase.from('fees').delete().eq('student_id', studentData.id);
+          if (delError) throw delError;
+
+          const { error: fError } = await supabase.from('fees').insert(fees);
+          if (fError) throw fError;
+        }
+
         setSyncStatus('synced');
     } catch (err) {
         console.error("Cloud update error", err);
         setSyncStatus('error');
+
+        let userMessage = "Failed to update student on server.";
+        if (err.message?.includes('duplicate')) {
+          userMessage = "A student with this ID already exists.";
+        } else if (err.message?.includes('permission')) {
+          userMessage = "You don't have permission to perform this action.";
+        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+          userMessage = "Network error. Please check your connection.";
+        }
+
         setSyncError({
-            message: "Failed to update student on server.",
+            message: userMessage,
             details: err
         });
+
+        setTimeout(() => {
+          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
     }
-  }, [user]);
+  }, [user, supabase]);
 
   const deleteStudent = useCallback(async (id) => {
     // 1. Local Update
@@ -112,7 +174,10 @@ export const useDataSync = () => {
     setStudents(updatedList);
     setSyncStatus('unsaved');
 
-    if (!user) return;
+    if (!user || !supabase) {
+      console.warn("Supabase not configured - changes saved locally only");
+      return;
+    }
 
     // 2. Cloud Update
     setSyncStatus('syncing');
@@ -123,12 +188,24 @@ export const useDataSync = () => {
     } catch (err) {
         console.error("Cloud delete error", err);
         setSyncStatus('error');
+
+        let userMessage = "Failed to delete student from server.";
+        if (err.message?.includes('permission')) {
+          userMessage = "You don't have permission to perform this action.";
+        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+          userMessage = "Network error. Please check your connection.";
+        }
+
         setSyncError({
-            message: "Failed to delete student from server.",
+            message: userMessage,
             details: err
         });
+
+        setTimeout(() => {
+          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
     }
-  }, [user]);
+  }, [user, supabase]);
 
   const addFeePayment = useCallback(async (studentId, paymentDetails) => {
     // paymentDetails can be object or array
@@ -142,7 +219,10 @@ export const useDataSync = () => {
     setStudents(updatedList);
     setSyncStatus('unsaved');
 
-    if (!user) return;
+    if (!user || !supabase) {
+      console.warn("Supabase not configured - changes saved locally only");
+      return;
+    }
 
     // 2. Cloud Update
     setSyncStatus('syncing');
@@ -155,12 +235,24 @@ export const useDataSync = () => {
     } catch (err) {
         console.error("Cloud fee error", err);
         setSyncStatus('error');
+
+        let userMessage = "Failed to save fee payment to server.";
+        if (err.message?.includes('permission')) {
+          userMessage = "You don't have permission to perform this action.";
+        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+          userMessage = "Network error. Please check your connection.";
+        }
+
         setSyncError({
-            message: "Failed to save fee payment to server.",
+            message: userMessage,
             details: err
         });
+
+        setTimeout(() => {
+          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
     }
-  }, [user]);
+  }, [user, supabase]);
 
   const importStudents = useCallback(async (newStudents) => {
     // 1. Local Update (Full Replace)
@@ -168,7 +260,10 @@ export const useDataSync = () => {
     setStudents(newStudents);
     setSyncStatus('unsaved');
 
-    if (!user) return;
+    if (!user || !supabase) {
+      console.warn("Supabase not configured - changes saved locally only");
+      return;
+    }
 
     // 2. Cloud Update (Batch)
     setSyncStatus('syncing');
@@ -199,12 +294,24 @@ export const useDataSync = () => {
     } catch (err) {
         console.error("Cloud import error", err);
         setSyncStatus('error');
+
+        let userMessage = "Failed to import data to server.";
+        if (err.message?.includes('permission')) {
+          userMessage = "You don't have permission to perform this action.";
+        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+          userMessage = "Network error. Please check your connection.";
+        }
+
         setSyncError({
-            message: "Failed to import data to server.",
+            message: userMessage,
             details: err
         });
+
+        setTimeout(() => {
+          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
     }
-  }, [user]);
+  }, [user, supabase]);
 
   const dismissError = useCallback(() => {
     setSyncError(null);
