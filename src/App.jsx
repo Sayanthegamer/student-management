@@ -168,8 +168,8 @@ function App() {
                 />
               } />
               <Route path="/payment-history" element={<PaymentHistory students={students} />} />
-              <Route path="/admission" element={<AdmissionStatus students={students} onUpdateStudent={handleUpdateStudent} />} />
-              <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} />} />
+              <Route path="/admission" element={<AdmissionStatus students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
+              <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/data" element={<DataManagement students={students} onImportSuccess={handleImportSuccess} />} />
             </Routes>
           </Suspense>

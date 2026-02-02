@@ -5,7 +5,7 @@ import Pagination from './Pagination';
 import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
 
-const TransferCertificate = ({ students, onUpdateStudent }) => {
+const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     const [view, setView] = useState('active'); // 'active' or 'transferred'
     const [searchTerm, setSearchTerm] = useState('');
     const [filterClass, setFilterClass] = useState('');
@@ -106,13 +106,18 @@ const TransferCertificate = ({ students, onUpdateStudent }) => {
     const handleConfirmIssue = () => {
         if (!selectedStudent) return;
 
+        const currentDate = new Date().toISOString().slice(0, 10);
+
         const updatedStudent = {
             ...selectedStudent,
             status: 'Transferred',
             tcDetails: {
                 ...tcDetails,
-                issueDate: new Date().toISOString().slice(0, 10)
-            }
+                issueDate: currentDate
+            },
+            // Add status change metadata (Issue 4 fix)
+            lastStatusChangeDate: currentDate,
+            lastStatusChangedBy: user?.email || user?.id || 'system'
         };
 
         logActivity('tc', `Issued TC for ${selectedStudent.name} (Class ${selectedStudent.class})`);
