@@ -6,6 +6,8 @@ export const getStudents = () => {
     return data ? JSON.parse(data) : [];
   } catch (error) {
     console.error("Error reading from sessionStorage", error);
+    // Issue 7: Return empty array on error - could notify user that cache was cleared
+    // Future enhancement: Emit event for UI to show notification
     return [];
   }
 };

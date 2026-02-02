@@ -8,16 +8,91 @@ const safeJSONParse = (str) => {
   }
 };
 
+/**
+ * Calculate fee status based on fee history and month
+ * @param {Object} student - The student object with feeHistory
+ * @param {string} month - The month to check (YYYY-MM format)
+ * @returns {string} - 'Paid', 'Pending', or 'Overdue'
+ */
+export const calculateFeesStatus = (student, month) => {
+  if (!student.feeHistory || !Array.isArray(student.feeHistory)) {
+    return 'Pending';
+  }
+
+  const isPaid = student.feeHistory.some(p => p.month === month);
+  if (isPaid) return 'Paid';
+
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  return month < currentMonth ? 'Overdue' : 'Pending';
+};
+
+/**
+ * Calculate fine for a payment based on payment date and month deadline
+ * @param {string} month - The month being paid for (YYYY-MM format)
+ * @param {string} payDate - The payment date (YYYY-MM-DD format)
+ * @returns {number} - The calculated fine amount
+ */
+export const calculateFineForPayment = (month, payDate) => {
+  if (!month || !payDate) return 0;
+
+  const [year, monthNum] = month.split('-').map(Number);
+  const paymentDate = new Date(payDate);
+
+  // Deadline is the 20th of the month being paid for
+  const deadline = new Date(year, monthNum - 1, 20);
+
+  // If paid on or before deadline, no fine
+  if (paymentDate <= deadline) return 0;
+
+  // Calculate days late
+  const daysLate = Math.floor((paymentDate - deadline) / (1000 * 60 * 60 * 24));
+
+  // Fine calculation: ₹5 per day after deadline, capped at ₹100
+  const fine = Math.min(daysLate * 5, 100);
+
+  return fine;
+};
+
+/**
+ * Get the standard fee amount for a class
+ * @param {string} className - The class name
+ * @returns {string} - The fee amount as a string
+ */
+export const getClassFeeAmount = (className) => {
+  const classFees = {
+    'Play School': '350',
+    'Nursury': '440',
+    'kg-1': '440',
+    'kg-2': '440',
+    '1': '480',
+    '2': '490',
+    '3': '510',
+    '4': '520',
+    '5': '540',
+    '6': '560',
+    '7': '580',
+    '8': '600',
+    '9': '650',
+    '10': '700',
+    '11': '800',
+    '12': '900',
+    'UG': '1500',
+    'PG': '2000'
+  };
+
+  return classFees[className] || '';
+};
+
 export const normalizeStudent = (student) => {
   // Extract feeHistory and other UI-only fields we don't want to send to DB as-is
   const {
     feeHistory,
     // eslint-disable-next-line no-unused-vars
-    feesAmount,
+    feesAmount,      // UI calculated field - not stored
     // eslint-disable-next-line no-unused-vars
-    feesStatus,
+    feesStatus,      // UI calculated field - not stored
     // eslint-disable-next-line no-unused-vars
-    fine,
+    fine,            // UI calculated field - not stored
     // eslint-disable-next-line no-unused-vars
     ...rest
   } = student;
@@ -50,6 +125,17 @@ export const normalizeStudent = (student) => {
       }
   }
 
+  // Safe Date Parsing for status change date
+  let statusChangeDateVal;
+  const rawStatusDate = student.lastStatusChangeDate || student.last_status_change_date;
+  if (rawStatusDate) {
+      try {
+          statusChangeDateVal = new Date(rawStatusDate).toISOString().split('T')[0];
+      } catch {
+          statusChangeDateVal = undefined;
+      }
+  }
+
   const cleanedStudent = {
     id: student.id,
     name: student.name,
@@ -68,6 +154,13 @@ export const normalizeStudent = (student) => {
     phone: student.phone || undefined,
     email: student.email || undefined,
     admission_number: (student.admissionNumber || student.admission_number) || undefined,
+
+    // TC Details - stored as JSON string (Issue 1 fix)
+    tc_details: student.tcDetails ? JSON.stringify(student.tcDetails) : undefined,
+
+    // Status change metadata (Issue 4 fix)
+    last_status_change_date: statusChangeDateVal,
+    last_status_changed_by: student.lastStatusChangedBy || student.last_status_changed_by || undefined,
   };
 
   // Filter out undefined keys explicitly (though JSON.stringify does this, Supabase client might check keys before stringifying)
@@ -97,28 +190,57 @@ export const denormalizeStudents = (studentsData, feesData) => {
     return acc;
   }, {});
 
-  return studentsData.map(s => ({
-    // Map snake_case DB columns back to UI camelCase
-    id: s.id,
-    name: s.name,
-    class: s.class,
-    section: s.section,
-    rollNo: s.roll_no,
-    admissionDate: s.admission_date ? s.admission_date.split('T')[0] : '',
-    admissionStatus: s.status,
+  const currentMonth = new Date().toISOString().slice(0, 7);
 
-    guardianName: s.guardian_name,
-    age: s.age,
-    address: s.address,
-    phone: s.phone,
-    email: s.email,
-    admissionNumber: s.admission_number,
+  return studentsData.map(s => {
+    const feeHistory = feesMap[s.id] || [];
 
-    // Reconstruct calculated fields (optional, but good for UI consistency)
-    feesAmount: '',
-    feesStatus: 'Pending',
-    fine: '',
+    // Parse tc_details if present (Issue 1 fix)
+    let tcDetails = null;
+    if (s.tc_details) {
+      try {
+        tcDetails = typeof s.tc_details === 'string' ? JSON.parse(s.tc_details) : s.tc_details;
+      } catch {
+        tcDetails = null;
+      }
+    }
 
-    feeHistory: feesMap[s.id] || []
-  }));
+    // Get the class fee amount
+    const feesAmount = getClassFeeAmount(s.class);
+
+    // Calculate fees status based on fee history
+    const feesStatus = calculateFeesStatus({ feeHistory }, currentMonth);
+
+    return {
+      // Map snake_case DB columns back to UI camelCase
+      id: s.id,
+      name: s.name,
+      class: s.class,
+      section: s.section,
+      rollNo: s.roll_no,
+      admissionDate: s.admission_date ? s.admission_date.split('T')[0] : '',
+      admissionStatus: s.status,
+
+      guardianName: s.guardian_name,
+      age: s.age,
+      address: s.address,
+      phone: s.phone,
+      email: s.email,
+      admissionNumber: s.admission_number,
+
+      // TC Details (Issue 1 fix)
+      tcDetails,
+
+      // Status change metadata (Issue 4 fix)
+      lastStatusChangeDate: s.last_status_change_date,
+      lastStatusChangedBy: s.last_status_changed_by,
+
+      // Calculated fields - recalculated from data, not stored (Issue 2 fix)
+      feesAmount,
+      feesStatus,
+      fine: '', // Fine is calculated per-payment, not stored at student level
+
+      feeHistory
+    };
+  });
 };

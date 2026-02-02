@@ -111,7 +111,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
     );
 };
 
-const AdmissionStatus = ({ students, onUpdateStudent }) => {
+const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
@@ -145,7 +145,13 @@ const AdmissionStatus = ({ students, onUpdateStudent }) => {
     const handleMoveStudent = (student, newStatus) => {
         if (window.confirm(`Are you sure you want to change status to ${newStatus}?`)) {
             logActivity('admission', `Changed admission status for ${student.name} to ${newStatus}`);
-            onUpdateStudent({ ...student, admissionStatus: newStatus });
+            onUpdateStudent({
+                ...student,
+                admissionStatus: newStatus,
+                // Add status change metadata (Issue 4 fix)
+                lastStatusChangeDate: new Date().toISOString().slice(0, 10),
+                lastStatusChangedBy: user?.email || user?.id || 'system'
+            });
         }
     };
 

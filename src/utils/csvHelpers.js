@@ -83,6 +83,89 @@ export const convertToCSV = (data) => {
 };
 
 /**
+ * Validates and coerces a student object to ensure correct types
+ * @param {Object} obj - The raw student object from CSV parsing
+ * @returns {Object} - The validated and coerced student object
+ * @throws {Error} - If required fields are missing
+ */
+export const validateAndCoerceStudent = (obj) => {
+    // Validate required fields
+    const required = ['name', 'class', 'section', 'rollNo'];
+    for (const field of required) {
+        if (!obj[field] || String(obj[field]).trim() === '') {
+            throw new Error(`Missing required field: ${field}`);
+        }
+    }
+
+    // Helper to safely parse date
+    const safeParseDate = (dateStr) => {
+        if (!dateStr) return undefined;
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return undefined;
+            return date.toISOString().split('T')[0];
+        } catch {
+            return undefined;
+        }
+    };
+
+    // Helper to safely parse number
+    const safeParseNumber = (val) => {
+        if (val === undefined || val === null || val === '') return undefined;
+        const num = Number(val);
+        return isNaN(num) ? undefined : num;
+    };
+
+    // Coerce types and return cleaned object
+    const result = {
+        // Required fields
+        id: obj.id || crypto.randomUUID(),
+        name: String(obj.name).trim(),
+        class: String(obj.class).trim(),
+        section: String(obj.section).trim(),
+        rollNo: String(obj.rollNo).trim(),
+
+        // Optional fields with type coercion
+        age: safeParseNumber(obj.age),
+        address: obj.address ? String(obj.address).trim() : undefined,
+        phone: obj.phone ? String(obj.phone).trim() : undefined,
+        email: obj.email ? String(obj.email).trim() : undefined,
+        guardianName: obj.guardianName ? String(obj.guardianName).trim() :
+                     (obj.guardian_name ? String(obj.guardian_name).trim() : undefined),
+        admissionNumber: obj.admissionNumber ? String(obj.admissionNumber).trim() :
+                        (obj.admission_number ? String(obj.admission_number).trim() : undefined),
+
+        // Dates
+        admissionDate: safeParseDate(obj.admissionDate || obj.admission_date),
+        lastStatusChangeDate: safeParseDate(obj.lastStatusChangeDate || obj.last_status_change_date),
+        lastStatusChangedBy: obj.lastStatusChangedBy ? String(obj.lastStatusChangedBy).trim() :
+                            (obj.last_status_changed_by ? String(obj.last_status_changed_by).trim() : undefined),
+
+        // Status
+        admissionStatus: obj.admissionStatus || obj.status || 'Confirmed',
+
+        // Fee fields (UI calculated - store as strings/numbers)
+        feesAmount: obj.feesAmount ? String(obj.feesAmount) :
+                   (obj.fees_amount ? String(obj.fees_amount) : ''),
+        feesStatus: obj.feesStatus || obj.fees_status || 'Pending',
+        fine: safeParseNumber(obj.fine) || '',
+
+        // Arrays and Objects
+        feeHistory: obj.feeHistory || [],
+        tcDetails: obj.tcDetails || null,
+    };
+
+    // Remove undefined values for cleaner objects
+    Object.keys(result).forEach(key => {
+        if (result[key] === undefined) {
+            delete result[key];
+        }
+    });
+
+    return result;
+};
+
+/**
  * Parses a CSV string back into an array of student objects.
  * Deserializes nested custom formats back into objects/arrays.
  */
@@ -171,6 +254,8 @@ export const parseCSV = (csvText) => {
         return Object.keys(tc).length > 0 ? tc : null;
     };
 
+    const errors = [];
+
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
@@ -198,7 +283,21 @@ export const parseCSV = (csvText) => {
             }
         });
 
-        result.push(obj);
+        try {
+            // Validate and coerce the student object (Issue 5 fix)
+            const validatedStudent = validateAndCoerceStudent(obj);
+            result.push(validatedStudent);
+        } catch (error) {
+            errors.push(`Row ${i}: ${error.message}`);
+        }
+    }
+
+    // If there were validation errors, throw with details
+    if (errors.length > 0) {
+        const errorMsg = `CSV Import Errors:\n${errors.join('\n')}`;
+        console.error(errorMsg);
+        // Still return successfully parsed rows, but log errors
+        // Optionally, could throw here to stop import: throw new Error(errorMsg);
     }
 
     return result;
