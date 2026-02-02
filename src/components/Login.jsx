@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 import { LogIn, UserPlus, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function Login() {
@@ -104,7 +105,13 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 flex flex-col items-center gap-4">
+          {isLogin && (
+            <Link to="/forgot-password" className="text-sm text-slate-500 hover:text-indigo-600 hover:underline transition-colors">
+                Forgot Password?
+            </Link>
+          )}
+
           <button
             onClick={() => {
               setIsLogin(!isLogin);
