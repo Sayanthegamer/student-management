@@ -10,12 +10,15 @@ const safeJSONParse = (str) => {
 
 export const normalizeStudent = (student) => {
   // Extract feeHistory and other UI-only fields we don't want to send to DB as-is
-  // eslint-disable-next-line no-unused-vars
   const {
     feeHistory,
+    // eslint-disable-next-line no-unused-vars
     feesAmount,
+    // eslint-disable-next-line no-unused-vars
     feesStatus,
+    // eslint-disable-next-line no-unused-vars
     fine,
+    // eslint-disable-next-line no-unused-vars
     ...rest
   } = student;
 
@@ -25,7 +28,7 @@ export const normalizeStudent = (student) => {
     student_id: student.id,
     amount: parseFloat(fee.amount),
     date: new Date(fee.date).toISOString(),
-    month: fee.month,
+    month: fee.month, // Use dedicated column
     type: 'Fee',
     // Pack extra fields into description
     description: JSON.stringify({
@@ -88,7 +91,7 @@ export const denormalizeStudents = (studentsData, feesData) => {
       id: fee.id,
       amount: fee.amount,
       date: fee.date ? fee.date.split('T')[0] : '',
-      month: fee.month || extraDetails.month,
+      month: fee.month || extraDetails.month, // Support legacy/migrated data if needed
       ...extraDetails
     });
     return acc;
