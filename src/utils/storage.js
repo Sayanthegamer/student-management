@@ -1,20 +1,20 @@
-const STORAGE_KEY = 'student_management_data_v1';
+const STORAGE_KEY = 'student_management_session_v1';
 
 export const getStudents = () => {
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const data = sessionStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
   } catch (error) {
-    console.error("Error reading from localStorage", error);
+    console.error("Error reading from sessionStorage", error);
     return [];
   }
 };
 
 export const saveStudents = (students) => {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(students));
   } catch (error) {
-    console.error("Error saving to localStorage", error);
+    console.error("Error saving to sessionStorage", error);
   }
 };
 
@@ -72,11 +72,11 @@ export const addFeePayment = (studentId, paymentDetails) => {
 
 // --- Activity Logging System ---
 
-const ACTIVITIES_KEY = 'student_management_activities_v1';
+const ACTIVITIES_KEY = 'student_management_activities_session_v1';
 
 export const getActivities = () => {
   try {
-    const data = localStorage.getItem(ACTIVITIES_KEY);
+    const data = sessionStorage.getItem(ACTIVITIES_KEY);
     return data ? JSON.parse(data) : [];
   } catch (error) {
     console.error("Error reading activities", error);
@@ -96,7 +96,7 @@ export const logActivity = (type, description) => {
 
     // Keep only last 50 activities
     const updatedActivities = [newActivity, ...activities].slice(0, 50);
-    localStorage.setItem(ACTIVITIES_KEY, JSON.stringify(updatedActivities));
+    sessionStorage.setItem(ACTIVITIES_KEY, JSON.stringify(updatedActivities));
     return updatedActivities;
   } catch (error) {
     console.error("Error logging activity", error);
