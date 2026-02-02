@@ -9,8 +9,20 @@ const safeJSONParse = (str) => {
 };
 
 export const normalizeStudent = (student) => {
-  const { feeHistory, ...studentData } = student;
+  // Extract feeHistory and other UI-only fields we don't want to send to DB as-is
+  const {
+    feeHistory,
+    // eslint-disable-next-line no-unused-vars
+    feesAmount,
+    // eslint-disable-next-line no-unused-vars
+    feesStatus,
+    // eslint-disable-next-line no-unused-vars
+    fine,
+    // eslint-disable-next-line no-unused-vars
+    ...rest
+  } = student;
 
+  // 1. Prepare Fees
   const fees = (feeHistory || []).map(fee => ({
     id: fee.id,
     student_id: student.id,
@@ -25,11 +37,43 @@ export const normalizeStudent = (student) => {
     })
   }));
 
+  // 2. Prepare Student (Strict Allow-list & Mapping)
+
+  // Safe Date Parsing
+  let admissionDateVal;
+  const rawDate = student.admissionDate || student.admission_date;
+  if (rawDate) {
+      try {
+          admissionDateVal = new Date(rawDate).toISOString();
+      } catch {
+          admissionDateVal = new Date().toISOString(); // Fallback to now if invalid
+      }
+  }
+
   const cleanedStudent = {
-    ...studentData,
-    age: parseInt(studentData.age) || 0,
-    admission_date: new Date(studentData.admission_date).toISOString(),
+    id: student.id,
+    name: student.name,
+    class: student.class,
+    section: student.section,
+    // Map camelCase to snake_case
+    roll_no: student.rollNo,
+    admission_date: admissionDateVal,
+    status: student.admissionStatus || student.status || 'Confirmed', // Map admissionStatus to status column
+
+    // Optional fields: Use undefined if missing so key is excluded from JSON
+    // This prevents wiping existing data with NULLs during upsert
+    guardian_name: (student.guardianName || student.guardian_name) || undefined,
+    age: (student.age ? parseInt(student.age) : undefined),
+    address: student.address || undefined,
+    phone: student.phone || undefined,
+    email: student.email || undefined,
+    admission_number: (student.admissionNumber || student.admission_number) || undefined,
   };
+
+  // Filter out undefined keys explicitly (though JSON.stringify does this, Supabase client might check keys before stringifying)
+  Object.keys(cleanedStudent).forEach(key =>
+      cleanedStudent[key] === undefined && delete cleanedStudent[key]
+  );
 
   return { student: cleanedStudent, fees };
 };
@@ -53,8 +97,28 @@ export const denormalizeStudents = (studentsData, feesData) => {
     return acc;
   }, {});
 
-  return studentsData.map(student => ({
-    ...student,
-    feeHistory: feesMap[student.id] || []
+  return studentsData.map(s => ({
+    // Map snake_case DB columns back to UI camelCase
+    id: s.id,
+    name: s.name,
+    class: s.class,
+    section: s.section,
+    rollNo: s.roll_no,
+    admissionDate: s.admission_date ? s.admission_date.split('T')[0] : '',
+    admissionStatus: s.status,
+
+    guardianName: s.guardian_name,
+    age: s.age,
+    address: s.address,
+    phone: s.phone,
+    email: s.email,
+    admissionNumber: s.admission_number,
+
+    // Reconstruct calculated fields (optional, but good for UI consistency)
+    feesAmount: '',
+    feesStatus: 'Pending',
+    fine: '',
+
+    feeHistory: feesMap[s.id] || []
   }));
 };
