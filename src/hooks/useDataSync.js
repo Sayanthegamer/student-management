@@ -219,6 +219,7 @@ export const useDataSync = () => {
     deleteStudent,
     addFeePayment,
     importStudents,
-    dismissError
+    dismissError,
+    forceSync: () => importStudents(students)
   };
 };

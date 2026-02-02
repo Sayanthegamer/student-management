@@ -24,7 +24,7 @@ const Walkthrough = lazy(() => import('./components/Walkthrough'));
 
 function App() {
   const { user, loading } = useAuth();
-  const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents, dismissError } = useDataSync();
+  const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents, dismissError, forceSync } = useDataSync();
   const [editingStudent, setEditingStudent] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -114,7 +114,7 @@ function App() {
             </button>
             <span className="font-bold text-slate-800 text-lg">Student Manager</span>
           </div>
-          <SyncIndicator status={syncStatus} />
+          <SyncIndicator status={syncStatus} onSync={forceSync} />
         </div>
 
         {/* Mobile Sidebar Backdrop */}
@@ -131,7 +131,7 @@ function App() {
           transition-transform duration-300 ease-in-out
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}>
-          <Sidebar onClose={() => setIsMobileMenuOpen(false)} syncStatus={syncStatus} />
+          <Sidebar onClose={() => setIsMobileMenuOpen(false)} syncStatus={syncStatus} onSync={forceSync} />
         </div>
 
         {/* Main Content */}

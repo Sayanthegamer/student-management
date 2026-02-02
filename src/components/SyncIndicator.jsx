@@ -1,7 +1,7 @@
 import React from 'react';
 import { Cloud, CloudOff, RefreshCw, CheckCircle, AlertTriangle } from 'lucide-react';
 
-const SyncIndicator = ({ status, darkMode = false }) => {
+const SyncIndicator = ({ status, onSync, darkMode = false }) => {
   const getStatusConfig = () => {
     switch (status) {
       case 'syncing':
@@ -43,9 +43,20 @@ const SyncIndicator = ({ status, darkMode = false }) => {
   const textClasses = darkMode ? "text-slate-300" : "text-slate-600";
 
   return (
-    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-medium transition-all ${bgClasses}`}>
-      <Icon size={14} className={`${config.color} ${config.animate || ''}`} />
-      <span className={textClasses}>{config.text}</span>
+    <div className="flex items-center gap-2">
+      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-medium transition-all ${bgClasses}`}>
+        <Icon size={14} className={`${config.color} ${config.animate || ''}`} />
+        <span className={textClasses}>{config.text}</span>
+      </div>
+      {status !== 'synced' && status !== 'syncing' && onSync && (
+        <button
+          onClick={onSync}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm transition-colors flex items-center gap-1"
+        >
+          <RefreshCw size={12} />
+          Sync Now
+        </button>
+      )}
     </div>
   );
 };

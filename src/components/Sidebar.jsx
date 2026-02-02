@@ -4,7 +4,7 @@ import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOu
 import { useAuth } from '../context/AuthContext';
 import SyncIndicator from './SyncIndicator';
 
-const Sidebar = ({ onClose, syncStatus }) => {
+const Sidebar = ({ onClose, syncStatus, onSync }) => {
     const { signOut, user } = useAuth();
     const menuItems = [
         { path: '/overview', label: 'Overview', icon: LayoutDashboard },
@@ -73,7 +73,7 @@ const Sidebar = ({ onClose, syncStatus }) => {
 
             <div className="mt-auto pt-6 border-t border-white/10 flex flex-col gap-4">
                 <div className="px-2">
-                    <SyncIndicator status={syncStatus} darkMode={true} />
+                    <SyncIndicator status={syncStatus} onSync={onSync} darkMode={true} />
                 </div>
 
                 <button
