@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
@@ -10,6 +10,7 @@ import { useAuth } from './context/AuthContext';
 import { useDataSync } from './hooks/useDataSync';
 import SyncIndicator from './components/SyncIndicator';
 import SyncErrorModal from './components/SyncErrorModal';
+import SkeletonLoader from './components/SkeletonLoader';
 
 // Lazy Load Components for Performance
 const Overview = lazy(() => import('./components/Overview'));
@@ -21,22 +22,56 @@ const TransferCertificate = lazy(() => import('./components/TransferCertificate'
 const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
 const Walkthrough = lazy(() => import('./components/Walkthrough'));
 
-// Loading Fallback Component
-const PageLoader = () => (
-  <div className="flex items-center justify-center h-full w-full">
-    <div className="flex flex-col items-center gap-3">
-      <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-      <p className="text-indigo-600 font-medium animate-pulse">Loading...</p>
-    </div>
-  </div>
-);
-
 function App() {
   const { user, loading } = useAuth();
   const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents, dismissError } = useDataSync();
   const [editingStudent, setEditingStudent] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Student Management Handlers
+  const handleAddClick = useCallback(() => {
+    setEditingStudent(null);
+    navigate('/students/new');
+  }, [navigate]);
+
+  const handleEditClick = useCallback((student) => {
+    setEditingStudent(student);
+    navigate('/students/edit');
+  }, [navigate]);
+
+  const handleDeleteClick = useCallback((id) => {
+    if (window.confirm('Are you sure you want to delete this student?')) {
+      deleteStudent(id);
+    }
+  }, [deleteStudent]);
+
+  const handleSave = useCallback((studentData) => {
+    if (editingStudent) {
+      updateStudent({ ...studentData, id: editingStudent.id });
+    } else {
+      addStudent(studentData);
+    }
+    navigate('/students');
+  }, [editingStudent, updateStudent, addStudent, navigate]);
+
+  const handleUpdateStudent = useCallback((updatedStudent) => {
+    updateStudent(updatedStudent);
+  }, [updateStudent]);
+
+  const handlePayFee = useCallback((studentId, paymentDetails) => {
+    addFeePayment(studentId, paymentDetails);
+  }, [addFeePayment]);
+
+  const handleCancel = useCallback(() => {
+    setEditingStudent(null);
+    navigate('/students');
+  }, [navigate]);
+
+  const handleImportSuccess = useCallback((importedData) => {
+    importStudents(importedData);
+    alert('Data imported and synced successfully!');
+  }, [importStudents]);
 
   React.useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -50,7 +85,7 @@ function App() {
   }, [syncStatus]);
 
   if (loading) {
-    return <PageLoader />;
+    return <SkeletonLoader />;
   }
 
   // Handle unauthenticated routes explicitly
@@ -63,50 +98,6 @@ function App() {
       </Routes>
     );
   }
-
-  // Student Management Handlers
-  const handleAddClick = () => {
-    setEditingStudent(null);
-    navigate('/students/new');
-  };
-
-  const handleEditClick = (student) => {
-    setEditingStudent(student);
-    navigate('/students/edit');
-  };
-
-  const handleDeleteClick = (id) => {
-    if (window.confirm('Are you sure you want to delete this student?')) {
-      deleteStudent(id);
-    }
-  };
-
-  const handleSave = (studentData) => {
-    if (editingStudent) {
-      updateStudent({ ...studentData, id: editingStudent.id });
-    } else {
-      addStudent(studentData);
-    }
-    navigate('/students');
-  };
-
-  const handleUpdateStudent = (updatedStudent) => {
-    updateStudent(updatedStudent);
-  };
-
-  const handlePayFee = (studentId, paymentDetails) => {
-    addFeePayment(studentId, paymentDetails);
-  };
-
-  const handleCancel = () => {
-    setEditingStudent(null);
-    navigate('/students');
-  };
-
-  const handleImportSuccess = (importedData) => {
-    importStudents(importedData);
-    alert('Data imported and synced successfully!');
-  };
 
   return (
     <ErrorBoundary>
@@ -145,7 +136,7 @@ function App() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto relative pt-16 md:pt-0 w-full">
-          <Suspense fallback={<PageLoader />}>
+          <Suspense fallback={<SkeletonLoader />}>
             <Walkthrough
               onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
               onCloseMobileMenu={() => setIsMobileMenuOpen(false)}

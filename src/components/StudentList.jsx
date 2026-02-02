@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Edit2, Trash2, Search, Plus, IndianRupee } from 'lucide-react';
 import FeePaymentModal from './FeePaymentModal';
 import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
+
+const getFeeStatusForMonth = (student, month) => {
+    const isPaid = student.feeHistory?.some(p => p.month === month);
+    if (isPaid) return 'Paid';
+
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    return month < currentMonth ? 'Overdue' : 'Pending';
+};
 
 const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -15,19 +23,11 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [selectedStudentForFee, setSelectedStudentForFee] = useState(null);
 
-    const getFeeStatusForMonth = (student, month) => {
-        const isPaid = student.feeHistory?.some(p => p.month === month);
-        if (isPaid) return 'Paid';
-
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        return month < currentMonth ? 'Overdue' : 'Pending';
-    };
-
     // Get unique classes and sections for filters
-    const classes = [...new Set(students.map(s => s.class))].sort();
-    const sections = [...new Set(students.map(s => s.section))].sort();
+    const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
+    const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
 
-    const filteredStudents = students
+    const filteredStudents = useMemo(() => students
         .filter(student => {
             const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 student.rollNo.includes(searchTerm) ||
@@ -63,7 +63,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
             if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
             if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
             return 0;
-        });
+        }), [students, searchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder]);
 
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
@@ -81,16 +81,16 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
         currentPage * itemsPerPage
     );
 
-    const handlePayFeeClick = (student) => {
+    const handlePayFeeClick = useCallback((student) => {
         setSelectedStudentForFee(student);
         setShowPaymentModal(true);
-    };
+    }, []);
 
-    const handlePaymentSave = (studentId, paymentDetails) => {
+    const handlePaymentSave = useCallback((studentId, paymentDetails) => {
         onPayFee(studentId, paymentDetails);
         setShowPaymentModal(false);
         setSelectedStudentForFee(null);
-    };
+    }, [onPayFee]);
 
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-w-6xl mx-auto">
