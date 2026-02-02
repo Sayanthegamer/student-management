@@ -4,6 +4,8 @@ import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import ErrorBoundary from './components/ErrorBoundary';
 import Login from './components/Login';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 import { useAuth } from './context/AuthContext';
 import { useDataSync } from './hooks/useDataSync';
 import SyncIndicator from './components/SyncIndicator';
@@ -50,8 +52,15 @@ function App() {
     return <PageLoader />;
   }
 
+  // Handle unauthenticated routes explicitly
   if (!user) {
-    return <Login />;
+    return (
+      <Routes>
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="*" element={<Login />} />
+      </Routes>
+    );
   }
 
   // Student Management Handlers

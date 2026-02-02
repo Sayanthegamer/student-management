@@ -16,11 +16,11 @@ export const normalizeStudent = (student) => {
     student_id: student.id,
     amount: parseFloat(fee.amount),
     date: new Date(fee.date).toISOString(),
+    month: fee.month, // Use dedicated column
     type: 'Fee',
     // Pack extra fields into description
     description: JSON.stringify({
       remarks: fee.remarks,
-      month: fee.month,
       fine: fee.fine
     })
   }));
@@ -46,7 +46,8 @@ export const denormalizeStudents = (studentsData, feesData) => {
     acc[fee.student_id].push({
       id: fee.id,
       amount: fee.amount,
-      date: fee.date ? fee.date.split('T')[0] : '', // UI expects YYYY-MM-DD usually? Check StudentForm.
+      date: fee.date ? fee.date.split('T')[0] : '',
+      month: fee.month || extraDetails.month, // Support legacy/migrated data if needed
       ...extraDetails
     });
     return acc;

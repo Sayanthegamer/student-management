@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (!supabase) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(false);
         return;
     }
