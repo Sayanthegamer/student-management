@@ -39,11 +39,11 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
         .filter(student => {
             // Filter based on View Mode
             if (view === 'active') {
-                if (student.status === 'Transferred') return false;
+                if (student.admissionStatus === 'Transferred') return false;
             }
 
             if (view === 'transferred') {
-                if (student.status !== 'Transferred') return false;
+                if (student.admissionStatus !== 'Transferred') return false;
 
                 // 3 Months Retention Policy: Only show students who left in the last 3 months
                 if (student.tcDetails?.dateOfLeaving) {
