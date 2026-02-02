@@ -22,8 +22,8 @@ export const addStudent = (student) => {
   const students = getStudents();
   const newStudent = {
     ...student,
-    id: crypto.randomUUID(),
-    feeHistory: [] // Initialize empty fee history
+    id: student.id || crypto.randomUUID(),
+    feeHistory: student.feeHistory || [] // Initialize empty fee history if not provided
   };
   const updatedStudents = [newStudent, ...students];
   saveStudents(updatedStudents);
@@ -54,9 +54,9 @@ export const addFeePayment = (studentId, paymentDetails) => {
 
       let newPayments = [];
       if (Array.isArray(paymentDetails)) {
-        newPayments = paymentDetails.map(p => ({ ...p, id: crypto.randomUUID() }));
+        newPayments = paymentDetails.map(p => ({ ...p, id: p.id || crypto.randomUUID() }));
       } else {
-        newPayments = [{ ...paymentDetails, id: crypto.randomUUID() }];
+        newPayments = [{ ...paymentDetails, id: paymentDetails.id || crypto.randomUUID() }];
       }
 
       return {
