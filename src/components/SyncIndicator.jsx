@@ -48,13 +48,19 @@ const SyncIndicator = ({ status, onSync, darkMode = false }) => {
         <Icon size={14} className={`${config.color} ${config.animate || ''}`} />
         <span className={textClasses}>{config.text}</span>
       </div>
-      {status !== 'synced' && status !== 'syncing' && onSync && (
+      {onSync && (
         <button
           onClick={onSync}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm transition-colors flex items-center gap-1"
+          disabled={status === 'syncing'}
+          className={`text-xs font-bold px-3 py-1.5 rounded-full shadow-sm transition-colors flex items-center gap-1 ${
+            status === 'syncing'
+              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+          }`}
+          title="Force save to cloud"
         >
-          <RefreshCw size={12} />
-          Sync Now
+          <RefreshCw size={12} className={status === 'syncing' ? 'animate-spin' : ''} />
+          {status === 'syncing' ? 'Syncing...' : 'Sync Now'}
         </button>
       )}
     </div>
