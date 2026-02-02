@@ -3,7 +3,12 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import ErrorBoundary from './components/ErrorBoundary';
-import { getStudents, addStudent, updateStudent, deleteStudent, addFeePayment } from './utils/storage';
+import Login from './components/Login';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
+import { useAuth } from './context/AuthContext';
+import { useDataSync } from './hooks/useDataSync';
+import SyncIndicator from './components/SyncIndicator';
 
 // Lazy Load Components for Performance
 const Overview = lazy(() => import('./components/Overview'));
@@ -26,10 +31,37 @@ const PageLoader = () => (
 );
 
 function App() {
-  const [students, setStudents] = useState(getStudents());
+  const { user, loading } = useAuth();
+  const { students, syncStatus, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents } = useDataSync();
   const [editingStudent, setEditingStudent] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (syncStatus !== 'synced') {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [syncStatus]);
+
+  if (loading) {
+    return <PageLoader />;
+  }
+
+  // Handle unauthenticated routes explicitly
+  if (!user) {
+    return (
+      <Routes>
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="*" element={<Login />} />
+      </Routes>
+    );
+  }
 
   // Student Management Handlers
   const handleAddClick = () => {
@@ -44,30 +76,25 @@ function App() {
 
   const handleDeleteClick = (id) => {
     if (window.confirm('Are you sure you want to delete this student?')) {
-      const updated = deleteStudent(id);
-      setStudents(updated);
+      deleteStudent(id);
     }
   };
 
   const handleSave = (studentData) => {
     if (editingStudent) {
-      const updated = updateStudent({ ...studentData, id: editingStudent.id });
-      setStudents(updated);
+      updateStudent({ ...studentData, id: editingStudent.id });
     } else {
-      const updated = addStudent(studentData);
-      setStudents(updated);
+      addStudent(studentData);
     }
     navigate('/students');
   };
 
   const handleUpdateStudent = (updatedStudent) => {
-    const updated = updateStudent(updatedStudent);
-    setStudents(updated);
+    updateStudent(updatedStudent);
   };
 
   const handlePayFee = (studentId, paymentDetails) => {
-    const updated = addFeePayment(studentId, paymentDetails);
-    setStudents(updated);
+    addFeePayment(studentId, paymentDetails);
   };
 
   const handleCancel = () => {
@@ -76,8 +103,8 @@ function App() {
   };
 
   const handleImportSuccess = (importedData) => {
-    setStudents(importedData);
-    alert('Data imported successfully!');
+    importStudents(importedData);
+    alert('Data imported and synced successfully!');
   };
 
   return (
@@ -94,6 +121,7 @@ function App() {
             </button>
             <span className="font-bold text-slate-800 text-lg">Student Manager</span>
           </div>
+          <SyncIndicator status={syncStatus} />
         </div>
 
         {/* Mobile Sidebar Backdrop */}
@@ -110,7 +138,7 @@ function App() {
           transition-transform duration-300 ease-in-out
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}>
-          <Sidebar onClose={() => setIsMobileMenuOpen(false)} />
+          <Sidebar onClose={() => setIsMobileMenuOpen(false)} syncStatus={syncStatus} />
         </div>
 
         {/* Main Content */}
