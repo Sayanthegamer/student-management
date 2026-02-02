@@ -146,6 +146,8 @@ export const normalizeStudent = (student) => {
     admission_date: admissionDateVal,
     status: student.admissionStatus || student.status || 'Confirmed', // Map admissionStatus to status column
 
+    tc_details: student.tcDetails ? JSON.stringify(student.tcDetails) : undefined,
+
     // Optional fields: Use undefined if missing so key is excluded from JSON
     // This prevents wiping existing data with NULLs during upsert
     guardian_name: (student.guardianName || student.guardian_name) || undefined,
