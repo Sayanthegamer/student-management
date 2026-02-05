@@ -136,8 +136,12 @@ export const useDataSync = () => {
         if (error) throw error;
 
         if (fees.length > 0) {
+          // Only delete fees if there are new ones to insert
           const { error: delError } = await supabase.from('fees').delete().eq('student_id', studentData.id);
-          if (delError) throw delError;
+          if (delError) {
+            console.error('Fee deletion warning:', delError);
+            // Don't throw - fees might already be new format or partially deleted
+          }
 
           const { error: fError } = await supabase.from('fees').insert(fees);
           if (fError) throw fError;

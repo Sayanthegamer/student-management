@@ -84,17 +84,19 @@ export const getClassFeeAmount = (className) => {
 };
 
 export const normalizeStudent = (student) => {
-  // Extract feeHistory and other UI-only fields we don't want to send to DB as-is
+  // Extract ONLY storage/sync fields, ignore calculated fields
   const {
     feeHistory,
     // eslint-disable-next-line no-unused-vars
-    feesAmount,      // UI calculated field - not stored
+    feesAmount,      // ✗ Calculated by getClassFeeAmount() - not stored
     // eslint-disable-next-line no-unused-vars
-    feesStatus,      // UI calculated field - not stored
+    feesStatus,      // ✗ Calculated by calculateFeesStatus() - not stored
     // eslint-disable-next-line no-unused-vars
-    fine,            // UI calculated field - not stored
+    fine,            // ✗ Calculated per-payment in fee history - not stored
     // eslint-disable-next-line no-unused-vars
-    ...rest
+    tcDetails,       // ✓ Store as JSON string (packed separately below)
+    // eslint-disable-next-line no-unused-vars
+    ...rest          // ✓ All other fields (intentionally spread and ignored)
   } = student;
 
   // 1. Prepare Fees
@@ -114,14 +116,14 @@ export const normalizeStudent = (student) => {
 
   // 2. Prepare Student (Strict Allow-list & Mapping)
 
-  // Safe Date Parsing
+  // Safe Date Parsing - Store only YYYY-MM-DD, not full ISO
   let admissionDateVal;
   const rawDate = student.admissionDate || student.admission_date;
   if (rawDate) {
       try {
-          admissionDateVal = new Date(rawDate).toISOString();
+          admissionDateVal = new Date(rawDate).toISOString().split('T')[0];
       } catch {
-          admissionDateVal = new Date().toISOString(); // Fallback to now if invalid
+          admissionDateVal = new Date().toISOString().split('T')[0]; // Fallback to now if invalid
       }
   }
 
@@ -144,13 +146,14 @@ export const normalizeStudent = (student) => {
     // Map camelCase to snake_case
     roll_no: student.rollNo,
     admission_date: admissionDateVal,
-    status: student.status || student.admissionStatus || 'Confirmed',  // Check status FIRST
+    // UI always uses admissionStatus, DB column is status
+    status: student.admissionStatus || 'Confirmed',
 
     tc_details: student.tcDetails ? JSON.stringify(student.tcDetails) : undefined,
 
     // Optional fields: Use undefined if missing so key is excluded from JSON
     // This prevents wiping existing data with NULLs during upsert
-    guardian_name: (student.guardianName || student.guardian_name) || undefined,
+    guardian_name: student.guardianName || undefined,
     age: (student.age ? parseInt(student.age) : undefined),
     address: student.address || undefined,
     phone: student.phone || undefined,
@@ -176,7 +179,7 @@ export const denormalizeStudents = (studentsData, feesData) => {
   const feesMap = (feesData || []).reduce((acc, fee) => {
     if (!acc[fee.student_id]) acc[fee.student_id] = [];
 
-    // Unpack description
+    // Unpack description JSON
     const extraDetails = safeJSONParse(fee.description);
 
     acc[fee.student_id].push({
@@ -184,7 +187,8 @@ export const denormalizeStudents = (studentsData, feesData) => {
       amount: fee.amount,
       date: fee.date ? fee.date.split('T')[0] : '',
       month: fee.month || extraDetails.month, // Support legacy/migrated data if needed
-      ...extraDetails
+      remarks: extraDetails.remarks || '', // ← Explicitly extract
+      fine: extraDetails.fine || 0         // ← Explicitly extract (default 0)
     });
     return acc;
   }, {});

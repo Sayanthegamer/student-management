@@ -130,8 +130,7 @@ export const validateAndCoerceStudent = (obj) => {
         address: obj.address ? String(obj.address).trim() : undefined,
         phone: obj.phone ? String(obj.phone).trim() : undefined,
         email: obj.email ? String(obj.email).trim() : undefined,
-        guardianName: obj.guardianName ? String(obj.guardianName).trim() :
-                     (obj.guardian_name ? String(obj.guardian_name).trim() : undefined),
+        guardianName: obj.guardianName ? String(obj.guardianName).trim() : undefined,
         admissionNumber: obj.admissionNumber ? String(obj.admissionNumber).trim() :
                         (obj.admission_number ? String(obj.admission_number).trim() : undefined),
 
@@ -142,7 +141,8 @@ export const validateAndCoerceStudent = (obj) => {
                             (obj.last_status_changed_by ? String(obj.last_status_changed_by).trim() : undefined),
 
         // Status
-        admissionStatus: obj.admissionStatus || obj.status || 'Confirmed',
+        // UI always uses admissionStatus
+        admissionStatus: obj.admissionStatus || 'Confirmed',
 
         // Fee fields (UI calculated - store as strings/numbers)
         feesAmount: obj.feesAmount ? String(obj.feesAmount) :
@@ -209,11 +209,15 @@ export const parseCSV = (csvText) => {
         if (!str) return [];
         // Try JSON first (backward compatibility)
         if (str.startsWith('[') || str.startsWith('{')) {
-            try { return JSON.parse(str); } catch { /* ignore */ }
+            try {
+                const parsed = JSON.parse(str);
+                // Ensure fine defaults to 0 for each payment
+                return parsed.map(p => ({ ...p, fine: p.fine || 0 }));
+            } catch { /* ignore */ }
         }
 
         return str.split(' | ').map(paymentStr => {
-            const payment = {};
+            const payment = { fine: 0 }; // Default fine to 0
             // Split by comma, but be careful about potential commas in values (though we control format)
             // Simple split by ", " should work for our generated format
             const parts = paymentStr.split(', ');
@@ -224,9 +228,11 @@ export const parseCSV = (csvText) => {
                 if (key === 'Date') payment.date = val;
                 else if (key === 'Month') payment.month = val;
                 else if (key === 'Amt') payment.amount = Number(val);
-                else if (key === 'Fine') payment.fine = Number(val);
+                else if (key === 'Fine') payment.fine = Number(val) || 0; // Ensure 0 if parsing fails
                 else if (key === 'Rem') payment.remarks = val;
             });
+            // Generate ID for each payment
+            payment.id = crypto.randomUUID();
             return payment;
         });
     };

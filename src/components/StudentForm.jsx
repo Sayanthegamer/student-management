@@ -9,6 +9,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         class: '',
         section: '',
         rollNo: '',
+        guardianName: '',
         feesAmount: '',
         feesStatus: 'Pending',
         fine: '',
@@ -55,13 +56,20 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Track status changes
+        let dataToSave = { ...formData };
+        if (initialData && initialData.admissionStatus !== formData.admissionStatus) {
+            dataToSave.lastStatusChangeDate = new Date().toISOString().split('T')[0];
+            dataToSave.lastStatusChangedBy = 'form-edit';
+        }
+
         if (initialData) {
             logActivity('student', `Updated details for student: ${formData.name}`);
         } else {
             logActivity('student', `Admitted new student: ${formData.name} (Class ${formData.class})`);
         }
 
-        onSave(formData);
+        onSave(dataToSave);
     };
 
     return (
@@ -150,6 +158,18 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                                 placeholder="e.g. 21"
                                 required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-2 text-slate-600 text-sm font-medium">Guardian Name</label>
+                            <input
+                                type="text"
+                                name="guardianName"
+                                value={formData.guardianName}
+                                onChange={handleChange}
+                                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                                placeholder="e.g. Rajesh Kumar"
                             />
                         </div>
                     </div>
