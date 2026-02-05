@@ -29,9 +29,9 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
     const filteredStudents = useMemo(() => students
         .filter(student => {
-            const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                student.rollNo.includes(searchTerm) ||
-                student.class.includes(searchTerm);
+            const matchesSearch = student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                student.rollNo?.includes(searchTerm) ||
+                student.class?.includes(searchTerm);
             const matchesClass = filterClass ? student.class === filterClass : true;
             const matchesSection = filterSection ? student.section === filterSection : true;
 

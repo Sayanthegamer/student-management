@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { CheckCircle, Clock, XCircle, Filter, Search, MoreVertical } from 'lucide-react';
+import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
 import { logActivity } from '../utils/storage';
 
@@ -141,6 +141,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const confirmed = filteredStudents.filter(s => s.admissionStatus === 'Confirmed');
     const provisional = filteredStudents.filter(s => s.admissionStatus === 'Provisional');
     const cancelled = filteredStudents.filter(s => s.admissionStatus === 'Cancelled');
+    const transferred = filteredStudents.filter(s => s.admissionStatus === 'Transferred');
 
     const handleMoveStudent = (student, newStatus) => {
         if (window.confirm(`Are you sure you want to change status to ${newStatus}?`)) {
@@ -272,6 +273,15 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     color="#ef4444"
                     icon={XCircle}
                     students={cancelled}
+                    onMove={handleMoveStudent}
+                />
+                <StatusColumn
+                    title="Transferred"
+                    count={transferred.length}
+                    total={filteredStudents.length}
+                    color="#6366f1"
+                    icon={FileText}
+                    students={transferred}
                     onMove={handleMoveStudent}
                 />
             </div>

@@ -149,8 +149,6 @@ export const normalizeStudent = (student) => {
     // UI always uses admissionStatus, DB column is status
     status: student.admissionStatus || 'Confirmed',
 
-    tc_details: student.tcDetails ? JSON.stringify(student.tcDetails) : undefined,
-
     // Optional fields: Use undefined if missing so key is excluded from JSON
     // This prevents wiping existing data with NULLs during upsert
     guardian_name: student.guardianName || undefined,
@@ -164,6 +162,12 @@ export const normalizeStudent = (student) => {
     last_status_change_date: statusChangeDateVal,
     last_status_changed_by: student.lastStatusChangedBy || student.last_status_changed_by || undefined,
   };
+
+  // Only include tc_details if it's present in the student object
+  // This preserves existing tc_details during partial updates
+  if ('tcDetails' in student && student.tcDetails) {
+    cleanedStudent.tc_details = JSON.stringify(student.tcDetails);
+  }
 
   // Filter out undefined keys explicitly (though JSON.stringify does this, Supabase client might check keys before stringifying)
   Object.keys(cleanedStudent).forEach(key =>
