@@ -42,15 +42,16 @@ const ResetPassword = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-slate-200">
-                <div className="text-center mb-8">
-                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Lock className="text-indigo-600" size={24} />
+            <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-6 md:p-8 border border-slate-200">
+                <div className="text-center mb-6 md:mb-8">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Lock className="text-indigo-600" size={20} className="md:hidden" />
+                        <Lock className="text-indigo-600" size={24} className="hidden md:block" />
                     </div>
-                    <h1 className="text-2xl font-bold text-slate-800 mb-2">
+                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 mb-2">
                         Set New Password
                     </h1>
-                    <p className="text-slate-500 text-sm">
+                    <p className="text-slate-500 text-sm md:text-base">
                         Please verify your new password below.
                     </p>
                 </div>
@@ -64,12 +65,12 @@ const ResetPassword = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">New Password</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">New Password</label>
                         <input
                             type="password"
                             required
                             minLength={6}
-                            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                            className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-base"
                             placeholder="Min 6 characters"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -79,7 +80,7 @@ const ResetPassword = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-200"
+                        className="w-full py-2.5 md:py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-200 min-h-[48px] touch-manipulation"
                     >
                         {loading ? <Loader2 className="animate-spin" size={20} /> : 'Update Password'}
                     </button>

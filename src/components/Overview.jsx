@@ -4,19 +4,20 @@ import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock } 
 import { getActivities } from '../utils/storage';
 
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext }) => (
-    <div className="bg-white rounded-2xl p-6 flex flex-col gap-4 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
+    <div className="bg-white rounded-2xl p-4 md:p-6 flex flex-col gap-3 md:gap-4 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
         <div className="flex justify-between items-start">
-            <div>
-                <p className="m-0 text-slate-500 text-sm font-medium tracking-wide uppercase">{title}</p>
-                <h3 className="mt-1 text-3xl text-slate-800 font-bold tracking-tight">{value}</h3>
+            <div className="min-w-0 flex-1">
+                <p className="m-0 text-slate-500 text-xs md:text-sm font-medium tracking-wide uppercase">{title}</p>
+                <h3 className="mt-1 text-2xl md:text-3xl text-slate-800 font-bold tracking-tight">{value}</h3>
             </div>
-            <div className={`p-3 rounded-xl ${colorClass} bg-opacity-10`}>
-                <Icon size={24} className="opacity-90" />
+            <div className={`p-2 md:p-3 rounded-xl ${colorClass} bg-opacity-10 shrink-0 ml-2`}>
+                <Icon size={20} className="md:hidden opacity-90" />
+                <Icon size={24} className="hidden md:block opacity-90" />
             </div>
         </div>
         {subtext && (
             <div className="flex items-center gap-2 pt-2 border-t border-slate-50">
-                <p className="m-0 text-xs text-slate-400 font-medium">{subtext}</p>
+                <p className="m-0 text-[10px] md:text-xs text-slate-400 font-medium">{subtext}</p>
             </div>
         )}
     </div>
@@ -57,10 +58,10 @@ const Overview = ({ students }) => {
     }, [students]); // Re-fetch when students change (likely triggers activity)
 
     return (
-        <div className="p-4 md:p-6 max-w-7xl mx-auto">
-            <h2 className="text-white mb-6 text-2xl font-bold">Dashboard Overview</h2>
+        <div className="p-3 md:p-6 max-w-7xl mx-auto">
+            <h2 className="text-white mb-4 md:mb-6 text-xl md:text-2xl font-bold">Dashboard Overview</h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-2 gap-3 md:gap-6 mb-6 md:mb-8 sm:grid-cols-2 lg:grid-cols-4">
                 <StatCard
                     title="Total Students"
                     value={totalStudents}
@@ -91,42 +92,48 @@ const Overview = ({ students }) => {
                 />
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100" id="recent-activities">
-                <h3 className="m-0 mb-6 text-slate-800 text-xl font-bold flex items-center gap-2">
+            <div className="bg-white rounded-2xl p-4 md:p-8 shadow-sm border border-slate-100" id="recent-activities">
+                <h3 className="m-0 mb-4 md:mb-6 text-slate-800 text-lg md:text-xl font-bold flex items-center gap-2">
                     Recent Activities
                     <span className="text-xs font-normal text-slate-500 bg-slate-100 px-2 py-1 rounded-full flex items-center gap-1">
                         <Activity size={12} /> Live Updates
                     </span>
                 </h3>
 
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3 md:gap-4">
                     {activities.length > 0 ? (
                         activities.map((activity) => (
-                            <div key={activity.id} className="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+                            <div key={activity.id} className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
                                 <div className={`p-2 rounded-lg shrink-0 ${activity.type === 'fee' ? 'bg-emerald-100 text-emerald-600' :
                                     activity.type === 'student' ? 'bg-indigo-100 text-indigo-600' :
                                         activity.type === 'tc' ? 'bg-rose-100 text-rose-600' :
                                             activity.type === 'admission' ? 'bg-amber-100 text-amber-600' :
                                                 'bg-slate-100 text-slate-600'
                                     }`}>
-                                    {activity.type === 'fee' && <IndianRupee size={18} />}
-                                    {activity.type === 'student' && <UserPlus size={18} />}
-                                    {activity.type === 'tc' && <FileText size={18} />}
-                                    {activity.type === 'admission' && <Users size={18} />}
-                                    {activity.type === 'system' && <Activity size={18} />}
+                                    {activity.type === 'fee' && <IndianRupee size={16} className="md:hidden" />}
+                                    {activity.type === 'fee' && <IndianRupee size={18} className="hidden md:block" />}
+                                    {activity.type === 'student' && <UserPlus size={16} className="md:hidden" />}
+                                    {activity.type === 'student' && <UserPlus size={18} className="hidden md:block" />}
+                                    {activity.type === 'tc' && <FileText size={16} className="md:hidden" />}
+                                    {activity.type === 'tc' && <FileText size={18} className="hidden md:block" />}
+                                    {activity.type === 'admission' && <Users size={16} className="md:hidden" />}
+                                    {activity.type === 'admission' && <Users size={18} className="hidden md:block" />}
+                                    {activity.type === 'system' && <Activity size={16} className="md:hidden" />}
+                                    {activity.type === 'system' && <Activity size={18} className="hidden md:block" />}
                                 </div>
-                                <div className="flex-1">
-                                    <p className="text-slate-800 font-medium text-sm m-0">{activity.description}</p>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-slate-800 font-medium text-xs md:text-sm m-0">{activity.description}</p>
                                     <p className="text-slate-400 text-xs mt-1 flex items-center gap-1">
                                         <Clock size={10} />
-                                        {new Date(activity.timestamp).toLocaleString()}
+                                        <span className="hidden sm:inline">{new Date(activity.timestamp).toLocaleString()}</span>
+                                        <span className="sm:hidden">{new Date(activity.timestamp).toLocaleDateString()}</span>
                                     </p>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <div className="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
-                            <p className="text-slate-400 font-medium">No recent activities found.</p>
+                        <div className="text-center py-8 md:py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                            <p className="text-slate-400 font-medium text-sm md:text-base">No recent activities found.</p>
                         </div>
                     )}
                 </div>

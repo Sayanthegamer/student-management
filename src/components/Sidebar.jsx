@@ -16,21 +16,22 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
     ];
 
     return (
-        <div className="sidebar bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl h-full p-6 flex flex-col gap-8 rounded-2xl text-white relative">
+        <div className="sidebar bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl h-full p-4 md:p-6 flex flex-col gap-6 md:gap-8 rounded-2xl text-white relative">
             {/* Mobile Close Button */}
             <button
                 onClick={onClose}
-                className="md:hidden absolute top-4 right-4 p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                className="md:hidden absolute top-4 right-4 p-2.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors touch-manipulation min-w-[44px] min-h-[44px]"
             >
                 <X size={20} />
             </button>
 
-            <div className="flex items-center gap-4 px-2 py-2">
-                <div className="bg-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-500/30 flex items-center justify-center">
-                    <GraduationCap size={24} color="white" />
+            <div className="flex items-center gap-3 md:gap-4 px-2 py-2">
+                <div className="bg-indigo-600 p-2 md:p-2.5 rounded-xl shadow-lg shadow-indigo-500/30 flex items-center justify-center shrink-0">
+                    <GraduationCap size={20} color="white" className="md:hidden" />
+                    <GraduationCap size={24} color="white" className="hidden md:block" />
                 </div>
-                <div>
-                    <h1 className="m-0 text-lg font-bold text-white leading-none tracking-tight">
+                <div className="min-w-0 flex-1">
+                    <h1 className="m-0 text-base md:text-lg font-bold text-white leading-none tracking-tight">
                         Student Manager
                     </h1>
                     <span className="text-xs text-indigo-300 font-medium tracking-wide uppercase">Pro</span>
@@ -47,7 +48,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                             to={item.path}
                             onClick={onClose}
                             className={({ isActive }) => `
-                                relative flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group overflow-hidden
+                                relative flex items-center gap-3 px-4 py-3 md:py-3.5 rounded-xl transition-all duration-300 group overflow-hidden touch-manipulation min-h-[48px]
                                 ${isActive
                                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/20 font-medium'
                                     : 'text-slate-400 hover:bg-white/5 hover:text-white'
@@ -59,8 +60,9 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                     {isActive && (
                                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-300 rounded-r-full"></div>
                                     )}
-                                    <Icon size={20} className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                                    <span className="relative z-10">{item.label}</span>
+                                    <Icon size={18} className={`md:hidden transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                                    <Icon size={20} className={`hidden md:block transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                                    <span className="relative z-10 text-sm md:text-base">{item.label}</span>
                                     {isActive && (
                                         <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"></div>
                                     )}
@@ -71,7 +73,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                 })}
             </nav>
 
-            <div className="mt-auto pt-6 border-t border-white/10 flex flex-col gap-4">
+            <div className="mt-auto pt-4 md:pt-6 border-t border-white/10 flex flex-col gap-3 md:gap-4">
                 <div className="px-2">
                     <SyncIndicator status={syncStatus} onSync={onSync} darkMode={true} />
                 </div>
@@ -84,22 +86,23 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                         }
                         signOut();
                     }}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group w-full text-left ${
+                    className={`flex items-center gap-3 px-4 py-3 md:py-3.5 rounded-xl transition-all duration-300 group w-full text-left touch-manipulation min-h-[48px] ${
                         syncStatus === 'syncing'
                             ? 'text-slate-600 cursor-not-allowed'
                             : 'text-slate-400 hover:bg-red-500/10 hover:text-red-400'
                     }`}
                     title={syncStatus === 'syncing' ? 'Sync in progress...' : 'Sign Out'}
                 >
-                    <LogOut size={20} className={syncStatus !== 'syncing' ? "group-hover:scale-110 transition-transform" : ""} />
-                    <span>Sign Out</span>
+                    <LogOut size={18} className="md:hidden" />
+                    <LogOut size={20} className={`hidden md:block ${syncStatus !== 'syncing' ? "group-hover:scale-110 transition-transform" : ""}`} />
+                    <span className="text-sm md:text-base">Sign Out</span>
                 </button>
 
                 <div className="flex items-center gap-3 px-2 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-[10px] font-bold text-white">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
                         {user?.email?.[0].toUpperCase() || 'U'}
                     </div>
-                    <div className="flex flex-col overflow-hidden">
+                    <div className="flex flex-col overflow-hidden min-w-0 flex-1">
                         <span className="text-xs font-medium text-white truncate max-w-[140px]">{user?.email || 'User'}</span>
                         <span className="text-[10px] text-indigo-300">Logged in</span>
                     </div>

@@ -22,6 +22,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [sortOrder, setSortOrder] = useState('asc'); // asc, desc
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [selectedStudentForFee, setSelectedStudentForFee] = useState(null);
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
 
     // Get unique classes and sections for filters
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
@@ -93,83 +94,101 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     }, [onPayFee]);
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-w-6xl mx-auto">
-            <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
-                <h2 className="m-0 text-slate-800 text-2xl font-bold tracking-tight">Student Records</h2>
-                <button onClick={onAdd} className="btn btn-primary shadow-indigo-200">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-6 max-w-6xl mx-auto">
+            <div className="flex justify-between items-center mb-4 md:mb-6 flex-wrap gap-3">
+                <h2 className="m-0 text-slate-800 text-xl md:text-2xl font-bold tracking-tight">Student Records</h2>
+                <button onClick={onAdd} className="btn btn-primary shadow-indigo-200 text-sm md:text-base px-4 md:px-6 py-2 md:py-3 min-h-[44px]">
                     <Plus size={20} />
-                    Add Student
+                    <span className="md:inline">Add Student</span>
+                    <span className="hidden md:inline"></span>
                 </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mb-6 md:flex md:flex-wrap md:items-center">
-                <div className="relative col-span-2 md:col-span-1 md:flex-1 md:min-w-[240px]">
-                    <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                        type="text"
-                        placeholder="Search by Name, Roll No..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 pl-10"
-                    />
-                </div>
-
-                {/* Filters */}
-                <select
-                    value={filterClass}
-                    onChange={(e) => setFilterClass(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[120px]"
-                >
-                    <option value="">All Classes</option>
-                    {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
-                </select>
-
-                <select
-                    value={filterSection}
-                    onChange={(e) => setFilterSection(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[120px]"
-                >
-                    <option value="">All Sections</option>
-                    {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
-                </select>
-
-                <select
-                    value={filterFeeStatus}
-                    onChange={(e) => setFilterFeeStatus(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[130px]"
-                >
-                    <option value="">All Status</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Overdue">Overdue</option>
-                </select>
-
-                {/* Sorting */}
-                <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto"
-                >
-                    <option value="name">Sort: Name</option>
-                    <option value="rollNo">Sort: Roll No</option>
-                    <option value="class">Sort: Class</option>
-                </select>
-
+            {/* Mobile Filter Toggle */}
+            <div className="md:hidden mb-4">
                 <button
-                    onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                    className="btn bg-slate-50 border border-slate-200 p-2.5 text-slate-600 hover:bg-slate-100 w-full md:w-auto flex justify-center"
-                    title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                    onClick={() => setShowMobileFilters(!showMobileFilters)}
+                    className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-700 font-medium flex items-center justify-center gap-2 transition-all active:bg-slate-100 min-h-[44px]"
                 >
-                    {sortOrder === 'asc' ? '↓' : '↑'}
+                    <Search size={18} />
+                    Filters & Search
+                    <svg className={`w-4 h-4 transition-transform ${showMobileFilters ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                 </button>
+            </div>
 
-                <div className="hidden md:block w-px h-8 bg-slate-200 mx-1"></div>
+            {/* Filters - Collapsible on Mobile */}
+            <div className={`${showMobileFilters ? 'block' : 'hidden'} md:block mb-4 md:mb-6 space-y-3 md:space-y-0`}>
+                <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:items-center">
+                    <div className="relative col-span-2 md:col-span-1 md:flex-1 md:min-w-[240px]">
+                        <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Search by Name, Roll No..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 pl-10 text-base"
+                        />
+                    </div>
 
-                <div className="col-span-2 md:col-span-1">
-                    <CustomMonthPicker
-                        value={filterMonth}
-                        onChange={setFilterMonth}
-                    />
+                    {/* Filters */}
+                    <select
+                        value={filterClass}
+                        onChange={(e) => setFilterClass(e.target.value)}
+                        className="bg-slate-50 border border-slate-200 px-3 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[120px] text-base"
+                    >
+                        <option value="">All Classes</option>
+                        {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
+                    </select>
+
+                    <select
+                        value={filterSection}
+                        onChange={(e) => setFilterSection(e.target.value)}
+                        className="bg-slate-50 border border-slate-200 px-3 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[120px] text-base"
+                    >
+                        <option value="">All Sections</option>
+                        {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
+                    </select>
+
+                    <select
+                        value={filterFeeStatus}
+                        onChange={(e) => setFilterFeeStatus(e.target.value)}
+                        className="bg-slate-50 border border-slate-200 px-3 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto md:min-w-[130px] text-base"
+                    >
+                        <option value="">All Status</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Overdue">Overdue</option>
+                    </select>
+
+                    {/* Sorting */}
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="bg-slate-50 border border-slate-200 px-3 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-full md:w-auto text-base"
+                    >
+                        <option value="name">Sort: Name</option>
+                        <option value="rollNo">Sort: Roll No</option>
+                        <option value="class">Sort: Class</option>
+                    </select>
+
+                    <button
+                        onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                        className="btn bg-slate-50 border border-slate-200 p-2.5 text-slate-600 hover:bg-slate-100 w-full md:w-auto flex justify-center min-h-[44px]"
+                        title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                    >
+                        {sortOrder === 'asc' ? '↓' : '↑'}
+                    </button>
+
+                    <div className="hidden md:block w-px h-8 bg-slate-200 mx-1"></div>
+
+                    <div className="col-span-2 md:col-span-1">
+                        <CustomMonthPicker
+                            value={filterMonth}
+                            onChange={setFilterMonth}
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -251,18 +270,18 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
             </div>
 
             {/* Mobile Card View */}
-            <div className="flex md:hidden flex-col gap-4">
+            <div className="flex md:hidden flex-col gap-3">
                 {currentStudents.map(student => {
                     const status = getFeeStatusForMonth(student, filterMonth);
                     return (
-                        <div key={student.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                            <div className="flex justify-between items-start mb-3">
-                                <div>
-                                    <h3 className="m-0 text-lg font-bold text-slate-800">{student.name}</h3>
-                                    <p className="m-0 mt-1 text-sm text-slate-500 font-medium">Class: {student.class}-{student.section} <span className="mx-1 text-slate-300">|</span> Roll: {student.rollNo}</p>
+                        <div key={student.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <div className="flex justify-between items-start mb-2">
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="m-0 text-base font-bold text-slate-800">{student.name}</h3>
+                                    <p className="m-0 mt-1 text-xs md:text-sm text-slate-500 font-medium truncate">Class: {student.class}-{student.section} <span className="mx-1 text-slate-300">|</span> Roll: {student.rollNo}</p>
                                 </div>
                                 <span
-                                    className={`px-2.5 py-1 rounded-md text-xs font-bold border ${status === 'Paid'
+                                    className={`px-2 py-0.5 rounded-md text-xs font-bold border shrink-0 ml-2 ${status === 'Paid'
                                         ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
                                         : status === 'Overdue'
                                             ? 'bg-rose-50 text-rose-700 border-rose-100'
@@ -273,37 +292,36 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 </span>
                             </div>
 
-                            <div className="flex justify-end items-center mt-4 pt-4 border-t border-slate-100">
-                                <div className="flex gap-3">
-                                    <button
-                                        onClick={() => handlePayFeeClick(student)}
-                                        className="flex-1 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 font-medium text-sm border border-emerald-100 flex items-center gap-2"
-                                        aria-label={`Pay fees for ${student.name}`}
-                                    >
-                                        <IndianRupee size={16} /> Pay
-                                    </button>
-                                    <button
-                                        onClick={() => onEdit(student)}
-                                        className="p-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100"
-                                        aria-label={`Edit ${student.name}`}
-                                    >
-                                        <Edit2 size={18} />
-                                    </button>
-                                    <button
-                                        onClick={() => onDelete(student.id)}
-                                        className="p-2 rounded-lg bg-rose-50 text-rose-600 border border-rose-100"
-                                        aria-label={`Delete ${student.name}`}
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
-                                </div>
+                            <div className="flex gap-2 mt-3 pt-3 border-t border-slate-100">
+                                <button
+                                    onClick={() => handlePayFeeClick(student)}
+                                    className="flex-1 px-3 py-2.5 rounded-lg bg-emerald-50 text-emerald-700 font-medium text-sm border border-emerald-100 flex items-center justify-center gap-2 min-h-[44px] touch-manipulation"
+                                    aria-label={`Pay fees for ${student.name}`}
+                                >
+                                    <IndianRupee size={16} /> Pay
+                                </button>
+                                <button
+                                    onClick={() => onEdit(student)}
+                                    className="p-2.5 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 min-w-[44px] min-h-[44px] touch-manipulation"
+                                    aria-label={`Edit ${student.name}`}
+                                >
+                                    <Edit2 size={18} />
+                                </button>
+                                <button
+                                    onClick={() => onDelete(student.id)}
+                                    className="p-2.5 rounded-lg bg-rose-50 text-rose-600 border border-rose-100 min-w-[44px] min-h-[44px] touch-manipulation"
+                                    aria-label={`Delete ${student.name}`}
+                                >
+                                    <Trash2 size={18} />
+                                </button>
                             </div>
                         </div>
                     );
                 })}
                 {currentStudents.length === 0 && (
-                    <div className="p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                        No students found.
+                    <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                        <Search size={32} className="mx-auto mb-2 opacity-30" />
+                        <p className="text-sm font-medium">No students found.</p>
                     </div>
                 )}
             </div>

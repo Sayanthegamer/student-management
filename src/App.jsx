@@ -104,15 +104,15 @@ function App() {
       <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
       <div className="app-container flex h-screen overflow-hidden">
         {/* Mobile Header */}
-        <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 flex items-center px-4 justify-between">
-          <div className="flex items-center gap-3">
+        <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-slate-200 z-30 flex items-center px-3 justify-between safe-area-inset-top">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+              className="p-2.5 -ml-1 text-slate-600 hover:bg-slate-100 rounded-xl touch-manipulation active:bg-slate-200 transition-colors"
             >
-              <Menu size={24} />
+              <Menu size={22} />
             </button>
-            <span className="font-bold text-slate-800 text-lg">Student Manager</span>
+            <span className="font-bold text-slate-800 text-base">Student Manager</span>
           </div>
           <SyncIndicator status={syncStatus} onSync={forceSync} />
         </div>
@@ -135,7 +135,7 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto relative pt-16 md:pt-0 w-full">
+        <main className="flex-1 overflow-y-auto relative pt-14 md:pt-0 w-full">
           <Suspense fallback={<SkeletonLoader />}>
             <Walkthrough
               onOpenMobileMenu={() => setIsMobileMenuOpen(true)}

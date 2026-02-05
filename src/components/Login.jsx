@@ -39,12 +39,12 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-slate-200">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-slate-800 mb-2">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-6 md:p-8 border border-slate-200">
+        <div className="text-center mb-6 md:mb-8">
+          <h1 className="text-xl md:text-2xl font-bold text-slate-800 mb-2">
             {isLogin ? 'Welcome Back' : 'Create Account'}
           </h1>
-          <p className="text-slate-500">
+          <p className="text-sm md:text-base text-slate-500">
             Student Management System
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-6 flex flex-col items-center gap-4">
+        <div className="mt-5 md:mt-6 flex flex-col items-center gap-3 md:gap-4">
           {isLogin && (
             <Link to="/forgot-password" className="text-sm text-slate-500 hover:text-indigo-600 hover:underline transition-colors">
                 Forgot Password?
