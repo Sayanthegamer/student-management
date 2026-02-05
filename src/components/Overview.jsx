@@ -24,7 +24,7 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext }) => (
 
 const Overview = ({ students }) => {
     // Calculate stats
-    const activeStudents = students.filter(s => s.status !== 'Transferred');
+    const activeStudents = students.filter(s => s.admissionStatus !== 'Transferred');
     const totalStudents = activeStudents.length;
 
     const currentMonth = new Date().toISOString().slice(0, 7);

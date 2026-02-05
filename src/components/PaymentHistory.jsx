@@ -138,7 +138,7 @@ const PaymentHistory = ({ students }) => {
                             <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
                                 <td className="p-4 font-medium text-slate-700">
                                     {student.name}
-                                    {student.status === 'Transferred' && <span className="ml-2 text-xs text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100 font-bold">Transferred</span>}
+                                    {student.admissionStatus === 'Transferred' && <span className="ml-2 text-xs text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100 font-bold">Transferred</span>}
                                 </td>
                                 <td className="p-4 text-slate-500">{student.class} - {student.section}</td>
                                 <td className="p-4 text-slate-500">{student.rollNo}</td>
@@ -181,7 +181,7 @@ const PaymentHistory = ({ students }) => {
                             <div>
                                 <h3 className="font-bold text-slate-800 flex items-center gap-2">
                                     {student.name}
-                                    {student.status === 'Transferred' && <span className="text-[10px] text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100">Transferred</span>}
+                                    {student.admissionStatus === 'Transferred' && <span className="text-[10px] text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100">Transferred</span>}
                                 </h3>
                                 <p className="text-sm text-slate-500">Class {student.class}-{student.section} | Roll: {student.rollNo}</p>
                             </div>
