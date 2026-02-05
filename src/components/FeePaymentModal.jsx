@@ -16,6 +16,9 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [error, setError] = useState('');
     const [totalPayable, setTotalPayable] = useState(0);
 
+    // Check if student is transferred
+    const isTransferred = student.admissionStatus === 'Transferred';
+
     // Helper to calculate fine for a specific month
     const calculateFineForMonth = (monthStr, payDateStr) => {
         const payDate = new Date(payDateStr);
@@ -164,6 +167,19 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                         <X size={20} />
                     </button>
                 </div>
+
+                {/* Transferred Student Warning */}
+                {isTransferred && (
+                    <div className="mx-6 mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+                        <AlertCircle size={20} className="text-amber-600 shrink-0 mt-0.5" />
+                        <div className="flex-1">
+                            <p className="text-amber-800 font-semibold text-sm">Student Has Transferred</p>
+                            <p className="text-amber-700 text-xs mt-1">
+                                This student has already been transferred and issued a Transfer Certificate. Recording fee payments may not be appropriate.
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
 

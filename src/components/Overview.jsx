@@ -42,7 +42,7 @@ const Overview = ({ students }) => {
 
     const currentYear = new Date().getFullYear().toString();
     const newAdmissions = students.filter(student =>
-        student.admissionDate && student.admissionDate.startsWith(currentYear)
+        student.admissionDate?.startsWith(currentYear)
     ).length;
 
     const [activities, setActivities] = useState(() => getActivities());

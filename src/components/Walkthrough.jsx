@@ -233,8 +233,8 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
 
     const handleNext = () => {
         if (currentStep < steps.length - 1) {
-            const nextStep = steps[currentStep + 1];
-            if (nextStep.action) nextStep.action();
+            const currentStepData = steps[currentStep];
+            if (currentStepData.action) currentStepData.action();
             setCurrentStep(prev => prev + 1);
         } else {
             handleClose(true);
@@ -243,8 +243,8 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
 
     const handlePrev = () => {
         if (currentStep > 0) {
-            const prevStep = steps[currentStep - 1];
-            if (prevStep.action) prevStep.action();
+            const currentStepData = steps[currentStep];
+            if (currentStepData.action) currentStepData.action();
             setCurrentStep(prev => prev - 1);
         }
     };
