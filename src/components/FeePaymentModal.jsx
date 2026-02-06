@@ -123,8 +123,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     };
 
     return createPortal(
-        <div className={`fixed inset-0 bg-slate-900/60 z-50 overflow-y-auto flex items-start md:items-center p-3 md:p-4 modal-backdrop backdrop-blur-sm ${isClosing ? 'closing' : ''}`}>
-            <div className={`bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border border-slate-100 ${isClosing ? 'scale-out' : 'scale-in'}`}>
+        <div className={`fixed inset-0 bg-slate-900/60 z-50 overflow-y-auto flex items-start md:items-center p-3 md:p-4 modal-backdrop backdrop-blur-sm ${isClosing ? 'closing' : ''}`} onClick={handleClose}>
+            <div className={`bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border border-slate-100 ${isClosing ? 'scale-out' : 'scale-in'}`} onClick={(e) => e.stopPropagation()}>
 
                 <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-hidden">
                     <div className="relative z-10">

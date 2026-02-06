@@ -108,21 +108,21 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
             <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden page-enter">
                 <div className="bg-slate-900 px-6 py-8 md:px-10 text-white relative overflow-hidden">
                     <div className="relative z-10">
-                        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{initialData ? 'Edit Student Record' : 'Register New Student'}</h2>
+                        <h2 className="text-xl md:text-3xl font-bold tracking-tight">{initialData ? 'Edit Student Record' : 'Register New Student'}</h2>
                         <p className="text-slate-400 mt-2 text-sm md:text-base font-medium">Please fill in the official details for the institutional record.</p>
                     </div>
                     <div className="absolute top-0 right-0 p-8 opacity-10">
                         <GraduationCap size={120} />
                     </div>
-                    <button 
-                        onClick={onCancel} 
+                    <button
+                        onClick={onCancel}
                         className="absolute top-6 right-6 p-2 rounded-xl bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-all"
                     >
                         <X size={20} />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 md:p-10 flex flex-col gap-10">
+                <form onSubmit={handleSubmit} className="p-4 md:p-10 flex flex-col gap-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
                         {/* Personal Information Group */}
                         <div className="space-y-6">
@@ -260,7 +260,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 </form>
 
                 {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
-                    <div className="bg-slate-50/50 px-6 py-10 md:px-10 border-t border-slate-100">
+                    <div className="bg-slate-50/50 px-4 py-6 md:px-10 border-t border-slate-100">
                         <div className="flex items-center gap-2 mb-6">
                             <Calendar size={18} className="text-slate-500" />
                             <h3 className="font-bold text-slate-800 tracking-tight">Recent Payment History</h3>
