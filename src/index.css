@@ -12,6 +12,10 @@
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+* {
+  touch-action: manipulation;
+}
+
 body {
   margin: 0;
   font-family: var(--font-family);
@@ -19,6 +23,7 @@ body {
   min-height: 100vh;
   color: #1f2937;
   -webkit-font-smoothing: antialiased;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Glassmorphism Utilities - Keeping these for now as utility classes */

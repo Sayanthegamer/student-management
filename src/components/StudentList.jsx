@@ -155,35 +155,35 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 </div>
 
                 {showFilters && (
-                    <div className="p-4 bg-slate-50/50 border-b border-slate-100 grid grid-cols-2 md:grid-cols-5 gap-3 slide-down">
-                        <div className="col-span-2 md:col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Class</label>
+                    <div className="p-4 bg-slate-50/50 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 slide-down">
+                        <div className="sm:col-span-1 md:col-span-1">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Class</label>
                             <select
                                 value={filterClass}
                                 onChange={(e) => setFilterClass(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2.5 rounded-lg text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
+                                className="w-full bg-white border border-slate-200 px-3 py-3 md:py-2.5 rounded-xl text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all touch-manipulation font-semibold text-slate-700"
                             >
                                 <option value="">All Classes</option>
                                 {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
                             </select>
                         </div>
-                        <div className="col-span-2 md:col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Section</label>
+                        <div className="sm:col-span-1 md:col-span-1">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Section</label>
                             <select
                                 value={filterSection}
                                 onChange={(e) => setFilterSection(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2.5 rounded-lg text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
+                                className="w-full bg-white border border-slate-200 px-3 py-3 md:py-2.5 rounded-xl text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all touch-manipulation font-semibold text-slate-700"
                             >
                                 <option value="">All Sections</option>
                                 {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
                             </select>
                         </div>
-                        <div className="col-span-2 md:col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Fee Status</label>
+                        <div className="sm:col-span-1 md:col-span-1">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Fee Status</label>
                             <select
                                 value={filterFeeStatus}
                                 onChange={(e) => setFilterFeeStatus(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2.5 rounded-lg text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
+                                className="w-full bg-white border border-slate-200 px-3 py-3 md:py-2.5 rounded-xl text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all touch-manipulation font-semibold text-slate-700"
                             >
                                 <option value="">All Status</option>
                                 <option value="Paid">Paid</option>
@@ -191,21 +191,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 <option value="Overdue">Overdue</option>
                             </select>
                         </div>
-                        <div className="col-span-2 md:col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Fee Month</label>
+                        <div className="sm:col-span-1 md:col-span-1">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Fee Month</label>
                             <CustomMonthPicker
                                 value={filterMonth}
                                 onChange={setFilterMonth}
                                 compact={true}
                             />
                         </div>
-                        <div className="col-span-2 md:col-span-1 flex items-end gap-2">
+                        <div className="sm:col-span-2 md:col-span-1 flex items-end gap-2">
                             <div className="flex-1">
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Sort By</label>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Sort By</label>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full bg-white border border-slate-200 px-3 py-2.5 rounded-lg text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
+                                    className="w-full bg-white border border-slate-200 px-3 py-3 md:py-2.5 rounded-xl text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all touch-manipulation font-semibold text-slate-700"
                                 >
                                     <option value="name">Name</option>
                                     <option value="rollNo">Roll No</option>
@@ -214,17 +214,18 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             </div>
                             <button
                                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-all min-h-[40px]"
+                                className="p-3 md:p-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 active:bg-slate-100 transition-all min-h-[48px] md:min-h-[40px] min-w-[48px] md:min-w-[40px] flex items-center justify-center touch-manipulation"
+                                aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                             >
-                                {sortOrder === 'asc' ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+                                {sortOrder === 'asc' ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
                             </button>
                         </div>
                     </div>
                 )}
 
-                <div className="md:hidden px-4 pb-4 space-y-3">
+                <div className="md:hidden px-4 pt-4 pb-4 space-y-3">
                     {currentStudents.length > 0 ? (
-                        currentStudents.map(student => (
+                        currentStudents.map((student, index) => (
                             <StudentCard
                                 key={student.id}
                                 student={student}
@@ -235,15 +236,15 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             />
                         ))
                     ) : (
-                        <div className="py-12 text-center">
-                            <div className="p-4 bg-slate-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                <Search size={28} className="text-slate-300" />
+                        <div className="py-16 text-center">
+                            <div className="p-5 bg-slate-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                                <Search size={32} className="text-slate-300" />
                             </div>
-                            <p className="text-slate-500 font-medium">No results found</p>
-                            <p className="text-slate-400 text-sm">Try adjusting your filters or search term</p>
+                            <p className="text-slate-600 font-bold text-base">No results found</p>
+                            <p className="text-slate-400 text-sm mt-1">Try adjusting your filters or search term</p>
                             <button
                                 onClick={handleClearFilters}
-                                className="text-indigo-600 text-sm font-semibold hover:underline mt-3"
+                                className="text-indigo-600 text-sm font-bold hover:underline mt-4 touch-manipulation min-h-[44px] px-4"
                             >
                                 Clear all filters
                             </button>

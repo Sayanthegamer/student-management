@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
+const Walkthrough = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [spotlightStyle, setSpotlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0 });
@@ -24,18 +24,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
         }
     };
 
-    const openMenuIfMobile = () => {
-        if (window.innerWidth < 768 && onOpenMobileMenu) {
-            onOpenMobileMenu();
-        }
-    };
-
-    const closeMenuIfMobile = () => {
-        if (window.innerWidth < 768 && onCloseMobileMenu) {
-            onCloseMobileMenu();
-        }
-    };
-
     const steps = [
         {
             title: "Welcome to Student Manager!",
@@ -44,7 +32,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'center',
             action: () => {
                 navigate('/overview');
-                closeMenuIfMobile();
             }
         },
         {
@@ -54,7 +41,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'right',
             action: () => {
                 navigate('/overview');
-                openMenuIfMobile();
             }
         },
         {
@@ -64,7 +50,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'top',
             action: () => {
                 navigate('/overview');
-                closeMenuIfMobile();
             }
         },
         {
@@ -74,7 +59,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'right',
             action: () => {
                 navigate('/students');
-                openMenuIfMobile();
             }
         },
         {
@@ -85,7 +69,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'bottom',
             action: () => {
                 navigate('/students');
-                closeMenuIfMobile();
             }
         },
         {
@@ -95,7 +78,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'right',
             action: () => {
                 navigate('/payment-history');
-                openMenuIfMobile();
             }
         },
         {
@@ -105,7 +87,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'right',
             action: () => {
                 navigate('/admission');
-                openMenuIfMobile();
             }
         },
         {
@@ -115,7 +96,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'right',
             action: () => {
                 navigate('/tc');
-                openMenuIfMobile();
             }
         },
         {
@@ -125,7 +105,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'right',
             action: () => {
                 navigate('/data');
-                openMenuIfMobile();
             }
         },
         {
@@ -135,7 +114,6 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
             position: 'center',
             action: () => {
                 navigate('/overview');
-                closeMenuIfMobile();
             }
         }
     ];
