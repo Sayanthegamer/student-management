@@ -20,7 +20,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
         <div className={`fixed inset-0 bg-slate-900/60 z-50 flex items-start md:items-center p-3 md:p-4 backdrop-blur-sm modal-backdrop safe-area-inset-bottom ${isClosing ? 'closing' : ''}`}>
             <div className={`bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-slate-100 ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
-                <div className="bg-slate-900 px-6 py-8 text-white relative overflow-hidden flex-shrink-0">
+                <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-hidden flex-shrink-0">
                     <div className="relative z-10">
                         <h3 className="text-xl md:text-2xl font-bold tracking-tight flex items-center gap-3">
                             <FileText className="text-indigo-400" size={24} />

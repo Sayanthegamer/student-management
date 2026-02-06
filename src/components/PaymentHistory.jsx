@@ -69,9 +69,9 @@ const PaymentHistory = ({ students }) => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden page-enter">
-                <div className="p-4 md:p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-3 md:p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
                             <IndianRupee size={24} />
@@ -96,11 +96,11 @@ const PaymentHistory = ({ students }) => {
                     </div>
                 </div>
 
-                <div className="p-4 bg-slate-50/50 border-b border-slate-100 flex flex-wrap gap-3">
+                <div className="p-3 bg-slate-50/50 border-b border-slate-100 grid grid-cols-2 md:flex flex-wrap gap-2 md:gap-3">
                     <select
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
-                        className="bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500/10"
+                        className="bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-500/10 text-slate-700"
                     >
                         <option value="">All Classes</option>
                         {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -109,7 +109,7 @@ const PaymentHistory = ({ students }) => {
                     <select
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
-                        className="bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500/10"
+                        className="bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-500/10 text-slate-700"
                     >
                         <option value="">All Sections</option>
                         {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
@@ -117,22 +117,24 @@ const PaymentHistory = ({ students }) => {
 
                     <div className="h-8 w-px bg-slate-200 mx-1 hidden md:block"></div>
 
-                    <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500/10"
-                    >
-                        <option value="name">Sort by Name</option>
-                        <option value="rollNo">Sort by Roll No</option>
-                        <option value="class">Sort by Class</option>
-                    </select>
+                    <div className="col-span-2 md:col-span-1 flex items-center gap-2">
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="flex-1 bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-500/10 text-slate-700"
+                        >
+                            <option value="name">Sort by Name</option>
+                            <option value="rollNo">Sort by Roll No</option>
+                            <option value="class">Sort by Class</option>
+                        </select>
 
-                    <button
-                        onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                        className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-all"
-                    >
-                        {sortOrder === 'asc' ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-                    </button>
+                        <button
+                            onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                            className="p-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-all min-h-[38px] min-w-[38px] flex items-center justify-center"
+                        >
+                            {sortOrder === 'asc' ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Mobile Card View */}

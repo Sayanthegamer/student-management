@@ -158,8 +158,8 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     };
 
     return (
-        <div className="p-6 max-w-[1600px] mx-auto h-full flex flex-col">
-            <div className="flex flex-col gap-6 mb-8">
+        <div className="p-3 md:p-6 max-w-[1600px] mx-auto h-full flex flex-col">
+            <div className="flex flex-col gap-4 md:gap-6 mb-6 md:mb-8">
                 <div className="flex justify-between items-center">
                     <div>
                         <h2 className="text-white m-0 text-2xl font-bold tracking-tight">Admission Status Board</h2>

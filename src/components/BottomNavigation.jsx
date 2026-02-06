@@ -13,7 +13,7 @@ const navItems = [
 
 const BottomNavigation = () => (
   <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40">
-    <div className="mx-auto max-w-lg px-2 pb-3 pt-2 safe-area-inset-bottom bg-gradient-to-t from-slate-100/80 via-slate-50/40 to-transparent pointer-events-none">
+    <div className="mx-auto max-w-lg px-2 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-6 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent pointer-events-none">
       <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-[0_-4px_24px_-8px_rgba(15,23,42,0.15)] rounded-2xl px-1 py-1.5 flex items-center justify-between pointer-events-auto">
         {navItems.map((item) => {
           const Icon = item.icon;

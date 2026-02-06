@@ -78,8 +78,8 @@ const Overview = ({ students, onAddStudent }) => {
     }
 
     return (
-        <div className="p-4 md:p-6 max-w-7xl mx-auto page-enter">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-5 md:mb-6">
+        <div className="p-3 md:p-6 max-w-7xl mx-auto page-enter">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 md:mb-6">
                 <h2 className="text-white text-xl md:text-2xl font-black tracking-tight">Dashboard Overview</h2>
                 <div className="flex items-center gap-2 text-white/80 text-xs md:text-sm font-semibold">
                     <Clock size={15} className="md:hidden" />
