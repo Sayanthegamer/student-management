@@ -2,8 +2,8 @@ import React from 'react';
 import { FileText, Download, User, Calendar, School, Award } from 'lucide-react';
 
 const CertificateCard = React.memo(({ student, onGenerateTC }) => {
-  const hasTC = student.tcGenerated && student.tcGenerated.date;
-  const tcDate = hasTC ? new Date(student.tcGenerated.date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : null;
+  const hasTC = student.tcDetails && student.tcDetails.issueDate;
+  const tcDate = hasTC ? new Date(student.tcDetails.issueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : null;
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 slide-up">

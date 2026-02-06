@@ -152,8 +152,8 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-w-6xl mx-auto">
-            <h2 className="text-slate-800 mb-6 text-2xl flex items-center gap-3 font-bold tracking-tight">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-3 md:p-6 max-w-6xl mx-auto">
+            <h2 className="text-slate-800 mb-6 text-xl md:text-2xl flex items-center gap-3 font-bold tracking-tight">
                 <FileText size={28} className="text-indigo-600" />
                 Transfer Certificate (TC)
             </h2>
@@ -343,17 +343,18 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
 
     return createPortal(
         <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 modal-backdrop ${isClosing ? 'closing' : ''}`}>
-            <div className={`bg-white rounded-2xl shadow-xl p-8 w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
-                <h3 className="mt-0 text-gray-800 border-b border-gray-200 pb-4 text-xl font-bold">
+            <div className={`bg-white rounded-2xl shadow-xl w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
+                <h3 className="mt-0 text-white bg-slate-900 px-6 py-5 md:py-8 text-xl font-bold border-b border-slate-700">
                     Issue Transfer Certificate
                 </h3>
 
-                <div className="mb-5">
-                    <p className="m-0 mb-2 font-bold text-lg text-gray-800">{student.name}</p>
-                    <p className="m-0 text-gray-500">Class: {student.class} - {student.section} | Roll: {student.rollNo}</p>
-                </div>
+                <div className="p-6 md:p-8">
+                    <div className="mb-5">
+                        <p className="m-0 mb-2 font-bold text-lg text-gray-800">{student.name}</p>
+                        <p className="m-0 text-gray-500">Class: {student.class} - {student.section} | Roll: {student.rollNo}</p>
+                    </div>
 
-                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4">
                     <div>
                         <CustomDatePicker
                             label="Date of Leaving"
@@ -411,7 +412,8 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                     </button>
                 </div>
             </div>
-        </div>,
+        </div>
+    </div>,
         document.body
     );
 };

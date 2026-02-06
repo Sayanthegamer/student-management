@@ -106,7 +106,7 @@ function App() {
       <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
       <div className="app-container flex h-screen overflow-hidden">
         {/* Mobile Header - Simplified */}
-        <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white/95 backdrop-blur-xl border-b border-slate-200 z-30 flex items-center px-4 justify-between safe-area-inset-top">
+        <div className="md:hidden fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-slate-200 z-30 flex items-center px-4 justify-between pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))]">
           <div className="flex items-center gap-2">
             <span className="font-bold text-slate-800 text-base">Student Manager</span>
           </div>
@@ -130,7 +130,7 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto relative pt-14 md:pt-0 w-full pb-20 md:pb-0">
+        <main className="flex-1 overflow-y-auto relative pt-[calc(3.5rem+env(safe-area-inset-top,0px))] md:pt-0 w-full pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
           <Suspense fallback={<SkeletonLoader />}>
             <Walkthrough />
             <Routes>

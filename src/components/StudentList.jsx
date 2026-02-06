@@ -121,9 +121,9 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden page-enter">
-                <div className="p-4 md:p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-3 md:p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h2 className="text-xl md:text-2xl font-bold text-slate-800">Student Directory</h2>
                         <p className="text-slate-500 text-sm mt-1">Manage and track student records and fees</p>
@@ -155,35 +155,35 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 </div>
 
                 {showFilters && (
-                    <div className="p-4 bg-slate-50/50 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 slide-down">
-                        <div className="sm:col-span-1 md:col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Class</label>
+                    <div className="p-3 bg-slate-50/50 border-b border-slate-100 grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3 slide-down">
+                        <div className="col-span-1">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Class</label>
                             <select
                                 value={filterClass}
                                 onChange={(e) => setFilterClass(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-3 md:py-2.5 rounded-xl text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all touch-manipulation font-semibold text-slate-700"
+                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold text-slate-700"
                             >
                                 <option value="">All Classes</option>
                                 {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
                             </select>
                         </div>
-                        <div className="sm:col-span-1 md:col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Section</label>
+                        <div className="col-span-1">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Section</label>
                             <select
                                 value={filterSection}
                                 onChange={(e) => setFilterSection(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-3 md:py-2.5 rounded-xl text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all touch-manipulation font-semibold text-slate-700"
+                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold text-slate-700"
                             >
                                 <option value="">All Sections</option>
                                 {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
                             </select>
                         </div>
-                        <div className="sm:col-span-1 md:col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Fee Status</label>
+                        <div className="col-span-1">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Fee Status</label>
                             <select
                                 value={filterFeeStatus}
                                 onChange={(e) => setFilterFeeStatus(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-3 md:py-2.5 rounded-xl text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all touch-manipulation font-semibold text-slate-700"
+                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold text-slate-700"
                             >
                                 <option value="">All Status</option>
                                 <option value="Paid">Paid</option>
@@ -191,21 +191,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 <option value="Overdue">Overdue</option>
                             </select>
                         </div>
-                        <div className="sm:col-span-1 md:col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Fee Month</label>
+                        <div className="col-span-1">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Fee Month</label>
                             <CustomMonthPicker
                                 value={filterMonth}
                                 onChange={setFilterMonth}
                                 compact={true}
                             />
                         </div>
-                        <div className="sm:col-span-2 md:col-span-1 flex items-end gap-2">
+                        <div className="col-span-2 md:col-span-1 flex items-end gap-2">
                             <div className="flex-1">
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Sort By</label>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Sort By</label>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full bg-white border border-slate-200 px-3 py-3 md:py-2.5 rounded-xl text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all touch-manipulation font-semibold text-slate-700"
+                                    className="w-full bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold text-slate-700"
                                 >
                                     <option value="name">Name</option>
                                     <option value="rollNo">Roll No</option>
@@ -214,10 +214,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             </div>
                             <button
                                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                className="p-3 md:p-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 active:bg-slate-100 transition-all min-h-[48px] md:min-h-[40px] min-w-[48px] md:min-w-[40px] flex items-center justify-center touch-manipulation"
+                                className="p-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 active:bg-slate-100 transition-all min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
                                 aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                             >
-                                {sortOrder === 'asc' ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
+                                {sortOrder === 'asc' ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
                             </button>
                         </div>
                     </div>

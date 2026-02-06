@@ -2,23 +2,21 @@ import React from 'react';
 import { UserCheck, UserX, Clock, Edit2, User, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 const statusStyles = {
-  Pending: 'bg-amber-50 text-amber-700 border-amber-100',
-  Approved: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-  Rejected: 'bg-rose-50 text-rose-700 border-rose-100',
-  'Under Review': 'bg-blue-50 text-blue-700 border-blue-100',
+  Provisional: 'bg-amber-50 text-amber-700 border-amber-100',
+  Confirmed: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+  Cancelled: 'bg-rose-50 text-rose-700 border-rose-100',
   Transferred: 'bg-slate-50 text-slate-700 border-slate-100',
 };
 
 const statusIcons = {
-  Pending: Clock,
-  Approved: CheckCircle,
-  Rejected: XCircle,
-  'Under Review': AlertCircle,
+  Provisional: Clock,
+  Confirmed: CheckCircle,
+  Cancelled: XCircle,
   Transferred: UserX,
 };
 
 const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
-  const status = student.admissionStatus || 'Pending';
+  const status = student.admissionStatus || 'Provisional';
   const StatusIcon = statusIcons[status] || Clock;
 
   return (
@@ -61,30 +59,30 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        {status === 'Pending' && (
+        {status === 'Provisional' && (
           <>
             <button
-              onClick={() => onUpdateStatus(student.id, 'Approved')}
+              onClick={() => onUpdateStatus(student, 'Confirmed')}
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-emerald-600 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 transition-colors font-bold text-sm touch-manipulation"
-              aria-label="Approve admission"
+              aria-label="Confirm admission"
             >
               <CheckCircle size={16} />
-              <span>Approve</span>
+              <span>Confirm</span>
             </button>
             <button
-              onClick={() => onUpdateStatus(student.id, 'Rejected')}
+              onClick={() => onUpdateStatus(student, 'Cancelled')}
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 transition-colors font-bold text-sm touch-manipulation"
-              aria-label="Reject admission"
+              aria-label="Cancel admission"
             >
               <XCircle size={16} />
-              <span>Reject</span>
+              <span>Cancel</span>
             </button>
           </>
         )}
         
-        {status === 'Approved' && (
+        {status === 'Confirmed' && (
           <button
-            onClick={() => onUpdateStatus(student.id, 'Transferred')}
+            onClick={() => onUpdateStatus(student, 'Transferred')}
             className="col-span-2 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-slate-600 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 transition-colors font-bold text-sm touch-manipulation"
             aria-label="Mark as transferred"
           >
@@ -93,14 +91,14 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
           </button>
         )}
 
-        {(status === 'Rejected' || status === 'Transferred') && (
+        {(status === 'Cancelled' || status === 'Transferred') && (
           <button
-            onClick={() => onUpdateStatus(student.id, 'Pending')}
+            onClick={() => onUpdateStatus(student, 'Provisional')}
             className="col-span-2 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-amber-600 bg-amber-50 hover:bg-amber-100 active:bg-amber-200 transition-colors font-bold text-sm touch-manipulation"
             aria-label="Reset status"
           >
             <Clock size={16} />
-            <span>Reset to Pending</span>
+            <span>Reset to Provisional</span>
           </button>
         )}
       </div>
