@@ -3,6 +3,38 @@ import { Save, X, User, GraduationCap, IndianRupee, Calendar, CheckCircle2 } fro
 import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
 
+const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange }) => (
+    <div className="flex flex-col gap-1.5">
+        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1 flex items-center gap-2">
+            {Icon && <Icon size={12} />}
+            {label} {required && <span className="text-rose-500">*</span>}
+        </label>
+        {options ? (
+            <select
+                name={name}
+                value={value}
+                onChange={onChange}
+                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm font-medium"
+                required={required}
+            >
+                {options.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+            </select>
+        ) : (
+            <input
+                type={type}
+                name={name}
+                value={value}
+                onChange={onChange}
+                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm font-medium"
+                placeholder={placeholder}
+                required={required}
+            />
+        )}
+    </div>
+);
+
 const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const [formData, setFormData] = useState(initialData || {
         name: '',
@@ -71,38 +103,6 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         onSave(dataToSave);
     };
 
-    const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null }) => (
-        <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1 flex items-center gap-2">
-                {Icon && <Icon size={12} />}
-                {label} {required && <span className="text-rose-500">*</span>}
-            </label>
-            {options ? (
-                <select
-                    name={name}
-                    value={formData[name]}
-                    onChange={handleChange}
-                    className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm font-medium"
-                    required={required}
-                >
-                    {options.map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                </select>
-            ) : (
-                <input
-                    type={type}
-                    name={name}
-                    value={formData[name]}
-                    onChange={handleChange}
-                    className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm font-medium"
-                    placeholder={placeholder}
-                    required={required}
-                />
-            )}
-        </div>
-    );
-
     return (
         <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
             <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden page-enter">
@@ -136,12 +136,16 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="name" 
                                 placeholder="Rahul Kumar" 
                                 required={true} 
+                                value={formData.name}
+                                onChange={handleChange}
                             />
 
                             <InputField 
                                 label="Guardian Name" 
                                 name="guardianName" 
                                 placeholder="Rajesh Kumar" 
+                                value={formData.guardianName}
+                                onChange={handleChange}
                             />
 
                             <div className="grid grid-cols-2 gap-4">
@@ -153,12 +157,16 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                         { value: '', label: 'Select' },
                                         ...Object.keys(classFees).map(c => ({ value: c, label: c }))
                                     ]}
+                                    value={formData.class}
+                                    onChange={handleChange}
                                 />
                                 <InputField 
                                     label="Section" 
                                     name="section" 
                                     placeholder="A" 
                                     required={true} 
+                                    value={formData.section}
+                                    onChange={handleChange}
                                 />
                             </div>
 
@@ -167,6 +175,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 name="rollNo" 
                                 placeholder="01" 
                                 required={true} 
+                                value={formData.rollNo}
+                                onChange={handleChange}
                             />
                         </div>
 
@@ -183,12 +193,16 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     name="feesAmount" 
                                     type="number" 
                                     placeholder="500" 
+                                    value={formData.feesAmount}
+                                    onChange={handleChange}
                                 />
                                 <InputField 
                                     label="Late Fine (₹)" 
                                     name="fine" 
                                     type="number" 
                                     placeholder="0" 
+                                    value={formData.fine}
+                                    onChange={handleChange}
                                 />
                             </div>
 
@@ -200,6 +214,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     { value: 'Pending', label: 'Pending' },
                                     { value: 'Overdue', label: 'Overdue' }
                                 ]}
+                                value={formData.feesStatus}
+                                onChange={handleChange}
                             />
 
                             <div className="flex flex-col gap-1.5">
@@ -219,6 +235,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     { value: 'Provisional', label: 'Provisional' },
                                     { value: 'Cancelled', label: 'Cancelled' }
                                 ]}
+                                value={formData.admissionStatus}
+                                onChange={handleChange}
                             />
                         </div>
                     </div>
