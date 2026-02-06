@@ -105,9 +105,11 @@ function App() {
     <ErrorBoundary>
       <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
       <div className="app-container flex h-screen overflow-hidden">
-        {/* Mobile Header */}
+        {/* Mobile Header - Simplified */}
         <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white/95 backdrop-blur-xl border-b border-slate-200 z-30 flex items-center px-4 justify-between safe-area-inset-top">
-          <span className="font-bold text-slate-800 text-base">Student Manager</span>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-slate-800 text-base">Student Manager</span>
+          </div>
           <div className="flex items-center gap-2">
             {showMobileAdd && (
               <button

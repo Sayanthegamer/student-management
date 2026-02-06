@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, FileText, Filter, IndianRupee, ChevronDown, ChevronUp, User } from 'lucide-react';
 import PaymentHistoryModal from './PaymentHistoryModal';
+import PaymentCard from './PaymentCard';
 
 const PaymentHistory = ({ students }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -134,7 +135,28 @@ const PaymentHistory = ({ students }) => {
                     </button>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Mobile Card View */}
+                <div className="md:hidden px-4 pt-4 pb-4 space-y-3">
+                    {filteredStudents.length > 0 ? (
+                        filteredStudents.map((student) => (
+                            <PaymentCard
+                                key={student.id}
+                                student={student}
+                                onViewHistory={handleViewHistory}
+                            />
+                        ))
+                    ) : (
+                        <div className="py-16 text-center">
+                            <div className="p-5 bg-slate-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                                <Search size={32} className="text-slate-300" />
+                            </div>
+                            <p className="text-slate-600 font-bold text-base">No results found</p>
+                            <p className="text-slate-400 text-sm mt-1">Try adjusting your filters or search term</p>
+                        </div>
+                    )}
+                </div>
+
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-slate-50/30">

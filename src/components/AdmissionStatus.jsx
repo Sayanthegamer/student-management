@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
+import AdmissionCard from './AdmissionCard';
 import { logActivity } from '../utils/storage';
 
 const StatusCard = ({ student, color, onMove }) => {
@@ -247,7 +248,29 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6 md:overflow-x-auto pb-5 h-auto md:h-full items-start">
+            {/* Mobile Card View */}
+            <div className="md:hidden px-4 pt-4 pb-4 space-y-3">
+                {filteredStudents.length > 0 ? (
+                    filteredStudents.map((student) => (
+                        <AdmissionCard
+                            key={student.id}
+                            student={student}
+                            onUpdateStatus={handleMoveStudent}
+                        />
+                    ))
+                ) : (
+                    <div className="py-16 text-center">
+                        <div className="p-5 bg-slate-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                            <Search size={32} className="text-slate-300" />
+                        </div>
+                        <p className="text-slate-600 font-bold text-base">No results found</p>
+                        <p className="text-slate-400 text-sm mt-1">Try adjusting your filters or search term</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Desktop Kanban Board */}
+            <div className="hidden md:flex flex-col md:flex-row gap-6 md:overflow-x-auto pb-5 h-auto md:h-full items-start">
                 <StatusColumn
                     title="Confirmed"
                     count={confirmed.length}
