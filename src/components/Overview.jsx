@@ -3,21 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock } from 'lucide-react';
 import { getActivities } from '../utils/storage';
 
-const StatCard = ({ title, value, icon: Icon, colorClass, subtext }) => (
-    <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col gap-3 md:gap-4 shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300">
-        <div className="flex justify-between items-start">
+const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
+    <div 
+        className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col gap-2 md:gap-4 shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300 slide-up"
+        style={{ animationDelay: `${index * 50}ms` }}
+    >
+        <div className="flex justify-between items-start gap-3">
             <div className="min-w-0 flex-1">
-                <p className="m-0 text-slate-500 text-[11px] md:text-sm font-semibold tracking-wide uppercase">{title}</p>
-                <h3 className="mt-1 text-2xl md:text-3xl text-slate-800 font-bold tracking-tight">{value}</h3>
+                <p className="m-0 text-slate-500 text-[10px] md:text-xs font-bold tracking-wider uppercase">{title}</p>
+                <h3 className="mt-1.5 text-2xl md:text-3xl text-slate-800 font-black tracking-tight leading-none">{value}</h3>
             </div>
-            <div className={`p-2.5 md:p-3 rounded-xl ${colorClass} bg-opacity-10 shrink-0 ml-2`}>
-                <Icon size={20} className="md:hidden opacity-90" />
-                <Icon size={24} className="hidden md:block opacity-90" />
+            <div className={`p-2.5 md:p-3 rounded-xl ${colorClass} shrink-0`}>
+                <Icon size={22} className="md:hidden" />
+                <Icon size={24} className="hidden md:block" />
             </div>
         </div>
         {subtext && (
-            <div className="flex items-center gap-2 pt-2 border-t border-slate-50">
-                <p className="m-0 text-[10px] md:text-xs text-slate-400 font-medium">{subtext}</p>
+            <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                <p className="m-0 text-[10px] md:text-xs text-slate-400 font-semibold">{subtext}</p>
             </div>
         )}
     </div>
@@ -75,22 +78,24 @@ const Overview = ({ students, onAddStudent }) => {
     }
 
     return (
-        <div className="p-3 md:p-6 max-w-7xl mx-auto page-enter">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
-                <h2 className="text-white text-xl md:text-2xl font-bold tracking-tight">Dashboard Overview</h2>
-                <div className="flex items-center gap-2 text-white/70 text-xs md:text-sm font-medium">
-                    <Clock size={16} />
+        <div className="p-4 md:p-6 max-w-7xl mx-auto page-enter">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-5 md:mb-6">
+                <h2 className="text-white text-xl md:text-2xl font-black tracking-tight">Dashboard Overview</h2>
+                <div className="flex items-center gap-2 text-white/80 text-xs md:text-sm font-semibold">
+                    <Clock size={15} className="md:hidden" />
+                    <Clock size={16} className="hidden md:block" />
                     {new Date().toLocaleDateString('default', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 md:gap-6 mb-6 md:mb-8 sm:grid-cols-2 lg:grid-cols-3">
                 <StatCard
                     title="Total Students"
                     value={totalStudents}
                     icon={Users}
                     colorClass="bg-indigo-100 text-indigo-600"
                     subtext="Active students enrolled"
+                    index={0}
                 />
                 <StatCard
                     title="Fees Collected"
@@ -98,6 +103,7 @@ const Overview = ({ students, onAddStudent }) => {
                     icon={IndianRupee}
                     colorClass="bg-emerald-100 text-emerald-600"
                     subtext={`${new Date().toLocaleString('default', { month: 'long' })} collection`}
+                    index={1}
                 />
                 <StatCard
                     title="Pending Fees"
@@ -105,6 +111,7 @@ const Overview = ({ students, onAddStudent }) => {
                     icon={AlertCircle}
                     colorClass="bg-amber-100 text-amber-600"
                     subtext="Awaiting payment"
+                    index={2}
                 />
             </div>
 
@@ -122,7 +129,7 @@ const Overview = ({ students, onAddStudent }) => {
                 <div className="divide-y divide-slate-50">
                     {activities.length > 0 ? (
                         activities.map((activity) => (
-                            <div key={activity.id} className="flex items-start gap-3 md:gap-4 p-3 md:p-5 hover:bg-slate-50/50 transition-colors group">
+                            <div key={activity.id} className="flex items-start gap-3 md:gap-4 p-3.5 md:p-5 hover:bg-slate-50/50 active:bg-slate-100/50 transition-colors group">
                                 <div className={`p-2.5 rounded-xl shrink-0 transition-transform group-hover:scale-110 ${activity.type === 'fee' ? 'bg-emerald-50 text-emerald-600' :
                                     activity.type === 'student' ? 'bg-indigo-50 text-indigo-600' :
                                         activity.type === 'tc' ? 'bg-rose-50 text-rose-600' :
@@ -138,8 +145,8 @@ const Overview = ({ students, onAddStudent }) => {
                                 <div className="flex-1 min-w-0 py-0.5">
                                     <p className="text-slate-700 font-semibold text-sm m-0 leading-snug">{activity.description}</p>
                                     <div className="flex items-center gap-3 mt-1.5">
-                                        <p className="text-slate-400 text-[11px] md:text-xs flex items-center gap-1 font-medium">
-                                            <Clock size={12} className="opacity-70" />
+                                        <p className="text-slate-400 text-[11px] md:text-xs flex items-center gap-1.5 font-semibold">
+                                            <Clock size={11} className="opacity-70" />
                                             {new Date(activity.timestamp).toLocaleString(undefined, {
                                                 hour: '2-digit',
                                                 minute: '2-digit',
@@ -152,11 +159,11 @@ const Overview = ({ students, onAddStudent }) => {
                             </div>
                         ))
                     ) : (
-                        <div className="text-center py-12 md:py-20">
-                            <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Activity size={32} className="text-slate-200" />
+                        <div className="text-center py-16 md:py-20">
+                            <div className="bg-slate-50 w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <Activity size={32} className="text-slate-300" />
                             </div>
-                            <p className="text-slate-400 font-medium">No activity recorded yet.</p>
+                            <p className="text-slate-500 font-bold">No activity recorded yet.</p>
                         </div>
                     )}
                 </div>
