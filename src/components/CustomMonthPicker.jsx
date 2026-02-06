@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CustomMonthPicker = ({ value, onChange, label, required, className = '' }) => {
+const CustomMonthPicker = ({ value, onChange, label, required, className = '', compact = false }) => {
     // 1. Initialize State
     const [prevValue, setPrevValue] = useState(value);
 
@@ -23,18 +23,18 @@ const CustomMonthPicker = ({ value, onChange, label, required, className = '' })
     }
 
     const months = [
-        { value: '01', label: 'January' },
-        { value: '02', label: 'February' },
-        { value: '03', label: 'March' },
-        { value: '04', label: 'April' },
-        { value: '05', label: 'May' },
-        { value: '06', label: 'June' },
-        { value: '07', label: 'July' },
-        { value: '08', label: 'August' },
-        { value: '09', label: 'September' },
-        { value: '10', label: 'October' },
-        { value: '11', label: 'November' },
-        { value: '12', label: 'December' }
+        { value: '01', label: compact ? 'Jan' : 'January' },
+        { value: '02', label: compact ? 'Feb' : 'February' },
+        { value: '03', label: compact ? 'Mar' : 'March' },
+        { value: '04', label: compact ? 'Apr' : 'April' },
+        { value: '05', label: compact ? 'May' : 'May' },
+        { value: '06', label: compact ? 'Jun' : 'June' },
+        { value: '07', label: compact ? 'Jul' : 'July' },
+        { value: '08', label: compact ? 'Aug' : 'August' },
+        { value: '09', label: compact ? 'Sep' : 'September' },
+        { value: '10', label: compact ? 'Oct' : 'October' },
+        { value: '11', label: compact ? 'Nov' : 'November' },
+        { value: '12', label: compact ? 'Dec' : 'December' }
     ];
 
     const currentYear = new Date().getFullYear();
@@ -59,18 +59,22 @@ const CustomMonthPicker = ({ value, onChange, label, required, className = '' })
         }
     };
 
+    const inputClasses = compact 
+        ? "w-full bg-white border border-slate-200 px-2 py-2 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 transition-all"
+        : "w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100";
+
     return (
         <div className={className}>
             {label && <label className="block mb-2 text-slate-600 text-sm font-medium">{label}</label>}
-            <div className="flex gap-2">
+            <div className={`flex ${compact ? 'gap-1' : 'gap-2'}`}>
                 <div className="relative flex-1">
                     <select
                         value={month}
                         onChange={(e) => handleChange('month', e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                        className={inputClasses}
                         required={required}
                     >
-                        <option value="">Month</option>
+                        <option value="">{compact ? 'Mo' : 'Month'}</option>
                         {months.map(m => (
                             <option key={m.value} value={m.value}>{m.label}</option>
                         ))}
@@ -80,10 +84,10 @@ const CustomMonthPicker = ({ value, onChange, label, required, className = '' })
                     <select
                         value={year}
                         onChange={(e) => handleChange('year', e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                        className={inputClasses}
                         required={required}
                     >
-                        <option value="">Year</option>
+                        <option value="">{compact ? 'Yr' : 'Year'}</option>
                         {years.map(y => (
                             <option key={y} value={y}>{y}</option>
                         ))}

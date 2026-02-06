@@ -143,7 +143,7 @@ function App() {
             />
             <Routes>
               <Route path="/" element={<Navigate to="/overview" replace />} />
-              <Route path="/overview" element={<Overview students={students} />} />
+              <Route path="/overview" element={<Overview students={students} onAddStudent={handleAddClick} />} />
               <Route path="/students" element={
                 <StudentList
                   students={students}
