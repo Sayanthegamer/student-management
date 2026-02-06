@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Search, FileText, AlertTriangle } from 'lucide-react';
+import { Search, FileText, AlertTriangle, X } from 'lucide-react';
 import Pagination from './Pagination';
 import CustomDatePicker from './CustomDatePicker';
 import CertificateCard from './CertificateCard';
@@ -342,11 +342,16 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
     };
 
     return createPortal(
-        <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 modal-backdrop ${isClosing ? 'closing' : ''}`}>
-            <div className={`bg-white rounded-2xl shadow-xl w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
-                <h3 className="mt-0 text-white bg-slate-900 px-6 py-5 md:py-8 text-xl font-bold border-b border-slate-700">
-                    Issue Transfer Certificate
-                </h3>
+        <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 modal-backdrop ${isClosing ? 'closing' : ''}`} onClick={() => handleExit(onCancel)}>
+            <div className={`bg-white rounded-2xl shadow-xl w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`} onClick={(e) => e.stopPropagation()}>
+                <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-hidden">
+                    <h3 className="text-xl font-bold tracking-tight">
+                        Issue Transfer Certificate
+                    </h3>
+                    <button onClick={() => handleExit(onCancel)} className="absolute top-6 right-6 text-white/60 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-xl transition-all">
+                        <X size={20} />
+                    </button>
+                </div>
 
                 <div className="p-6 md:p-8">
                     <div className="mb-5">
