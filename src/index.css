@@ -120,6 +120,17 @@ body {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ============================================
    UTILITY CLASSES
 ============================================ */
@@ -166,7 +177,7 @@ body {
 
 /* Base interactive elements should have transitions, but not everything */
 button, a, input, select, textarea {
-  @apply transition-all duration-200 ease-in-out;
+  @apply transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-in-out;
 }
 
 /* Shared transition utility */
@@ -205,6 +216,7 @@ button, a, input, select, textarea {
   /* Better touch scrolling */
   input, select, textarea {
     font-size: 16px;
+    line-height: 1.5;
   }
 }
 
