@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const CustomMonthPicker = ({ value, onChange, label, required, className = '', compact = false }) => {
     // 1. Initialize State
-    const [prevValue, setPrevValue] = useState(value);
 
     const parse = (v) => {
         if (!v) return ['', ''];
@@ -14,13 +13,12 @@ const CustomMonthPicker = ({ value, onChange, label, required, className = '', c
     const [month, setMonth] = useState(initM);
     const [year, setYear] = useState(initY);
 
-    // 2. Sync State with Props (Adjusting state during rendering)
-    if (value !== prevValue) {
-        setPrevValue(value);
-        const [y, m] = parse(value);
-        setYear(y);
-        setMonth(m);
-    }
+    // 2. Sync State with Props
+    useEffect(() => {
+        const [nextYear, nextMonth] = parse(value);
+        setYear(nextYear);
+        setMonth(nextMonth);
+    }, [value]);
 
     const months = [
         { value: '01', label: compact ? 'Jan' : 'January' },
