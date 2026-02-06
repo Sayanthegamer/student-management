@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const CustomDatePicker = ({ value, onChange, label, required, className = '' }) => {
-    const [prevValue, setPrevValue] = useState(value);
 
     const parse = (v) => {
         if (!v) return ['', '', ''];
@@ -14,13 +13,12 @@ const CustomDatePicker = ({ value, onChange, label, required, className = '' }) 
     const [month, setMonth] = useState(initM);
     const [year, setYear] = useState(initY);
 
-    if (value !== prevValue) {
-        setPrevValue(value);
-        const [y, m, d] = parse(value);
-        setYear(y);
-        setMonth(m);
-        setDay(d);
-    }
+    useEffect(() => {
+        const [nextYear, nextMonth, nextDay] = parse(value);
+        setYear(nextYear);
+        setMonth(nextMonth);
+        setDay(nextDay);
+    }, [value]);
 
     const months = [
         { value: '01', label: 'Jan' },
