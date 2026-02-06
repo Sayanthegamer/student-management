@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Save, X } from 'lucide-react';
+import { Save, X, User, GraduationCap, IndianRupee, Calendar, CheckCircle2 } from 'lucide-react';
 import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
 
@@ -56,7 +56,6 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Track status changes
         let dataToSave = { ...formData };
         if (initialData && initialData.admissionStatus !== formData.admissionStatus) {
             dataToSave.lastStatusChangeDate = new Date().toISOString().split('T')[0];
@@ -72,234 +71,207 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         onSave(dataToSave);
     };
 
+    const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null }) => (
+        <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1 flex items-center gap-2">
+                {Icon && <Icon size={12} />}
+                {label} {required && <span className="text-rose-500">*</span>}
+            </label>
+            {options ? (
+                <select
+                    name={name}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm font-medium"
+                    required={required}
+                >
+                    {options.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                </select>
+            ) : (
+                <input
+                    type={type}
+                    name={name}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm font-medium"
+                    placeholder={placeholder}
+                    required={required}
+                />
+            )}
+        </div>
+    );
+
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-8 max-w-3xl mx-auto">
-            <div className="flex justify-between items-center mb-6 md:mb-8 border-b border-slate-100 pb-4">
-                <h2 className="m-0 text-slate-800 text-xl md:text-2xl font-bold tracking-tight">{initialData ? 'Edit Student' : 'Add New Student'}</h2>
-                <button onClick={onCancel} className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors touch-manipulation min-w-[44px] min-h-[44px]">
-                    <X size={20} className="md:hidden" />
-                    <X size={24} className="hidden md:block" />
-                </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6 md:gap-8">
-
-                {/* Personal Details */}
-                <section>
-                    <h3 className="text-indigo-600 mb-4 md:mb-5 text-base md:text-lg font-bold flex items-center gap-2">
-                        <span className="w-1.5 h-5 md:h-6 bg-indigo-600 rounded-full"></span>
-                        Personal Details
-                    </h3>
-                    <div className="flex flex-col gap-4 md:gap-5">
-                        <div>
-                            <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Full Name</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-base"
-                                placeholder="e.g. Rahul Kumar"
-                                required
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3 md:gap-5">
-                            <div>
-                                <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Class</label>
-                                <select
-                                    name="class"
-                                    value={formData.class}
-                                    onChange={handleChange}
-                                    className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-base"
-                                    required
-                                >
-                                    <option value="">Select Class</option>
-                                    <option value="Play School">Play School</option>
-                                    <option value="Nursury">Nursury</option>
-                                    <option value="kg-1">kg-1</option>
-                                    <option value="kg-2">kg-2</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                    <option value="UG">UG</option>
-                                    <option value="PG">PG</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Section</label>
-                                <input
-                                    type="text"
-                                    name="section"
-                                    value={formData.section}
-                                    onChange={handleChange}
-                                    className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-base"
-                                    placeholder="A"
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Roll No.</label>
-                            <input
-                                type="text"
-                                name="rollNo"
-                                value={formData.rollNo}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-base"
-                                placeholder="e.g. 21"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Guardian Name</label>
-                            <input
-                                type="text"
-                                name="guardianName"
-                                value={formData.guardianName}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-base"
-                                placeholder="e.g. Rajesh Kumar"
-                            />
-                        </div>
+        <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
+            <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden page-enter">
+                <div className="bg-slate-900 px-6 py-8 md:px-10 text-white relative overflow-hidden">
+                    <div className="relative z-10">
+                        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{initialData ? 'Edit Student Record' : 'Register New Student'}</h2>
+                        <p className="text-slate-400 mt-2 text-sm md:text-base font-medium">Please fill in the official details for the institutional record.</p>
                     </div>
-                </section>
-
-                {/* Fees Details */}
-                <section>
-                    <h3 className="text-emerald-600 mb-4 md:mb-5 text-base md:text-lg font-bold flex items-center gap-2">
-                        <span className="w-1.5 h-5 md:h-6 bg-emerald-600 rounded-full"></span>
-                        Fees & Fine
-                    </h3>
-                    <div className="flex flex-col gap-4 md:gap-5">
-                        <div>
-                            <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Fees Amount (₹)</label>
-                            <input
-                                type="number"
-                                name="feesAmount"
-                                value={formData.feesAmount}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 text-base"
-                                placeholder="5000"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Fees Status</label>
-                            <select
-                                name="feesStatus"
-                                value={formData.feesStatus}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 text-base"
-                            >
-                                <option value="Paid">Paid</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Overdue">Overdue</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Fine (₹)</label>
-                            <input
-                                type="number"
-                                name="fine"
-                                value={formData.fine}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 text-base"
-                                placeholder="0"
-                            />
-                        </div>
+                    <div className="absolute top-0 right-0 p-8 opacity-10">
+                        <GraduationCap size={120} />
                     </div>
-                </section>
-
-                {/* Admission Details */}
-                <section>
-                    <h3 className="text-amber-600 mb-4 md:mb-5 text-base md:text-lg font-bold flex items-center gap-2">
-                        <span className="w-1.5 h-5 md:h-6 bg-amber-600 rounded-full"></span>
-                        Admission
-                    </h3>
-                    <div className="flex flex-col gap-4 md:gap-5">
-                        <div>
-                            <CustomDatePicker
-                                label="Admission Date"
-                                value={formData.admissionDate}
-                                onChange={(val) => handleChange({ target: { name: 'admissionDate', value: val } })}
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block mb-1.5 md:mb-2 text-slate-600 text-sm font-medium">Admission Status</label>
-                            <select
-                                name="admissionStatus"
-                                value={formData.admissionStatus}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 md:py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-100 text-base"
-                            >
-                                <option value="Confirmed">Confirmed</option>
-                                <option value="Provisional">Provisional</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-                        </div>
-                    </div>
-                </section>
-
-                <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-slate-100">
-                    <button type="submit" className="btn btn-primary w-full p-3 md:p-4 text-base md:text-lg font-bold shadow-indigo-200 min-h-[48px]">
-                        <Save size={20} />
-                        Save Student
+                    <button 
+                        onClick={onCancel} 
+                        className="absolute top-6 right-6 p-2 rounded-xl bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-all"
+                    >
+                        <X size={20} />
                     </button>
                 </div>
 
-            </form>
+                <form onSubmit={handleSubmit} className="p-6 md:p-10 flex flex-col gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+                        {/* Personal Information Group */}
+                        <div className="space-y-6">
+                            <div className="flex items-center gap-2 pb-2 border-b border-slate-100 mb-2">
+                                <User size={18} className="text-indigo-600" />
+                                <h3 className="font-bold text-slate-800 tracking-tight">Personal Information</h3>
+                            </div>
+                            
+                            <InputField 
+                                label="Full Name" 
+                                name="name" 
+                                placeholder="Rahul Kumar" 
+                                required={true} 
+                            />
 
-            {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
-                <div className="mt-8 md:mt-10 border-t border-slate-100 pt-6 md:pt-8">
-                    <h3 className="text-slate-800 mb-4 md:mb-6 text-base md:text-lg font-bold flex items-center gap-2">
-                        <span className="w-1.5 h-5 md:h-6 bg-slate-400 rounded-full"></span>
-                        Fee Payment History
-                    </h3>
-                    <div className="overflow-x-auto -mx-4 md:mx-0">
-                        <div className="rounded-xl border border-slate-200 min-w-[500px] md:min-w-0">
+                            <InputField 
+                                label="Guardian Name" 
+                                name="guardianName" 
+                                placeholder="Rajesh Kumar" 
+                            />
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <InputField 
+                                    label="Class" 
+                                    name="class" 
+                                    required={true} 
+                                    options={[
+                                        { value: '', label: 'Select' },
+                                        ...Object.keys(classFees).map(c => ({ value: c, label: c }))
+                                    ]}
+                                />
+                                <InputField 
+                                    label="Section" 
+                                    name="section" 
+                                    placeholder="A" 
+                                    required={true} 
+                                />
+                            </div>
+
+                            <InputField 
+                                label="Roll Number" 
+                                name="rollNo" 
+                                placeholder="01" 
+                                required={true} 
+                            />
+                        </div>
+
+                        {/* Administrative Details Group */}
+                        <div className="space-y-6">
+                            <div className="flex items-center gap-2 pb-2 border-b border-slate-100 mb-2">
+                                <IndianRupee size={18} className="text-emerald-600" />
+                                <h3 className="font-bold text-slate-800 tracking-tight">Fee & Admission Details</h3>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <InputField 
+                                    label="Base Fee (₹)" 
+                                    name="feesAmount" 
+                                    type="number" 
+                                    placeholder="500" 
+                                />
+                                <InputField 
+                                    label="Late Fine (₹)" 
+                                    name="fine" 
+                                    type="number" 
+                                    placeholder="0" 
+                                />
+                            </div>
+
+                            <InputField 
+                                label="Fee Status" 
+                                name="feesStatus" 
+                                options={[
+                                    { value: 'Paid', label: 'Paid' },
+                                    { value: 'Pending', label: 'Pending' },
+                                    { value: 'Overdue', label: 'Overdue' }
+                                ]}
+                            />
+
+                            <div className="flex flex-col gap-1.5">
+                                <CustomDatePicker
+                                    label="ADMISSION DATE"
+                                    value={formData.admissionDate}
+                                    onChange={(val) => handleChange({ target: { name: 'admissionDate', value: val } })}
+                                    required
+                                />
+                            </div>
+
+                            <InputField 
+                                label="Admission Status" 
+                                name="admissionStatus" 
+                                options={[
+                                    { value: 'Confirmed', label: 'Confirmed' },
+                                    { value: 'Provisional', label: 'Provisional' },
+                                    { value: 'Cancelled', label: 'Cancelled' }
+                                ]}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-100">
+                        <button 
+                            type="button" 
+                            onClick={onCancel}
+                            className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition-all text-center"
+                        >
+                            Cancel Changes
+                        </button>
+                        <button 
+                            type="submit" 
+                            className="flex-1 px-6 py-4 rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2 group"
+                        >
+                            <Save size={20} className="group-hover:scale-110 transition-transform" />
+                            {initialData ? 'Update Record' : 'Complete Registration'}
+                        </button>
+                    </div>
+                </form>
+
+                {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
+                    <div className="bg-slate-50/50 px-6 py-10 md:px-10 border-t border-slate-100">
+                        <div className="flex items-center gap-2 mb-6">
+                            <Calendar size={18} className="text-slate-500" />
+                            <h3 className="font-bold text-slate-800 tracking-tight">Recent Payment History</h3>
+                        </div>
+                        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
                             <table className="w-full border-collapse text-sm text-left">
-                                <thead className="bg-slate-50">
+                                <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="p-2 md:p-3 font-semibold text-slate-600 text-xs">Date</th>
-                                        <th className="p-2 md:p-3 font-semibold text-slate-600 text-xs">Month</th>
-                                        <th className="p-2 md:p-3 font-semibold text-slate-600 text-xs">Amount</th>
-                                        <th className="p-2 md:p-3 font-semibold text-slate-600 text-xs">Fine</th>
-                                        <th className="p-2 md:p-3 font-semibold text-slate-600 text-xs">Remarks</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Month</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Amount</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Fine</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
-                                    {initialData.feeHistory.map((payment) => (
-                                        <tr key={payment.id} className="hover:bg-slate-50/50">
-                                            <td className="p-2 md:p-3 text-slate-700 text-xs">{payment.date}</td>
-                                            <td className="p-2 md:p-3 text-slate-700 text-xs">{payment.month}</td>
-                                            <td className="p-2 md:p-3 font-medium text-emerald-600 text-xs">₹{payment.amount}</td>
-                                            <td className={`p-2 md:p-3 text-xs ${payment.fine > 0 ? 'text-rose-600 font-medium' : 'text-slate-400'}`}>
-                                                {payment.fine > 0 ? `₹${payment.fine}` : '-'}
-                                            </td>
-                                            <td className="p-2 md:p-3 text-slate-500 italic text-xs truncate max-w-[100px]" title={payment.remarks}>{payment.remarks || '-'}</td>
+                                <tbody className="divide-y divide-slate-50">
+                                    {initialData.feeHistory.slice(-5).reverse().map((payment) => (
+                                        <tr key={payment.id} className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="px-4 py-3 text-slate-600 font-medium">{payment.date}</td>
+                                            <td className="px-4 py-3 text-slate-600 font-medium">{payment.month}</td>
+                                            <td className="px-4 py-3 text-emerald-600 font-bold">₹{payment.amount}</td>
+                                            <td className="px-4 py-3 text-rose-500 font-semibold">{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

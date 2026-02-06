@@ -39,7 +39,7 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
     const steps = [
         {
             title: "Welcome to Student Manager!",
-            description: "Let's take a quick tour to help you get started with this personal project.",
+            description: "Let's take a quick tour to help you get started with your new institutional management system.",
             target: null,
             position: 'center',
             action: () => {
@@ -130,7 +130,7 @@ const Walkthrough = ({ onOpenMobileMenu, onCloseMobileMenu }) => {
         },
         {
             title: "You're All Set!",
-            description: "Feel free to explore. Remember, this is a safe playground to learn the workflow.",
+            description: "Feel free to explore. The system is designed to streamline your daily administrative tasks efficiently.",
             target: null,
             position: 'center',
             action: () => {
