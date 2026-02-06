@@ -16,6 +16,11 @@
   touch-action: manipulation;
 }
 
+/* Global mobile optimizations */
+input, select, textarea {
+  font-size: 16px !important; /* Prevents iOS zoom on focus */
+}
+
 body {
   margin: 0;
   font-family: var(--font-family);
@@ -24,6 +29,13 @@ body {
   color: #1f2937;
   -webkit-font-smoothing: antialiased;
   -webkit-overflow-scrolling: touch;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Hardware acceleration for smooth animations */
+.slide-up, .slide-down, .page-enter {
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Force hardware acceleration */
 }
 
 /* Glassmorphism Utilities - Keeping these for now as utility classes */

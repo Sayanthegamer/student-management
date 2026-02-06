@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Search, FileText, AlertTriangle } from 'lucide-react';
 import Pagination from './Pagination';
 import CustomDatePicker from './CustomDatePicker';
+import CertificateCard from './CertificateCard';
 import { logActivity } from '../utils/storage';
 
 const TransferCertificate = ({ students, onUpdateStudent, user }) => {
@@ -125,6 +126,29 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
         setShowIssueModal(false);
         setSelectedStudent(null);
         alert('Transfer Certificate Issued Successfully!');
+    };
+
+    const handleGenerateTC = (studentId, action) => {
+        const student = students.find(s => s.id === studentId);
+        if (!student) return;
+
+        if (action === 'generate') {
+            // Show the issue modal for generating a new TC
+            setSelectedStudent(student);
+            setTcDetails({
+                reason: 'Completed Course',
+                conduct: 'Good',
+                dateOfLeaving: new Date().toISOString().slice(0, 10),
+                remarks: ''
+            });
+            setShowIssueModal(true);
+        } else if (action === 'download') {
+            // In a real implementation, this would generate and download the PDF
+            alert('Downloading Transfer Certificate...');
+        } else if (action === 'regenerate') {
+            // Regenerate existing TC
+            alert('Regenerating Transfer Certificate...');
+        }
     };
 
     return (
@@ -259,43 +283,23 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                 </table>
             </div>
 
-            {/* Card View (Mobile) */}
-            <div className="md:hidden flex flex-col gap-4">
-                {currentStudents.map(student => (
-                    <div key={student.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <div className="flex justify-between items-start mb-3">
-                            <div>
-                                <h3 className="font-bold text-slate-800">{student.name}</h3>
-                                <p className="text-sm text-slate-500">Class {student.class}-{student.section} | Roll: {student.rollNo}</p>
-                            </div>
-                            {view === 'active' && (
-                                <button
-                                    onClick={() => handleIssueClick(student)}
-                                    className="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 text-xs font-bold uppercase tracking-wider border border-rose-100"
-                                >
-                                    Issue TC
-                                </button>
-                            )}
+            {/* Mobile Card View */}
+            <div className="md:hidden px-4 pt-4 pb-4 space-y-3">
+                {currentStudents.length > 0 ? (
+                    currentStudents.map((student) => (
+                        <CertificateCard
+                            key={student.id}
+                            student={student}
+                            onGenerateTC={handleGenerateTC}
+                        />
+                    ))
+                ) : (
+                    <div className="py-16 text-center">
+                        <div className="p-5 bg-slate-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                            <Search size={32} className="text-slate-300" />
                         </div>
-
-                        <div className="flex items-center justify-between pt-3 border-t border-slate-50 text-sm">
-                            <span className="text-slate-500">
-                                {view === 'active' ? 'Admitted:' : 'Left:'}
-                                <span className="ml-1 font-medium text-slate-700">
-                                    {view === 'active' ? student.admissionDate : student.tcDetails?.dateOfLeaving}
-                                </span>
-                            </span>
-                            {view !== 'active' && (
-                                <span className="text-slate-500 italic">
-                                    {student.tcDetails?.reason || 'N/A'}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                ))}
-                {currentStudents.length === 0 && (
-                    <div className="p-8 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
-                        <p>No students found.</p>
+                        <p className="text-slate-600 font-bold text-base">No results found</p>
+                        <p className="text-slate-400 text-sm mt-1">Try adjusting your filters or search term</p>
                     </div>
                 )}
             </div>
