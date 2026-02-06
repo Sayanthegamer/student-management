@@ -3,6 +3,7 @@ import { Edit2, Trash2, Search, Plus, IndianRupee, Filter, ChevronDown, ChevronU
 import FeePaymentModal from './FeePaymentModal';
 import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
+import StudentCard from './StudentCard';
 
 const getFeeStatusForMonth = (student, month) => {
     const isPaid = student.feeHistory?.some(p => p.month === month);
@@ -96,6 +97,13 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
         setSelectedStudentForFee(null);
     }, [onPayFee]);
 
+    const handleClearFilters = useCallback(() => {
+        setSearchTerm('');
+        setFilterClass('');
+        setFilterSection('');
+        setFilterFeeStatus('');
+    }, []);
+
     if (students.length === 0) {
         return (
             <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 md:p-16 text-center max-w-2xl mx-auto">
@@ -120,27 +128,29 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         <h2 className="text-xl md:text-2xl font-bold text-slate-800">Student Directory</h2>
                         <p className="text-slate-500 text-sm mt-1">Manage and track student records and fees</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <div className="relative flex-1 md:w-64">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full md:w-auto">
+                        <div className="relative flex-1 sm:min-w-[220px] md:w-64">
                             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                             <input
                                 type="text"
                                 placeholder="Search students..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none text-sm"
+                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none text-base md:text-sm"
                             />
                         </div>
-                        <button 
-                            onClick={() => setShowFilters(!showFilters)}
-                            className={`p-2 rounded-xl border transition-all ${showFilters ? 'bg-indigo-50 border-indigo-200 text-indigo-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
-                        >
-                            <Filter size={20} />
-                        </button>
-                        <button onClick={onAdd} className="btn btn-primary py-2 px-4 text-sm whitespace-nowrap">
-                            <Plus size={18} />
-                            Add <span className="hidden sm:inline">Student</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setShowFilters(!showFilters)}
+                                className={`p-2.5 rounded-xl border transition-all ${showFilters ? 'bg-indigo-50 border-indigo-200 text-indigo-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                            >
+                                <Filter size={20} />
+                            </button>
+                            <button onClick={onAdd} className="btn btn-primary py-2 px-4 text-sm whitespace-nowrap hidden md:inline-flex">
+                                <Plus size={18} />
+                                Add <span className="hidden lg:inline">Student</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -151,7 +161,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <select
                                 value={filterClass}
                                 onChange={(e) => setFilterClass(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
+                                className="w-full bg-white border border-slate-200 px-3 py-2.5 rounded-lg text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
                             >
                                 <option value="">All Classes</option>
                                 {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -162,7 +172,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <select
                                 value={filterSection}
                                 onChange={(e) => setFilterSection(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
+                                className="w-full bg-white border border-slate-200 px-3 py-2.5 rounded-lg text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
                             >
                                 <option value="">All Sections</option>
                                 {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
@@ -173,7 +183,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <select
                                 value={filterFeeStatus}
                                 onChange={(e) => setFilterFeeStatus(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
+                                className="w-full bg-white border border-slate-200 px-3 py-2.5 rounded-lg text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
                             >
                                 <option value="">All Status</option>
                                 <option value="Paid">Paid</option>
@@ -195,7 +205,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
+                                    className="w-full bg-white border border-slate-200 px-3 py-2.5 rounded-lg text-base md:text-sm outline-none focus:ring-2 focus:ring-indigo-500/10"
                                 >
                                     <option value="name">Name</option>
                                     <option value="rollNo">Roll No</option>
@@ -204,7 +214,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             </div>
                             <button
                                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-all min-h-[38px]"
+                                className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-all min-h-[40px]"
                             >
                                 {sortOrder === 'asc' ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
                             </button>
@@ -212,7 +222,36 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     </div>
                 )}
 
-                <div className="overflow-x-auto">
+                <div className="md:hidden px-4 pb-4 space-y-3">
+                    {currentStudents.length > 0 ? (
+                        currentStudents.map(student => (
+                            <StudentCard
+                                key={student.id}
+                                student={student}
+                                status={getFeeStatusForMonth(student, filterMonth)}
+                                onEdit={onEdit}
+                                onDelete={onDelete}
+                                onPayFee={handlePayFeeClick}
+                            />
+                        ))
+                    ) : (
+                        <div className="py-12 text-center">
+                            <div className="p-4 bg-slate-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                <Search size={28} className="text-slate-300" />
+                            </div>
+                            <p className="text-slate-500 font-medium">No results found</p>
+                            <p className="text-slate-400 text-sm">Try adjusting your filters or search term</p>
+                            <button
+                                onClick={handleClearFilters}
+                                className="text-indigo-600 text-sm font-semibold hover:underline mt-3"
+                            >
+                                Clear all filters
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-slate-50/50">
@@ -280,11 +319,6 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                     <Trash2 size={16} />
                                                 </button>
                                             </div>
-                                            {/* Visible on mobile/touch always */}
-                                            <div className="flex gap-2 justify-end md:hidden">
-                                                <button onClick={() => handlePayFeeClick(student)} className="p-2 text-emerald-600"><IndianRupee size={18} /></button>
-                                                <button onClick={() => onEdit(student)} className="p-2 text-indigo-600"><Edit2 size={18} /></button>
-                                            </div>
                                         </td>
                                     </tr>
                                 );
@@ -300,13 +334,8 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                 <p className="text-slate-500 font-medium">No results found</p>
                                                 <p className="text-slate-400 text-sm">Try adjusting your filters or search term</p>
                                             </div>
-                                            <button 
-                                                onClick={() => {
-                                                    setSearchTerm('');
-                                                    setFilterClass('');
-                                                    setFilterSection('');
-                                                    setFilterFeeStatus('');
-                                                }}
+                                            <button
+                                                onClick={handleClearFilters}
                                                 className="text-indigo-600 text-sm font-semibold hover:underline"
                                             >
                                                 Clear all filters

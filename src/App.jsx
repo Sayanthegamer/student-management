@@ -1,7 +1,8 @@
 import React, { useState, Suspense, lazy, useCallback } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Menu, Plus } from 'lucide-react';
 import Sidebar from './components/Sidebar';
+import BottomNavigation from './components/BottomNavigation';
 import ErrorBoundary from './components/ErrorBoundary';
 import Login from './components/Login';
 import ForgotPassword from './components/ForgotPassword';
@@ -28,6 +29,8 @@ function App() {
   const [editingStudent, setEditingStudent] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const showMobileAdd = location.pathname === '/students';
 
   // Student Management Handlers
   const handleAddClick = useCallback(() => {
@@ -104,7 +107,7 @@ function App() {
       <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
       <div className="app-container flex h-screen overflow-hidden">
         {/* Mobile Header */}
-        <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-slate-200 z-30 flex items-center px-3 justify-between safe-area-inset-top">
+        <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white/95 backdrop-blur-xl border-b border-slate-200 z-30 flex items-center px-3 justify-between safe-area-inset-top">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
@@ -114,7 +117,18 @@ function App() {
             </button>
             <span className="font-bold text-slate-800 text-base">Student Manager</span>
           </div>
-          <SyncIndicator status={syncStatus} onSync={forceSync} />
+          <div className="flex items-center gap-2">
+            {showMobileAdd && (
+              <button
+                onClick={handleAddClick}
+                className="p-2.5 rounded-xl bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 transition-colors"
+                aria-label="Add student"
+              >
+                <Plus size={18} />
+              </button>
+            )}
+            <SyncIndicator status={syncStatus} onSync={forceSync} />
+          </div>
         </div>
 
         {/* Mobile Sidebar Backdrop */}
@@ -135,7 +149,7 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto relative pt-14 md:pt-0 w-full">
+        <main className="flex-1 overflow-y-auto relative pt-14 md:pt-0 w-full pb-24 md:pb-0">
           <Suspense fallback={<SkeletonLoader />}>
             <Walkthrough
               onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
@@ -174,6 +188,7 @@ function App() {
             </Routes>
           </Suspense>
         </main>
+        <BottomNavigation />
       </div>
     </ErrorBoundary>
   );
