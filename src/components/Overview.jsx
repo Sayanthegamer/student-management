@@ -5,13 +5,13 @@ import { getActivities } from '../utils/storage';
 
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
     <div 
-        className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col gap-2 md:gap-4 shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300 slide-up"
+        className="bg-white rounded-2xl md:rounded-3xl p-3 md:p-6 flex flex-col gap-2 md:gap-4 shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300 slide-up"
         style={{ animationDelay: `${index * 50}ms` }}
     >
         <div className="flex justify-between items-start gap-3">
             <div className="min-w-0 flex-1">
                 <p className="m-0 text-slate-500 text-[10px] md:text-xs font-bold tracking-wider uppercase">{title}</p>
-                <h3 className="mt-1.5 text-2xl md:text-3xl text-slate-800 font-black tracking-tight leading-none">{value}</h3>
+                <h3 className="mt-1.5 text-xl md:text-3xl text-slate-800 font-black tracking-tight leading-none">{value}</h3>
             </div>
             <div className={`p-2.5 md:p-3 rounded-xl ${colorClass} shrink-0`}>
                 <Icon size={22} className="md:hidden" />

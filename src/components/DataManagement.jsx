@@ -106,19 +106,19 @@ const DataManagement = ({ students, onImportSuccess }) => {
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden page-enter">
-                <div className="p-8 md:p-12 border-b border-slate-100 bg-slate-50/50">
+                <div className="p-5 md:p-8 border-b border-slate-100 bg-slate-50/50">
                     <div className="flex items-center gap-4 mb-2">
                         <div className="p-3 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-600/20">
                             <Database size={32} />
                         </div>
                         <div>
-                            <h2 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">System Data Management</h2>
+                            <h2 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight">System Data Management</h2>
                             <p className="text-slate-500 font-medium">Backup, restore, and audit your institutional records.</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-8 md:p-12 grid md:grid-cols-2 gap-10">
+                <div className="p-5 md:p-8 grid md:grid-cols-2 gap-10">
                     <div className="group relative">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-0 group-hover:opacity-10 transition duration-500"></div>
                         <div className="relative bg-white p-8 rounded-2xl border border-slate-200 shadow-sm transition-all group-hover:shadow-md h-full flex flex-col">
@@ -158,7 +158,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
                     </div>
                 </div>
 
-                <div className="px-8 pb-12 md:px-12">
+                <div className="px-5 pb-8 md:px-8 md:pb-12">
                     <div className="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-100">
                         <h3 className="text-slate-800 font-bold mb-4 flex items-center gap-2">
                             <AlertTriangle size={20} className="text-amber-500" />
