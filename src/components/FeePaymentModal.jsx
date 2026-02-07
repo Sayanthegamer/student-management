@@ -123,7 +123,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     };
 
     return createPortal(
-        <div className={`fixed inset-0 bg-slate-900/60 z-50 overflow-y-auto flex items-start md:items-center p-3 md:p-4 modal-backdrop backdrop-blur-sm ${isClosing ? 'closing' : ''}`}>
+        <div 
+            className={`fixed inset-0 bg-slate-900/60 z-50 overflow-y-auto flex items-start md:items-center p-3 md:p-4 modal-backdrop backdrop-blur-sm ${isClosing ? 'closing' : ''}`}
+            onClick={(e) => {
+                if (e.target === e.currentTarget) handleClose();
+            }}
+        >
             <div className={`bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border border-slate-100 ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
                 <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-hidden">
@@ -154,7 +159,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 )}
 
                 <form onSubmit={handleSubmit} className="flex flex-col">
-                    <div className="p-4 md:p-8 flex flex-col gap-5 md:gap-6">
+                    <div className="p-5 md:p-8 flex flex-col gap-5 md:gap-6">
                         <CustomDatePicker
                             label="Collection Date"
                             value={paymentDate}
@@ -255,7 +260,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                         </div>
                     </div>
 
-                    <div className="p-6 bg-slate-50 border-t border-slate-100">
+                    <div className="p-4 md:p-6 bg-slate-50 border-t border-slate-100">
                         <button
                             type="submit"
                             disabled={!!error}

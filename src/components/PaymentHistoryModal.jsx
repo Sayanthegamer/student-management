@@ -17,7 +17,12 @@ const PaymentHistoryModal = ({ student, onClose }) => {
     };
 
     return createPortal(
-        <div className={`fixed inset-0 bg-slate-900/60 z-50 flex items-start md:items-center p-3 md:p-4 backdrop-blur-sm modal-backdrop safe-area-inset-bottom ${isClosing ? 'closing' : ''}`}>
+        <div 
+            className={`fixed inset-0 bg-slate-900/60 z-50 flex items-start md:items-center p-3 md:p-4 backdrop-blur-sm modal-backdrop safe-area-inset-bottom ${isClosing ? 'closing' : ''}`}
+            onClick={(e) => {
+                if (e.target === e.currentTarget) handleClose();
+            }}
+        >
             <div className={`bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-slate-100 ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
                 <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-hidden flex-shrink-0">
@@ -38,7 +43,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                     </button>
                 </div>
 
-                <div className="overflow-y-auto p-4 md:p-8 flex-1">
+                <div className="overflow-y-auto p-5 md:p-8 flex-1">
                     {sortedHistory.length === 0 ? (
                         <div className="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
                             <Calendar size={48} className="mx-auto mb-4 text-slate-200" />
