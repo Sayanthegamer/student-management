@@ -131,7 +131,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         >
             <div className={`bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border border-slate-100 ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
-                <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-hidden">
+                <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-visible">
                     <div className="relative z-10">
                         <h3 className="m-0 text-xl md:text-2xl font-bold tracking-tight flex items-center gap-3">
                             <IndianRupee size={24} className="text-emerald-400" />
@@ -141,7 +141,10 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                             Academic Fee Collection: <span className="text-white font-bold">{student.name}</span>
                         </p>
                     </div>
-                    <button onClick={handleClose} className="absolute top-6 right-6 text-white/60 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-xl transition-all">
+                    <button
+                        onClick={handleClose}
+                        className="absolute top-4 right-4 md:top-6 md:right-6 text-white/60 hover:text-white bg-white/10 hover:bg-white/20 p-3 min-h-[44px] min-w-[44px] rounded-xl transition-all z-20 flex items-center justify-center"
+                    >
                         <X size={20} />
                     </button>
                 </div>

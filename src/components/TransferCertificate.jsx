@@ -349,17 +349,17 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
             }}
         >
             <div className={`bg-white rounded-2xl shadow-xl w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
-                <div className="relative">
-                    <h3 className="mt-0 text-white bg-slate-900 px-6 py-5 md:py-8 text-xl font-bold border-b border-slate-700">
-                        Issue Transfer Certificate
-                    </h3>
-                    <button 
-                        onClick={() => handleExit(onCancel)}
-                        className="absolute top-6 right-6 text-white/60 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-xl transition-all"
-                    >
-                        <X size={20} />
-                    </button>
-                </div>
+            <div className="relative">
+                <h3 className="mt-0 text-white bg-slate-900 px-6 py-5 md:py-8 text-xl font-bold border-b border-slate-700">
+                    Issue Transfer Certificate
+                </h3>
+                <button
+                    onClick={() => handleExit(onCancel)}
+                    className="absolute top-4 right-4 md:top-6 md:right-6 text-white/60 hover:text-white bg-white/10 hover:bg-white/20 p-3 min-h-[44px] min-w-[44px] rounded-xl transition-all z-20 flex items-center justify-center"
+                >
+                    <X size={20} />
+                </button>
+            </div>
 
                 <div className="p-5 md:p-8">
                     <div className="mb-5">

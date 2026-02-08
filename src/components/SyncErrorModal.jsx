@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, AlertTriangle, XCircle } from 'lucide-react';
+import { Download, AlertTriangle, X } from 'lucide-react';
 import { convertToCSV } from '../utils/csvHelpers';
 
 const SyncErrorModal = ({ error, students, onDismiss }) => {
@@ -33,7 +33,7 @@ const SyncErrorModal = ({ error, students, onDismiss }) => {
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col overflow-hidden border border-red-200">
 
         {/* Header */}
-        <div className="bg-red-50 p-4 md:p-6 border-b border-red-100 flex items-center gap-4">
+        <div className="bg-red-50 p-4 md:p-6 border-b border-red-100 flex items-center gap-4 relative pr-14 md:pr-16">
           <div className="p-2 md:p-3 bg-red-100 rounded-full">
             <AlertTriangle className="w-6 h-6 md:w-8 md:h-8 text-red-600" />
           </div>
@@ -43,6 +43,13 @@ const SyncErrorModal = ({ error, students, onDismiss }) => {
               We encountered a problem syncing your data.
             </p>
           </div>
+          <button
+            onClick={onDismiss}
+            className="absolute top-3 right-3 md:top-4 md:right-4 text-red-500 hover:text-red-700 bg-white/80 hover:bg-white p-3 min-h-[44px] min-w-[44px] rounded-xl transition-all z-20 flex items-center justify-center"
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
         </div>
 
         {/* Content */}
