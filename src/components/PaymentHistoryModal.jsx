@@ -25,7 +25,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
         >
             <div className={`bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-slate-100 ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
-                <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-hidden flex-shrink-0">
+                <div className="bg-slate-900 px-6 py-5 md:py-8 text-white relative overflow-visible flex-shrink-0">
                     <div className="relative z-10">
                         <h3 className="text-xl md:text-2xl font-bold tracking-tight flex items-center gap-3">
                             <FileText className="text-indigo-400" size={24} />
@@ -37,7 +37,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                     </div>
                     <button
                         onClick={handleClose}
-                        className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 text-white/60 hover:text-white rounded-xl transition-all"
+                        className="absolute top-4 right-4 md:top-6 md:right-6 p-3 min-h-[44px] min-w-[44px] bg-white/10 hover:bg-white/20 text-white/60 hover:text-white rounded-xl transition-all z-20 flex items-center justify-center"
                     >
                         <X size={20} />
                     </button>
