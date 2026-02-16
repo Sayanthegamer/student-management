@@ -104,7 +104,7 @@ function App() {
   return (
     <ErrorBoundary>
       <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
-      <div className="app-container flex h-screen overflow-hidden">
+      <div className="app-container flex h-[100dvh] overflow-hidden">
         {/* Mobile Header - Simplified */}
         <div className="md:hidden fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-slate-200 z-30 flex items-center px-4 justify-between pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))]">
           <div className="flex items-center gap-2">
@@ -126,7 +126,7 @@ function App() {
 
         {/* Sidebar - Desktop Only */}
         <div className="hidden md:block md:relative md:w-[260px] md:z-0 flex-shrink-0 md:p-4">
-          <Sidebar onClose={() => {}} syncStatus={syncStatus} onSync={forceSync} />
+          <Sidebar onClose={() => { }} syncStatus={syncStatus} onSync={forceSync} />
         </div>
 
         {/* Main Content */}

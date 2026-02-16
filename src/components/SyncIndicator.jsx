@@ -44,7 +44,7 @@ const SyncIndicator = ({ status, onSync, darkMode = false }) => {
 
   return (
     <div className="flex items-center gap-3">
-      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-wider transition-all shadow-inner ${bgClasses}`}>
+      <div className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-wider transition-all shadow-inner min-w-[140px] ${bgClasses}`}>
         <Icon size={12} className={`${config.color} ${config.animate || ''}`} />
         <span className={textClasses}>{config.text}</span>
       </div>
@@ -52,11 +52,10 @@ const SyncIndicator = ({ status, onSync, darkMode = false }) => {
         <button
           onClick={onSync}
           disabled={status === 'syncing' || status === 'synced'}
-          className={`p-1.5 rounded-lg transition-all ${
-            status === 'syncing' || status === 'synced'
+          className={`p-1.5 rounded-lg transition-all ${status === 'syncing' || status === 'synced'
               ? 'text-slate-600 opacity-50 cursor-not-allowed'
               : 'text-indigo-400 hover:bg-indigo-400/10 hover:text-indigo-300 active:scale-95'
-          }`}
+            }`}
           title={status === 'synced' ? "Data is up to date" : "Sync data with cloud"}
           aria-label="Synchronize data"
         >
