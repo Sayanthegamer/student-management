@@ -10,59 +10,46 @@ export const useDataSync = () => {
   const [syncStatus, setSyncStatus] = useState('synced'); // 'synced', 'syncing', 'error', 'unsaved'
   const [syncError, setSyncError] = useState(null);
 
-  // Load from Supabase on mount/auth change
-  useEffect(() => {
+  // Reusable fetch from cloud — used by initial load AND forceSync
+  const fetchFromCloud = useCallback(async () => {
     if (!user || !supabase) {
       setStudents(getStudents());
       setSyncStatus('synced');
       return;
     }
 
-    let isMounted = true;
+    setSyncStatus('syncing');
+    setSyncError(null);
+    try {
+      const { data: studentsData, error: sError } = await supabase.from('students').select('*');
+      if (sError) throw sError;
 
-    const fetchFromCloud = async () => {
-      setSyncStatus('syncing');
-      setSyncError(null);
-      try {
-        const { data: studentsData, error: sError } = await supabase.from('students').select('*');
-        if (sError) throw sError;
+      const { data: feesData, error: fError } = await supabase.from('fees').select('*');
+      if (fError) throw fError;
 
-        const { data: feesData, error: fError } = await supabase.from('fees').select('*');
-        if (fError) throw fError;
+      // "Online Source is Truth" - Always overwrite local with cloud data if connection is successful.
+      const merged = denormalizeStudents(studentsData, feesData);
+      saveStudents(merged);
+      setStudents(merged);
+      setSyncStatus('synced');
+    } catch (err) {
+      console.error("Sync error:", err);
+      setSyncStatus('error');
+      setSyncError({
+        message: "Failed to load data from server. Please check your connection.",
+        details: err
+      });
 
-        // "Online Source is Truth" - Always overwrite local with cloud data if connection is successful.
-        // Even if Cloud is empty, we assume that's the truth.
-        if (isMounted) {
-          const merged = denormalizeStudents(studentsData, feesData);
-          saveStudents(merged);
-          setStudents(merged);
-          setSyncStatus('synced');
-        }
+      setTimeout(() => {
+        setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+      }, 5000);
+    }
+  }, [user]);
 
-      } catch (err) {
-        if (isMounted) {
-          console.error("Sync error:", err);
-          setSyncStatus('error');
-          setSyncError({
-            message: "Failed to load data from server. Please check your connection.",
-            details: err
-          });
-
-          setTimeout(() => {
-            if (isMounted && syncStatus === 'error') {
-              setSyncStatus('unsaved');
-            }
-          }, 5000);
-        }
-      }
-    };
-
+  // Load from Supabase on mount/auth change
+  useEffect(() => {
     fetchFromCloud();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [user, supabase]);
+  }, [fetchFromCloud]);
 
   const addStudent = useCallback(async (studentData) => {
     const id = crypto.randomUUID();
@@ -114,7 +101,7 @@ export const useDataSync = () => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
     }
-  }, [user, supabase]);
+  }, [user]);
 
   const updateStudent = useCallback(async (studentData) => {
     // 1. Local Update
@@ -170,7 +157,7 @@ export const useDataSync = () => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
     }
-  }, [user, supabase]);
+  }, [user]);
 
   const deleteStudent = useCallback(async (id) => {
     // 1. Local Update
@@ -209,7 +196,7 @@ export const useDataSync = () => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
     }
-  }, [user, supabase]);
+  }, [user]);
 
   const addFeePayment = useCallback(async (studentId, paymentDetails) => {
     // paymentDetails can be object or array
@@ -256,7 +243,7 @@ export const useDataSync = () => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
     }
-  }, [user, supabase]);
+  }, [user]);
 
   const importStudents = useCallback(async (newStudents) => {
     // 1. Local Update (Full Replace)
@@ -315,7 +302,7 @@ export const useDataSync = () => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
     }
-  }, [user, supabase]);
+  }, [user]);
 
   const dismissError = useCallback(() => {
     setSyncError(null);
@@ -331,6 +318,7 @@ export const useDataSync = () => {
     addFeePayment,
     importStudents,
     dismissError,
-    forceSync: () => importStudents(students)
+    forceSync: fetchFromCloud
   };
 };
+

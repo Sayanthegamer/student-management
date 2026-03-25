@@ -2,23 +2,24 @@ import React, { useState } from 'react';
 import { Save, X, User, GraduationCap, IndianRupee, Calendar, CheckCircle2 } from 'lucide-react';
 import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
+import { CLASS_FEES } from '../utils/constants';
 
 const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange }) => (
     <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1 flex items-center gap-2">
-            {Icon && <Icon size={12} />}
-            {label} {required && <span className="text-rose-500">*</span>}
+        <label className="text-[10px] font-black text-white/50 uppercase tracking-widest px-1 flex items-center gap-2">
+            {Icon && <Icon size={12} className="stroke-[3px]" />}
+            {label} {required && <span className="text-[#CCFF00]">*</span>}
         </label>
         {options ? (
             <select
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm font-medium"
+                className="w-full bg-[#050505] border border-white/20 px-4 py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest appearance-none"
                 required={required}
             >
                 {options.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    <option key={opt.value} value={opt.value}>{opt.label.toUpperCase()}</option>
                 ))}
             </select>
         ) : (
@@ -27,8 +28,8 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm font-medium"
-                placeholder={placeholder}
+                className="w-full bg-[#050505] border border-white/20 px-4 py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest placeholder:text-white/20"
+                placeholder={placeholder?.toUpperCase()}
                 required={required}
             />
         )}
@@ -49,32 +50,11 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         admissionStatus: 'Confirmed'
     });
 
-    const classFees = {
-        'Play School': '350',
-        'Nursury': '440',
-        'kg-1': '440',
-        'kg-2': '440',
-        '1': '480',
-        '2': '490',
-        '3': '510',
-        '4': '520',
-        '5': '540',
-        '6': '560',
-        '7': '580',
-        '8': '600',
-        '9': '650',
-        '10': '700',
-        '11': '800',
-        '12': '900',
-        'UG': '1500',
-        'PG': '2000'
-    };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         if (name === 'class') {
-            const fee = classFees[value] || '';
+            const fee = CLASS_FEES[value] || '';
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
@@ -105,30 +85,30 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
     return (
         <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
-            <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden page-enter">
-                <div className="bg-slate-900 px-6 py-6 md:px-10 md:py-8 text-white relative overflow-hidden">
+            <div className="bg-[#0a0a0a] border border-white/20 overflow-hidden page-enter flex flex-col">
+                <div className="bg-[#050505] border-b border-white/20 px-6 py-6 md:px-10 md:py-8 text-white relative overflow-hidden">
                     <div className="relative z-10">
-                        <h2 className="text-xl md:text-3xl font-bold tracking-tight">{initialData ? 'Edit Student Record' : 'Register New Student'}</h2>
-                        <p className="text-slate-400 mt-2 text-sm md:text-base font-medium">Please fill in the official details for the institutional record.</p>
+                        <h2 className="text-2xl md:text-3xl font-black uppercase tracking-widest">{initialData ? 'Edit Student Record' : 'Register New Student'}</h2>
+                        <p className="text-[#CCFF00] mt-3 text-xs md:text-sm font-mono uppercase tracking-wide">Please fill in the official details for the institutional record.</p>
                     </div>
-                    <div className="absolute top-0 right-0 p-8 opacity-10">
-                        <GraduationCap size={120} />
+                    <div className="absolute -top-4 -right-4 p-8 opacity-5 text-white">
+                        <GraduationCap size={160} className="stroke-[1px]" />
                     </div>
                     <button 
                         onClick={onCancel} 
-                        className="absolute top-6 right-6 p-2 rounded-xl bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-all"
+                        className="absolute top-6 right-6 p-3 border border-white/20 bg-transparent text-white hover:bg-white hover:text-black transition-colors z-20"
                     >
-                        <X size={20} />
+                        <X size={20} className="stroke-[3px]" />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-4 md:p-10 flex flex-col gap-8 md:gap-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+                <form onSubmit={handleSubmit} className="p-5 md:p-10 flex flex-col gap-8 md:gap-12">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                         {/* Personal Information Group */}
                         <div className="space-y-6">
-                            <div className="flex items-center gap-2 pb-2 border-b border-slate-100 mb-2">
-                                <User size={18} className="text-indigo-600" />
-                                <h3 className="font-bold text-slate-800 tracking-tight">Personal Information</h3>
+                            <div className="flex items-center gap-3 pb-3 border-b border-white/10 mb-4">
+                                <User size={20} className="text-white stroke-[3px]" />
+                                <h3 className="font-black text-white uppercase tracking-widest text-lg">Personal Info</h3>
                             </div>
                             
                             <InputField 
@@ -155,7 +135,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     required={true} 
                                     options={[
                                         { value: '', label: 'Select' },
-                                        ...Object.keys(classFees).map(c => ({ value: c, label: c }))
+                                        ...Object.keys(CLASS_FEES).map(c => ({ value: c, label: c }))
                                     ]}
                                     value={formData.class}
                                     onChange={handleChange}
@@ -182,9 +162,9 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
                         {/* Administrative Details Group */}
                         <div className="space-y-6">
-                            <div className="flex items-center gap-2 pb-2 border-b border-slate-100 mb-2">
-                                <IndianRupee size={18} className="text-emerald-600" />
-                                <h3 className="font-bold text-slate-800 tracking-tight">Fee & Admission Details</h3>
+                            <div className="flex items-center gap-3 pb-3 border-b border-white/10 mb-4">
+                                <IndianRupee size={20} className="text-emerald-400 stroke-[3px]" />
+                                <h3 className="font-black text-white uppercase tracking-widest text-lg">Fee Details</h3>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
@@ -241,47 +221,47 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-100">
-                        <button 
+                    <div className="flex flex-col sm:flex-row gap-4 pt-8 mt-4 border-t border-white/20">
+                    <button 
                             type="button" 
                             onClick={onCancel}
-                            className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition-all text-center"
+                            className="flex-1 px-6 py-5 border border-rose-500 text-rose-500 font-black uppercase tracking-widest hover:bg-rose-500 hover:text-black transition-colors rounded-none text-center"
                         >
                             Cancel Changes
                         </button>
                         <button 
                             type="submit" 
-                            className="flex-1 px-6 py-4 rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2 group"
+                            className="flex-1 px-6 py-5 bg-[#CCFF00] border border-[#CCFF00] text-black font-black uppercase tracking-widest hover:bg-white hover:border-white transition-colors flex items-center justify-center gap-3 rounded-none group"
                         >
-                            <Save size={20} className="group-hover:scale-110 transition-transform" />
+                            <Save size={20} className="group-hover:scale-110 transition-transform stroke-[3px]" />
                             {initialData ? 'Update Record' : 'Complete Registration'}
                         </button>
                     </div>
                 </form>
 
                 {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
-                    <div className="bg-slate-50/50 px-4 py-8 md:px-10 md:py-10 border-t border-slate-100">
-                        <div className="flex items-center gap-2 mb-6">
-                            <Calendar size={18} className="text-slate-500" />
-                            <h3 className="font-bold text-slate-800 tracking-tight">Recent Payment History</h3>
+                    <div className="bg-[#050505] p-6 md:p-10 border-t border-white/20 text-white">
+                        <div className="flex items-center gap-3 mb-6">
+                            <Calendar size={20} className="text-[#CCFF00] stroke-[3px]" />
+                            <h3 className="font-black uppercase tracking-widest text-lg">Recent Payment History</h3>
                         </div>
-                        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-                            <table className="w-full border-collapse text-sm text-left">
-                                <thead className="bg-slate-50 border-b border-slate-100">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse border border-white/20">
+                                <thead className="bg-[#050505] border-b border-white/20">
                                     <tr>
-                                        <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date</th>
-                                        <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Month</th>
-                                        <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Amount</th>
-                                        <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Fine</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Date</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Month</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Amount</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Fine</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-50">
+                                <tbody className="divide-y divide-white/10 bg-[#0a0a0a]">
                                     {initialData.feeHistory.slice(-5).reverse().map((payment) => (
-                                        <tr key={payment.id} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-4 py-3 text-slate-600 font-medium">{payment.date}</td>
-                                            <td className="px-4 py-3 text-slate-600 font-medium">{payment.month}</td>
-                                            <td className="px-4 py-3 text-emerald-600 font-bold">₹{payment.amount}</td>
-                                            <td className="px-4 py-3 text-rose-500 font-semibold">{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
+                                        <tr key={payment.id} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 text-white font-black uppercase tracking-widest text-sm">{payment.date}</td>
+                                            <td className="px-6 py-4 text-white font-black uppercase tracking-widest text-sm">{payment.month}</td>
+                                            <td className="px-6 py-4 text-emerald-400 font-black uppercase tracking-widest text-sm">₹{payment.amount}</td>
+                                            <td className="px-6 py-4 text-rose-500 font-black uppercase tracking-widest text-sm">{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
                                         </tr>
                                     ))}
                                 </tbody>

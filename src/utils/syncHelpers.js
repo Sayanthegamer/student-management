@@ -1,5 +1,7 @@
 // Helper functions to transform data between UI (Nested) and DB (Normalized) formats
 
+import { CLASS_FEES, calculateFine } from './constants';
+
 const safeJSONParse = (str) => {
   try {
     return JSON.parse(str);
@@ -26,32 +28,8 @@ export const calculateFeesStatus = (student, month) => {
   return month < currentMonth ? 'Overdue' : 'Pending';
 };
 
-/**
- * Calculate fine for a payment based on payment date and month deadline
- * @param {string} month - The month being paid for (YYYY-MM format)
- * @param {string} payDate - The payment date (YYYY-MM-DD format)
- * @returns {number} - The calculated fine amount
- */
-export const calculateFineForPayment = (month, payDate) => {
-  if (!month || !payDate) return 0;
-
-  const [year, monthNum] = month.split('-').map(Number);
-  const paymentDate = new Date(payDate);
-
-  // Deadline is the 20th of the month being paid for
-  const deadline = new Date(year, monthNum - 1, 20);
-
-  // If paid on or before deadline, no fine
-  if (paymentDate <= deadline) return 0;
-
-  // Calculate days late
-  const daysLate = Math.floor((paymentDate - deadline) / (1000 * 60 * 60 * 24));
-
-  // Fine calculation: ₹5 per day after deadline, capped at ₹100
-  const fine = Math.min(daysLate * 5, 100);
-
-  return fine;
-};
+// Re-export for backward compatibility
+export { calculateFine };
 
 /**
  * Get the standard fee amount for a class
@@ -59,28 +37,7 @@ export const calculateFineForPayment = (month, payDate) => {
  * @returns {string} - The fee amount as a string
  */
 export const getClassFeeAmount = (className) => {
-  const classFees = {
-    'Play School': '350',
-    'Nursury': '440',
-    'kg-1': '440',
-    'kg-2': '440',
-    '1': '480',
-    '2': '490',
-    '3': '510',
-    '4': '520',
-    '5': '540',
-    '6': '560',
-    '7': '580',
-    '8': '600',
-    '9': '650',
-    '10': '700',
-    '11': '800',
-    '12': '900',
-    'UG': '1500',
-    'PG': '2000'
-  };
-
-  return classFees[className] || '';
+  return CLASS_FEES[className] || '';
 };
 
 export const normalizeStudent = (student) => {

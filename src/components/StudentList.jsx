@@ -106,15 +106,15 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
     if (students.length === 0) {
         return (
-            <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 md:p-16 text-center max-w-2xl mx-auto">
-                <div className="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <UserPlus size={40} />
+            <div className="bg-[#0a0a0a] border border-white/20 p-8 md:p-16 text-center max-w-2xl mx-auto">
+                <div className="w-20 h-20 bg-[#CCFF00] border border-[#CCFF00] text-black flex items-center justify-center mx-auto mb-6">
+                    <UserPlus size={40} className="stroke-[2px]" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">No students yet</h2>
-                <p className="text-slate-500 mb-8 text-lg">Start building your database by adding your first student record.</p>
-                <button onClick={onAdd} className="btn btn-primary px-8 py-4 text-lg">
-                    <Plus size={20} />
-                    Add Student
+                <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">No students yet</h2>
+                <p className="text-white/60 font-mono mb-8 text-lg">Start building your database by adding your first student record.</p>
+                <button onClick={onAdd} className="px-8 py-4 bg-[#CCFF00] border border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 mx-auto">
+                    <Plus size={20} className="stroke-[3px]" />
+                    Initialize Student
                 </button>
             </div>
         );
@@ -122,32 +122,32 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
     return (
         <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden page-enter">
-                <div className="p-3 md:p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="bg-[#0a0a0a] border border-white/20 overflow-hidden page-enter flex flex-col">
+                <div className="p-3 md:p-6 border-b border-white/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-xl md:text-2xl font-bold text-slate-800">Student Directory</h2>
-                        <p className="text-slate-500 text-sm mt-1">Manage and track student records and fees</p>
+                        <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-widest">Student Directory</h2>
+                        <p className="text-white/50 text-xs font-mono tracking-wide mt-1 uppercase">Manage and track student records and fees</p>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full md:w-auto">
                         <div className="relative flex-1 sm:min-w-[220px] md:w-64">
-                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 stroke-[2.5px]" />
                             <input
                                 type="text"
-                                placeholder="Search students..."
+                                placeholder="SEARCH STUDENTS..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none text-base md:text-sm"
+                                className="w-full pl-10 pr-4 py-2.5 bg-[#050505] border border-white/20 focus:border-[#CCFF00] text-white outline-none transition-all text-sm font-black tracking-widest uppercase placeholder:text-white/20"
                             />
                         </div>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`p-2.5 rounded-xl border transition-all ${showFilters ? 'bg-indigo-50 border-indigo-200 text-indigo-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                                className={`p-2.5 border transition-all ${showFilters ? 'bg-[#CCFF00] border-[#CCFF00] text-black' : 'bg-[#050505] border-white/20 text-white hover:bg-white/10'}`}
                             >
-                                <Filter size={20} />
+                                <Filter size={20} className="stroke-[2.5px]" />
                             </button>
-                            <button onClick={onAdd} className="btn btn-primary py-2 px-4 text-sm whitespace-nowrap hidden md:inline-flex">
-                                <Plus size={18} />
+                            <button onClick={onAdd} className="px-5 py-2.5 bg-[#CCFF00] border border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-colors hidden md:flex items-center gap-2">
+                                <Plus size={18} className="stroke-[3px]" />
                                 Add <span className="hidden lg:inline">Student</span>
                             </button>
                         </div>
@@ -155,44 +155,44 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 </div>
 
                 {showFilters && (
-                    <div className="p-3 bg-slate-50/50 border-b border-slate-100 grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3 slide-down">
+                    <div className="p-3 md:p-5 bg-[#050505] border-b border-white/20 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 slide-down">
                         <div className="col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Class</label>
+                            <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Class</label>
                             <select
                                 value={filterClass}
                                 onChange={(e) => setFilterClass(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold text-slate-700"
+                                className="w-full bg-[#0a0a0a] border border-white/20 px-3 py-2.5 text-xs text-white outline-none focus:border-[#CCFF00] font-black tracking-widest uppercase"
                             >
-                                <option value="">All Classes</option>
-                                {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
+                                <option value="">ALL CLASSES</option>
+                                {classes.map(c => <option key={c} value={c}>CLASS {c}</option>)}
                             </select>
                         </div>
                         <div className="col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Section</label>
+                            <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Section</label>
                             <select
                                 value={filterSection}
                                 onChange={(e) => setFilterSection(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold text-slate-700"
+                                className="w-full bg-[#0a0a0a] border border-white/20 px-3 py-2.5 text-xs text-white outline-none focus:border-[#CCFF00] font-black tracking-widest uppercase"
                             >
-                                <option value="">All Sections</option>
-                                {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
+                                <option value="">ALL SECTIONS</option>
+                                {sections.map(s => <option key={s} value={s}>SEC {s}</option>)}
                             </select>
                         </div>
                         <div className="col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Fee Status</label>
+                            <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Fee Status</label>
                             <select
                                 value={filterFeeStatus}
                                 onChange={(e) => setFilterFeeStatus(e.target.value)}
-                                className="w-full bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold text-slate-700"
+                                className="w-full bg-[#0a0a0a] border border-white/20 px-3 py-2.5 text-xs text-white outline-none focus:border-[#CCFF00] font-black tracking-widest uppercase"
                             >
-                                <option value="">All Status</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Overdue">Overdue</option>
+                                <option value="">ALL STATUS</option>
+                                <option value="Paid">PAID</option>
+                                <option value="Pending">PENDING</option>
+                                <option value="Overdue">OVERDUE</option>
                             </select>
                         </div>
                         <div className="col-span-1">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Fee Month</label>
+                            <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Fee Month</label>
                             <CustomMonthPicker
                                 value={filterMonth}
                                 onChange={setFilterMonth}
@@ -201,29 +201,29 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         </div>
                         <div className="col-span-2 md:col-span-1 flex items-end gap-2">
                             <div className="flex-1">
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Sort By</label>
+                                <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Sort By</label>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold text-slate-700"
+                                    className="w-full bg-[#0a0a0a] border border-white/20 px-3 py-2.5 text-xs text-white outline-none focus:border-[#CCFF00] font-black tracking-widest uppercase"
                                 >
-                                    <option value="name">Name</option>
-                                    <option value="rollNo">Roll No</option>
-                                    <option value="class">Class</option>
+                                    <option value="name">NAME</option>
+                                    <option value="rollNo">ROLL NO</option>
+                                    <option value="class">CLASS</option>
                                 </select>
                             </div>
                             <button
                                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                className="p-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 active:bg-slate-100 transition-all min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
+                                className="p-2.5 bg-[#0a0a0a] border border-white/20 text-white hover:bg-white/10 transition-all min-h-[40px] min-w-[40px] flex items-center justify-center outline-none focus:border-[#CCFF00]"
                                 aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                             >
-                                {sortOrder === 'asc' ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+                                {sortOrder === 'asc' ? <ChevronDown size={18} className="stroke-[3px]" /> : <ChevronUp size={18} className="stroke-[3px]" />}
                             </button>
                         </div>
                     </div>
                 )}
 
-                <div className="md:hidden px-4 pt-4 pb-4 space-y-3">
+                <div className="md:hidden p-3 space-y-3">
                     {currentStudents.length > 0 ? (
                         currentStudents.map((student, index) => (
                             <StudentCard
@@ -236,15 +236,15 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             />
                         ))
                     ) : (
-                        <div className="py-16 text-center">
-                            <div className="p-5 bg-slate-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                                <Search size={32} className="text-slate-300" />
+                        <div className="py-16 text-center border border-white/20 bg-[#050505]">
+                            <div className="bg-[#0a0a0a] border border-white/20 w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                <Search size={24} className="text-white/30" />
                             </div>
-                            <p className="text-slate-600 font-bold text-base">No results found</p>
-                            <p className="text-slate-400 text-sm mt-1">Try adjusting your filters or search term</p>
+                            <p className="text-white font-black text-base uppercase tracking-widest">No results found</p>
+                            <p className="text-white/50 font-mono text-xs mt-2 uppercase">Try adjusting your filters or search term</p>
                             <button
                                 onClick={handleClearFilters}
-                                className="text-indigo-600 text-sm font-bold hover:underline mt-4 touch-manipulation min-h-[44px] px-4"
+                                className="text-[#CCFF00] text-sm font-black hover:underline mt-6 uppercase tracking-widest px-4"
                             >
                                 Clear all filters
                             </button>
@@ -252,72 +252,72 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     )}
                 </div>
 
-                <div className="hidden md:block overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                <div className="hidden md:block flex-1 overflow-x-auto">
+                    <table className="w-full text-left border-collapse border-t border-b border-white/20">
                         <thead>
-                            <tr className="bg-slate-50/50">
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">Student Info</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">Class Details</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">Fee Status ({filterMonth})</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 text-right">Actions</th>
+                            <tr className="bg-[#050505] border-b border-white/20">
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Student Info</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Class Details</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Fee Status ({filterMonth})</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-50">
+                        <tbody className="divide-y divide-white/10 bg-[#0a0a0a]">
                             {currentStudents.map(student => {
                                 const status = getFeeStatusForMonth(student, filterMonth);
                                 return (
-                                    <tr key={student.id} className="hover:bg-slate-50/50 transition-colors group">
+                                    <tr key={student.id} className="hover:bg-white/5 transition-colors group">
                                         <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm shrink-0">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 border border-[#CCFF00] bg-[#CCFF00] text-black flex items-center justify-center font-black text-base shrink-0 uppercase">
                                                     {student.name.charAt(0)}
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <p className="font-semibold text-slate-800 text-sm truncate">{student.name}</p>
-                                                    <p className="text-slate-400 text-xs truncate">ID: {student.id.slice(0, 8)}</p>
+                                                    <p className="font-black text-white text-sm uppercase tracking-widest truncate">{student.name}</p>
+                                                    <p className="text-white/40 font-mono text-xs mt-1 uppercase truncate">ID: {student.id.slice(0, 8)}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 border-l border-white/10">
                                             <div className="flex flex-col">
-                                                <span className="text-sm text-slate-700 font-medium">Class {student.class} - {student.section}</span>
-                                                <span className="text-xs text-slate-400">Roll No: {student.rollNo}</span>
+                                                <span className="text-sm text-white font-black uppercase tracking-widest">CLASS {student.class} - {student.section}</span>
+                                                <span className="text-xs text-white/50 font-mono mt-1 uppercase">ROLL NO: {student.rollNo}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 border-l border-white/10">
                                             <span
-                                                className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border uppercase tracking-wide ${status === 'Paid'
-                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                                className={`inline-flex items-center px-3 py-1 text-[10px] font-black border uppercase tracking-widest ${status === 'Paid'
+                                                    ? 'bg-emerald-400 border-emerald-400 text-black'
                                                     : status === 'Overdue'
-                                                        ? 'bg-rose-50 text-rose-700 border-rose-100'
-                                                        : 'bg-amber-50 text-amber-700 border-amber-100'
+                                                        ? 'bg-rose-500 border-rose-500 text-black'
+                                                        : 'bg-amber-400 border-amber-400 text-black'
                                                     }`}
                                             >
                                                 {status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex gap-1 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <td className="px-6 py-4 text-right border-l border-white/10">
+                                            <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => handlePayFeeClick(student)}
-                                                    className="p-2 rounded-lg text-emerald-600 hover:bg-emerald-50 transition-all"
+                                                    className="p-2 border border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-colors"
                                                     title="Collect Fee"
                                                 >
-                                                    <IndianRupee size={16} />
+                                                    <IndianRupee size={16} className="stroke-[3px]" />
                                                 </button>
                                                 <button
                                                     onClick={() => onEdit(student)}
-                                                    className="p-2 rounded-lg text-indigo-600 hover:bg-indigo-50 transition-all"
+                                                    className="p-2 border border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors"
                                                     title="Edit Record"
                                                 >
-                                                    <Edit2 size={16} />
+                                                    <Edit2 size={16} className="stroke-[3px]" />
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(student.id)}
-                                                    className="p-2 rounded-lg text-rose-600 hover:bg-rose-50 transition-all"
+                                                    className="p-2 border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-black transition-colors"
                                                     title="Delete Record"
                                                 >
-                                                    <Trash2 size={16} />
+                                                    <Trash2 size={16} className="stroke-[3px]" />
                                                 </button>
                                             </div>
                                         </td>
@@ -326,18 +326,18 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             })}
                             {currentStudents.length === 0 && (
                                 <tr>
-                                    <td colSpan="4" className="py-20 text-center">
-                                        <div className="flex flex-col items-center gap-3">
-                                            <div className="p-4 bg-slate-50 rounded-full">
-                                                <Search size={32} className="text-slate-300" />
+                                    <td colSpan="4" className="py-24 text-center">
+                                        <div className="flex flex-col items-center gap-4">
+                                            <div className="p-4 border border-white/20 bg-[#050505]">
+                                                <Search size={32} className="text-white/30" />
                                             </div>
                                             <div>
-                                                <p className="text-slate-500 font-medium">No results found</p>
-                                                <p className="text-slate-400 text-sm">Try adjusting your filters or search term</p>
+                                                <p className="text-white font-black uppercase tracking-widest">No results found</p>
+                                                <p className="text-white/50 font-mono text-sm mt-1 uppercase">Try adjusting your filters or search term</p>
                                             </div>
                                             <button
                                                 onClick={handleClearFilters}
-                                                className="text-indigo-600 text-sm font-semibold hover:underline"
+                                                className="text-[#CCFF00] text-sm font-black hover:underline uppercase tracking-widest mt-2"
                                             >
                                                 Clear all filters
                                             </button>
@@ -349,7 +349,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     </table>
                 </div>
 
-                <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100">
+                <div className="px-4 py-3 bg-[#050505] border-t border-white/20">
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}

@@ -236,66 +236,66 @@ const Walkthrough = () => {
             {/* Spotlight Overlay */}
             {/* We use a huge box-shadow on the spotlight div to create the dark overlay around it */}
             <div
-                className="absolute transition-all duration-500 ease-in-out rounded-lg pointer-events-none"
+                className="absolute transition-all duration-300 ease-in-out rounded-none pointer-events-none border-[3px] border-[#CCFF00]"
                 style={{
                     top: spotlightStyle.top,
                     left: spotlightStyle.left,
                     width: spotlightStyle.width,
                     height: spotlightStyle.height,
-                    boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75)',
+                    boxShadow: '0 0 0 9999px rgba(5, 5, 5, 0.85)',
                     opacity: spotlightStyle.opacity === 0 && !step.target ? 0 : 1 // Hide spotlight ring if no target
                 }}
             />
 
             {/* Full screen backdrop for when there is NO target (center steps) */}
             {!step.target && (
-                <div className="absolute inset-0 bg-black/75 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-[#050505]/90 transition-opacity duration-300" />
             )}
 
             {/* Tooltip Card */}
             <div
-                className="absolute pointer-events-auto bg-white p-6 rounded-2xl shadow-2xl w-[90vw] md:w-full md:max-w-sm transition-all duration-500 ease-in-out border border-white/20"
+                className="absolute pointer-events-auto bg-[#0a0a0a] p-8 rounded-none shadow-none w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-white/20 z-[110]"
                 style={tooltipPosition}
             >
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
-                        <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">
+                        <span className="bg-[#CCFF00] text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-none border border-[#CCFF00]">
                             Step {currentStep + 1}/{steps.length}
                         </span>
                     </div>
-                    <button onClick={() => handleClose(true)} className="text-slate-400 hover:text-slate-600 transition-colors">
-                        <X size={20} />
+                    <button onClick={() => handleClose(true)} className="text-white/50 hover:text-white transition-colors">
+                        <X size={24} className="stroke-[3px]" />
                     </button>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-800 mb-2">{step.title}</h3>
-                <p className="text-slate-600 mb-6 leading-relaxed">{step.description}</p>
+                <h3 className="text-xl font-black text-white mb-3 uppercase tracking-widest">{step.title}</h3>
+                <p className="text-white/70 mb-8 leading-relaxed font-mono text-xs uppercase tracking-widest">{step.description}</p>
 
-                <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-4">
                     <button
                         onClick={handlePrev}
                         disabled={currentStep === 0}
-                        className={`flex items-center gap-1 text-sm font-medium transition-colors ${currentStep === 0 ? 'text-slate-300 cursor-not-allowed' : 'text-slate-500 hover:text-indigo-600'}`}
+                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${currentStep === 0 ? 'text-white/20 cursor-not-allowed' : 'text-white/50 hover:text-[#CCFF00]'}`}
                     >
-                        <ChevronLeft size={16} /> Previous
+                        <ChevronLeft size={16} className="stroke-[3px]" /> Previous
                     </button>
 
-                    <div className="flex gap-2 hidden sm:flex">
+                    <div className="hidden sm:flex gap-3">
                         {/* Dots indicator */}
                         {steps.map((_, idx) => (
                             <div
                                 key={idx}
-                                className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentStep ? 'bg-indigo-600 w-3' : 'bg-slate-200'}`}
+                                className={`w-2 h-2 rounded-none transition-all ${idx === currentStep ? 'bg-[#CCFF00] scale-125' : 'bg-white/20'}`}
                             />
                         ))}
                     </div>
 
                     <button
                         onClick={handleNext}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-indigo-200 flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
+                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border border-[#CCFF00] px-5 py-3 rounded-none text-[10px] font-black shadow-none flex items-center gap-3 transition-colors uppercase tracking-widest active:bg-[#CCFF00]/20"
                     >
                         {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
-                        {currentStep === steps.length - 1 ? <CheckCircle size={16} /> : <ChevronRight size={16} />}
+                        {currentStep === steps.length - 1 ? <CheckCircle size={16} className="stroke-[3px]" /> : <ChevronRight size={16} className="stroke-[3px]" />}
                     </button>
                 </div>
             </div>

@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  /* Professional Dark Slate Theme */
-  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-
-  /* Cleaner, more opaque glass for better readability */
-  --glass-bg: rgba(255, 255, 255, 0.92);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* Accessible Brutalist Theme */
+  --bg-gradient: #050505;
+  
+  /* Replace glass with solid, harsh sections */
+  --glass-bg: #0a0a0a;
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: none;
 
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -21,15 +21,26 @@ input, select, textarea {
   font-size: 16px !important; /* Prevents iOS zoom on focus */
 }
 
+/* Global Brutalist Overrides */
+* {
+  /* Force sharp edges globally */
+  border-radius: 0px !important;
+}
+
+::selection {
+  background: #CCFF00;
+  color: #000;
+}
+
 body {
   margin: 0;
   font-family: var(--font-family);
   background: var(--bg-gradient);
   min-height: 100dvh;
-  color: #1f2937;
+  color: #e0e0e0;
   -webkit-font-smoothing: antialiased;
   -webkit-overflow-scrolling: touch;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
 /* Hardware acceleration for smooth animations */
@@ -43,15 +54,15 @@ body {
 
 @layer utilities {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold cursor-pointer transition-all duration-200 active:scale-95 hover:scale-[1.02];
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-black uppercase tracking-wider cursor-pointer transition-all duration-200 border;
   }
 
   .btn-primary {
-    @apply bg-indigo-600 text-white shadow-md hover:bg-indigo-700 hover:shadow-lg;
+    @apply bg-[#CCFF00] text-black border-[#CCFF00] hover:bg-white hover:border-white;
   }
 
   .btn-danger {
-    @apply bg-red-500 text-white hover:bg-red-600;
+    @apply bg-transparent text-rose-500 border-rose-500 hover:bg-rose-500 hover:text-black;
   }
 }
 
@@ -186,9 +197,9 @@ body {
   animation: fadeOut 0.2s ease-in forwards;
 }
 
-/* Better focus styles */
+/* Better focus styles for brutalism */
 :focus-visible {
-  outline: 2px solid #4f46e5;
+  outline: 2px solid #CCFF00;
   outline-offset: 2px;
 }
 

@@ -41,37 +41,36 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-6 md:p-8 border border-slate-200">
-                <div className="text-center mb-6 md:mb-8">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Lock className="text-indigo-600" size={20} className="md:hidden" />
-                        <Lock className="text-indigo-600" size={24} className="hidden md:block" />
+        <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4 selection:bg-[#CCFF00] selection:text-black">
+            <div className="max-w-md w-full bg-[#0a0a0a] p-8 md:p-10 border border-white/20">
+                <div className="text-center mb-8 border-b border-white/10 pb-6">
+                    <div className="w-12 h-12 border border-[#CCFF00] bg-[#CCFF00] flex items-center justify-center mx-auto mb-6">
+                        <Lock className="text-black" size={24} />
                     </div>
-                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 mb-2">
+                    <h1 className="text-2xl font-black text-white uppercase tracking-tight mb-2">
                         Set New Password
                     </h1>
-                    <p className="text-slate-500 text-sm md:text-base">
+                    <p className="text-white/50 text-sm font-mono">
                         Please verify your new password below.
                     </p>
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-rose-50 text-rose-700 rounded-xl flex items-center gap-3 border border-rose-100">
-                        <AlertCircle size={20} className="shrink-0" />
-                        <span className="text-sm font-medium">{error}</span>
+                    <div className="mb-6 p-4 flex items-start gap-3 border bg-rose-500/10 text-rose-500 border-rose-500">
+                        <AlertCircle size={20} className="shrink-0 mt-0.5" />
+                        <span className="text-sm font-bold tracking-wide uppercase">{error}</span>
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1.5">New Password</label>
+                        <label className="block text-xs font-black text-white uppercase tracking-widest mb-3">NEW PASSWORD</label>
                         <input
                             type="password"
                             required
                             minLength={6}
-                            className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-base"
-                            placeholder="Min 6 characters"
+                            className="w-full px-4 py-4 bg-[#050505] border border-white/20 text-white focus:border-[#CCFF00] transition-colors outline-none text-sm font-medium"
+                            placeholder="MINIMUM 6 CHARACTERS"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
@@ -80,7 +79,7 @@ const ResetPassword = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-2.5 md:py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-200 min-h-[48px] touch-manipulation"
+                        className="w-full py-5 px-4 bg-[#CCFF00] border border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                     >
                         {loading ? <Loader2 className="animate-spin" size={20} /> : 'Update Password'}
                     </button>

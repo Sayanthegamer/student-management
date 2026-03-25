@@ -32,13 +32,13 @@ class ErrorBoundary extends React.Component {
                             <AlertTriangle size={32} className="text-red-600" />
                         </div>
 
-                        <h2 className="text-2xl font-bold text-gray-800 mb-2">Something went wrong</h2>
-                        <p className="text-gray-500 mb-6">
+                        <h2 className="text-2xl font-bold text-slate-800 mb-2">Something went wrong</h2>
+                        <p className="text-slate-500 mb-6">
                             The application encountered an unexpected error. We apologize for the inconvenience.
                         </p>
 
-                        <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left overflow-hidden">
-                            <p className="text-xs text-gray-500 font-mono break-all">
+                        <div className="bg-slate-50 rounded-lg p-4 mb-6 text-left overflow-hidden">
+                            <p className="text-xs text-slate-500 font-mono break-all">
                                 {this.state.error && this.state.error.toString()}
                             </p>
                         </div>

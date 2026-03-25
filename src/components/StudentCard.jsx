@@ -2,63 +2,66 @@ import React from 'react';
 import { Edit2, IndianRupee, Trash2 } from 'lucide-react';
 
 const statusStyles = {
-  Paid: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-  Pending: 'bg-amber-50 text-amber-700 border-amber-100',
-  Overdue: 'bg-rose-50 text-rose-700 border-rose-100',
+  Paid: 'bg-emerald-400 text-black border-emerald-400',
+  Pending: 'bg-amber-400 text-black border-amber-400',
+  Overdue: 'bg-rose-500 text-black border-rose-500',
 };
 
 const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee }) => (
-  <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 slide-up">
-    <div className="flex items-start justify-between gap-3 mb-3">
-      <div className="flex items-center gap-3 min-w-0 flex-1">
-        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center font-bold text-base shrink-0 shadow-sm">
+  <div className="bg-[#0a0a0a] border border-white/20 p-4 transition-all duration-200 slide-up group hover:border-[#CCFF00]">
+    <div className="flex items-start justify-between gap-3 mb-4">
+      <div className="flex items-center gap-4 min-w-0 flex-1">
+        <div className="w-12 h-12 bg-[#CCFF00] border border-[#CCFF00] text-black flex items-center justify-center font-black text-lg shrink-0 uppercase">
           {student.name.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-slate-800 font-bold text-base truncate leading-tight">{student.name}</p>
-          <p className="text-slate-400 text-xs truncate mt-0.5">Roll: {student.rollNo}</p>
+          <p className="text-white font-black text-base uppercase tracking-widest truncate leading-tight">{student.name}</p>
+          <p className="text-white/50 text-xs font-mono tracking-wide uppercase truncate mt-1">ID: {student.id.slice(0, 8)}</p>
         </div>
       </div>
+    </div>
+    
+    <div className="flex items-center justify-end mb-4">
       <span
-        className={`inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-black border uppercase tracking-wider shadow-sm ${statusStyles[status] || statusStyles.Pending}`}
+          className={`inline-flex items-center px-3 py-1 text-[10px] font-black border uppercase tracking-widest ${statusStyles[status] || statusStyles.Pending}`}
       >
         {status}
       </span>
     </div>
 
-    <div className="grid grid-cols-2 gap-3 text-xs text-slate-500 mb-3 pb-3 border-b border-slate-100">
-      <div className="bg-slate-50 rounded-lg p-2.5">
-        <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Class</p>
-        <p className="text-slate-800 font-bold text-sm">{student.class} - {student.section}</p>
+    <div className="grid grid-cols-2 gap-3 text-xs mb-4 pb-4 border-b border-white/10">
+      <div className="bg-[#050505] border border-white/10 p-3">
+        <p className="text-[10px] uppercase tracking-widest text-white/50 font-black mb-1">Class</p>
+        <p className="text-white font-black uppercase tracking-widest text-sm">{student.class} - {student.section}</p>
       </div>
-      <div className="bg-slate-50 rounded-lg p-2.5">
-        <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Roll No</p>
-        <p className="text-slate-800 font-bold text-sm">{student.rollNo}</p>
+      <div className="bg-[#050505] border border-white/10 p-3">
+        <p className="text-[10px] uppercase tracking-widest text-white/50 font-black mb-1">Roll No</p>
+        <p className="text-white font-black uppercase tracking-widest text-sm">{student.rollNo}</p>
       </div>
     </div>
 
     <div className="flex items-center gap-2">
       <button
         onClick={() => onPayFee(student)}
-        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-emerald-600 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 transition-colors font-bold text-sm touch-manipulation"
+        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-colors font-black uppercase tracking-widest text-sm touch-manipulation"
         aria-label="Collect fee"
       >
-        <IndianRupee size={18} />
+        <IndianRupee size={18} className="stroke-[3px]" />
         <span>Pay</span>
       </button>
       <button
         onClick={() => onEdit(student)}
-        className="p-3 rounded-xl text-indigo-600 bg-indigo-50 hover:bg-indigo-100 active:bg-indigo-200 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+        className="p-3 border border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center"
         aria-label="Edit student"
       >
-        <Edit2 size={18} />
+        <Edit2 size={18} className="stroke-[3px]" />
       </button>
       <button
         onClick={() => onDelete(student.id)}
-        className="p-3 rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+        className="p-3 border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-black transition-colors touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center"
         aria-label="Delete student"
       >
-        <Trash2 size={18} />
+        <Trash2 size={18} className="stroke-[3px]" />
       </button>
     </div>
   </div>

@@ -9,42 +9,42 @@ const StatusCard = ({ student, color, onMove }) => {
     const [showActions, setShowActions] = useState(false);
 
     return (
-        <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-4 hover:shadow-md transition-all group relative">
-            <div className="flex justify-between items-start mb-2">
-                <h4 className="m-0 text-slate-800 font-bold text-base group-hover:text-indigo-600 transition-colors">{student.name}</h4>
+        <div className="bg-[#050505] border border-white/20 shadow-none rounded-none p-5 hover:border-[#CCFF00] transition-colors group relative">
+            <div className="flex justify-between items-start mb-3">
+                <h4 className="m-0 text-white font-black text-base uppercase tracking-widest group-hover:text-[#CCFF00] transition-colors">{student.name}</h4>
                 <button
                     onClick={() => setShowActions(!showActions)}
-                    className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+                    className="p-2 rounded-none hover:bg-white/10 text-white/50 hover:text-white transition-colors"
                 >
-                    <MoreVertical size={16} />
+                    <MoreVertical size={20} />
                 </button>
             </div>
 
             {showActions && (
-                <div className="absolute right-4 top-10 bg-white shadow-xl border border-slate-100 rounded-lg py-1 z-20 w-40 animate-in fade-in zoom-in-95 duration-100">
-                    <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-50">Move To</div>
+                <div className="absolute right-4 top-12 bg-[#0a0a0a] shadow-none border border-white/20 rounded-none py-1 z-20 w-48 animate-in fade-in zoom-in-95 duration-100">
+                    <div className="px-4 py-3 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/20">Move To</div>
                     {student.admissionStatus !== 'Confirmed' && (
                         <button
                             onClick={() => { onMove(student, 'Confirmed'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-2 text-sm text-emerald-600 hover:bg-emerald-50 flex items-center gap-2"
+                            className="w-full text-left px-4 py-3 text-sm font-bold text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black flex items-center gap-3 uppercase tracking-widest transition-colors"
                         >
-                            <CheckCircle size={14} /> Confirmed
+                            <CheckCircle size={16} className="stroke-[3px]" /> Confirmed
                         </button>
                     )}
                     {student.admissionStatus !== 'Provisional' && (
                         <button
                             onClick={() => { onMove(student, 'Provisional'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-2 text-sm text-amber-600 hover:bg-amber-50 flex items-center gap-2"
+                            className="w-full text-left px-4 py-3 text-sm font-bold text-amber-400 hover:bg-amber-400 hover:text-black flex items-center gap-3 uppercase tracking-widest transition-colors"
                         >
-                            <Clock size={14} /> Provisional
+                            <Clock size={16} className="stroke-[3px]" /> Provisional
                         </button>
                     )}
                     {student.admissionStatus !== 'Cancelled' && (
                         <button
                             onClick={() => { onMove(student, 'Cancelled'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-2 text-sm text-rose-600 hover:bg-rose-50 flex items-center gap-2"
+                            className="w-full text-left px-4 py-3 text-sm font-bold text-rose-500 hover:bg-rose-500 hover:text-black flex items-center gap-3 uppercase tracking-widest transition-colors"
                         >
-                            <XCircle size={14} /> Cancelled
+                            <XCircle size={16} className="stroke-[3px]" /> Cancelled
                         </button>
                     )}
                 </div>
@@ -54,16 +54,16 @@ const StatusCard = ({ student, color, onMove }) => {
                 <div className="fixed inset-0 z-10" onClick={() => setShowActions(false)}></div>
             )}
 
-            <p className="m-0 text-sm text-slate-500 font-medium mb-2">
-                Class: {student.class}-{student.section} <span className="text-slate-300 mx-1">|</span> Roll: {student.rollNo}
+            <p className="m-0 text-xs text-white/70 font-mono mb-3 uppercase tracking-widest">
+                Class: {student.class}-{student.section} <span className="text-white/20 mx-2">|</span> Roll: {student.rollNo}
             </p>
 
-            <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-50">
-                <span className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock size={12} />
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
+                <span className="text-[10px] text-white/50 font-mono flex items-center gap-2">
+                    <Clock size={14} />
                     {student.admissionDate || 'N/A'}
                 </span>
-                <span className={`text-xs font-bold px-2 py-0.5 rounded ${student.feesStatus === 'Paid' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+                <span className={`text-[9px] font-black px-2 py-1 rounded-none border uppercase tracking-widest ${student.feesStatus === 'Paid' ? 'bg-[#CCFF00] text-black border-[#CCFF00]' : 'bg-amber-500 text-black border-amber-500'}`}>
                     {student.feesStatus || 'Pending'}
                 </span>
             </div>
@@ -75,35 +75,35 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
     const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
 
     return (
-        <div className="w-full md:w-auto md:flex-1 md:min-w-[320px] flex flex-col h-full bg-slate-50/50 rounded-2xl p-2">
+        <div className="w-full md:w-auto md:flex-1 md:min-w-[320px] flex flex-col h-full bg-[#0a0a0a] rounded-none border border-white/10 p-4">
             <div
-                className="flex flex-col mb-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm sticky top-0 z-10"
+                className="flex flex-col mb-4 bg-[#050505] p-5 rounded-none border border-white/20 shadow-none sticky top-0 z-10"
                 style={{ borderTop: `4px solid ${color}` }}
             >
-                <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                        <Icon size={18} color={color} />
-                        <h3 className="m-0 text-base font-bold text-slate-800">{title}</h3>
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                        <Icon size={20} color={color} className="stroke-[3px]" />
+                        <h3 className="m-0 text-sm font-black text-white uppercase tracking-widest">{title}</h3>
                     </div>
-                    <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md text-xs font-bold">
+                    <span className="bg-white/10 text-white px-3 py-1 rounded-none text-xs font-black border border-white/20">
                         {count}
                     </span>
                 </div>
-                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-white/10 h-2 rounded-none overflow-hidden">
                     <div
-                        className="h-full rounded-full transition-all duration-500"
+                        className="h-full rounded-none transition-all duration-500"
                         style={{ width: `${percentage}%`, backgroundColor: color }}
                     ></div>
                 </div>
-                <p className="text-xs text-slate-400 mt-2 text-right">{percentage}% of total</p>
+                <p className="text-[10px] uppercase tracking-widest text-white/50 mt-3 text-right font-mono">{percentage}% of total</p>
             </div>
 
-            <div className="flex flex-col gap-3 overflow-y-auto pr-1 pb-2 flex-1 custom-scrollbar">
+            <div className="flex flex-col gap-4 overflow-y-auto pr-1 pb-2 flex-1 custom-scrollbar">
                 {students.map(student => (
                     <StatusCard key={student.id} student={student} color={color} onMove={onMove} />
                 ))}
                 {students.length === 0 && (
-                    <div className="p-6 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl bg-white/50">
+                    <div className="p-8 text-center text-white/30 border border-white/10 rounded-none bg-transparent font-black uppercase tracking-widest mt-4">
                         No students
                     </div>
                 )}
@@ -158,69 +158,69 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     };
 
     return (
-        <div className="p-3 md:p-6 max-w-[1600px] mx-auto h-full flex flex-col">
-            <div className="flex flex-col gap-4 md:gap-6 mb-6 md:mb-8">
+        <div className="p-4 md:p-8 max-w-[1600px] mx-auto h-full flex flex-col">
+            <div className="flex flex-col gap-6 md:gap-8 mb-8">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h2 className="text-white m-0 text-2xl font-bold tracking-tight">Admission Status Board</h2>
-                        <p className="text-slate-200 mt-1">Manage and track student admission pipeline</p>
+                        <h2 className="text-white m-0 text-2xl md:text-3xl font-black tracking-widest uppercase">Admission Status Board</h2>
+                        <p className="text-white/50 mt-2 font-mono text-xs uppercase tracking-widest">Manage and track student admission pipeline</p>
                     </div>
 
                     {/* Stats Summary */}
                     <div className="flex gap-4">
-                        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-sm flex flex-col items-center min-w-[100px]">
-                            <span className="text-2xl font-bold text-slate-800">{filteredStudents.length}</span>
-                            <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">Total</span>
+                        <div className="bg-[#050505] border border-[#CCFF00] rounded-none px-6 py-4 shadow-none flex flex-col items-center min-w-[120px]">
+                            <span className="text-3xl font-black text-[#CCFF00]">{filteredStudents.length}</span>
+                            <span className="text-[10px] font-black text-[#CCFF00]/70 uppercase tracking-widest mt-1">Total</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Filters */}
-                <div className="flex gap-3 flex-wrap items-center bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex gap-4 flex-wrap items-center bg-[#0a0a0a] p-4 rounded-none border border-white/20 shadow-none">
                     <div className="relative flex-1 min-w-[240px]">
-                        <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 stroke-[3px]" />
                         <input
                             type="text"
-                            placeholder="Search by Name or Roll No..."
+                            placeholder="SEARCH BY NAME OR ROLL NO..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 pl-10"
+                            className="w-full bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] pl-12 font-black uppercase tracking-widest placeholder:text-white/20"
                         />
                     </div>
 
-                    <div className="h-8 w-px bg-slate-200 mx-1"></div>
+                    <div className="h-10 w-px bg-white/20 mx-2 hidden md:block"></div>
 
                     <select
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
-                        className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[140px]"
+                        className="bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
                     >
-                        <option value="">All Classes</option>
-                        {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
+                        <option value="">ALL CLASSES</option>
+                        {classes.map(c => <option key={c} value={c}>CLASS {c}</option>)}
                     </select>
 
                     <select
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
-                        className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[140px]"
+                        className="bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
                     >
-                        <option value="">All Sections</option>
-                        {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
+                        <option value="">ALL SECTIONS</option>
+                        {sections.map(s => <option key={s} value={s}>SEC {s}</option>)}
                     </select>
 
                     <select
                         value={filterFeeStatus}
                         onChange={(e) => setFilterFeeStatus(e.target.value)}
-                        className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl text-slate-700 outline-none transition-all focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 w-auto min-w-[140px]"
+                        className="bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
                     >
-                        <option value="">All Fees</option>
-                        <option value="Paid">Paid</option>
-                        <option value="Pending">Pending</option>
+                        <option value="">ALL FEES</option>
+                        <option value="Paid">PAID</option>
+                        <option value="Pending">PENDING</option>
                     </select>
 
-                    <div className="h-8 w-px bg-slate-200 mx-1"></div>
+                    <div className="h-10 w-px bg-white/20 mx-2 hidden md:block"></div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                         <button
                             onClick={() => {
                                 setShowMonthFilter(!showMonthFilter);
@@ -228,12 +228,12 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                                     setFilterMonth(new Date().toISOString().slice(0, 7));
                                 }
                             }}
-                            className={`p-2.5 rounded-xl border transition-all ${showMonthFilter
-                                ? 'bg-indigo-50 border-indigo-200 text-indigo-600'
-                                : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}
+                            className={`p-3 rounded-none border transition-colors ${showMonthFilter
+                                ? 'bg-[#CCFF00] border-[#CCFF00] text-black'
+                                : 'bg-[#050505] border-white/20 text-white hover:border-[#CCFF00] hover:text-[#CCFF00]'}`}
                             title="Filter by Admission Month"
                         >
-                            <Filter size={20} />
+                            <Filter size={20} className="stroke-[3px]" />
                         </button>
 
                         {showMonthFilter && (
@@ -249,7 +249,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
             </div>
 
             {/* Mobile Card View */}
-            <div className="md:hidden px-4 pt-4 pb-4 space-y-3">
+            <div className="md:hidden pt-4 pb-4 space-y-4">
                 {filteredStudents.length > 0 ? (
                     filteredStudents.map((student) => (
                         <AdmissionCard
@@ -259,12 +259,12 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                         />
                     ))
                 ) : (
-                    <div className="py-16 text-center">
-                        <div className="p-5 bg-slate-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                            <Search size={32} className="text-slate-300" />
+                    <div className="py-20 text-center border border-white/20 bg-[#050505] mx-4">
+                        <div className="w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                            <Search size={48} className="text-white/20 stroke-[1px]" />
                         </div>
-                        <p className="text-slate-600 font-bold text-base">No results found</p>
-                        <p className="text-slate-400 text-sm mt-1">Try adjusting your filters or search term</p>
+                        <p className="text-white font-black uppercase tracking-widest text-lg">No results found</p>
+                        <p className="text-white/50 font-mono text-xs uppercase tracking-widest mt-2">Try adjusting your filters</p>
                     </div>
                 )}
             </div>
@@ -275,7 +275,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Confirmed"
                     count={confirmed.length}
                     total={filteredStudents.length}
-                    color="#10b981"
+                    color="#CCFF00"
                     icon={CheckCircle}
                     students={confirmed}
                     onMove={handleMoveStudent}
@@ -284,7 +284,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Provisional"
                     count={provisional.length}
                     total={filteredStudents.length}
-                    color="#f59e0b"
+                    color="#fbbf24"
                     icon={Clock}
                     students={provisional}
                     onMove={handleMoveStudent}
@@ -293,7 +293,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Cancelled"
                     count={cancelled.length}
                     total={filteredStudents.length}
-                    color="#ef4444"
+                    color="#f43f5e"
                     icon={XCircle}
                     students={cancelled}
                     onMove={handleMoveStudent}
@@ -302,7 +302,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Transferred"
                     count={transferred.length}
                     total={filteredStudents.length}
-                    color="#6366f1"
+                    color="#c084fc"
                     icon={FileText}
                     students={transferred}
                     onMove={handleMoveStudent}

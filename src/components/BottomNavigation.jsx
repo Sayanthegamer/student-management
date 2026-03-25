@@ -12,9 +12,8 @@ const navItems = [
 ];
 
 const BottomNavigation = () => (
-  <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40">
-    <div className="mx-auto max-w-lg px-2 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-6 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent pointer-events-none">
-      <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-[0_-4px_24px_-8px_rgba(15,23,42,0.15)] rounded-2xl px-1 py-1.5 flex items-center justify-between pointer-events-auto">
+  <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#050505] border-t border-white/20 pb-[env(safe-area-inset-bottom,0px)]">
+    <div className="w-full flex items-center justify-around pointer-events-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -22,20 +21,19 @@ const BottomNavigation = () => (
               key={item.path}
               to={item.path}
               className={({ isActive }) => `
-                flex flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl text-[9px] font-bold transition-all duration-200 min-w-[52px] touch-manipulation active:scale-95
-                ${isActive ? 'text-indigo-600 bg-indigo-50' : 'text-slate-500 active:text-slate-700'}
+                flex flex-col items-center justify-center gap-1 py-3 flex-1 border-b-[3px] transition-colors
+                ${isActive ? 'border-[#CCFF00] bg-[#CCFF00]/10 text-[#CCFF00]' : 'border-transparent text-white/50 active:text-white'}
               `}
             >
               {({ isActive }) => (
                 <>
-                  <Icon size={16} className={`transition-all ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
-                  <span className="tracking-wide text-center leading-tight">{item.label}</span>
+                  <Icon size={20} className={isActive ? 'text-[#CCFF00]' : 'text-white/50'} />
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-center mt-1">{item.label}</span>
                 </>
               )}
             </NavLink>
           );
         })}
-      </div>
     </div>
   </nav>
 );
