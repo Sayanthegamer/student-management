@@ -70,10 +70,10 @@ const PaymentHistory = ({ students }) => {
 
     return (
         <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
-            <div className="bg-[#0a0a0a] rounded-none shadow-none border border-white/20 overflow-hidden page-enter">
-                <div className="p-4 md:p-8 border-b border-white/20 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border-2 border-white/40 overflow-hidden page-enter">
+                <div className="p-4 md:p-8 border-b border-white/40 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex items-center gap-4">
-                        <div className="p-3 bg-[#CCFF00] text-black border border-[#CCFF00] rounded-none">
+                        <div className="p-3 bg-[#CCFF00] text-black border-2 border-[#CCFF00] rounded-none">
                             <IndianRupee size={28} className="stroke-[3px]" />
                         </div>
                         <div>
@@ -90,17 +90,17 @@ const PaymentHistory = ({ students }) => {
                                 placeholder="SEARCH BY NAME..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 bg-[#050505] border border-white/20 rounded-none focus:border-[#CCFF00] transition-colors outline-none text-white font-black uppercase tracking-widest placeholder:text-white/20"
+                                className="w-full pl-12 pr-4 py-3 bg-[#050505] border-2 border-white/40 rounded-none focus:border-[#CCFF00] transition-colors outline-none text-white font-black uppercase tracking-widest placeholder:text-white/20"
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className="p-4 bg-[#0a0a0a] border-b border-white/20 grid grid-cols-2 md:flex flex-wrap gap-4">
+                <div className="p-4 bg-[#0a0a0a] border-b border-white/40 grid grid-cols-2 md:flex flex-wrap gap-4">
                     <select
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
-                        className="bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white font-black uppercase tracking-widest outline-none focus:border-[#CCFF00] appearance-none cursor-pointer"
+                        className="bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white font-black uppercase tracking-widest outline-none focus:border-[#CCFF00] appearance-none cursor-pointer"
                     >
                         <option value="">ALL CLASSES</option>
                         {classes.map(c => <option key={c} value={c}>CLASS {c}</option>)}
@@ -109,7 +109,7 @@ const PaymentHistory = ({ students }) => {
                     <select
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
-                        className="bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white font-black uppercase tracking-widest outline-none focus:border-[#CCFF00] appearance-none cursor-pointer"
+                        className="bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white font-black uppercase tracking-widest outline-none focus:border-[#CCFF00] appearance-none cursor-pointer"
                     >
                         <option value="">ALL SECTIONS</option>
                         {sections.map(s => <option key={s} value={s}>SEC {s}</option>)}
@@ -121,7 +121,7 @@ const PaymentHistory = ({ students }) => {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="flex-1 bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white font-black uppercase tracking-widest outline-none focus:border-[#CCFF00] appearance-none cursor-pointer"
+                            className="flex-1 bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white font-black uppercase tracking-widest outline-none focus:border-[#CCFF00] appearance-none cursor-pointer"
                         >
                             <option value="name">SORT BY: NAME</option>
                             <option value="rollNo">SORT BY: ROLL NO</option>
@@ -130,7 +130,7 @@ const PaymentHistory = ({ students }) => {
 
                         <button
                             onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                            className="p-3 bg-[#050505] border border-white/20 rounded-none text-white hover:border-white transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center cursor-pointer"
+                            className="p-3 bg-[#050505] border-2 border-white/40 rounded-none text-white hover:border-white transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center cursor-pointer"
                         >
                             {sortOrder === 'asc' ? <ChevronDown size={20} className="stroke-[3px]" /> : <ChevronUp size={20} className="stroke-[3px]" />}
                         </button>
@@ -148,7 +148,7 @@ const PaymentHistory = ({ students }) => {
                             />
                         ))
                     ) : (
-                        <div className="py-16 text-center border border-white/20 bg-[#050505] mx-4">
+                        <div className="py-16 text-center border-2 border-white/40 bg-[#050505] mx-4">
                             <div className="p-6 w-24 h-24 flex items-center justify-center mx-auto mb-4">
                                 <Search size={48} className="text-white/30 stroke-[1px]" />
                             </div>
@@ -161,12 +161,12 @@ const PaymentHistory = ({ students }) => {
                 <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-[#050505] border-b border-white/20">
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/20">Beneficiary</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/20">Academic Unit</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/20">Cumulative Paid</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/20">Recent Activity</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/20 text-right">Audit</th>
+                            <tr className="bg-[#050505] border-b border-white/40">
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/40">Beneficiary</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/40">Academic Unit</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/40">Cumulative Paid</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/40">Recent Activity</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/40 text-right">Audit</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/10">
@@ -174,14 +174,14 @@ const PaymentHistory = ({ students }) => {
                                 <tr key={student.id} className="hover:bg-white/5 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-none bg-[#CCFF00] text-black border border-[#CCFF00] flex items-center justify-center font-black text-xs shrink-0">
+                                            <div className="w-10 h-10 rounded-none bg-[#CCFF00] text-black border-2 border-[#CCFF00] flex items-center justify-center font-black text-xs shrink-0">
                                                 <User size={18} className="stroke-[3px]" />
                                             </div>
                                             <div className="min-w-0">
                                                 <p className="font-black text-white text-sm uppercase tracking-widest truncate flex items-center gap-3">
                                                     {student.name}
                                                     {student.admissionStatus === 'Transferred' && (
-                                                        <span className="text-[9px] font-black bg-rose-500 text-black px-2 py-1 rounded-none border border-rose-500 uppercase tracking-tighter">Exit</span>
+                                                        <span className="text-[9px] font-black bg-rose-500 text-black px-2 py-1 rounded-none border-2 border-rose-500 uppercase tracking-tighter">Exit</span>
                                                     )}
                                                 </p>
                                                 <p className="text-white/50 font-mono text-[10px] truncate uppercase tracking-widest mt-1">Roll: {student.rollNo}</p>
@@ -203,7 +203,7 @@ const PaymentHistory = ({ students }) => {
                                     <td className="px-6 py-4 text-right">
                                         <button
                                             onClick={() => handleViewHistory(student)}
-                                            className="px-6 py-3 rounded-none bg-transparent border border-[#CCFF00] text-[#CCFF00] text-xs font-black uppercase tracking-widest hover:bg-[#CCFF00] hover:text-black transition-colors flex items-center gap-2 ml-auto shadow-none"
+                                            className="px-6 py-3 rounded-none bg-transparent border-2 border-[#CCFF00] text-[#CCFF00] text-xs font-black uppercase tracking-widest hover:bg-[#CCFF00] hover:text-black transition-colors flex items-center gap-2 ml-auto shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]"
                                         >
                                             <FileText size={16} className="stroke-[3px]" />
                                             History
@@ -217,7 +217,7 @@ const PaymentHistory = ({ students }) => {
                 
                 {filteredStudents.length === 0 && (
                     <div className="py-24 text-center">
-                        <div className="w-20 h-20 bg-[#050505] border border-white/20 flex items-center justify-center mx-auto mb-6">
+                        <div className="w-20 h-20 bg-[#050505] border-2 border-white/40 flex items-center justify-center mx-auto mb-6">
                             <Search size={40} className="text-white/20 stroke-[1px]" />
                         </div>
                         <p className="text-white/50 font-black uppercase tracking-widest text-sm">No records matching search</p>

@@ -43,9 +43,9 @@ const LandingPage = () => {
               Most school software is built like a legacy bank. We built this like a high-frequency trading engine.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <span className="px-4 py-2 border border-white/20 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">No Spinners</span>
-              <span className="px-4 py-2 border border-white/20 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Instant Interactions</span>
-              <span className="px-4 py-2 border border-white/20 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Offline Capable</span>
+              <span className="px-4 py-2 border-2 border-white/40 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">No Spinners</span>
+              <span className="px-4 py-2 border-2 border-white/40 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Instant Interactions</span>
+              <span className="px-4 py-2 border-2 border-white/40 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Offline Capable</span>
             </div>
           </div>
 
@@ -54,7 +54,7 @@ const LandingPage = () => {
                 onClick={() => navigate('/login')}
                 className="group relative inline-flex items-center justify-center w-full md:w-auto px-8 py-5 md:py-6 bg-[#CCFF00] text-black font-black uppercase tracking-widest text-lg md:text-xl hover:bg-white transition-all"
              >
-                <div className="absolute inset-0 border border-transparent group-hover:border-black transition-colors pointer-events-none scale-105 opacity-0 group-hover:opacity-100" />
+                <div className="absolute inset-0 border-2 border-transparent group-hover:border-black transition-colors pointer-events-none scale-105 opacity-0 group-hover:opacity-100" />
                 <span className="relative z-10 flex items-center gap-4">
                   Initialize System
                   <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -62,7 +62,7 @@ const LandingPage = () => {
                   </svg>
                 </span>
              </button>
-             <div className="border border-white/20 bg-white/5 p-5 md:text-right max-w-sm w-full">
+             <div className="border-2 border-white/40 bg-white/5 p-5 md:text-right max-w-sm w-full">
                 <p className="text-sm font-black text-white uppercase leading-snug">
                     Note: We removed all artificial loading screens. The system reacts instantly to your inputs.
                 </p>

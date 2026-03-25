@@ -8,10 +8,10 @@ const statusStyles = {
 };
 
 const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee }) => (
-  <div className="bg-[#0a0a0a] border border-white/20 p-4 transition-all duration-200 slide-up group hover:border-[#CCFF00]">
+  <div className="bg-[#0a0a0a] border-2 border-white/40 p-4 transition-all duration-200 slide-up group hover:border-[#CCFF00]">
     <div className="flex items-start justify-between gap-3 mb-4">
       <div className="flex items-center gap-4 min-w-0 flex-1">
-        <div className="w-12 h-12 bg-[#CCFF00] border border-[#CCFF00] text-black flex items-center justify-center font-black text-lg shrink-0 uppercase">
+        <div className="w-12 h-12 bg-[#CCFF00] border-2 border-[#CCFF00] text-black flex items-center justify-center font-black text-lg shrink-0 uppercase">
           {student.name.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
@@ -30,11 +30,11 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
     </div>
 
     <div className="grid grid-cols-2 gap-3 text-xs mb-4 pb-4 border-b border-white/10">
-      <div className="bg-[#050505] border border-white/10 p-3">
+      <div className="bg-[#050505] border-2 border-white/10 p-3">
         <p className="text-[10px] uppercase tracking-widest text-white/50 font-black mb-1">Class</p>
         <p className="text-white font-black uppercase tracking-widest text-sm">{student.class} - {student.section}</p>
       </div>
-      <div className="bg-[#050505] border border-white/10 p-3">
+      <div className="bg-[#050505] border-2 border-white/10 p-3">
         <p className="text-[10px] uppercase tracking-widest text-white/50 font-black mb-1">Roll No</p>
         <p className="text-white font-black uppercase tracking-widest text-sm">{student.rollNo}</p>
       </div>
@@ -43,7 +43,7 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
     <div className="flex items-center gap-2">
       <button
         onClick={() => onPayFee(student)}
-        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-colors font-black uppercase tracking-widest text-sm touch-manipulation"
+        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-colors font-black uppercase tracking-widest text-sm touch-manipulation"
         aria-label="Collect fee"
       >
         <IndianRupee size={18} className="stroke-[3px]" />
@@ -51,14 +51,14 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
       </button>
       <button
         onClick={() => onEdit(student)}
-        className="p-3 border border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center"
+        className="p-3 border-2 border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center"
         aria-label="Edit student"
       >
         <Edit2 size={18} className="stroke-[3px]" />
       </button>
       <button
         onClick={() => onDelete(student.id)}
-        className="p-3 border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-black transition-colors touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center"
+        className="p-3 border-2 border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-black transition-colors touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center"
         aria-label="Delete student"
       >
         <Trash2 size={18} className="stroke-[3px]" />

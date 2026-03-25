@@ -5,7 +5,7 @@ import { getActivities } from '../utils/storage';
 
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
     <div 
-        className="bg-[#0a0a0a] p-4 md:p-6 flex flex-col gap-2 md:gap-4 border border-white/20 transition-all duration-300 slide-up group hover:border-[#CCFF00]"
+        className="bg-[#0a0a0a] p-4 md:p-6 flex flex-col gap-2 md:gap-4 border-2 border-white/40 transition-all duration-300 slide-up group hover:border-[#CCFF00]"
         style={{ animationDelay: `${index * 50}ms` }}
     >
         <div className="flex justify-between items-start gap-3">
@@ -57,8 +57,8 @@ const Overview = ({ students, onAddStudent }) => {
     if (students.length === 0) {
         return (
             <div className="p-6 md:p-12 max-w-7xl mx-auto text-center">
-                <div className="bg-[#0a0a0a] p-8 md:p-16 border border-white/20 flex flex-col items-center gap-6">
-                    <div className="w-20 h-20 bg-[#CCFF00] border border-[#CCFF00] text-black flex items-center justify-center">
+                <div className="bg-[#0a0a0a] p-8 md:p-16 border-2 border-white/40 flex flex-col items-center gap-6">
+                    <div className="w-20 h-20 bg-[#CCFF00] border-2 border-[#CCFF00] text-black flex items-center justify-center">
                         <Users size={40} className="stroke-[2px]" />
                     </div>
                     <div className="max-w-md">
@@ -81,7 +81,7 @@ const Overview = ({ students, onAddStudent }) => {
         <div className="p-3 md:p-6 max-w-7xl mx-auto page-enter">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6 md:mb-8">
                 <h2 className="text-white text-xl md:text-2xl font-black tracking-widest uppercase">Dashboard Overview</h2>
-                <div className="flex items-center gap-2 text-[#CCFF00] bg-[#CCFF00]/10 border border-[#CCFF00]/20 px-3 py-1.5 text-xs md:text-sm font-bold uppercase tracking-wide">
+                <div className="flex items-center gap-2 text-[#CCFF00] bg-[#CCFF00]/10 border-2 border-[#CCFF00]/20 px-3 py-1.5 text-xs md:text-sm font-bold uppercase tracking-wide">
                     <Clock size={15} className="md:hidden stroke-[3px]" />
                     <Clock size={16} className="hidden md:block stroke-[3px]" />
                     {new Date().toLocaleDateString('default', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -115,8 +115,8 @@ const Overview = ({ students, onAddStudent }) => {
                 />
             </div>
 
-            <div className="bg-[#0a0a0a] border border-white/20 overflow-hidden" id="recent-activities">
-                <div className="p-4 md:p-6 border-b border-white/20 flex justify-between items-center">
+            <div className="bg-[#0a0a0a] border-2 border-white/40 overflow-hidden" id="recent-activities">
+                <div className="p-4 md:p-6 border-b border-white/40 flex justify-between items-center">
                     <h3 className="m-0 text-white text-base md:text-lg font-black uppercase tracking-widest flex items-center gap-2">
                         Activity Stream
                     </h3>
@@ -134,7 +134,7 @@ const Overview = ({ students, onAddStudent }) => {
                                     activity.type === 'student' ? 'bg-[#CCFF00]/20 text-[#CCFF00] border-[#CCFF00]/30' :
                                         activity.type === 'tc' ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' :
                                             activity.type === 'admission' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
-                                                'bg-white/10 text-white/60 border-white/20'
+                                                'bg-white/10 text-white/60 border-white/40'
                                     }`}>
                                     {activity.type === 'fee' && <IndianRupee size={18} className="stroke-[2.5px]" />}
                                     {activity.type === 'student' && <UserPlus size={18} className="stroke-[2.5px]" />}
@@ -160,7 +160,7 @@ const Overview = ({ students, onAddStudent }) => {
                         ))
                     ) : (
                         <div className="text-center py-16 md:py-20">
-                            <div className="bg-white/5 border border-white/10 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center mx-auto mb-4">
+                            <div className="bg-white/5 border-2 border-white/10 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center mx-auto mb-4">
                                 <Activity size={32} className="text-white/30" />
                             </div>
                             <p className="text-white/50 font-mono text-sm tracking-wide uppercase">No activity recorded yet.</p>

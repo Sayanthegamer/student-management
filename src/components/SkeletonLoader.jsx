@@ -29,12 +29,12 @@ const SkeletonLoader = () => {
              {/* Stats Cards Row */}
              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                  {Array.from({ length: 3 }).map((_, i) => (
-                     <div key={i} className="h-32 bg-white rounded-2xl border border-slate-100 animate-pulse"></div>
+                     <div key={i} className="h-32 bg-white rounded-2xl border-2 border-slate-100 animate-pulse"></div>
                  ))}
              </div>
 
              {/* Main Table/Card Area */}
-             <div className="flex-1 bg-white rounded-2xl border border-slate-100 animate-pulse min-h-[400px]"></div>
+             <div className="flex-1 bg-white rounded-2xl border-2 border-slate-100 animate-pulse min-h-[400px]"></div>
         </div>
       </div>
     </div>

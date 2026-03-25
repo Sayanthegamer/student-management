@@ -122,7 +122,7 @@ function App() {
       <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
       <div className="app-container flex h-[100dvh] overflow-hidden bg-[#050505] text-[#e0e0e0]">
         {/* Mobile Header - Simplified */}
-        <div className="md:hidden fixed top-0 left-0 right-0 bg-[#0a0a0a] border-b border-white/20 z-30 flex items-center px-4 justify-between pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))]">
+        <div className="md:hidden fixed top-0 left-0 right-0 bg-[#0a0a0a] border-b border-white/40 z-30 flex items-center px-4 justify-between pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))]">
           <div className="flex items-center gap-2">
             <span className="font-black tracking-widest uppercase text-white text-base">STD::MGR</span>
           </div>
@@ -130,7 +130,7 @@ function App() {
             {showMobileAdd && (
               <button
                 onClick={handleAddClick}
-                className="p-2 border border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors touch-manipulation"
+                className="p-2 border-2 border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors touch-manipulation"
                 aria-label="Add student"
               >
                 <Plus size={20} className="stroke-[3px]" />
@@ -188,13 +188,13 @@ function App() {
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
-          <div className="bg-[#050505] border border-white/20 max-w-sm w-full p-8 scale-in shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#050505] border-2 border-white/40 max-w-sm w-full p-8 scale-in shadow-2xl" onClick={e => e.stopPropagation()}>
             <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">Delete Student?</h3>
             <p className="text-white/60 font-mono text-xs mb-8">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
             <div className="flex gap-4">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 px-4 py-3 border border-white/20 text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
+                className="flex-1 px-4 py-3 border-2 border-white/40 text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
               >
                 Cancel
               </button>
@@ -212,7 +212,7 @@ function App() {
       {/* Toast Notification */}
       {toast && (
         <div className="fixed top-4 right-4 z-50 slide-down pointer-events-none">
-          <div className="bg-[#CCFF00] border border-black p-4 flex items-center gap-4 max-w-sm pointer-events-auto">
+          <div className="bg-[#CCFF00] border-2 border-black p-4 flex items-center gap-4 max-w-sm pointer-events-auto">
             <CheckCircle2 size={24} className="text-black stroke-[3px] shrink-0" />
             <p className="text-sm font-black uppercase text-black flex-1 tracking-wide">{toast.message}</p>
             <button onClick={() => setToast(null)} className="text-black/50 hover:text-black p-1">

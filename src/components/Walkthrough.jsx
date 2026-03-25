@@ -177,6 +177,18 @@ const Walkthrough = () => {
                         left: rect.right + tooltipGap,
                         transform: 'translateY(-50%)'
                     };
+                } else if (step.position === 'left') {
+                    tooltipStyle = {
+                        top: rect.top + (rect.height / 2),
+                        right: window.innerWidth - rect.left + tooltipGap,
+                        transform: 'translateY(-50%)'
+                    };
+                } else if (step.position === 'top') {
+                    tooltipStyle = {
+                        bottom: window.innerHeight - rect.top + tooltipGap,
+                        left: rect.left + (rect.width / 2),
+                        transform: 'translateX(-50%)'
+                    };
                 } else if (step.position === 'bottom') {
                     tooltipStyle = {
                         top: rect.bottom + tooltipGap,
@@ -184,7 +196,7 @@ const Walkthrough = () => {
                         transform: 'translateX(-50%)'
                     };
                 } else {
-                    // Default center/fallback
+                    // Default fallback: place below target, and prevent it from going off right edge of screen if target is wide
                     tooltipStyle = {
                         top: rect.bottom + tooltipGap,
                         left: rect.left + (rect.width / 2),
@@ -254,12 +266,12 @@ const Walkthrough = () => {
 
             {/* Tooltip Card */}
             <div
-                className="absolute pointer-events-auto bg-[#0a0a0a] p-8 rounded-none shadow-none w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-white/20 z-[110]"
+                className="absolute pointer-events-auto bg-[#0a0a0a] p-8 rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border-2 border-white/40 z-[110]"
                 style={tooltipPosition}
             >
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
-                        <span className="bg-[#CCFF00] text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-none border border-[#CCFF00]">
+                        <span className="bg-[#CCFF00] text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-none border-2 border-[#CCFF00]">
                             Step {currentStep + 1}/{steps.length}
                         </span>
                     </div>
@@ -292,7 +304,7 @@ const Walkthrough = () => {
 
                     <button
                         onClick={handleNext}
-                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border border-[#CCFF00] px-5 py-3 rounded-none text-[10px] font-black shadow-none flex items-center gap-3 transition-colors uppercase tracking-widest active:bg-[#CCFF00]/20"
+                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border-2 border-[#CCFF00] px-5 py-3 rounded-none text-[10px] font-black shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex items-center gap-3 transition-colors uppercase tracking-widest active:bg-[#CCFF00]/20"
                     >
                         {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
                         {currentStep === steps.length - 1 ? <CheckCircle size={16} className="stroke-[3px]" /> : <ChevronRight size={16} className="stroke-[3px]" />}

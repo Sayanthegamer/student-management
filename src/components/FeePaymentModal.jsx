@@ -115,7 +115,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
         >
-            <div className={`bg-[#0a0a0a] rounded-none shadow-none w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div className={`bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border-2 border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
                 <div className="bg-[#CCFF00] px-6 py-5 md:py-8 text-black relative overflow-visible">
                     <div className="relative z-10">
@@ -129,14 +129,14 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     </div>
                     <button
                         onClick={handleClose}
-                        className="absolute top-4 right-4 md:top-6 md:right-6 text-black border border-black hover:bg-black hover:text-[#CCFF00] p-3 min-h-[48px] min-w-[48px] rounded-none transition-colors z-20 flex items-center justify-center"
+                        className="absolute top-4 right-4 md:top-6 md:right-6 text-black border-2 border-black hover:bg-black hover:text-[#CCFF00] p-3 min-h-[48px] min-w-[48px] rounded-none transition-colors z-20 flex items-center justify-center"
                     >
                         <X size={20} className="stroke-[3px]" />
                     </button>
                 </div>
 
                 {isTransferred && (
-                    <div className="mx-6 mt-6 p-4 bg-[#050505] border border-amber-500 rounded-none flex items-start gap-3">
+                    <div className="mx-6 mt-6 p-4 bg-[#050505] border-2 border-amber-500 rounded-none flex items-start gap-3">
                         <AlertCircle size={20} className="text-amber-500 shrink-0 mt-0.5 stroke-[3px]" />
                         <div className="flex-1 min-w-0">
                             <p className="text-amber-500 uppercase tracking-widest font-black text-sm">Transferred Student</p>
@@ -156,7 +156,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                             required
                         />
 
-                        <div className="space-y-4 bg-[#050505] p-5 rounded-none border border-white/20">
+                        <div className="space-y-4 bg-[#050505] p-5 rounded-none border-2 border-white/40">
                             <div className="flex justify-between items-center">
                                 <label className="text-[10px] font-black text-white/50 uppercase tracking-widest px-1">Duration</label>
                                 <button
@@ -190,7 +190,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 )}
                             </div>
                             {error && (
-                                <div className="flex items-center gap-2 mt-2 text-rose-500 text-[10px] font-black bg-rose-500/10 p-2 border border-rose-500/30 uppercase tracking-widest">
+                                <div className="flex items-center gap-2 mt-2 text-rose-500 text-[10px] font-black bg-rose-500/10 p-2 border-2 border-rose-500/30 uppercase tracking-widest">
                                     <AlertCircle size={14} className="stroke-[3px]" />
                                     {error}
                                 </div>
@@ -206,7 +206,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                         type="number"
                                         value={amount}
                                         onChange={(e) => setAmount(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-4 bg-[#050505] border border-white/20 rounded-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm"
+                                        className="w-full pl-12 pr-4 py-4 bg-[#050505] border-2 border-white/40 rounded-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm"
                                         required
                                     />
                                 </div>
@@ -219,7 +219,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                         type="number"
                                         value={fine}
                                         readOnly
-                                        className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-none text-white/50 font-black uppercase tracking-widest outline-none text-sm pointer-events-none"
+                                        className="w-full pl-12 pr-4 py-4 bg-white/5 border-2 border-white/10 rounded-none text-white/50 font-black uppercase tracking-widest outline-none text-sm pointer-events-none"
                                     />
                                 </div>
                             </div>
@@ -231,12 +231,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 type="text"
                                 value={remarks}
                                 onChange={(e) => setRemarks(e.target.value)}
-                                className="w-full px-4 py-4 bg-[#050505] border border-white/20 rounded-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm placeholder:text-white/20"
+                                className="w-full px-4 py-4 bg-[#050505] border-2 border-white/40 rounded-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm placeholder:text-white/20"
                                 placeholder="E.G. UPI ID OR CASH"
                             />
                         </div>
 
-                        <div className="bg-transparent border-t border-b border-white/20 py-6 text-white flex justify-between items-center mt-2">
+                        <div className="bg-transparent border-t border-b border-white/40 py-6 text-white flex justify-between items-center mt-2">
                             <div>
                                 <p className="text-[10px] font-black text-[#CCFF00] uppercase tracking-widest">Total Collection</p>
                                 <p className="text-xs font-mono tracking-wide text-white/70 mt-0.5 uppercase">Automated settlement</p>
@@ -253,7 +253,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                         <button
                             type="submit"
                             disabled={!!error}
-                            className={`w-full bg-[#CCFF00] border border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest py-5 rounded-none transition-colors flex items-center justify-center gap-3 group ${error ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
+                            className={`w-full bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest py-5 rounded-none transition-colors flex items-center justify-center gap-3 group ${error ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
                         >
                             <CheckCircle2 size={24} className="stroke-[3px] group-hover:scale-110 transition-transform" />
                             Complete Transaction

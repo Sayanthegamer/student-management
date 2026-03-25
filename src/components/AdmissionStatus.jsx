@@ -9,7 +9,7 @@ const StatusCard = ({ student, color, onMove }) => {
     const [showActions, setShowActions] = useState(false);
 
     return (
-        <div className="bg-[#050505] border border-white/20 shadow-none rounded-none p-5 hover:border-[#CCFF00] transition-colors group relative">
+        <div className="bg-[#050505] border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] rounded-none p-5 hover:border-[#CCFF00] transition-colors group relative">
             <div className="flex justify-between items-start mb-3">
                 <h4 className="m-0 text-white font-black text-base uppercase tracking-widest group-hover:text-[#CCFF00] transition-colors">{student.name}</h4>
                 <button
@@ -21,8 +21,8 @@ const StatusCard = ({ student, color, onMove }) => {
             </div>
 
             {showActions && (
-                <div className="absolute right-4 top-12 bg-[#0a0a0a] shadow-none border border-white/20 rounded-none py-1 z-20 w-48 animate-in fade-in zoom-in-95 duration-100">
-                    <div className="px-4 py-3 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/20">Move To</div>
+                <div className="absolute right-4 top-12 bg-[#0a0a0a] shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border-2 border-white/40 rounded-none py-1 z-20 w-48 animate-in fade-in zoom-in-95 duration-100">
+                    <div className="px-4 py-3 text-[10px] font-black text-white/50 uppercase tracking-widest border-b border-white/40">Move To</div>
                     {student.admissionStatus !== 'Confirmed' && (
                         <button
                             onClick={() => { onMove(student, 'Confirmed'); setShowActions(false); }}
@@ -75,9 +75,9 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
     const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
 
     return (
-        <div className="w-full md:w-auto md:flex-1 md:min-w-[320px] flex flex-col h-full bg-[#0a0a0a] rounded-none border border-white/10 p-4">
+        <div className="w-full md:w-auto md:flex-1 md:min-w-[320px] flex flex-col h-full bg-[#0a0a0a] rounded-none border-2 border-white/10 p-4">
             <div
-                className="flex flex-col mb-4 bg-[#050505] p-5 rounded-none border border-white/20 shadow-none sticky top-0 z-10"
+                className="flex flex-col mb-4 bg-[#050505] p-5 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] sticky top-0 z-10"
                 style={{ borderTop: `4px solid ${color}` }}
             >
                 <div className="flex items-center justify-between mb-4">
@@ -85,7 +85,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
                         <Icon size={20} color={color} className="stroke-[3px]" />
                         <h3 className="m-0 text-sm font-black text-white uppercase tracking-widest">{title}</h3>
                     </div>
-                    <span className="bg-white/10 text-white px-3 py-1 rounded-none text-xs font-black border border-white/20">
+                    <span className="bg-white/10 text-white px-3 py-1 rounded-none text-xs font-black border-2 border-white/40">
                         {count}
                     </span>
                 </div>
@@ -103,7 +103,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
                     <StatusCard key={student.id} student={student} color={color} onMove={onMove} />
                 ))}
                 {students.length === 0 && (
-                    <div className="p-8 text-center text-white/30 border border-white/10 rounded-none bg-transparent font-black uppercase tracking-widest mt-4">
+                    <div className="p-8 text-center text-white/30 border-2 border-white/10 rounded-none bg-transparent font-black uppercase tracking-widest mt-4">
                         No students
                     </div>
                 )}
@@ -168,7 +168,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
 
                     {/* Stats Summary */}
                     <div className="flex gap-4">
-                        <div className="bg-[#050505] border border-[#CCFF00] rounded-none px-6 py-4 shadow-none flex flex-col items-center min-w-[120px]">
+                        <div className="bg-[#050505] border-2 border-[#CCFF00] rounded-none px-6 py-4 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex flex-col items-center min-w-[120px]">
                             <span className="text-3xl font-black text-[#CCFF00]">{filteredStudents.length}</span>
                             <span className="text-[10px] font-black text-[#CCFF00]/70 uppercase tracking-widest mt-1">Total</span>
                         </div>
@@ -176,7 +176,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                 </div>
 
                 {/* Filters */}
-                <div className="flex gap-4 flex-wrap items-center bg-[#0a0a0a] p-4 rounded-none border border-white/20 shadow-none">
+                <div className="flex gap-4 flex-wrap items-center bg-[#0a0a0a] p-4 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
                     <div className="relative flex-1 min-w-[240px]">
                         <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 stroke-[3px]" />
                         <input
@@ -184,7 +184,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                             placeholder="SEARCH BY NAME OR ROLL NO..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] pl-12 font-black uppercase tracking-widest placeholder:text-white/20"
+                            className="w-full bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] pl-12 font-black uppercase tracking-widest placeholder:text-white/20"
                         />
                     </div>
 
@@ -193,7 +193,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     <select
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
-                        className="bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
+                        className="bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
                     >
                         <option value="">ALL CLASSES</option>
                         {classes.map(c => <option key={c} value={c}>CLASS {c}</option>)}
@@ -202,7 +202,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     <select
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
-                        className="bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
+                        className="bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
                     >
                         <option value="">ALL SECTIONS</option>
                         {sections.map(s => <option key={s} value={s}>SEC {s}</option>)}
@@ -211,7 +211,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     <select
                         value={filterFeeStatus}
                         onChange={(e) => setFilterFeeStatus(e.target.value)}
-                        className="bg-[#050505] border border-white/20 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
+                        className="bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] w-auto min-w-[160px] font-black uppercase tracking-widest appearance-none cursor-pointer"
                     >
                         <option value="">ALL FEES</option>
                         <option value="Paid">PAID</option>
@@ -230,7 +230,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                             }}
                             className={`p-3 rounded-none border transition-colors ${showMonthFilter
                                 ? 'bg-[#CCFF00] border-[#CCFF00] text-black'
-                                : 'bg-[#050505] border-white/20 text-white hover:border-[#CCFF00] hover:text-[#CCFF00]'}`}
+                                : 'bg-[#050505] border-white/40 text-white hover:border-[#CCFF00] hover:text-[#CCFF00]'}`}
                             title="Filter by Admission Month"
                         >
                             <Filter size={20} className="stroke-[3px]" />
@@ -259,7 +259,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                         />
                     ))
                 ) : (
-                    <div className="py-20 text-center border border-white/20 bg-[#050505] mx-4">
+                    <div className="py-20 text-center border-2 border-white/40 bg-[#050505] mx-4">
                         <div className="w-24 h-24 flex items-center justify-center mx-auto mb-4">
                             <Search size={48} className="text-white/20 stroke-[1px]" />
                         </div>

@@ -14,10 +14,10 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
   };
 
   return (
-    <div className="bg-[#050505] border border-white/20 rounded-none p-5 transition-colors duration-200 slide-up">
+    <div className="bg-[#050505] border-2 border-white/40 rounded-none p-5 transition-colors duration-200 slide-up">
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex items-center gap-4 min-w-0 flex-1">
-          <div className="w-12 h-12 rounded-none bg-[#CCFF00] text-black border border-[#CCFF00] flex items-center justify-center font-black text-xl shrink-0">
+          <div className="w-12 h-12 rounded-none bg-[#CCFF00] text-black border-2 border-[#CCFF00] flex items-center justify-center font-black text-xl shrink-0">
             <User size={24} className="stroke-[3px]" />
           </div>
           <div className="min-w-0 flex-1">
@@ -33,12 +33,12 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
       </div>
 
       <div className="grid grid-cols-1 gap-3 mb-6">
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-none p-4">
+        <div className="bg-[#0a0a0a] border-2 border-white/10 rounded-none p-4">
           <p className="text-[10px] uppercase tracking-widest text-white/50 font-black mb-1">Class Details</p>
           <p className="text-white font-black uppercase tracking-widest text-sm">Class {student.class} - {student.section}</p>
         </div>
         
-        <div className="bg-[#CCFF00]/10 border border-[#CCFF00]/30 rounded-none p-4">
+        <div className="bg-[#CCFF00]/10 border-2 border-[#CCFF00]/30 rounded-none p-4">
           <p className="text-[10px] uppercase tracking-widest text-[#CCFF00] font-black mb-1">Total Paid</p>
           <div className="flex items-center gap-2">
             <IndianRupee size={16} className="text-[#CCFF00] stroke-[3px]" />
@@ -46,7 +46,7 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
           </div>
         </div>
         
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-none p-4">
+        <div className="bg-[#0a0a0a] border-2 border-white/10 rounded-none p-4">
           <p className="text-[10px] uppercase tracking-widest text-white/50 font-black mb-1">Last Payment</p>
           <div className="flex items-center gap-3">
             <Calendar size={16} className="text-white/50" />
@@ -57,7 +57,7 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
 
       <button
         onClick={() => onViewHistory(student)}
-        className="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-none text-[#CCFF00] bg-transparent border border-white/20 hover:border-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors font-black uppercase tracking-widest text-sm touch-manipulation"
+        className="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-none text-[#CCFF00] bg-transparent border-2 border-white/40 hover:border-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors font-black uppercase tracking-widest text-sm touch-manipulation"
         aria-label="View payment history"
       >
         <FileText size={18} className="stroke-[3px]" />

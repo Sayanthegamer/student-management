@@ -15,7 +15,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[#050505] border border-white/20 px-4 py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest appearance-none"
+                className="w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest appearance-none"
                 required={required}
             >
                 {options.map(opt => (
@@ -28,7 +28,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[#050505] border border-white/20 px-4 py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest placeholder:text-white/20"
+                className="w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest placeholder:text-white/20"
                 placeholder={placeholder?.toUpperCase()}
                 required={required}
             />
@@ -85,8 +85,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
     return (
         <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
-            <div className="bg-[#0a0a0a] border border-white/20 overflow-hidden page-enter flex flex-col">
-                <div className="bg-[#050505] border-b border-white/20 px-6 py-6 md:px-10 md:py-8 text-white relative overflow-hidden">
+            <div className="bg-[#0a0a0a] border-2 border-white/40 overflow-hidden page-enter flex flex-col">
+                <div className="bg-[#050505] border-b border-white/40 px-6 py-6 md:px-10 md:py-8 text-white relative overflow-hidden">
                     <div className="relative z-10">
                         <h2 className="text-2xl md:text-3xl font-black uppercase tracking-widest">{initialData ? 'Edit Student Record' : 'Register New Student'}</h2>
                         <p className="text-[#CCFF00] mt-3 text-xs md:text-sm font-mono uppercase tracking-wide">Please fill in the official details for the institutional record.</p>
@@ -96,7 +96,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </div>
                     <button 
                         onClick={onCancel} 
-                        className="absolute top-6 right-6 p-3 border border-white/20 bg-transparent text-white hover:bg-white hover:text-black transition-colors z-20"
+                        className="absolute top-6 right-6 p-3 border-2 border-white/40 bg-transparent text-white hover:bg-white hover:text-black transition-colors z-20"
                     >
                         <X size={20} className="stroke-[3px]" />
                     </button>
@@ -221,17 +221,17 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 pt-8 mt-4 border-t border-white/20">
+                    <div className="flex flex-col sm:flex-row gap-4 pt-8 mt-4 border-t border-white/40">
                     <button 
                             type="button" 
                             onClick={onCancel}
-                            className="flex-1 px-6 py-5 border border-rose-500 text-rose-500 font-black uppercase tracking-widest hover:bg-rose-500 hover:text-black transition-colors rounded-none text-center"
+                            className="flex-1 px-6 py-5 border-2 border-rose-500 text-rose-500 font-black uppercase tracking-widest hover:bg-rose-500 hover:text-black transition-colors rounded-none text-center"
                         >
                             Cancel Changes
                         </button>
                         <button 
                             type="submit" 
-                            className="flex-1 px-6 py-5 bg-[#CCFF00] border border-[#CCFF00] text-black font-black uppercase tracking-widest hover:bg-white hover:border-white transition-colors flex items-center justify-center gap-3 rounded-none group"
+                            className="flex-1 px-6 py-5 bg-[#CCFF00] border-2 border-[#CCFF00] text-black font-black uppercase tracking-widest hover:bg-white hover:border-white transition-colors flex items-center justify-center gap-3 rounded-none group"
                         >
                             <Save size={20} className="group-hover:scale-110 transition-transform stroke-[3px]" />
                             {initialData ? 'Update Record' : 'Complete Registration'}
@@ -240,14 +240,14 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 </form>
 
                 {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
-                    <div className="bg-[#050505] p-6 md:p-10 border-t border-white/20 text-white">
+                    <div className="bg-[#050505] p-6 md:p-10 border-t border-white/40 text-white">
                         <div className="flex items-center gap-3 mb-6">
                             <Calendar size={20} className="text-[#CCFF00] stroke-[3px]" />
                             <h3 className="font-black uppercase tracking-widest text-lg">Recent Payment History</h3>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse border border-white/20">
-                                <thead className="bg-[#050505] border-b border-white/20">
+                            <table className="w-full text-left border-collapse border-2 border-white/40">
+                                <thead className="bg-[#050505] border-b border-white/40">
                                     <tr>
                                         <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Date</th>
                                         <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Month</th>

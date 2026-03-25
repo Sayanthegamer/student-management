@@ -30,7 +30,7 @@ const SyncErrorModal = ({ error, students, onDismiss }) => {
         if (e.target === e.currentTarget) onDismiss();
       }}
     >
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col overflow-hidden border border-red-200">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col overflow-hidden border-2 border-red-200">
 
         {/* Header */}
         <div className="bg-red-50 p-4 md:p-6 border-b border-red-100 flex items-center gap-4 relative pr-14 md:pr-16">
@@ -55,7 +55,7 @@ const SyncErrorModal = ({ error, students, onDismiss }) => {
         {/* Content */}
         <div className="flex-1 p-4 md:p-8 overflow-y-auto">
           <div className="space-y-6">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
               <h3 className="font-semibold text-red-900 mb-2">Error Details:</h3>
               <p className="font-mono text-sm text-red-700 break-words">
                 {error.message || JSON.stringify(error)}

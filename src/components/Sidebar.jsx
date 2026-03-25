@@ -16,7 +16,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
     ];
 
     return (
-        <div className="sidebar bg-[#050505] border-r border-white/20 h-full p-4 md:p-6 flex flex-col gap-8 text-[#e0e0e0] relative">
+        <div className="sidebar bg-[#050505] border-r border-white/40 h-full p-4 md:p-6 flex flex-col gap-8 text-[#e0e0e0] relative">
             {/* Mobile Close Button */}
             <button
                 onClick={onClose}
@@ -26,7 +26,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
             </button>
 
             <div className="flex items-center gap-3 px-2">
-                <div className="border border-[#CCFF00] bg-[#CCFF00] p-2.5 flex items-center justify-center shrink-0">
+                <div className="border-2 border-[#CCFF00] bg-[#CCFF00] p-2.5 flex items-center justify-center shrink-0">
                     <GraduationCap size={22} className="text-black" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -50,7 +50,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                 relative flex items-center gap-4 px-4 py-3 transition-colors duration-150 group overflow-hidden border
                                 ${isActive
                                     ? 'bg-[#CCFF00] text-black font-black border-[#CCFF00]'
-                                    : 'text-white/60 hover:bg-white/10 hover:text-white font-bold border-transparent hover:border-white/20'
+                                    : 'text-white/60 hover:bg-white/10 hover:text-white font-bold border-transparent hover:border-white/40'
                                 }
                             `}
                         >
@@ -65,12 +65,12 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                 })}
             </nav>
 
-            <div className="mt-auto pt-6 border-t border-white/20 flex flex-col gap-6">
+            <div className="mt-auto pt-6 border-t border-white/40 flex flex-col gap-6">
                 <div className="px-2">
                     <SyncIndicator status={syncStatus} onSync={onSync} darkMode={true} />
                 </div>
 
-                <div className="flex items-center justify-between gap-3 px-2 bg-[#0a0a0a] p-4 border border-white/20">
+                <div className="flex items-center justify-between gap-3 px-2 bg-[#0a0a0a] p-4 border-2 border-white/40">
                     <div className="flex items-center gap-3 min-w-0">
                         <div className="w-8 h-8 bg-white flex items-center justify-center text-[10px] font-black text-black shrink-0">
                             {user?.email?.[0].toUpperCase() || 'U'}

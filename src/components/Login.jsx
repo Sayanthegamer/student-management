@@ -42,14 +42,14 @@ export default function Login() {
       <div className="max-w-md w-full">
         {/* Logo Section */}
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 bg-[#CCFF00] border border-[#CCFF00] flex items-center justify-center mb-4 transition-transform hover:scale-105 duration-300">
+          <div className="w-16 h-16 bg-[#CCFF00] border-2 border-[#CCFF00] flex items-center justify-center mb-4 transition-transform hover:scale-105 duration-300">
             <GraduationCap size={32} className="text-black" />
           </div>
           <h1 className="text-3xl font-black text-white tracking-widest uppercase">STD::MGR</h1>
           <p className="text-[#CCFF00] font-mono mt-2 text-sm">ACCESS PORTAL ///</p>
         </div>
 
-        <div className="bg-[#0a0a0a] border border-white/20 p-8 md:p-10 transition-all duration-300">
+        <div className="bg-[#0a0a0a] border-2 border-white/40 p-8 md:p-10 transition-all duration-300">
           <div className="mb-8 border-b border-white/10 pb-6">
             <h2 className="text-2xl font-black text-white uppercase tracking-tight">
               {isLogin ? 'Initialize Session' : 'Register Administrator'}
@@ -60,14 +60,14 @@ export default function Login() {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-rose-500/10 text-rose-500 flex items-start gap-3 text-sm border border-rose-500 animate-fadeIn">
+            <div className="mb-6 p-4 bg-rose-500/10 text-rose-500 flex items-start gap-3 text-sm border-2 border-rose-500 animate-fadeIn">
               <AlertCircle size={18} className="shrink-0 mt-0.5" />
               <p className="font-bold tracking-wide uppercase">{error}</p>
             </div>
           )}
 
           {message && (
-            <div className="mb-6 p-4 bg-[#CCFF00]/10 text-[#CCFF00] flex items-start gap-3 text-sm border border-[#CCFF00] animate-fadeIn">
+            <div className="mb-6 p-4 bg-[#CCFF00]/10 text-[#CCFF00] flex items-start gap-3 text-sm border-2 border-[#CCFF00] animate-fadeIn">
               <ShieldCheck size={18} className="shrink-0 mt-0.5" />
               <p className="font-bold tracking-wide uppercase">{message}</p>
             </div>
@@ -81,7 +81,7 @@ export default function Login() {
                 <input
                   type="email"
                   required
-                  className="w-full pl-12 pr-4 py-4 bg-[#050505] border border-white/20 text-white focus:border-[#CCFF00] transition-all outline-none text-sm font-medium"
+                  className="w-full pl-12 pr-4 py-4 bg-[#050505] border-2 border-white/40 text-white focus:border-[#CCFF00] transition-all outline-none text-sm font-medium"
                   placeholder="admin@institution.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -97,7 +97,7 @@ export default function Login() {
                   type="password"
                   required
                   minLength={6}
-                  className="w-full pl-12 pr-4 py-4 bg-[#050505] border border-white/20 text-white focus:border-[#CCFF00] transition-all outline-none text-sm font-medium focus:ring-0"
+                  className="w-full pl-12 pr-4 py-4 bg-[#050505] border-2 border-white/40 text-white focus:border-[#CCFF00] transition-all outline-none text-sm font-medium focus:ring-0"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -111,7 +111,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-5 px-4 mt-2 bg-[#CCFF00] border border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="w-full py-5 px-4 mt-2 bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {loading ? (
                 <Loader2 className="animate-spin" size={20} />

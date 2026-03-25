@@ -27,7 +27,7 @@ class ErrorBoundary extends React.Component {
             // You can render any custom fallback UI
             return (
                 <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
-                    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center border border-red-100">
+                    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center border-2 border-red-100">
                         <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                             <AlertTriangle size={32} className="text-red-600" />
                         </div>
