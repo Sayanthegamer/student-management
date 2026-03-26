@@ -17,7 +17,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="p-2 border-2 border-white/40 text-white hover:bg-white hover:text-black hover:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shrink-0"
+                    className="p-2 border-2 border-white/40 text-white hover:bg-white hover:text-black hover:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shrink-0 min-w-[44px] min-h-[44px]"
                     aria-label="Previous Page"
                 >
                     <ChevronLeft size={20} className="stroke-[3px]" />
@@ -41,7 +41,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                             <button
                                 key={pageNum}
                                 onClick={() => onPageChange(pageNum)}
-                                className={`w-8 h-8 sm:w-10 sm:h-10 text-xs sm:text-sm font-black transition-colors border shrink-0 flex items-center justify-center ${currentPage === pageNum
+                                className={`w-11 h-11 sm:w-10 sm:h-10 text-xs sm:text-sm font-black transition-colors border shrink-0 flex items-center justify-center ${currentPage === pageNum
                                         ? 'bg-[#CCFF00] text-black border-[#CCFF00]'
                                         : 'text-white border-white/40 hover:bg-white/10 hover:border-white'
                                     }`}
@@ -55,7 +55,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="p-2 border-2 border-white/40 text-white hover:bg-white hover:text-black hover:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shrink-0"
+                    className="p-2 border-2 border-white/40 text-white hover:bg-white hover:text-black hover:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shrink-0 min-w-[44px] min-h-[44px]"
                     aria-label="Next Page"
                 >
                     <ChevronRight size={20} className="stroke-[3px]" />

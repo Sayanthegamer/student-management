@@ -106,15 +106,16 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
     if (students.length === 0) {
         return (
-            <div className="bg-[#0a0a0a] border-2 border-white/40 p-8 md:p-16 text-center max-w-2xl mx-auto">
-                <div className="w-20 h-20 bg-[#CCFF00] border-2 border-[#CCFF00] text-black flex items-center justify-center mx-auto mb-6">
-                    <UserPlus size={40} className="stroke-[2px]" />
+            <div className="bg-[#0a0a0a] border-2 border-white/40 p-6 md:p-16 text-center max-w-2xl mx-auto">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-[#CCFF00] border-2 border-[#CCFF00] text-black flex items-center justify-center mx-auto mb-6">
+                    <UserPlus size={32} className="md:size-[40px] stroke-[2px]" />
                 </div>
-                <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">No students yet</h2>
-                <p className="text-white/60 font-mono mb-8 text-lg">Start building your database by adding your first student record.</p>
-                <button onClick={onAdd} className="px-8 py-4 bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 mx-auto">
+                <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight mb-2">No students yet</h2>
+                <p className="text-white/60 font-mono mb-8 text-base md:text-lg">Start building your database by adding your first student record.</p>
+                <button onClick={onAdd} className="px-6 md:px-8 py-3 md:py-4 bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 mx-auto min-h-[48px]">
                     <Plus size={20} className="stroke-[3px]" />
-                    Initialize Student
+                    <span className="hidden md:inline">Initialize Student</span>
+                    <span className="md:hidden">Add</span>
                 </button>
             </div>
         );

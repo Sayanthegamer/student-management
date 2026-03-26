@@ -152,14 +152,14 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     };
 
     return (
-        <div className="bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border-2 border-white/40 p-4 md:p-8 max-w-6xl mx-auto">
+        <div className="bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border-2 border-white/40 p-3 md:p-8 max-w-6xl mx-auto">
             <h2 className="text-white mb-8 text-2xl md:text-3xl flex items-center gap-4 font-black uppercase tracking-widest flex-wrap">
                 <FileText size={32} className="text-[#CCFF00] stroke-[3px]" />
                 Transfer Certificate
             </h2>
 
             {/* View Toggle */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8 border-b border-white/40 pb-6">
+            <div className="flex flex-row gap-3 md:gap-4 mb-6 md:mb-8 border-b border-white/40 pb-4 md:pb-6">
                 <button
                     onClick={() => setView('active')}
                     className={`flex-1 px-4 py-3 text-xs sm:text-sm transition-colors uppercase tracking-widest font-black whitespace-nowrap text-center ${view === 'active'
@@ -181,7 +181,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
             </div>
 
             {/* Filters & Controls */}
-            <div className="flex gap-4 mb-8 flex-wrap items-center">
+            <div className="flex gap-2.5 md:gap-4 mb-6 md:mb-8 flex-wrap items-center">
                 <div className="relative flex-1 min-w-[240px]">
                     <Search size={24} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 stroke-[3px]" />
                     <input
@@ -189,14 +189,14 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                         placeholder="SEARCH STUDENT..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-black uppercase tracking-widest placeholder:text-white/20 pl-12"
+                        className="w-full bg-[#050505] border-2 border-white/40 px-4 py-2.5 md:py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-black uppercase tracking-widest placeholder:text-white/20 pl-12"
                     />
                 </div>
 
                 <select
                     value={filterClass}
                     onChange={(e) => setFilterClass(e.target.value)}
-                    className="bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-black uppercase tracking-widest appearance-none w-auto min-w-[140px]"
+                    className="bg-[#050505] border-2 border-white/40 px-3 md:px-4 py-2.5 md:py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-black uppercase tracking-widest appearance-none w-auto min-w-[120px] md:min-w-[140px]"
                 >
                     <option value="">ALL CLASSES</option>
                     {classes.map(c => <option key={c} value={c}>CLASS {c}</option>)}
@@ -205,7 +205,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                 <select
                     value={filterSection}
                     onChange={(e) => setFilterSection(e.target.value)}
-                    className="bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-black uppercase tracking-widest appearance-none w-auto min-w-[140px]"
+                    className="bg-[#050505] border-2 border-white/40 px-3 md:px-4 py-2.5 md:py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-black uppercase tracking-widest appearance-none w-auto min-w-[120px] md:min-w-[140px]"
                 >
                     <option value="">ALL SECTIONS</option>
                     {sections.map(s => <option key={s} value={s}>SEC {s}</option>)}
@@ -214,7 +214,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                 <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-[#050505] border-2 border-white/40 px-4 py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-black uppercase tracking-widest appearance-none w-auto"
+                    className="bg-[#050505] border-2 border-white/40 px-3 md:px-4 py-2.5 md:py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-black uppercase tracking-widest appearance-none w-auto"
                 >
                     <option value="name">SORT: NAME</option>
                     <option value="rollNo">SORT: ROLL NO</option>
@@ -352,18 +352,18 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
         >
             <div className={`bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border-2 border-rose-500 w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
             <div className="relative">
-                <h3 className="mt-0 text-black bg-rose-500 px-6 py-6 md:py-8 text-xl font-black uppercase tracking-widest border-b border-rose-500">
+                <h3 className="mt-0 text-black bg-rose-500 px-6 py-5 md:py-8 text-xl font-black uppercase tracking-widest border-b border-rose-500">
                     Issue Transfer Certificate
                 </h3>
                 <button
                     onClick={() => handleExit(onCancel)}
-                    className="absolute top-4 right-4 md:top-6 md:right-6 text-black border-2 border-black hover:bg-black hover:text-rose-500 p-3 min-h-[48px] min-w-[48px] rounded-none transition-colors z-20 flex items-center justify-center"
+                    className="absolute top-3 right-3 md:top-6 md:right-6 text-black border-2 border-black hover:bg-black hover:text-rose-500 p-3 min-h-[48px] min-w-[48px] rounded-none transition-colors z-20 flex items-center justify-center"
                 >
                     <X size={20} className="stroke-[3px]" />
                 </button>
             </div>
 
-                <div className="p-6 md:p-10">
+                <div className="p-5 md:p-10">
                     <div className="mb-8 border-b border-white/10 pb-6">
                         <p className="m-0 mb-2 font-black text-2xl text-white uppercase tracking-widest">{student.name}</p>
                         <p className="m-0 text-white/50 font-mono tracking-wide uppercase text-sm">Class: {student.class} - {student.section} | Roll: {student.rollNo}</p>
@@ -382,7 +382,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                         <select
                             value={tcDetails.reason}
                             onChange={e => setTcDetails({ ...tcDetails, reason: e.target.value })}
-                            className="w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white focus:border-rose-500 uppercase tracking-widest font-black text-sm outline-none appearance-none transition-colors"
+                            className="w-full bg-[#050505] border-2 border-white/40 px-4 py-3 md:py-4 rounded-none text-white focus:border-rose-500 uppercase tracking-widest font-black text-sm outline-none appearance-none transition-colors"
                         >
                             <option>Completed Course</option>
                             <option>Parent's Transfer</option>
@@ -396,7 +396,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                             type="text"
                             value={tcDetails.conduct}
                             onChange={e => setTcDetails({ ...tcDetails, conduct: e.target.value })}
-                            className="w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white focus:border-rose-500 uppercase tracking-widest font-black text-sm outline-none transition-colors"
+                            className="w-full bg-[#050505] border-2 border-white/40 px-4 py-3 md:py-4 rounded-none text-white focus:border-rose-500 uppercase tracking-widest font-black text-sm outline-none transition-colors"
                         />
                     </div>
                     <div>
@@ -405,7 +405,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                             type="text"
                             value={tcDetails.remarks}
                             onChange={e => setTcDetails({ ...tcDetails, remarks: e.target.value })}
-                            className="w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white focus:border-rose-500 uppercase tracking-widest font-black text-sm outline-none transition-colors placeholder:text-white/20"
+                            className="w-full bg-[#050505] border-2 border-white/40 px-4 py-3 md:py-4 rounded-none text-white focus:border-rose-500 uppercase tracking-widest font-black text-sm outline-none transition-colors placeholder:text-white/20"
                             placeholder="OPTIONAL..."
                         />
                     </div>
@@ -414,14 +414,14 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                 <div className="flex flex-col sm:flex-row gap-4 mt-10">
                     <button
                         onClick={() => handleExit(onConfirm)}
-                        className="btn flex-1 bg-rose-500 border-2 border-rose-500 text-black hover:bg-white hover:border-white font-black uppercase tracking-widest rounded-none p-4 transition-colors justify-center flex items-center gap-3"
+                        className="btn flex-1 bg-rose-500 border-2 border-rose-500 text-black hover:bg-white hover:border-white font-black uppercase tracking-widest rounded-none p-3.5 md:p-4 transition-colors justify-center flex items-center gap-3 min-h-[48px]"
                     >
                         <AlertTriangle size={20} className="stroke-[3px]" />
                         Confirm TC
                     </button>
                     <button
                         onClick={() => handleExit(onCancel)}
-                        className="btn flex-1 bg-transparent border-2 border-white/40 text-white hover:border-white font-black uppercase tracking-widest rounded-none p-4 transition-colors justify-center flex items-center"
+                        className="btn flex-1 bg-transparent border-2 border-white/40 text-white hover:border-white font-black uppercase tracking-widest rounded-none p-3.5 md:p-4 transition-colors justify-center flex items-center min-h-[48px]"
                     >
                         Cancel
                     </button>
