@@ -52,12 +52,12 @@ const LandingPage = () => {
           <div className="md:col-span-4 flex flex-col items-start md:items-end justify-end space-y-6 pt-12 md:pt-0">
              <button 
                 onClick={() => navigate('/login')}
-                className="group relative inline-flex items-center justify-center w-full md:w-auto px-8 py-5 md:py-6 bg-[#CCFF00] text-black font-black uppercase tracking-widest text-lg md:text-xl hover:bg-white transition-all"
+                className="group relative inline-flex items-center justify-center w-full md:w-auto px-8 py-5 md:py-6 bg-[#CCFF00] text-black font-black uppercase tracking-widest text-lg md:text-xl hover:bg-white transition-all overflow-hidden"
              >
                 <div className="absolute inset-0 border-2 border-transparent group-hover:border-black transition-colors pointer-events-none scale-105 opacity-0 group-hover:opacity-100" />
-                <span className="relative z-10 flex items-center gap-4">
+                <span className="relative z-10 flex items-center gap-4 whitespace-nowrap">
                   Initialize System
-                  <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-6 h-6 shrink-0 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </span>

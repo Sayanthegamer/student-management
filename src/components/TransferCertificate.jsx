@@ -153,16 +153,16 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
 
     return (
         <div className="bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border-2 border-white/40 p-4 md:p-8 max-w-6xl mx-auto">
-            <h2 className="text-white mb-8 text-2xl md:text-3xl flex items-center gap-4 font-black uppercase tracking-widest">
+            <h2 className="text-white mb-8 text-2xl md:text-3xl flex items-center gap-4 font-black uppercase tracking-widest flex-wrap">
                 <FileText size={32} className="text-[#CCFF00] stroke-[3px]" />
                 Transfer Certificate
             </h2>
 
             {/* View Toggle */}
-            <div className="flex gap-4 mb-8 border-b border-white/40 pb-6">
+            <div className="flex flex-col sm:flex-row gap-4 mb-8 border-b border-white/40 pb-6">
                 <button
                     onClick={() => setView('active')}
-                    className={`px-6 py-3 text-sm transition-colors uppercase tracking-widest font-black ${view === 'active'
+                    className={`flex-1 px-4 py-3 text-xs sm:text-sm transition-colors uppercase tracking-widest font-black whitespace-nowrap text-center ${view === 'active'
                         ? 'bg-[#CCFF00] text-black border-2 border-[#CCFF00]'
                         : 'bg-transparent text-white/50 border-2 border-transparent hover:border-white/50 hover:text-white'
                         }`}
@@ -171,7 +171,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                 </button>
                 <button
                     onClick={() => setView('transferred')}
-                    className={`px-6 py-3 text-sm transition-colors uppercase tracking-widest font-black ${view === 'transferred'
+                    className={`flex-1 px-4 py-3 text-xs sm:text-sm transition-colors uppercase tracking-widest font-black whitespace-nowrap text-center ${view === 'transferred'
                         ? 'bg-[#CCFF00] text-black border-2 border-[#CCFF00]'
                         : 'bg-transparent text-white/50 border-2 border-transparent hover:border-white/50 hover:text-white'
                         }`}

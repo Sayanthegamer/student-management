@@ -21,14 +21,14 @@ const BottomNavigation = () => (
               key={item.path}
               to={item.path}
               className={({ isActive }) => `
-                flex flex-col items-center justify-center gap-1 py-3 flex-1 border-b-[3px] transition-colors
+                flex flex-col items-center justify-center gap-1 py-3 flex-1 border-b-[3px] transition-colors px-0.5
                 ${isActive ? 'border-[#CCFF00] bg-[#CCFF00]/10 text-[#CCFF00]' : 'border-transparent text-white/50 active:text-white'}
               `}
             >
               {({ isActive }) => (
                 <>
                   <Icon size={20} className={isActive ? 'text-[#CCFF00]' : 'text-white/50'} />
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-center mt-1">{item.label}</span>
+                  <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-center mt-1 truncate w-full px-0.5 leading-tight">{item.label}</span>
                 </>
               )}
             </NavLink>
