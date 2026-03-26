@@ -9,7 +9,7 @@ const statusStyles = {
 
 const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee }) => (
   <div className="bg-[#0a0a0a] border-2 border-white/40 p-4 transition-all duration-200 slide-up group hover:border-[#CCFF00]">
-    <div className="flex items-start justify-between gap-3 mb-4">
+    <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
       <div className="flex items-center gap-4 min-w-0 flex-1">
         <div className="w-12 h-12 bg-[#CCFF00] border-2 border-[#CCFF00] text-black flex items-center justify-center font-black text-lg shrink-0 uppercase">
           {student.name.charAt(0).toUpperCase()}
@@ -19,15 +19,15 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
           <p className="text-white/50 text-xs font-mono tracking-wide uppercase truncate mt-1">ID: {student.id.slice(0, 8)}</p>
         </div>
       </div>
+      <div className="flex items-center justify-end shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
+        <span
+            className={`inline-flex items-center px-3 py-1 text-[10px] font-black border uppercase tracking-widest ${statusStyles[status] || statusStyles.Pending}`}
+        >
+          {status}
+        </span>
+      </div>
     </div>
     
-    <div className="flex items-center justify-end mb-4">
-      <span
-          className={`inline-flex items-center px-3 py-1 text-[10px] font-black border uppercase tracking-widest ${statusStyles[status] || statusStyles.Pending}`}
-      >
-        {status}
-      </span>
-    </div>
 
     <div className="grid grid-cols-2 gap-3 text-xs mb-4 pb-4 border-b border-white/10">
       <div className="bg-[#050505] border-2 border-white/10 p-3">

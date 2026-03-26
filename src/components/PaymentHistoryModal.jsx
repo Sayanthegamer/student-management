@@ -25,21 +25,21 @@ const PaymentHistoryModal = ({ student, onClose }) => {
         >
             <div className={`bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border-2 border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
-                <div className="bg-[#CCFF00] px-6 py-6 md:py-8 text-black relative flex-shrink-0 border-b border-[#CCFF00]">
-                    <div className="relative z-10">
-                        <h3 className="text-xl md:text-2xl font-black uppercase tracking-widest flex items-center gap-4">
-                            <FileText className="text-black stroke-[3px]" size={28} />
+                <div className="bg-[#CCFF00] px-4 md:px-6 py-6 md:py-8 text-black relative flex-shrink-0 border-b border-[#CCFF00]">
+                    <div className="relative z-10 pr-12">
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-black uppercase tracking-widest flex items-center gap-2 md:gap-4 break-words leading-tight">
+                            <FileText className="text-black stroke-[3px] shrink-0" size={24} />
                             Payment Ledger
                         </h3>
-                        <p className="text-black/60 mt-2 text-[10px] font-mono uppercase tracking-widest">
-                            Beneficiary: <span className="text-black font-black uppercase tracking-widest text-sm">{student.name}</span> — {student.class}-{student.section}
+                        <p className="text-black/60 mt-2 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest leading-tight">
+                            Beneficiary: <span className="text-black font-black uppercase tracking-widest text-xs sm:text-sm">{student.name}</span> <br className="sm:hidden" /> <span className="hidden sm:inline">—</span> {student.class}-{student.section}
                         </p>
                     </div>
                     <button
                         onClick={handleClose}
-                        className="absolute top-4 right-4 md:top-6 md:right-6 p-3 min-h-[48px] min-w-[48px] bg-transparent border-2 border-black hover:bg-black hover:text-[#CCFF00] text-black rounded-none transition-colors z-20 flex items-center justify-center"
+                        className="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 min-h-[40px] min-w-[40px] md:min-h-[48px] md:min-w-[48px] bg-transparent border-2 border-black hover:bg-black hover:text-[#CCFF00] text-black rounded-none transition-colors z-20 flex items-center justify-center shrink-0"
                     >
-                        <X size={24} className="stroke-[3px]" />
+                        <X size={20} className="stroke-[3px] md:w-6 md:h-6" />
                     </button>
                 </div>
 

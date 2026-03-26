@@ -216,7 +216,7 @@ button, a, input, select, textarea {
 /* Mobile-specific improvements */
 @media (max-width: 768px) {
   /* Better touch targets */
-  button, a, .touch-manipulation {
+  .touch-manipulation {
     min-height: 44px;
     min-width: 44px;
   }
