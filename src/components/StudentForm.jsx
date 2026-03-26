@@ -15,7 +15,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest appearance-none"
+                className="w-full bg-[#050505] border-2 border-white/40 px-4 py-3 md:py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest appearance-none"
                 required={required}
             >
                 {options.map(opt => (
@@ -28,7 +28,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest placeholder:text-white/20"
+                className="w-full bg-[#050505] border-2 border-white/40 px-4 py-3 md:py-4 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] text-sm font-black uppercase tracking-widest placeholder:text-white/20"
                 placeholder={placeholder?.toUpperCase()}
                 required={required}
             />
@@ -96,13 +96,13 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </div>
                     <button 
                         onClick={onCancel} 
-                        className="absolute top-6 right-6 p-3 border-2 border-white/40 bg-transparent text-white hover:bg-white hover:text-black transition-colors z-20"
+                        className="absolute top-4 right-4 md:top-6 md:right-6 p-3 border-2 border-white/40 bg-transparent text-white hover:bg-white hover:text-black transition-colors z-20 min-w-[44px] min-h-[44px] flex items-center justify-center"
                     >
                         <X size={20} className="stroke-[3px]" />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-5 md:p-10 flex flex-col gap-8 md:gap-12">
+                <form onSubmit={handleSubmit} className="p-4 md:p-10 flex flex-col gap-8 md:gap-12">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                         {/* Personal Information Group */}
                         <div className="space-y-6">
@@ -225,16 +225,18 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     <button 
                             type="button" 
                             onClick={onCancel}
-                            className="flex-1 px-6 py-5 border-2 border-rose-500 text-rose-500 font-black uppercase tracking-widest hover:bg-rose-500 hover:text-black transition-colors rounded-none text-center"
+                            className="flex-1 px-6 py-3.5 md:py-5 border-2 border-rose-500 text-rose-500 font-black uppercase tracking-widest hover:bg-rose-500 hover:text-black transition-colors rounded-none text-center min-h-[48px]"
                         >
-                            Cancel Changes
+                            <span className="md:hidden">Cancel</span>
+                            <span className="hidden md:inline">Cancel Changes</span>
                         </button>
                         <button 
                             type="submit" 
-                            className="flex-1 px-6 py-5 bg-[#CCFF00] border-2 border-[#CCFF00] text-black font-black uppercase tracking-widest hover:bg-white hover:border-white transition-colors flex items-center justify-center gap-3 rounded-none group"
+                            className="flex-1 px-6 py-3.5 md:py-5 bg-[#CCFF00] border-2 border-[#CCFF00] text-black font-black uppercase tracking-widest hover:bg-white hover:border-white transition-colors flex items-center justify-center gap-3 rounded-none group min-h-[48px]"
                         >
                             <Save size={20} className="group-hover:scale-110 transition-transform stroke-[3px]" />
-                            {initialData ? 'Update Record' : 'Complete Registration'}
+                            <span className="md:hidden">Save</span>
+                            <span className="hidden md:inline">{initialData ? 'Update Record' : 'Complete Registration'}</span>
                         </button>
                     </div>
                 </form>

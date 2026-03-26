@@ -117,7 +117,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         >
             <div className={`bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border-2 border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
-                <div className="bg-[#CCFF00] px-6 py-5 md:py-8 text-black relative overflow-visible">
+                <div className="bg-[#CCFF00] px-6 py-4 md:py-8 text-black relative overflow-visible">
                     <div className="relative z-10">
                         <h3 className="m-0 text-xl md:text-2xl font-black uppercase tracking-widest flex items-center gap-3">
                             <IndianRupee size={28} className="text-black stroke-[3px]" />
@@ -129,7 +129,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     </div>
                     <button
                         onClick={handleClose}
-                        className="absolute top-4 right-4 md:top-6 md:right-6 text-black border-2 border-black hover:bg-black hover:text-[#CCFF00] p-3 min-h-[48px] min-w-[48px] rounded-none transition-colors z-20 flex items-center justify-center"
+                        className="absolute top-3 right-3 md:top-6 md:right-6 text-black border-2 border-black hover:bg-black hover:text-[#CCFF00] p-3 min-h-[48px] min-w-[48px] rounded-none transition-colors z-20 flex items-center justify-center"
                     >
                         <X size={20} className="stroke-[3px]" />
                     </button>
@@ -148,7 +148,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 )}
 
                 <form onSubmit={handleSubmit} className="flex flex-col">
-                    <div className="p-5 md:p-8 flex flex-col gap-6 md:gap-8">
+                    <div className="p-4 md:p-8 flex flex-col gap-6 md:gap-8">
                         <CustomDatePicker
                             label="Collection Date"
                             value={paymentDate}
@@ -206,7 +206,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                         type="number"
                                         value={amount}
                                         onChange={(e) => setAmount(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-4 bg-[#050505] border-2 border-white/40 rounded-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm"
+                                        className="w-full pl-12 pr-4 py-3 md:py-4 bg-[#050505] border-2 border-white/40 rounded-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm"
                                         required
                                     />
                                 </div>
@@ -219,7 +219,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                         type="number"
                                         value={fine}
                                         readOnly
-                                        className="w-full pl-12 pr-4 py-4 bg-white/5 border-2 border-white/10 rounded-none text-white/50 font-black uppercase tracking-widest outline-none text-sm pointer-events-none"
+                                        className="w-full pl-12 pr-4 py-3 md:py-4 bg-white/5 border-2 border-white/10 rounded-none text-white/50 font-black uppercase tracking-widest outline-none text-sm pointer-events-none"
                                     />
                                 </div>
                             </div>
@@ -231,7 +231,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 type="text"
                                 value={remarks}
                                 onChange={(e) => setRemarks(e.target.value)}
-                                className="w-full px-4 py-4 bg-[#050505] border-2 border-white/40 rounded-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm placeholder:text-white/20"
+                                className="w-full px-4 py-3 md:py-4 bg-[#050505] border-2 border-white/40 rounded-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm placeholder:text-white/20"
                                 placeholder="E.G. UPI ID OR CASH"
                             />
                         </div>
@@ -253,10 +253,11 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                         <button
                             type="submit"
                             disabled={!!error}
-                            className={`w-full bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest py-5 rounded-none transition-colors flex items-center justify-center gap-3 group ${error ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
+                            className={`w-full bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest py-3.5 md:py-5 rounded-none transition-colors flex items-center justify-center gap-3 group min-h-[48px] ${error ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
                         >
                             <CheckCircle2 size={24} className="stroke-[3px] group-hover:scale-110 transition-transform" />
-                            Complete Transaction
+                            <span className="md:hidden">Pay</span>
+                            <span className="hidden md:inline">Complete Transaction</span>
                         </button>
                     </div>
 

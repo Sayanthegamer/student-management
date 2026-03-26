@@ -104,7 +104,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
     };
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+        <div className="max-w-5xl mx-auto px-3 md:px-6 lg:px-8 py-4 md:py-8">
             <div className="bg-[#050505] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border-2 border-white/40 overflow-hidden page-enter">
                 <div className="p-4 md:p-10 border-b border-white/40 bg-[#0a0a0a]">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-2">
@@ -118,9 +118,9 @@ const DataManagement = ({ students, onImportSuccess }) => {
                     </div>
                 </div>
 
-                <div className="p-4 md:p-10 grid md:grid-cols-2 gap-6">
+                <div className="p-3 md:p-10 grid md:grid-cols-2 gap-4 md:gap-6">
                     <div className="group relative">
-                        <div className="relative bg-[#0a0a0a] p-5 md:p-8 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-[#CCFF00] h-full flex flex-col group">
+                        <div className="relative bg-[#0a0a0a] p-4 md:p-8 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-[#CCFF00] h-full flex flex-col group">
                             <div className="w-10 h-10 md:w-14 md:h-14 bg-transparent border-2 border-[#CCFF00] text-[#CCFF00] rounded-none flex items-center justify-center mb-6 group-hover:bg-[#CCFF00] group-hover:text-black transition-colors shrink-0">
                                 <FileSpreadsheet size={20} className="stroke-[3px] md:w-7 md:h-7" />
                             </div>
@@ -128,14 +128,16 @@ const DataManagement = ({ students, onImportSuccess }) => {
                             <p className="text-white/70 mb-8 text-[10px] md:text-xs font-mono uppercase tracking-widest leading-relaxed">
                                 Generate a comprehensive CSV export compatible with Microsoft Excel and Google Sheets. This includes full student profiles, fee histories, and status metadata.
                             </p>
-                            <button onClick={handleExport} className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-[#CCFF00] text-black font-black rounded-none border-2 border-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] uppercase tracking-widest active:bg-[#CCFF00]/20 text-xs md:text-base text-center leading-tight">
-                                Download Database (.csv)
+                            <button onClick={handleExport} className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-[#CCFF00] text-black font-black rounded-none border-2 border-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] uppercase tracking-widest active:bg-[#CCFF00]/20 text-xs md:text-base text-center leading-tight flex items-center justify-center gap-2 min-h-[48px]">
+                                <Download size={18} className="md:hidden stroke-[3px]" />
+                                <span className="md:hidden">Export</span>
+                                <span className="hidden md:inline">Download Database (.csv)</span>
                             </button>
                         </div>
                     </div>
 
                     <div className="group relative">
-                        <div className="relative bg-[#0a0a0a] p-5 md:p-8 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-emerald-400 h-full flex flex-col group">
+                        <div className="relative bg-[#0a0a0a] p-4 md:p-8 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-emerald-400 h-full flex flex-col group">
                             <div className="w-10 h-10 md:w-14 md:h-14 bg-transparent border-2 border-emerald-400 text-emerald-400 rounded-none flex items-center justify-center mb-6 group-hover:bg-emerald-400 group-hover:text-black transition-colors shrink-0">
                                 <FileJson size={20} className="stroke-[3px] md:w-7 md:h-7" />
                             </div>
@@ -143,8 +145,10 @@ const DataManagement = ({ students, onImportSuccess }) => {
                             <p className="text-white/70 mb-8 text-[10px] md:text-xs font-mono uppercase tracking-widest leading-relaxed">
                                 Upload a previously exported .csv or .json file to restore your database. The system will automatically generate a safety backup of your current data before proceeding.
                             </p>
-                            <label className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-emerald-400 text-black font-black rounded-none border-2 border-emerald-400 hover:bg-transparent hover:text-emerald-400 transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] text-center cursor-pointer uppercase tracking-widest active:bg-emerald-400/20 block text-xs md:text-base leading-tight">
-                                Select File to Restore
+                            <label className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-emerald-400 text-black font-black rounded-none border-2 border-emerald-400 hover:bg-transparent hover:text-emerald-400 transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] text-center cursor-pointer uppercase tracking-widest active:bg-emerald-400/20 flex items-center justify-center gap-2 text-xs md:text-base leading-tight min-h-[48px]">
+                                <Upload size={18} className="md:hidden stroke-[3px]" />
+                                <span className="md:hidden">Import</span>
+                                <span className="hidden md:inline">Select File to Restore</span>
                                 <input
                                     type="file"
                                     accept=".csv,.json"

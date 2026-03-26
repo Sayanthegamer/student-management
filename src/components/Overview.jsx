@@ -57,20 +57,21 @@ const Overview = ({ students, onAddStudent }) => {
     if (students.length === 0) {
         return (
             <div className="p-6 md:p-12 max-w-7xl mx-auto text-center">
-                <div className="bg-[#0a0a0a] p-8 md:p-16 border-2 border-white/40 flex flex-col items-center gap-6">
-                    <div className="w-20 h-20 bg-[#CCFF00] border-2 border-[#CCFF00] text-black flex items-center justify-center">
-                        <Users size={40} className="stroke-[2px]" />
+                <div className="bg-[#0a0a0a] p-6 md:p-16 border-2 border-white/40 flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-[#CCFF00] border-2 border-[#CCFF00] text-black flex items-center justify-center">
+                        <Users size={32} className="md:size-[40px] stroke-[2px]" />
                     </div>
                     <div className="max-w-md">
-                        <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight mb-2">Welcome to STD::MGR</h2>
-                        <p className="text-white/60 text-lg font-mono">Get started by adding your first student to the database.</p>
+                        <h2 className="text-xl md:text-3xl font-black text-white uppercase tracking-tight mb-2">Welcome to STD::MGR</h2>
+                        <p className="text-white/60 text-base md:text-lg font-mono">Get started by adding your first student to the database.</p>
                     </div>
                     <button 
                         onClick={onAddStudent}
-                        className="btn btn-primary text-lg px-8 py-4 font-black tracking-widest uppercase mt-4"
+                        className="btn btn-primary text-base md:text-lg px-6 md:px-8 py-3.5 md:py-4 font-black tracking-widest uppercase mt-4 flex items-center gap-2 min-h-[48px]"
                     >
                         <UserPlus size={20} className="stroke-[3px]" />
-                        Initialize Student
+                        <span className="hidden md:inline">Initialize Student</span>
+                        <span className="md:hidden">Add Student</span>
                     </button>
                 </div>
             </div>
