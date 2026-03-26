@@ -100,38 +100,40 @@ That's it! 🎉 The student is now in your system.
 
 ---
 
-## ⚠️ Important: Where Does My Data Go?
+## ☁️ How Your Data is Stored
 
-This is **really important** to understand:
+Student Manager Pro uses a **premium dual-layer storage system** to ensure your work is lightning-fast and safely backed up. Think of it like a modern office:
 
-### 🔒 Your Data Stays on Your Device
-- All student information is stored **in your browser** (specifically, in browser session storage)
-- Data **does NOT go to any external server** — it's completely private and stays on your computer
-- This means **no internet required** for most features once the app is loaded
-- Think of it like a document on your computer — only you can see it
+1.  **The Clipboard (sessionStorage Cache):** When you make a change, it's instantly saved to a "digital clipboard" in your browser. This makes the app feel incredibly fast because you don't have to wait for a server to respond.
+2.  **The Filing Cabinet (Supabase Cloud):** Moments later, the app automatically sends those changes to a secure "filing cabinet" in the cloud. This is your permanent, safe storage that works across all your devices.
 
-### ⚡ But Here's the Catch — BACK UP YOUR DATA!
-**Your data is temporary!** Because it lives in your browser's session storage:
+### Why this is great for you:
+*   **Speed:** No more "Loading..." spinners every time you click save.
+*   **Safety:** Your data is automatically synced to the cloud while you work.
+*   **Reliability:** If your internet drops for a moment, you can keep working. The app will catch up and sync your changes as soon as you're back online.
+*   **Access Anywhere:** Log in from any computer and your students will be there waiting for you.
 
-- **If you close the browser tab** → Data stays (as long as you reopen the same browser)
-- **If you close the entire browser** → Data is cleared! 💥
-- **If you clear your browser cache** → Data is gone! 💥
-- **If you switch computers** → Data doesn't transfer automatically! 💥
+---
 
-> 🛑 **CRITICAL: Export your data regularly!**
-> 
-> We can't stress this enough — **make backups part of your routine.**
+## 🔄 Understanding the Sync Indicator
 
-### 📦 How to Back Up Your Data (Export)
+At the top of your screen, you'll see a small indicator that tells you exactly what's happening with your data:
 
-Don't worry, it's easy!
+*   **🔄 Saving changes... (Indigo):** The app is currently sending your work to the cloud filing cabinet.
+*   **✅ All changes saved (Green):** Your work is safely tucked away in the cloud. It's safe to close your browser.
+*   **☁️ Offline mode (Red):** There's a temporary connection issue. Don't worry—your changes are still on your "clipboard" (browser cache).
+*   **⚠️ Unsaved local data (Amber):** You have changes that haven't reached the cloud yet. Keep the tab open until you see the green checkmark!
 
-1. Click **Data Management** in the sidebar
-2. Click the **Export Data** button
-3. Your browser will download a file (CSV format)
-4. **Save this file somewhere safe** — your documents folder, a USB drive, cloud storage, etc.
+---
 
-> 💡 **Best Practice:** Export your data at the end of every day, or at minimum, once a week.
+## 📦 How to Back Up Your Data
+
+While your data is safely stored in the cloud, we believe in **Smart Data Hygiene**. You can export your entire database at any time from the **Data Management** tab.
+
+**Why export?**
+*   **Personal Backups:** Keep a permanent record on your own computer or USB drive.
+*   **Reporting:** Open your data in **Microsoft Excel** or **Google Sheets** to create custom reports or charts.
+*   **Data Portability:** Your data belongs to you. You can move it to other systems whenever you like.
 
 ### 📥 How to Restore Your Data (Import)
 
@@ -141,8 +143,6 @@ If you need to load a backup:
 2. Click **Import Data**
 3. Select the CSV file you previously exported
 4. Click **Import** — your data will be restored!
-
-> 📊 **Pro Tip:** The exported CSV files work with Microsoft Excel and Google Sheets too! You can open them there to create reports or analyze data.
 
 ---
 
@@ -175,15 +175,14 @@ If you need to load a backup:
 ## 🔧 Troubleshooting Common Issues
 
 ### "I can't see my students after closing the browser!"
-😱 **Don't panic!** This is the session storage limitation we mentioned earlier.
+If you open the app and it looks empty, **simply log in to your account.**
 
-**Solution:** If you exported your data before, you can restore it:
+Since your data is stored securely in the cloud (Supabase), it's linked to your account. Once you sign in, the app will automatically pull your "filing cabinet" from the cloud and you'll see all your students again.
+
+If you are not using a cloud account and were relying on local storage, you can restore from a backup:
 1. Click **Data Management**
 2. Click **Import Data**
 3. Select your backup file
-4. Your students will be restored!
-
-**Prevention:** Make regular backups part of your routine.
 
 ### "The app is asking me to log in again"
 This is normal! The app protects your data by requiring login. Just enter your email and password.
@@ -207,7 +206,7 @@ The app is designed to be mobile-friendly. Try:
 - **Refresh the page** to reload the styles
 
 ### "I accidentally deleted a student"
-Uh oh! Unfortunately, deleted data cannot be recovered unless you have a backup. This is why **regular backups are so important!**
+If you have a backup, you can import it to recover the student. Otherwise, you will need to add the student again. This is why **regular exports are a smart practice!**
 
 ---
 
@@ -226,12 +225,14 @@ For those interested in the technical implementation:
 | **Tailwind CSS 4** | Styling framework |
 | **Lucide React** | Icon library |
 | **React Router 7** | Navigation and routing |
-| **Supabase** (optional) | Cloud sync and authentication |
+| **Supabase** | Cloud sync and authentication |
 | **Vercel Speed Insights** | Performance analytics |
 
 ### Data Storage
 
-- **Primary Storage**: Browser `sessionStorage` — data persists during browser session only
+- **Cache Layer**: Browser `sessionStorage` — provides an "Optimistic UI" experience for instant feedback.
+- **Permanent Storage**: Supabase PostgreSQL database — the "Source of Truth" for all student records.
+- **Sync Strategy**: Local-first with background cloud synchronization. Changes are reflected instantly in the UI and queued for cloud persistence.
 - **Key Format**: `student_management_session_v1`
 - **Data Structure**: JSON objects containing student records, fee history, and activities
 
@@ -264,17 +265,18 @@ npm run dev
 
 ```
 src/
-├── components/     # React components
-├── hooks/          # Custom React hooks
-├── lib/            # Supabase client
+├── components/     # React components (UI primitives, feature modules)
+├── hooks/          # Custom React hooks (useDataSync, useWalkthrough)
+├── context/        # React Context (AuthContext)
+├── lib/            # External libraries (Supabase client)
 ├── utils/          # Storage, CSV, and sync helpers
-├── App.jsx         # Main application component
+├── App.jsx         # Main application component & routing
 └── main.jsx        # Application entry point
 ```
 
 ### Environment Variables
 
-Create a `.env` file with Supabase credentials (optional for cloud sync):
+Create a `.env` file with Supabase credentials:
 
 ```
 VITE_SUPABASE_URL=your_supabase_url
