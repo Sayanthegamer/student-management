@@ -104,46 +104,46 @@ const DataManagement = ({ students, onImportSuccess }) => {
     };
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
             <div className="bg-[#050505] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border-2 border-white/40 overflow-hidden page-enter">
-                <div className="p-6 md:p-10 border-b border-white/40 bg-[#0a0a0a]">
-                    <div className="flex items-center gap-4 mb-2">
-                        <div className="p-4 bg-[#CCFF00] text-black border-2 border-[#CCFF00] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
-                            <Database size={32} className="stroke-[3px]" />
+                <div className="p-4 md:p-10 border-b border-white/40 bg-[#0a0a0a]">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-2">
+                        <div className="p-3 md:p-4 bg-[#CCFF00] text-black border-2 border-[#CCFF00] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] shrink-0">
+                            <Database size={24} className="stroke-[3px] md:w-8 md:h-8" />
                         </div>
                         <div>
-                            <h2 className="text-2xl md:text-4xl font-black text-white tracking-widest uppercase">System Data Management</h2>
-                            <p className="text-[#CCFF00]/70 font-mono text-sm uppercase tracking-widest mt-2">Backup, restore, and audit your institutional records.</p>
+                            <h2 className="text-xl md:text-4xl font-black text-white tracking-widest uppercase">System Data Management</h2>
+                            <p className="text-[#CCFF00]/70 font-mono text-xs md:text-sm uppercase tracking-widest mt-2">Backup, restore, and audit your institutional records.</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-6 md:p-10 grid md:grid-cols-2 gap-8">
+                <div className="p-4 md:p-10 grid md:grid-cols-2 gap-6">
                     <div className="group relative">
-                        <div className="relative bg-[#0a0a0a] p-8 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-[#CCFF00] h-full flex flex-col group">
-                            <div className="w-14 h-14 bg-transparent border-2 border-[#CCFF00] text-[#CCFF00] rounded-none flex items-center justify-center mb-6 group-hover:bg-[#CCFF00] group-hover:text-black transition-colors">
-                                <FileSpreadsheet size={28} className="stroke-[3px]" />
+                        <div className="relative bg-[#0a0a0a] p-5 md:p-8 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-[#CCFF00] h-full flex flex-col group">
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-transparent border-2 border-[#CCFF00] text-[#CCFF00] rounded-none flex items-center justify-center mb-6 group-hover:bg-[#CCFF00] group-hover:text-black transition-colors shrink-0">
+                                <FileSpreadsheet size={20} className="stroke-[3px] md:w-7 md:h-7" />
                             </div>
-                            <h3 className="text-xl font-black text-white uppercase tracking-widest mb-4">Export Records</h3>
-                            <p className="text-white/70 mb-8 text-xs font-mono uppercase tracking-widest leading-relaxed">
+                            <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-widest mb-4">Export Records</h3>
+                            <p className="text-white/70 mb-8 text-[10px] md:text-xs font-mono uppercase tracking-widest leading-relaxed">
                                 Generate a comprehensive CSV export compatible with Microsoft Excel and Google Sheets. This includes full student profiles, fee histories, and status metadata.
                             </p>
-                            <button onClick={handleExport} className="mt-auto w-full py-4 bg-[#CCFF00] text-black font-black whitespace-nowrap rounded-none border-2 border-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] uppercase tracking-widest active:bg-[#CCFF00]/20">
+                            <button onClick={handleExport} className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-[#CCFF00] text-black font-black rounded-none border-2 border-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] uppercase tracking-widest active:bg-[#CCFF00]/20 text-xs md:text-base text-center leading-tight">
                                 Download Database (.csv)
                             </button>
                         </div>
                     </div>
 
                     <div className="group relative">
-                        <div className="relative bg-[#0a0a0a] p-8 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-emerald-400 h-full flex flex-col group">
-                            <div className="w-14 h-14 bg-transparent border-2 border-emerald-400 text-emerald-400 rounded-none flex items-center justify-center mb-6 group-hover:bg-emerald-400 group-hover:text-black transition-colors">
-                                <FileJson size={28} className="stroke-[3px]" />
+                        <div className="relative bg-[#0a0a0a] p-5 md:p-8 rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-emerald-400 h-full flex flex-col group">
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-transparent border-2 border-emerald-400 text-emerald-400 rounded-none flex items-center justify-center mb-6 group-hover:bg-emerald-400 group-hover:text-black transition-colors shrink-0">
+                                <FileJson size={20} className="stroke-[3px] md:w-7 md:h-7" />
                             </div>
-                            <h3 className="text-xl font-black text-white uppercase tracking-widest mb-4">Import Backup</h3>
-                            <p className="text-white/70 mb-8 text-xs font-mono uppercase tracking-widest leading-relaxed">
+                            <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-widest mb-4">Import Backup</h3>
+                            <p className="text-white/70 mb-8 text-[10px] md:text-xs font-mono uppercase tracking-widest leading-relaxed">
                                 Upload a previously exported .csv or .json file to restore your database. The system will automatically generate a safety backup of your current data before proceeding.
                             </p>
-                            <label className="mt-auto w-full py-4 bg-emerald-400 text-black font-black whitespace-nowrap rounded-none border-2 border-emerald-400 hover:bg-transparent hover:text-emerald-400 transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] text-center cursor-pointer uppercase tracking-widest active:bg-emerald-400/20 block">
+                            <label className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-emerald-400 text-black font-black rounded-none border-2 border-emerald-400 hover:bg-transparent hover:text-emerald-400 transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] text-center cursor-pointer uppercase tracking-widest active:bg-emerald-400/20 block text-xs md:text-base leading-tight">
                                 Select File to Restore
                                 <input
                                     type="file"
@@ -156,8 +156,8 @@ const DataManagement = ({ students, onImportSuccess }) => {
                     </div>
                 </div>
 
-                <div className="px-5 pb-8 md:px-10 md:pb-12">
-                    <div className="bg-[#0a0a0a] rounded-none p-6 md:p-8 border-2 border-white/40">
+                <div className="px-4 pb-6 md:px-10 md:pb-12">
+                    <div className="bg-[#0a0a0a] rounded-none p-5 md:p-8 border-2 border-white/40">
                         <h3 className="text-white font-black mb-4 flex items-center gap-3 uppercase tracking-widest">
                             <AlertTriangle size={24} className="text-amber-400 stroke-[3px]" />
                             Import Specification
