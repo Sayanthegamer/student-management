@@ -4,9 +4,11 @@ import { Search, FileText, AlertTriangle, X } from 'lucide-react';
 import Pagination from './Pagination';
 import CustomDatePicker from './CustomDatePicker';
 import CertificateCard from './CertificateCard';
+import { useToast } from '../context/ToastContext';
 import { logActivity } from '../utils/storage';
 
 const TransferCertificate = ({ students, onUpdateStudent, user }) => {
+    const { showToast } = useToast();
     const [view, setView] = useState('active'); // 'active' or 'transferred'
     const [searchTerm, setSearchTerm] = useState('');
     const [filterClass, setFilterClass] = useState('');
@@ -125,7 +127,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
         onUpdateStudent(updatedStudent);
         setShowIssueModal(false);
         setSelectedStudent(null);
-        alert('Transfer Certificate Issued Successfully!');
+        showToast('Transfer Certificate Issued Successfully!', 'success');
     };
 
     const handleGenerateTC = (studentId, action) => {
@@ -144,10 +146,10 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
             setShowIssueModal(true);
         } else if (action === 'download') {
             // In a real implementation, this would generate and download the PDF
-            alert('Downloading Transfer Certificate...');
+            showToast('Downloading Transfer Certificate...', 'info');
         } else if (action === 'regenerate') {
             // Regenerate existing TC
-            alert('Regenerating Transfer Certificate...');
+            showToast('Regenerating Transfer Certificate...', 'info');
         }
     };
 

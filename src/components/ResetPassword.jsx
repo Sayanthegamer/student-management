@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Loader2, AlertCircle } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 
 const ResetPassword = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { showToast } = useToast();
 
     // Verification: Ensure user is actually authenticated (via the magic link)
     useEffect(() => {
@@ -31,7 +33,7 @@ const ResetPassword = () => {
 
             if (error) throw error;
 
-            alert('Password updated successfully! You can now log in.');
+            showToast('Password updated successfully! You can now log in.', 'success');
             navigate('/');
         } catch (err) {
             setError(err.message);

@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { Plus, CheckCircle2, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import BottomNavigation from './components/BottomNavigation';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -8,6 +8,7 @@ import Login from './components/Login';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import { useAuth } from './context/AuthContext';
+import { useToast } from './context/ToastContext';
 import { useDataSync } from './hooks/useDataSync';
 import SyncIndicator from './components/SyncIndicator';
 import SyncErrorModal from './components/SyncErrorModal';
@@ -27,10 +28,10 @@ const Walkthrough = lazy(() => import('./components/Walkthrough'));
 
 function App() {
   const { user, loading } = useAuth();
+  const { showToast } = useToast();
   const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents, dismissError, forceSync } = useDataSync();
   const [editingStudent, setEditingStudent] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null); // student id to confirm delete
-  const [toast, setToast] = useState(null); // { message, type }
   const navigate = useNavigate();
   const location = useLocation();
   const showMobileAdd = location.pathname === '/students';
@@ -81,9 +82,8 @@ function App() {
 
   const handleImportSuccess = useCallback((importedData) => {
     importStudents(importedData);
-    setToast({ message: 'Data imported and synced successfully!', type: 'success' });
-    setTimeout(() => setToast(null), 3000);
-  }, [importStudents]);
+    showToast('Data imported and synced successfully!', 'success');
+  }, [importStudents, showToast]);
 
   React.useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -209,18 +209,6 @@ function App() {
         </div>
       )}
 
-      {/* Toast Notification */}
-      {toast && (
-        <div className="fixed top-4 right-4 z-50 slide-down pointer-events-none">
-          <div className="bg-[#CCFF00] border-2 border-black p-4 flex items-center gap-4 max-w-sm pointer-events-auto">
-            <CheckCircle2 size={24} className="text-black stroke-[3px] shrink-0" />
-            <p className="text-sm font-black uppercase text-black flex-1 tracking-wide">{toast.message}</p>
-            <button onClick={() => setToast(null)} className="text-black/50 hover:text-black p-1">
-              <X size={20} className="stroke-[3px]" />
-            </button>
-          </div>
-        </div>
-      )}
     </ErrorBoundary>
   );
 }
