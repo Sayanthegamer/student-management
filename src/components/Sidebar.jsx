@@ -2,10 +2,12 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee, X, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import SyncIndicator from './SyncIndicator';
 
 const Sidebar = ({ onClose, syncStatus, onSync }) => {
     const { signOut, user } = useAuth();
+    const { showToast } = useToast();
     const menuItems = [
         { path: '/overview', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/students', label: 'Students', icon: Users },
@@ -83,7 +85,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                     <button
                         onClick={() => {
                             if (syncStatus === 'syncing') {
-                                alert('Please wait for synchronization to finish before signing out.');
+                                showToast('Please wait for synchronization to finish before signing out.', 'warning');
                                 return;
                             }
                             signOut();
