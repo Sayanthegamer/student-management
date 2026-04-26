@@ -9,7 +9,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
     const { signOut, user } = useAuth();
     const { showToast } = useToast();
     const menuItems = [
-        { path: '/overview', label: 'Dashboard', icon: LayoutDashboard },
+        { path: '/overview', label: 'Overview', icon: LayoutDashboard },
         { path: '/students', label: 'Students', icon: Users },
         { path: '/payment-history', label: 'Fee History', icon: IndianRupee },
         { path: '/admission', label: 'Admissions', icon: ClipboardCheck },
@@ -18,83 +18,85 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
     ];
 
     return (
-        <div className="sidebar bg-[#050505] border-r border-white/40 h-full p-4 md:p-6 flex flex-col gap-8 text-[#e0e0e0] relative">
+        <div className="sidebar bg-[var(--bg-sidebar)] h-full p-4 flex flex-col gap-6 text-[var(--text-primary)] relative">
             {/* Mobile Close Button */}
             <button
                 onClick={onClose}
-                className="md:hidden absolute top-4 right-4 p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all active:scale-95"
+                className="md:hidden absolute top-4 right-4 p-2 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-card-hover)] rounded-custom-md transition-all"
+                aria-label="Close sidebar"
             >
-                <X size={20} />
+                <X size={18} />
             </button>
 
-            <div className="flex items-center gap-3 px-2">
-                <div className="border-2 border-[#CCFF00] bg-[#CCFF00] p-2.5 flex items-center justify-center shrink-0">
-                    <GraduationCap size={22} className="text-black" />
+            {/* Profile / Project Selector Header */}
+            <div className="flex items-center gap-3 px-2 py-2 mt-2 cursor-pointer hover:bg-[var(--bg-card-hover)] rounded-custom-lg transition-colors group">
+                <div className="w-8 h-8 rounded-custom-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shrink-0 border border-[var(--border-color)]">
+                    <span className="text-xs font-semibold text-white">{user?.email?.[0].toUpperCase() || 'S'}</span>
                 </div>
-                <div className="min-w-0 flex-1">
-                    <h1 className="m-0 text-base font-black text-white leading-none tracking-tight uppercase">
-                        STD::MGR
-                    </h1>
-                    <span className="text-[10px] text-[#CCFF00] font-bold tracking-widest uppercase mt-1 block">[ INTERNAL ]</span>
+                <div className="flex flex-col min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-[var(--text-primary)] truncate">{user?.email?.split('@')[0] || 'Administrator'}</span>
+                    </div>
+                    <span className="text-[11px] text-[var(--text-muted)] truncate">Student Manager Pro</span>
                 </div>
+                <button
+                    onClick={async () => {
+                        if (syncStatus === 'syncing') {
+                            showToast('Please wait for synchronization to finish before signing out.', 'warning');
+                            return;
+                        }
+                        try {
+                            await signOut();
+                            showToast('Signed out successfully', 'success');
+                        } catch (err) {
+                            showToast('Sign out failed: ' + (err?.message || 'Unknown error'), 'error');
+                        }
+                    }}
+                    className="p-1.5 text-[var(--text-muted)] hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all rounded-custom-md hover:bg-[var(--bg-card)]"
+                    aria-label="Sign out"
+                >
+                    <LogOut size={14} />
+                </button>
             </div>
 
-            <nav className="flex flex-col gap-1">
-                {menuItems.map((item) => {
-                    const Icon = item.icon;
+            <div className="w-full h-px bg-[var(--border-color)] my-1"></div>
 
-                    return (
-                        <NavLink
-                            key={item.path}
-                            to={item.path}
-                            onClick={onClose}
-                            className={({ isActive }) => `
-                                relative flex items-center gap-4 px-4 py-3 transition-colors duration-150 group overflow-hidden border
-                                ${isActive
-                                    ? 'bg-[#CCFF00] text-black font-black border-[#CCFF00]'
-                                    : 'text-white/60 hover:bg-white/10 hover:text-white font-bold border-transparent hover:border-white/40'
-                                }
-                            `}
-                        >
-                            {({ isActive }) => (
-                                <>
-                                    <Icon size={18} className={`transition-transform duration-300 ${isActive ? 'text-black' : 'group-hover:scale-110'}`} />
-                                    <span className="text-sm tracking-wider uppercase">{item.label}</span>
-                                </>
-                            )}
-                        </NavLink>
-                    );
-                })}
-            </nav>
-
-            <div className="mt-auto pt-6 border-t border-white/40 flex flex-col gap-6">
-                <div className="px-2">
-                    <SyncIndicator status={syncStatus} onSync={onSync} darkMode={true} />
+            <div className="flex-1 overflow-y-auto">
+                <div className="mb-2 px-2 mt-4">
+                    <span className="text-xs font-medium text-[var(--text-muted)] tracking-wide mb-2 block">Projects</span>
                 </div>
+                <nav className="flex flex-col gap-0.5">
+                    {menuItems.map((item) => {
+                        const Icon = item.icon;
 
-                <div className="flex items-center justify-between gap-3 px-2 bg-[#0a0a0a] p-4 border-2 border-white/40">
-                    <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 bg-white flex items-center justify-center text-[10px] font-black text-black shrink-0">
-                            {user?.email?.[0].toUpperCase() || 'U'}
-                        </div>
-                        <div className="flex flex-col overflow-hidden">
-                            <span className="text-xs font-black text-white truncate uppercase">{user?.email?.split('@')[0] || 'User'}</span>
-                            <span className="text-[10px] text-white/50 font-mono">ADMINISTRATOR</span>
-                        </div>
-                    </div>
-                    <button
-                        onClick={() => {
-                            if (syncStatus === 'syncing') {
-                                showToast('Please wait for synchronization to finish before signing out.', 'warning');
-                                return;
-                            }
-                            signOut();
-                        }}
-                        className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-400/10 rounded-lg transition-all active:scale-95"
-                        title="Sign Out"
-                    >
-                        <LogOut size={16} />
-                    </button>
+                        return (
+                            <NavLink
+                                key={item.path}
+                                to={item.path}
+                                onClick={onClose}
+                                className={({ isActive }) => `
+                                    flex items-center gap-3 px-3 py-2 rounded-custom-md transition-colors duration-150 group
+                                    ${isActive
+                                        ? 'bg-[var(--bg-card)] text-white'
+                                        : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white'
+                                    }
+                                `}
+                            >
+                                {({ isActive }) => (
+                                    <>
+                                        <Icon size={16} className={`${isActive ? 'text-white' : 'text-[var(--text-muted)] group-hover:text-white'}`} />
+                                        <span className="text-sm font-medium">{item.label}</span>
+                                    </>
+                                )}
+                            </NavLink>
+                        );
+                    })}
+                </nav>
+            </div>
+
+            <div className="mt-auto pt-4 border-t border-[var(--border-color)] flex flex-col gap-4">
+                <div className="px-2">
+                    <SyncIndicator status={syncStatus} onSync={onSync} />
                 </div>
             </div>
         </div>

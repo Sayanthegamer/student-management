@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, IndianRupee, FileText } from 'lucide-react';
 
 const PaymentHistoryModal = ({ student, onClose }) => {
     const history = student.feeHistory || [];
     const [isClosing, setIsClosing] = useState(false);
+    const dialogRef = useRef(null);
+    const previousActiveElementRef = useRef(null);
 
     const sortedHistory = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -16,6 +18,70 @@ const PaymentHistoryModal = ({ student, onClose }) => {
         }, 200);
     };
 
+    // Focus trap and keyboard handling
+    useEffect(() => {
+        // Save previously focused element
+        previousActiveElementRef.current = document.activeElement;
+
+        // Focus the first focusable element inside the dialog
+        if (dialogRef.current) {
+            const focusableElements = dialogRef.current.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusableElements.length > 0) {
+                focusableElements[0].focus();
+            }
+        }
+
+        // Keyboard handler for focus trap and Escape key
+        const handleKeyDown = (e) => {
+            if (!dialogRef.current) return;
+
+            // Handle Escape key
+            if (e.key === 'Escape') {
+                handleClose();
+                return;
+            }
+
+            // Handle Tab key for focus trap
+            if (e.key === 'Tab') {
+                const focusableElements = dialogRef.current.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) {
+                    // Shift + Tab
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    // Tab
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        };
+
+        if (dialogRef.current) {
+            dialogRef.current.addEventListener('keydown', handleKeyDown);
+        }
+
+        // Cleanup: restore focus and remove event listener
+        return () => {
+            if (dialogRef.current) {
+                dialogRef.current.removeEventListener('keydown', handleKeyDown);
+            }
+            if (previousActiveElementRef.current) {
+                previousActiveElementRef.current.focus();
+            }
+        };
+    }, []);
+
     return createPortal(
         <div 
             className={`fixed inset-0 bg-slate-900/80 z-50 flex items-start md:items-center p-3 md:p-4 backdrop-blur-sm modal-backdrop safe-area-inset-bottom ${isClosing ? 'closing' : ''}`}
@@ -23,42 +89,43 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
         >
-            <div className={`bg-[#0a0a0a] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border-2 border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div ref={dialogRef} className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="payment-ledger-title" aria-describedby="payment-ledger-desc">
 
                 <div className="bg-[#CCFF00] px-4 md:px-6 py-6 md:py-8 text-black relative flex-shrink-0 border-b border-[#CCFF00]">
                     <div className="relative z-10 pr-12">
-                        <h3 className="text-lg sm:text-xl md:text-2xl font-black uppercase tracking-widest flex items-center gap-2 md:gap-4 break-words leading-tight">
+                        <h3 id="payment-ledger-title" className="text-lg sm:text-xl md:text-2xl font-medium  flex items-center gap-2 md:gap-4 break-words leading-tight">
                             <FileText className="text-black stroke-[3px] shrink-0" size={24} />
                             Payment Ledger
                         </h3>
-                        <p className="text-black/60 mt-2 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest leading-tight">
-                            Beneficiary: <span className="text-black font-black uppercase tracking-widest text-xs sm:text-sm">{student.name}</span> <br className="sm:hidden" /> <span className="hidden sm:inline">—</span> {student.class}-{student.section}
+                        <p id="payment-ledger-desc" className="text-black/60 mt-2 text-[9px] sm:text-[10px] font-mono  leading-tight">
+                            Beneficiary: <span className="text-black font-medium  text-xs sm:text-sm">{student.name}</span> <br className="sm:hidden" /> <span className="hidden sm:inline">—</span> {student.class}-{student.section}
                         </p>
                     </div>
                     <button
                         onClick={handleClose}
-                        className="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 min-h-[40px] min-w-[40px] md:min-h-[48px] md:min-w-[48px] bg-transparent border-2 border-black hover:bg-black hover:text-[#CCFF00] text-black rounded-none transition-colors z-20 flex items-center justify-center shrink-0"
+                        aria-label="Close payment ledger"
+                        className="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 min-h-[40px] min-w-[40px] md:min-h-[48px] md:min-w-[48px] bg-transparent border border-black hover:bg-black hover:text-[#CCFF00] text-black rounded-custom-none transition-colors z-20 flex items-center justify-center shrink-0"
                     >
                         <X size={20} className="stroke-[3px] md:w-6 md:h-6" />
                     </button>
                 </div>
 
-                <div className="overflow-y-auto p-4 md:p-8 flex-1 bg-[#0a0a0a]">
+                <div className="overflow-y-auto p-4 md:p-8 flex-1 bg-[var(--bg-card)]">
                     {sortedHistory.length === 0 ? (
-                        <div className="text-center py-20 bg-[#050505] rounded-none border-2 border-white/40">
+                        <div className="text-center py-20 bg-[var(--bg-main)] rounded-custom-none border border-[var(--border-color)]">
                             <Calendar size={48} className="mx-auto mb-4 text-white/20 stroke-[1px]" />
-                            <p className="text-white/50 font-black uppercase tracking-widest text-sm">No transactions recorded</p>
+                            <p className="text-[var(--text-secondary)] font-medium  text-sm">No transactions recorded</p>
                         </div>
                     ) : (
-                        <div className="overflow-hidden rounded-none border-2 border-white/40 shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] bg-[#050505]">
+                        <div className="overflow-hidden rounded-custom-none border border-[var(--border-color)] shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] bg-[var(--bg-main)]">
                             <table className="hidden md:table w-full text-left border-collapse">
-                                <thead className="bg-[#050505] text-white/50 text-[10px] uppercase tracking-widest font-black border-b border-white/40">
+                                <thead className="bg-[var(--bg-main)] text-[var(--text-secondary)] text-[10px]  font-medium border-b border-[var(--border-color)]">
                                     <tr>
-                                        <th className="px-5 py-4 border-b border-white/40">Date</th>
-                                        <th className="px-5 py-4 border-b border-white/40">Period</th>
-                                        <th className="px-5 py-4 border-b border-white/40 text-right">Base</th>
-                                        <th className="px-5 py-4 border-b border-white/40 text-right">Fine</th>
-                                        <th className="px-5 py-4 border-b border-white/40 text-right">Total</th>
+                                        <th className="px-5 py-4 border-b border-[var(--border-color)]">Date</th>
+                                        <th className="px-5 py-4 border-b border-[var(--border-color)]">Period</th>
+                                        <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Base</th>
+                                        <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Fine</th>
+                                        <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/10">
@@ -68,7 +135,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                 {new Date(payment.date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
                                             </td>
                                             <td className="px-5 py-5">
-                                                <span className="bg-[#CCFF00] text-black px-2 py-1 rounded-none text-[9px] font-black uppercase tracking-widest border-2 border-[#CCFF00]">
+                                                <span className="bg-[#CCFF00] text-black px-2 py-1 rounded-custom-none text-[9px] font-medium  border border-[#CCFF00]">
                                                     {payment.month}
                                                 </span>
                                             </td>
@@ -78,16 +145,16 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                             <td className="px-5 py-5 text-rose-500 text-right font-mono font-bold text-sm">
                                                 {payment.fine > 0 ? `₹${payment.fine}` : '—'}
                                             </td>
-                                            <td className="px-5 py-5 text-[#CCFF00] font-black tracking-widest text-right text-sm">
+                                            <td className="px-5 py-5 text-[#CCFF00] font-medium tracking-widest text-right text-sm">
                                                 ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
-                                <tfoot className="bg-[#0a0a0a] text-white border-t border-white/40 font-black">
+                                <tfoot className="bg-[var(--bg-card)] text-white border-t border-[var(--border-color)] font-medium">
                                     <tr>
-                                        <td colSpan="4" className="px-5 py-5 text-right text-[10px] uppercase tracking-widest text-white/50">Cumulative Settlement:</td>
-                                        <td className="px-5 py-5 text-right text-lg font-black tracking-widest text-[#CCFF00]">
+                                        <td colSpan="4" className="px-5 py-5 text-right text-[10px]  text-[var(--text-secondary)]">Cumulative Settlement:</td>
+                                        <td className="px-5 py-5 text-right text-lg font-medium tracking-widest text-[#CCFF00]">
                                             ₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}
                                         </td>
                                     </tr>
@@ -101,17 +168,17 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                             <div>
                                                 <p className="text-sm font-mono text-white">{new Date(payment.date).toLocaleDateString()}</p>
                                                 <div className="mt-3">
-                                                    <span className="inline-block bg-[#CCFF00] text-black px-2 py-1 rounded-none text-[9px] font-black uppercase tracking-widest border-2 border-[#CCFF00]">
+                                                    <span className="inline-block bg-[#CCFF00] text-black px-2 py-1 rounded-custom-none text-[9px] font-medium  border border-[#CCFF00]">
                                                         {payment.month}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-base font-black tracking-widest text-[#CCFF00]">
+                                                <p className="text-base font-medium tracking-widest text-[#CCFF00]">
                                                     ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                                 </p>
                                                 {payment.fine > 0 && (
-                                                    <p className="text-[9px] text-rose-500 font-black uppercase tracking-widest mt-1">
+                                                    <p className="text-[9px] text-rose-500 font-medium  mt-1">
                                                         Incl. ₹{payment.fine} fine
                                                     </p>
                                                 )}
@@ -119,10 +186,10 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                         </div>
                                     </div>
                                 ))}
-                                <div className="bg-[#0a0a0a] p-5 text-white border-t border-white/40">
+                                <div className="bg-[var(--bg-card)] p-5 text-white border-t border-[var(--border-color)]">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-white/50">Grand Total Paid</span>
-                                        <span className="text-xl font-black text-[#CCFF00] tracking-widest">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}</span>
+                                        <span className="text-[10px] font-medium  text-[var(--text-secondary)]">Grand Total Paid</span>
+                                        <span className="text-xl font-medium text-[#CCFF00] tracking-widest">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}</span>
                                     </div>
                                 </div>
                             </div>

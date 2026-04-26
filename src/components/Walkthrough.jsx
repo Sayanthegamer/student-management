@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,8 @@ const Walkthrough = () => {
     const [spotlightStyle, setSpotlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0 });
     const [tooltipPosition, setTooltipPosition] = useState({});
     const navigate = useNavigate();
+    const dialogRef = useRef(null);
+    const previousActiveElementRef = useRef(null);
 
     useEffect(() => {
         const hasSeenWalkthrough = localStorage.getItem('hasSeenWalkthrough_v1');
@@ -21,6 +23,11 @@ const Walkthrough = () => {
         setIsVisible(false);
         if (dontShowAgain) {
             localStorage.setItem('hasSeenWalkthrough_v1', 'true');
+        }
+        // Restore focus to previously focused element
+        if (previousActiveElementRef.current) {
+            previousActiveElementRef.current.focus();
+            previousActiveElementRef.current = null;
         }
     };
 
@@ -117,6 +124,66 @@ const Walkthrough = () => {
             }
         }
     ];
+
+    // Focus trap and keyboard handling when dialog is visible
+    useEffect(() => {
+        if (!isVisible) return;
+
+        // Save previously focused element on mount
+        if (!previousActiveElementRef.current) {
+            previousActiveElementRef.current = document.activeElement;
+        }
+
+        // Focus the dialog
+        if (dialogRef.current) {
+            dialogRef.current.focus();
+        }
+
+        // Keyboard handler for focus trap and Escape key
+        const handleKeyDown = (e) => {
+            if (!dialogRef.current) return;
+
+            // Handle Escape key
+            if (e.key === 'Escape') {
+                handleClose(true);
+                return;
+            }
+
+            // Handle Tab key for focus trap
+            if (e.key === 'Tab') {
+                const focusableElements = dialogRef.current.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) {
+                    // Shift + Tab
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    // Tab
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        };
+
+        if (dialogRef.current) {
+            dialogRef.current.addEventListener('keydown', handleKeyDown);
+        }
+
+        // Cleanup
+        return () => {
+            if (dialogRef.current) {
+                dialogRef.current.removeEventListener('keydown', handleKeyDown);
+            }
+        };
+    }, [currentStep, isVisible]);
 
     // Update spotlight and tooltip position when step changes
     useEffect(() => {
@@ -248,7 +315,7 @@ const Walkthrough = () => {
             {/* Spotlight Overlay */}
             {/* We use a huge box-shadow on the spotlight div to create the dark overlay around it */}
             <div
-                className="absolute transition-all duration-300 ease-in-out rounded-none pointer-events-none border-[3px] border-[#CCFF00]"
+                className="absolute transition-all duration-300 ease-in-out rounded-custom-none pointer-events-none border-[3px] border-[#CCFF00]"
                 style={{
                     top: spotlightStyle.top,
                     left: spotlightStyle.left,
@@ -261,33 +328,39 @@ const Walkthrough = () => {
 
             {/* Full screen backdrop for when there is NO target (center steps) */}
             {!step.target && (
-                <div className="absolute inset-0 bg-[#050505]/90 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-[var(--bg-main)]/90 transition-opacity duration-300" />
             )}
 
             {/* Tooltip Card */}
             <div
-                className="absolute pointer-events-auto bg-[#0a0a0a] p-8 rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border-2 border-white/40 z-[110]"
+                ref={dialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={`walkthrough-title-${currentStep}`}
+                aria-describedby={`walkthrough-desc-${currentStep}`}
+                tabIndex="-1"
+                className="absolute pointer-events-auto bg-[var(--bg-card)] p-8 rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
                 style={tooltipPosition}
             >
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
-                        <span className="bg-[#CCFF00] text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-none border-2 border-[#CCFF00]">
+                        <span className="bg-[#CCFF00] text-black text-[10px] font-medium  px-3 py-1 rounded-custom-none border border-[#CCFF00]">
                             Step {currentStep + 1}/{steps.length}
                         </span>
                     </div>
-                    <button onClick={() => handleClose(true)} className="text-white/50 hover:text-white transition-colors">
+                    <button onClick={() => handleClose(true)} aria-label="Close walkthrough" className="text-[var(--text-secondary)] hover:text-white transition-colors">
                         <X size={24} className="stroke-[3px]" />
                     </button>
                 </div>
 
-                <h3 className="text-xl font-black text-white mb-3 uppercase tracking-widest">{step.title}</h3>
-                <p className="text-white/70 mb-8 leading-relaxed font-mono text-xs uppercase tracking-widest">{step.description}</p>
+                <h3 id={`walkthrough-title-${currentStep}`} className="text-xl font-medium text-white mb-3 ">{step.title}</h3>
+                <p id={`walkthrough-desc-${currentStep}`} className="text-white/70 mb-8 leading-relaxed font-mono text-xs ">{step.description}</p>
 
                 <div className="flex flex-wrap items-center justify-between gap-4">
                     <button
                         onClick={handlePrev}
                         disabled={currentStep === 0}
-                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${currentStep === 0 ? 'text-white/20 cursor-not-allowed' : 'text-white/50 hover:text-[#CCFF00]'}`}
+                        className={`flex items-center gap-2 text-[10px] font-medium  transition-colors ${currentStep === 0 ? 'text-white/20 cursor-not-allowed' : 'text-[var(--text-secondary)] hover:text-[#CCFF00]'}`}
                     >
                         <ChevronLeft size={16} className="stroke-[3px]" /> Previous
                     </button>
@@ -297,14 +370,14 @@ const Walkthrough = () => {
                         {steps.map((_, idx) => (
                             <div
                                 key={idx}
-                                className={`w-2 h-2 rounded-none transition-all ${idx === currentStep ? 'bg-[#CCFF00] scale-125' : 'bg-white/20'}`}
+                                className={`w-2 h-2 rounded-custom-none transition-all ${idx === currentStep ? 'bg-[#CCFF00] scale-125' : 'bg-white/20'}`}
                             />
                         ))}
                     </div>
 
                     <button
                         onClick={handleNext}
-                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border-2 border-[#CCFF00] px-5 py-3 rounded-none text-[10px] font-black shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex items-center gap-3 transition-colors uppercase tracking-widest active:bg-[#CCFF00]/20"
+                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border border-[#CCFF00] px-5 py-3 rounded-custom-none text-[10px] font-medium shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex items-center gap-3 transition-colors  active:bg-[#CCFF00]/20"
                     >
                         {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
                         {currentStep === steps.length - 1 ? <CheckCircle size={16} className="stroke-[3px]" /> : <ChevronRight size={16} className="stroke-[3px]" />}

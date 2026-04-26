@@ -58,12 +58,12 @@ const CustomMonthPicker = ({ value, onChange, label, required, className = '', c
     };
 
     const inputClasses = compact 
-        ? "w-full bg-[#050505] border-2 border-white/40 px-3 py-3 rounded-none text-white font-black uppercase tracking-widest outline-none transition-colors focus:border-[#CCFF00] text-sm"
-        : "w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white font-black uppercase tracking-widest outline-none transition-colors focus:border-[#CCFF00] text-sm";
+        ? "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-3 rounded-none text-white font-medium  outline-none transition-colors focus:border-[#CCFF00] text-sm"
+        : "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-4 rounded-none text-white font-medium  outline-none transition-colors focus:border-[#CCFF00] text-sm";
 
     return (
         <div className={className}>
-            {label && <label className="text-[10px] font-black text-white/50 uppercase tracking-widest px-1 mb-1.5 block">{label}</label>}
+            {label && <label className="text-[10px] font-medium text-[var(--text-secondary)]  px-1 mb-1.5 block">{label}</label>}
             <div className={`flex ${compact ? 'gap-1' : 'gap-2'}`}>
                 <div className="relative flex-1">
                     <select
