@@ -130,15 +130,17 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-[var(--border-color)]">
-                                    {sortedHistory.map((payment) => (
+                                    {sortedHistory.map((payment) => {
+                                        const displayType = payment.type === 'Admission' ? 'Admission' : 'Monthly';
+                                        return (
                                         <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
                                             <td className="px-5 py-5">
                                                 <span className={`text-[10px] font-bold px-2 py-1 rounded-[6px] border uppercase tracking-wider ${
-                                                    payment.type === 'Admission'
+                                                    displayType === 'Admission'
                                                         ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
                                                         : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                 }`}>
-                                                    {payment.type || 'Monthly'}
+                                                    {displayType}
                                                 </span>
                                             </td>
                                             <td className="px-5 py-5 text-[var(--text-primary)] font-semibold text-sm">
@@ -163,7 +165,8 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                 ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                             </td>
                                         </tr>
-                                    ))}
+                                    );
+                                    })}
                                 </tbody>
                                 <tfoot className="bg-[var(--bg-main)] text-[var(--text-primary)] border-t border-[var(--border-color)] font-medium">
                                     <tr>
@@ -176,17 +179,19 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                             </table>
 
                             <div className="md:hidden flex flex-col divide-y divide-[var(--border-color)]">
-                                {sortedHistory.map((payment) => (
+                                {sortedHistory.map((payment) => {
+                                    const displayType = payment.type === 'Admission' ? 'Admission' : 'Monthly';
+                                    return (
                                     <div key={payment.id} className="p-5 bg-[var(--bg-card)]">
                                         <div className="flex justify-between items-start mb-2">
                                             <div>
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[6px] border uppercase tracking-wider ${
-                                                        payment.type === 'Admission'
+                                                        displayType === 'Admission'
                                                             ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
                                                             : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                     }`}>
-                                                        {payment.type || 'Monthly'}
+                                                        {displayType}
                                                     </span>
                                                 </div>
                                                 <p className="text-sm font-semibold text-[var(--text-primary)]">{new Date(payment.date).toLocaleDateString()}</p>
@@ -210,7 +215,8 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                );
+                                })}
                                 <div className="bg-[var(--bg-main)] p-5 text-[var(--text-primary)] border-t border-[var(--border-color)]">
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-bold text-[var(--text-secondary)]">Grand Total Paid</span>

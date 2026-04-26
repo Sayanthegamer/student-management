@@ -55,9 +55,9 @@ export const useDataSync = () => {
     const id = crypto.randomUUID();
     const newStudent = { ...studentData, id };
 
-    // Auto-create admission fee record if admission fee is set
-    const grossAdmission = Number(studentData.admissionFee) || 0;
-    const concession = Number(studentData.concessionAmount) || 0;
+    // Auto-create admission fee record if admission fee is set (clamp to non-negative)
+    const grossAdmission = Math.max(0, Number(studentData.admissionFee) || 0);
+    const concession = Math.max(0, Number(studentData.concessionAmount) || 0);
     const netAdmission = Math.max(0, grossAdmission - concession);
 
     if (netAdmission > 0) {

@@ -61,24 +61,24 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         const { name, value } = e.target;
 
         if (name === 'class') {
-            const fee = CLASS_FEES[value] || '';
-            const admFee = ADMISSION_FEES[value] || formData.admissionFee || '';
+            const fee = CLASS_FEES[value] ?? '';
+            const admFee = ADMISSION_FEES[value] ?? formData.admissionFee ?? '';
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
                 feesAmount: fee,
                 // Only auto-fill admission fee if there's a configured value AND we're creating new student
-                ...(isNewStudent && ADMISSION_FEES[value] ? { admissionFee: admFee } : {})
+                ...(isNewStudent && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {})
             }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
 
-    // Calculate net admission fee
-    const grossAdmissionFee = Number(formData.admissionFee) || 0;
-    const concessionAmount = Number(formData.concessionAmount) || 0;
-    const netAdmissionFee = Math.max(0, grossAdmissionFee - concessionAmount);
+    // Calculate net admission fee (clamped to prevent negatives or concession > gross)
+    const grossAdmissionFee = Math.max(0, Number(formData.admissionFee) || 0);
+    const concessionAmount = Math.max(0, Math.min(Number(formData.concessionAmount) || 0, grossAdmissionFee));
+    const netAdmissionFee = grossAdmissionFee - concessionAmount;
     const hasConcession = concessionAmount > 0;
 
     const handleSubmit = (e) => {
@@ -86,7 +86,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
         let dataToSave = { ...formData };
 
-        // Ensure numeric values are stored properly
+        // Ensure clamped numeric values are stored properly
         dataToSave.admissionFee = grossAdmissionFee;
         dataToSave.concessionAmount = concessionAmount;
 
@@ -347,15 +347,17 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-[var(--border-color)] bg-[var(--bg-card)]">
-                                    {initialData.feeHistory.slice(-5).reverse().map((payment) => (
+                                    {initialData.feeHistory.slice(-5).reverse().map((payment) => {
+                                        const displayType = payment.type === 'Admission' ? 'Admission' : 'Monthly';
+                                        return (
                                         <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
                                             <td className="px-6 py-4 text-sm">
                                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[6px] border uppercase tracking-wider ${
-                                                    payment.type === 'Admission' 
+                                                    displayType === 'Admission' 
                                                         ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' 
                                                         : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                 }`}>
-                                                    {payment.type || 'Monthly'}
+                                                    {displayType}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.date}</td>
@@ -363,7 +365,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                             <td className="px-6 py-4 text-[var(--color-positive)] font-bold text-sm">₹{payment.amount}</td>
                                             <td className={`px-6 py-4 text-sm ${payment.fine > 0 ? 'text-[var(--color-negative)] font-bold' : 'text-[var(--text-muted)] font-normal'}`}>{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
                                         </tr>
-                                    ))}
+                                    );
+                                    })}
                                 </tbody>
                             </table>
                         </div>

@@ -151,8 +151,8 @@ export const validateAndCoerceStudent = (obj) => {
         fine: safeParseNumber(obj.fine) || '',
 
         // Admission fee & concession
-        admissionFee: safeParseNumber(obj.admissionFee || obj.admission_fee) || 0,
-        concessionAmount: safeParseNumber(obj.concessionAmount || obj.concession_amount) || 0,
+        admissionFee: safeParseNumber(obj.admissionFee ?? obj.admission_fee) || 0,
+        concessionAmount: safeParseNumber(obj.concessionAmount ?? obj.concession_amount) || 0,
 
         // Arrays and Objects
         feeHistory: obj.feeHistory || [],
