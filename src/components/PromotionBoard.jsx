@@ -3,6 +3,15 @@ import { Search, Filter, ArrowRight, UserCheck, CreditCard, ChevronRight } from 
 import { CLASS_ORDER, getNextClass, PROMOTION_FEES, CLASS_FEES } from '../utils/constants';
 import { logActivity } from '../utils/storage';
 
+/**
+ * Component for managing student promotions to the next class, including promotion fees.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object[]} props.students - The array of student objects.
+ * @param {Function} props.onUpdateStudent - Callback function to update a student's class and fee details.
+ * @param {Object} props.user - The current authenticated user.
+ * @returns {JSX.Element} The rendered promotion board component.
+ */
 const PromotionBoard = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterClass, setFilterClass] = useState('');

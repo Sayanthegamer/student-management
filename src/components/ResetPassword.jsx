@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { Lock, Loader2, AlertCircle } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
+/**
+ * Component for handling the "Reset Password" flow, where users enter their new password
+ * after clicking the link from their email.
+ *
+ * @returns {JSX.Element} The rendered reset password component.
+ */
 const ResetPassword = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);

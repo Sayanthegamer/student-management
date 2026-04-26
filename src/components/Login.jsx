@@ -3,6 +3,11 @@ import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { LogIn, UserPlus, AlertCircle, Loader2, GraduationCap, ShieldCheck, Mail, Lock } from 'lucide-react';
 
+/**
+ * Component for user authentication, handling both login and signup flows.
+ *
+ * @returns {JSX.Element} The rendered login component.
+ */
 export default function Login() {
   const { signIn, signUp } = useAuth();
   const [isLogin, setIsLogin] = useState(true);

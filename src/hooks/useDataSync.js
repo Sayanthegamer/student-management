@@ -4,6 +4,24 @@ import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * Custom hook for managing student data synchronization with Supabase and local storage.
+ * Provides functions for CRUD operations on students and fee payments, handling both local optimistic updates
+ * and remote data syncing.
+ *
+ * @returns {{
+ *   students: Object[],
+ *   syncStatus: string,
+ *   syncError: Object|null,
+ *   addStudent: Function,
+ *   updateStudent: Function,
+ *   deleteStudent: Function,
+ *   addFeePayment: Function,
+ *   importStudents: Function,
+ *   dismissError: Function,
+ *   forceSync: Function
+ * }} Data sync state and operation functions.
+ */
 export const useDataSync = () => {
   const { user } = useAuth();
   const [students, setStudents] = useState(getStudents());

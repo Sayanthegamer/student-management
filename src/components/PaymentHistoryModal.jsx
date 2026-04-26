@@ -2,6 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, IndianRupee, FileText } from 'lucide-react';
 
+/**
+ * Modal component to display the detailed payment history for a specific student.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.student - The student object whose history is to be displayed.
+ * @param {Function} props.onClose - Callback function to close the modal.
+ * @returns {JSX.Element} The rendered payment history modal component.
+ */
 const PaymentHistoryModal = ({ student, onClose }) => {
     const history = student.feeHistory || [];
     const [isClosing, setIsClosing] = useState(false);

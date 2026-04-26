@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
+/**
+ * A custom date picker component that provides separate dropdowns for year, month, and day.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.value - The current date value in 'YYYY-MM-DD' format.
+ * @param {Function} props.onChange - Callback function called when the date changes.
+ * @param {string} props.label - The label for the date picker.
+ * @param {boolean} [props.required=false] - Whether the date field is required.
+ * @param {string} [props.className=''] - Additional CSS classes.
+ * @returns {JSX.Element} The rendered custom date picker component.
+ */
 const CustomDatePicker = ({ value, onChange, label, required, className = '' }) => {
 
     const parse = (v) => {

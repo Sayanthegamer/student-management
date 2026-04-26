@@ -3,6 +3,14 @@ import { Download, Upload, AlertTriangle, CheckCircle, Database, Github, FileJso
 import { saveStudents } from '../utils/storage';
 import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 
+/**
+ * Component for managing data import and export operations via CSV.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object[]} props.students - The current list of students for export.
+ * @param {Function} props.onImportSuccess - Callback function called when data is successfully imported.
+ * @returns {JSX.Element} The rendered data management component.
+ */
 const DataManagement = ({ students, onImportSuccess }) => {
     const [importStatus, setImportStatus] = useState(null); // 'success', 'error', 'loading'
     const [message, setMessage] = useState('');

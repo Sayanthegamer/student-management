@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * A fallback UI component displayed during initial data loading or when navigating routes lazily.
+ *
+ * @returns {JSX.Element} The rendered skeleton loader component.
+ */
 const SkeletonLoader = () => {
   return (
     <div className="app-container flex h-[100dvh] overflow-hidden bg-[var(--bg-main)]">

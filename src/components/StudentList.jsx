@@ -5,6 +5,13 @@ import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
 import StudentCard from './StudentCard';
 
+/**
+ * Calculates the fee status for a student for a specific month.
+ *
+ * @param {Object} student - The student object containing fee history.
+ * @param {string} month - The month string in 'YYYY-MM' format.
+ * @returns {string} The status string ('Paid', 'Pending', or 'Overdue').
+ */
 const getFeeStatusForMonth = (student, month) => {
     const isPaid = student.feeHistory?.some(p => p.month === month);
     if (isPaid) return 'Paid';
@@ -13,6 +20,17 @@ const getFeeStatusForMonth = (student, month) => {
     return month < currentMonth ? 'Overdue' : 'Pending';
 };
 
+/**
+ * Component that renders a searchable, filterable, and paginated list of students.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object[]} props.students - The array of student objects to list.
+ * @param {Function} props.onEdit - Callback function to edit a student.
+ * @param {Function} props.onDelete - Callback function to delete a student.
+ * @param {Function} props.onAdd - Callback function to add a new student.
+ * @param {Function} props.onPayFee - Callback function to initiate fee payment.
+ * @returns {JSX.Element} The rendered student list component.
+ */
 const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');

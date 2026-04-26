@@ -1,7 +1,17 @@
 import React from 'react';
 import { Edit2, IndianRupee, Trash2 } from 'lucide-react';
 
-
+/**
+ * A memoized functional component that displays individual student summary card.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.student - The student object to display.
+ * @param {string} props.status - The calculated fee status for the student ('Paid', 'Pending', 'Overdue').
+ * @param {Function} props.onEdit - Callback function when the edit button is clicked.
+ * @param {Function} props.onDelete - Callback function when the delete button is clicked.
+ * @param {Function} props.onPayFee - Callback function when the pay fee button is clicked.
+ * @returns {JSX.Element} The rendered student card component.
+ */
 const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee }) => (
   <div className="card-base p-4 transition-all duration-300 group hover:border-[var(--border-highlight)] hover:-translate-y-0.5 glow-accent">
     <div className="flex items-start justify-between gap-3 mb-4">

@@ -9,6 +9,14 @@ const statusIcons = {
   Transferred: UserX,
 };
 
+/**
+ * A memoized functional component that displays an admission status card for a student.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.student - The student object containing admission details.
+ * @param {Function} props.onUpdateStatus - Callback function to handle admission status updates.
+ * @returns {JSX.Element} The rendered admission card component.
+ */
 const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
   const status = student.admissionStatus || 'Provisional';
   const StatusIcon = statusIcons[status] || Clock;

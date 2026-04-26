@@ -3,6 +3,13 @@ import { Search, FileText, Filter, IndianRupee, ChevronDown, ChevronUp, User } f
 import PaymentHistoryModal from './PaymentHistoryModal';
 import PaymentCard from './PaymentCard';
 
+/**
+ * Component that displays the payment history for all students with filtering and sorting.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object[]} props.students - The array of student objects with fee history.
+ * @returns {JSX.Element} The rendered payment history component.
+ */
 const PaymentHistory = ({ students }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');

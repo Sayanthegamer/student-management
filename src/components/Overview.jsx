@@ -3,6 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight } from 'lucide-react';
 import { getActivities } from '../utils/storage';
 
+/**
+ * A sub-component to display a statistics card.
+ *
+ * @param {Object} props - The component props.
+ * @returns {JSX.Element} The rendered statistic card component.
+ */
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
     <div 
         className="card-base p-5 flex flex-col gap-3 transition-all duration-300 group hover:bg-[var(--bg-card-hover)] hover:-translate-y-0.5 glow-accent"
@@ -25,6 +31,14 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) 
     </div>
 );
 
+/**
+ * Component that displays an overview dashboard with key metrics and recent activities.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object[]} props.students - The array of all student objects.
+ * @param {Function} props.onAddStudent - Callback function to add a new student.
+ * @returns {JSX.Element} The rendered overview component.
+ */
 const Overview = ({ students, onAddStudent }) => {
     // Calculate stats
     const activeStudents = students.filter(s => s.admissionStatus !== 'Transferred');

@@ -40,6 +40,12 @@ export const getClassFeeAmount = (className) => {
   return CLASS_FEES[className] || '';
 };
 
+/**
+ * Normalizes a nested student object from the UI into flattened student and fees structures for DB storage.
+ *
+ * @param {Object} student - The student object from the UI.
+ * @returns {{student: Object, fees: Object[]}} An object containing the normalized student and their fees.
+ */
 export const normalizeStudent = (student) => {
   // Extract ONLY storage/sync fields, ignore calculated fields
   const {
@@ -138,6 +144,13 @@ export const normalizeStudent = (student) => {
   return { student: cleanedStudent, fees };
 };
 
+/**
+ * Denormalizes raw DB student and fees data into a nested structure for the UI.
+ *
+ * @param {Object[]} studentsData - Array of student records from the DB.
+ * @param {Object[]} feesData - Array of fee records from the DB.
+ * @returns {Object[]} The array of denormalized, nested student objects.
+ */
 export const denormalizeStudents = (studentsData, feesData) => {
   if (!studentsData) return [];
 

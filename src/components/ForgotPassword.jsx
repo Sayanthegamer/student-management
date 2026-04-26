@@ -3,6 +3,11 @@ import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
+/**
+ * Component for handling the "Forgot Password" flow, allowing users to request a password reset email.
+ *
+ * @returns {JSX.Element} The rendered forgot password component.
+ */
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);

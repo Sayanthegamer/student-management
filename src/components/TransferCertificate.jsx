@@ -7,6 +7,15 @@ import CertificateCard from './CertificateCard';
 import { useToast } from '../context/ToastContext';
 import { logActivity } from '../utils/storage';
 
+/**
+ * Component for managing transfer certificates, allowing generation and tracking of TCs.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object[]} props.students - The array of student objects.
+ * @param {Function} props.onUpdateStudent - Callback to update a student's TC details.
+ * @param {Object} props.user - The current authenticated user.
+ * @returns {JSX.Element} The rendered transfer certificate component.
+ */
 const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     const { showToast } = useToast();
     const [view, setView] = useState('active'); // 'active' or 'transferred'
@@ -352,7 +361,9 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
     const exitTimerRef = React.useRef(null);
 
     // Keep onCancel ref up to date
-    onCancelRef.current = onCancel;
+    React.useEffect(() => {
+        onCancelRef.current = onCancel;
+    }, [onCancel]);
 
     const handleExit = (callback) => {
         if (isClosing) return;
