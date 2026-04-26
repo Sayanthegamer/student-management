@@ -23,20 +23,21 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
         >
-            <div className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="payment-ledger-title" aria-describedby="payment-ledger-desc">
 
                 <div className="bg-[#CCFF00] px-4 md:px-6 py-6 md:py-8 text-black relative flex-shrink-0 border-b border-[#CCFF00]">
                     <div className="relative z-10 pr-12">
-                        <h3 className="text-lg sm:text-xl md:text-2xl font-medium  flex items-center gap-2 md:gap-4 break-words leading-tight">
+                        <h3 id="payment-ledger-title" className="text-lg sm:text-xl md:text-2xl font-medium  flex items-center gap-2 md:gap-4 break-words leading-tight">
                             <FileText className="text-black stroke-[3px] shrink-0" size={24} />
                             Payment Ledger
                         </h3>
-                        <p className="text-black/60 mt-2 text-[9px] sm:text-[10px] font-mono  leading-tight">
+                        <p id="payment-ledger-desc" className="text-black/60 mt-2 text-[9px] sm:text-[10px] font-mono  leading-tight">
                             Beneficiary: <span className="text-black font-medium  text-xs sm:text-sm">{student.name}</span> <br className="sm:hidden" /> <span className="hidden sm:inline">—</span> {student.class}-{student.section}
                         </p>
                     </div>
                     <button
                         onClick={handleClose}
+                        aria-label="Close payment ledger"
                         className="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 min-h-[40px] min-w-[40px] md:min-h-[48px] md:min-w-[48px] bg-transparent border border-black hover:bg-black hover:text-[#CCFF00] text-black rounded-custom-none transition-colors z-20 flex items-center justify-center shrink-0"
                     >
                         <X size={20} className="stroke-[3px] md:w-6 md:h-6" />

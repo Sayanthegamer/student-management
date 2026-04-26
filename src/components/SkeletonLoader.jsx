@@ -2,7 +2,7 @@ import React from 'react';
 
 const SkeletonLoader = () => {
   return (
-    <div className="app-container flex h-screen overflow-hidden bg-[var(--bg-main)]">
+    <div className="app-container flex h-[100dvh] overflow-hidden bg-[var(--bg-main)]">
       {/* Sidebar Skeleton (Desktop only mostly, but we can show it) */}
       <div className="hidden md:flex w-[260px] flex-col gap-4 p-4 border-r border-[var(--border-color)] bg-[var(--bg-sidebar)] h-full shrink-0">
         {/* Logo/Header */}

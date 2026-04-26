@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ const Walkthrough = () => {
     const [spotlightStyle, setSpotlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0 });
     const [tooltipPosition, setTooltipPosition] = useState({});
     const navigate = useNavigate();
+    const dialogRef = useRef(null);
 
     useEffect(() => {
         const hasSeenWalkthrough = localStorage.getItem('hasSeenWalkthrough_v1');
@@ -117,6 +118,13 @@ const Walkthrough = () => {
             }
         }
     ];
+
+    // Focus the dialog when the step changes
+    useEffect(() => {
+        if (isVisible && dialogRef.current) {
+            dialogRef.current.focus();
+        }
+    }, [currentStep, isVisible]);
 
     // Update spotlight and tooltip position when step changes
     useEffect(() => {
@@ -266,6 +274,12 @@ const Walkthrough = () => {
 
             {/* Tooltip Card */}
             <div
+                ref={dialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={`walkthrough-title-${currentStep}`}
+                aria-describedby={`walkthrough-desc-${currentStep}`}
+                tabIndex="-1"
                 className="absolute pointer-events-auto bg-[var(--bg-card)] p-8 rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
                 style={tooltipPosition}
             >
@@ -275,13 +289,13 @@ const Walkthrough = () => {
                             Step {currentStep + 1}/{steps.length}
                         </span>
                     </div>
-                    <button onClick={() => handleClose(true)} className="text-[var(--text-secondary)] hover:text-white transition-colors">
+                    <button onClick={() => handleClose(true)} aria-label="Close walkthrough" className="text-[var(--text-secondary)] hover:text-white transition-colors">
                         <X size={24} className="stroke-[3px]" />
                     </button>
                 </div>
 
-                <h3 className="text-xl font-medium text-white mb-3 ">{step.title}</h3>
-                <p className="text-white/70 mb-8 leading-relaxed font-mono text-xs ">{step.description}</p>
+                <h3 id={`walkthrough-title-${currentStep}`} className="text-xl font-medium text-white mb-3 ">{step.title}</h3>
+                <p id={`walkthrough-desc-${currentStep}`} className="text-white/70 mb-8 leading-relaxed font-mono text-xs ">{step.description}</p>
 
                 <div className="flex flex-wrap items-center justify-between gap-4">
                     <button

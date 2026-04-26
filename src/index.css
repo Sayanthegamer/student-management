@@ -33,6 +33,30 @@ input, select, textarea {
   border-radius: 8px;
 }
 
+.rounded-custom-none {
+  border-radius: 0;
+}
+
+.rounded-custom-md {
+  border-radius: 4px;
+}
+
+.rounded-custom-lg {
+  border-radius: 12px;
+}
+
+.rounded-custom-xl {
+  border-radius: 16px;
+}
+
+.rounded-custom-2xl {
+  border-radius: 24px;
+}
+
+.rounded-custom-full {
+  border-radius: 9999px;
+}
+
 ::selection {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;

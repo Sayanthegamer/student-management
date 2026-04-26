@@ -57,11 +57,11 @@ const Overview = ({ students, onAddStudent }) => {
         return (
             <div className="p-6 md:p-12 max-w-5xl mx-auto text-center">
                 <div className="card-base p-8 md:p-16 flex flex-col items-center gap-6">
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 border border-[var(--border-color)] rounded-custom-2xl flex items-center justify-center">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-[var(--bg-card-hover)] border border-[var(--border-color)] rounded-custom-2xl flex items-center justify-center">
                         <Users size={32} className="text-[var(--text-primary)]" />
                     </div>
                     <div className="max-w-md">
-                        <h2 className="text-xl md:text-2xl font-semibold text-white mb-2">Welcome to Student Manager</h2>
+                        <h2 className="text-xl md:text-2xl font-semibold text-[var(--text-primary)] mb-2">Welcome to Student Manager</h2>
                         <p className="text-[var(--text-secondary)] text-sm md:text-base">Get started by adding your first student to the database.</p>
                     </div>
                     <button 

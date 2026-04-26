@@ -87,10 +87,10 @@ const PaymentHistory = ({ students }) => {
                             <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] stroke-[3px]" aria-hidden="true" />
                             <input
                                 type="text"
-                                placeholder="Search by name..."
+                                placeholder="Search by name, roll number, or class"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                aria-label="Search by name"
+                                aria-label="Search by name, roll number, or class"
                                 className="w-full pl-12 pr-4 py-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-xl focus:border-white transition-colors outline-none text-[var(--text-primary)] font-medium placeholder:text-[var(--text-muted)]"
                             />
                         </div>
