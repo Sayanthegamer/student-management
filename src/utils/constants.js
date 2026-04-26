@@ -36,6 +36,52 @@ export const ADMISSION_FEES = {
 };
 
 /**
+ * Promotion fee schedule by class (destination class).
+ * Empty for now — user must enter manually during promotion.
+ * Fill in values here to auto-populate the promotion fee field per destination class.
+ */
+export const PROMOTION_FEES = {
+  // '1': '1500',
+};
+
+/**
+ * Standard ordered progression of classes.
+ * Used for automatic next-class calculation during student promotion.
+ */
+export const CLASS_ORDER = [
+  'Play School',
+  'Nursery',
+  'kg-1',
+  'kg-2',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  '11',
+  '12',
+  'UG',
+  'PG'
+];
+
+/**
+ * Get the next logical class for a given class.
+ * Returns null if the current class is the highest or not found.
+ */
+export const getNextClass = (currentClass) => {
+  const currentIndex = CLASS_ORDER.indexOf(currentClass);
+  if (currentIndex === -1 || currentIndex === CLASS_ORDER.length - 1) {
+    return null;
+  }
+  return CLASS_ORDER[currentIndex + 1];
+};
+
+/**
  * Calculate late fine based on payment date vs monthly deadline (20th).
  *
  * Fine logic:

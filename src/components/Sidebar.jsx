@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee, X, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee, X, LogOut, ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import SyncIndicator from './SyncIndicator';
@@ -13,6 +13,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
         { path: '/students', label: 'Students', icon: Users },
         { path: '/payment-history', label: 'Fee History', icon: IndianRupee },
         { path: '/admission', label: 'Admissions', icon: ClipboardCheck },
+        { path: '/promotions', label: 'Promotions', icon: ArrowUpRight },
         { path: '/tc', label: 'Certificates', icon: FileOutput },
         { path: '/data', label: 'Settings', icon: Database },
     ];
