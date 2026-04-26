@@ -34,14 +34,15 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
 
     // Default promotion fee when class changes
     React.useEffect(() => {
-        if (nextClass) {
-            setPromotionFee(PROMOTION_FEES[nextClass] || '');
+        const next = getNextClass(filterClass);
+        if (next) {
+            setPromotionFee(PROMOTION_FEES[next] || '');
         } else {
             setPromotionFee('');
         }
         // Deselect all when class filter changes
         setSelectedStudents(new Set());
-    }, [filterClass, nextClass]);
+    }, [filterClass]);
 
     const handleSelectAll = (e) => {
         if (e.target.checked) {
@@ -67,9 +68,10 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
         const feeAmount = Math.max(0, Number(promotionFee) || 0);
         if (window.confirm(`Promote ${selectedStudents.size} student(s) to ${nextClass} with a promotion fee of ₹${feeAmount}?`)) {
             const dateStr = new Date().toISOString().split('T')[0];
-            
+            const studentById = new Map(students.map(s => [s.id, s]));
+
             selectedStudents.forEach(id => {
-                const student = students.find(s => s.id === id);
+                const student = studentById.get(id);
                 if (student) {
                     const newFeeHistory = [...(student.feeHistory || [])];
                     if (feeAmount > 0) {
@@ -78,7 +80,8 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
                             date: dateStr,
                             amount: feeAmount,
                             type: 'Promotion',
-                            month: null
+                            month: null,
+                            fine: 0
                         });
                     }
 
