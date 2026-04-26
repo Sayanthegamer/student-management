@@ -6,7 +6,11 @@ import { useToast } from '../context/ToastContext';
 
 /**
  * Component for handling the "Reset Password" flow, where users enter their new password
- * after clicking the link from their email.
+ * after clicking the password-reset magic link from their email.
+ *
+ * This component requires an authenticated session obtained via the password-reset magic link.
+ * On mount, it checks for a valid Supabase session using `supabase.auth.getSession()`.
+ * If no session is found (indicating an invalid or expired link), the user is redirected to the login page.
  *
  * @returns {JSX.Element} The rendered reset password component.
  */

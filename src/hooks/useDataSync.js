@@ -13,13 +13,13 @@ import { useAuth } from '../context/AuthContext';
  *   students: Object[],
  *   syncStatus: string,
  *   syncError: Object|null,
- *   addStudent: Function,
- *   updateStudent: Function,
- *   deleteStudent: Function,
- *   addFeePayment: Function,
- *   importStudents: Function,
- *   dismissError: Function,
- *   forceSync: Function
+ *   addStudent: (studentData: Object) => Promise<void>,
+ *   updateStudent: (studentData: Object) => Promise<void>,
+ *   deleteStudent: (id: string) => Promise<void>,
+ *   addFeePayment: (studentId: string, paymentDetails: Object|Object[]) => Promise<void>,
+ *   importStudents: (newStudents: Object[]) => Promise<void>,
+ *   dismissError: () => void,
+ *   forceSync: () => Promise<void>
  * }} Data sync state and operation functions.
  */
 export const useDataSync = () => {

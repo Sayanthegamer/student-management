@@ -4,11 +4,11 @@ import { saveStudents } from '../utils/storage';
 import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 
 /**
- * Component for managing data import and export operations via CSV.
+ * Component for managing data import and export operations via CSV and JSON.
  *
  * @param {Object} props - The component props.
- * @param {Object[]} props.students - The current list of students for export.
- * @param {Function} props.onImportSuccess - Callback function called when data is successfully imported.
+ * @param {Object[]} props.students - The current list of students used for exporting and creating safety backups.
+ * @param {Function} props.onImportSuccess - Callback function called when data is successfully imported, receives the parsed student array.
  * @returns {JSX.Element} The rendered data management component.
  */
 const DataManagement = ({ students, onImportSuccess }) => {

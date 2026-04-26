@@ -4,12 +4,30 @@ import { CLASS_ORDER, getNextClass, PROMOTION_FEES, CLASS_FEES } from '../utils/
 import { logActivity } from '../utils/storage';
 
 /**
+ * @typedef {Object} Student
+ * @property {string} id - Unique identifier for the student.
+ * @property {string} name - Full name of the student.
+ * @property {string} rollNo - Roll number.
+ * @property {string} class - Current class/grade.
+ * @property {string} section - Section identifier.
+ * @property {string} admissionStatus - Admission status (e.g., "Confirmed", "Applied").
+ * @property {number} feesAmount - Current monthly fee amount.
+ * @property {Object[]} feeHistory - Array of fee payment records.
+ */
+
+/**
+ * @typedef {Object} User
+ * @property {string} email - User's email address.
+ * @property {string} id - Unique user identifier.
+ */
+
+/**
  * Component for managing student promotions to the next class, including promotion fees.
  *
  * @param {Object} props - The component props.
- * @param {Object[]} props.students - The array of student objects.
- * @param {Function} props.onUpdateStudent - Callback function to update a student's class and fee details.
- * @param {Object} props.user - The current authenticated user.
+ * @param {Student[]} props.students - The array of student objects.
+ * @param {(student: Student) => void} props.onUpdateStudent - Callback function to update a student's class and fee details.
+ * @param {User} props.user - The current authenticated user.
  * @returns {JSX.Element} The rendered promotion board component.
  */
 const PromotionBoard = ({ students, onUpdateStudent, user }) => {
