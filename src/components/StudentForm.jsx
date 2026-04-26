@@ -15,7 +15,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm"
+                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm"
                 required={required}
             >
                 {options.map(opt => (
@@ -28,7 +28,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm placeholder:text-[var(--text-muted)]"
+                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm placeholder:text-[var(--text-muted)]"
                 placeholder={placeholder}
                 required={required}
             />
@@ -93,7 +93,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </div>
                     <button 
                         onClick={onCancel} 
-                        className="p-2 border border-[var(--border-color)] rounded-md bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white transition-colors z-20 flex items-center justify-center"
+                        className="p-2 border border-[var(--border-color)] rounded-custom-md bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white transition-colors z-20 flex items-center justify-center"
                     >
                         <X size={18} />
                     </button>

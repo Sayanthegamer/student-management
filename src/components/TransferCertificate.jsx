@@ -154,7 +154,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     };
 
     return (
-        <div className="bg-[var(--bg-card)] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border border-[var(--border-color)] p-3 md:p-8 max-w-6xl mx-auto">
+        <div className="bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border border-[var(--border-color)] p-3 md:p-8 max-w-6xl mx-auto">
             <h2 className="text-white mb-8 text-2xl md:text-3xl flex items-center gap-4 font-medium  flex-wrap">
                 <FileText size={32} className="text-[#CCFF00] stroke-[3px]" />
                 Transfer Certificate
@@ -191,14 +191,14 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                         placeholder="SEARCH STUDENT..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-2.5 md:py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  placeholder:text-white/20 pl-12"
+                        className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-2.5 md:py-3 rounded-custom-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  placeholder:text-white/20 pl-12"
                     />
                 </div>
 
                 <select
                     value={filterClass}
                     onChange={(e) => setFilterClass(e.target.value)}
-                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto min-w-[120px] md:min-w-[140px]"
+                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-custom-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto min-w-[120px] md:min-w-[140px]"
                 >
                     <option value="">ALL CLASSES</option>
                     {classes.map(c => <option key={c} value={c}>CLASS {c}</option>)}
@@ -207,7 +207,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                 <select
                     value={filterSection}
                     onChange={(e) => setFilterSection(e.target.value)}
-                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto min-w-[120px] md:min-w-[140px]"
+                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-custom-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto min-w-[120px] md:min-w-[140px]"
                 >
                     <option value="">ALL SECTIONS</option>
                     {sections.map(s => <option key={s} value={s}>SEC {s}</option>)}
@@ -216,7 +216,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                 <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto"
+                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-custom-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto"
                 >
                     <option value="name">SORT: NAME</option>
                     <option value="rollNo">SORT: ROLL NO</option>
@@ -225,7 +225,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
 
                 <button
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                    className="btn bg-[var(--bg-main)] border border-[var(--border-color)] p-3 text-white font-medium hover:border-white rounded-none transition-colors"
+                    className="btn bg-[var(--bg-main)] border border-[var(--border-color)] p-3 text-white font-medium hover:border-white rounded-custom-none transition-colors"
                     title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                 >
                     {sortOrder === 'asc' ? '↓' : '↑'}
@@ -233,7 +233,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
             </div>
 
             {/* Table View (Desktop) */}
-            <div className="hidden md:block overflow-hidden rounded-none border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <div className="hidden md:block overflow-hidden rounded-custom-none border border-[var(--border-color)] bg-[var(--bg-card)]">
                 <table className="w-full border-collapse text-left">
                     <thead className="bg-[var(--bg-main)] border-b border-[var(--border-color)]">
                         <tr>
@@ -257,7 +257,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                                     {view === 'active' ? (
                                         <button
                                             onClick={() => handleIssueClick(student)}
-                                            className="inline-flex items-center gap-2 px-4 py-2 border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-black  font-medium text-[10px] rounded-none bg-transparent transition-colors"
+                                            className="inline-flex items-center gap-2 px-4 py-2 border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-black  font-medium text-[10px] rounded-custom-none bg-transparent transition-colors"
                                         >
                                             Issue TC
                                         </button>
@@ -352,14 +352,14 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                 if (e.target === e.currentTarget) handleExit(onCancel);
             }}
         >
-            <div className={`bg-[var(--bg-card)] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border border-rose-500 w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border border-rose-500 w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
             <div className="relative">
                 <h3 className="mt-0 text-black bg-rose-500 px-6 py-5 md:py-8 text-xl font-medium  border-b border-rose-500">
                     Issue Transfer Certificate
                 </h3>
                 <button
                     onClick={() => handleExit(onCancel)}
-                    className="absolute top-3 right-3 md:top-6 md:right-6 text-black border border-black hover:bg-black hover:text-rose-500 p-3 min-h-[48px] min-w-[48px] rounded-none transition-colors z-20 flex items-center justify-center"
+                    className="absolute top-3 right-3 md:top-6 md:right-6 text-black border border-black hover:bg-black hover:text-rose-500 p-3 min-h-[48px] min-w-[48px] rounded-custom-none transition-colors z-20 flex items-center justify-center"
                     aria-label="Close"
                 >
                     <X size={20} className="stroke-[3px]" />
@@ -385,7 +385,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                         <select
                             value={tcDetails.reason}
                             onChange={e => setTcDetails({ ...tcDetails, reason: e.target.value })}
-                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-none text-white focus:border-rose-500  font-medium text-sm outline-none appearance-none transition-colors"
+                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-custom-none text-white focus:border-rose-500  font-medium text-sm outline-none appearance-none transition-colors"
                         >
                             <option>Completed Course</option>
                             <option>Parent's Transfer</option>
@@ -399,7 +399,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                             type="text"
                             value={tcDetails.conduct}
                             onChange={e => setTcDetails({ ...tcDetails, conduct: e.target.value })}
-                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-none text-white focus:border-rose-500  font-medium text-sm outline-none transition-colors"
+                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-custom-none text-white focus:border-rose-500  font-medium text-sm outline-none transition-colors"
                         />
                     </div>
                     <div>
@@ -408,7 +408,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                             type="text"
                             value={tcDetails.remarks}
                             onChange={e => setTcDetails({ ...tcDetails, remarks: e.target.value })}
-                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-none text-white focus:border-rose-500  font-medium text-sm outline-none transition-colors placeholder:text-white/20"
+                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-custom-none text-white focus:border-rose-500  font-medium text-sm outline-none transition-colors placeholder:text-white/20"
                             placeholder="OPTIONAL..."
                         />
                     </div>
@@ -417,14 +417,14 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                 <div className="flex flex-col sm:flex-row gap-4 mt-10">
                     <button
                         onClick={() => handleExit(onConfirm)}
-                        className="btn flex-1 bg-rose-500 border border-rose-500 text-black hover:bg-white hover:border-white font-medium  rounded-none p-3.5 md:p-4 transition-colors justify-center flex items-center gap-3 min-h-[48px]"
+                        className="btn flex-1 bg-rose-500 border border-rose-500 text-black hover:bg-white hover:border-white font-medium  rounded-custom-none p-3.5 md:p-4 transition-colors justify-center flex items-center gap-3 min-h-[48px]"
                     >
                         <AlertTriangle size={20} className="stroke-[3px]" />
                         Confirm TC
                     </button>
                     <button
                         onClick={() => handleExit(onCancel)}
-                        className="btn flex-1 bg-transparent border border-[var(--border-color)] text-white hover:border-white font-medium  rounded-none p-3.5 md:p-4 transition-colors justify-center flex items-center min-h-[48px]"
+                        className="btn flex-1 bg-transparent border border-[var(--border-color)] text-white hover:border-white font-medium  rounded-custom-none p-3.5 md:p-4 transition-colors justify-center flex items-center min-h-[48px]"
                     >
                         Cancel
                     </button>

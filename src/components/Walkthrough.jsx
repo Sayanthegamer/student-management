@@ -248,7 +248,7 @@ const Walkthrough = () => {
             {/* Spotlight Overlay */}
             {/* We use a huge box-shadow on the spotlight div to create the dark overlay around it */}
             <div
-                className="absolute transition-all duration-300 ease-in-out rounded-none pointer-events-none border-[3px] border-[#CCFF00]"
+                className="absolute transition-all duration-300 ease-in-out rounded-custom-none pointer-events-none border-[3px] border-[#CCFF00]"
                 style={{
                     top: spotlightStyle.top,
                     left: spotlightStyle.left,
@@ -266,12 +266,12 @@ const Walkthrough = () => {
 
             {/* Tooltip Card */}
             <div
-                className="absolute pointer-events-auto bg-[var(--bg-card)] p-8 rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
+                className="absolute pointer-events-auto bg-[var(--bg-card)] p-8 rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
                 style={tooltipPosition}
             >
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
-                        <span className="bg-[#CCFF00] text-black text-[10px] font-medium  px-3 py-1 rounded-none border border-[#CCFF00]">
+                        <span className="bg-[#CCFF00] text-black text-[10px] font-medium  px-3 py-1 rounded-custom-none border border-[#CCFF00]">
                             Step {currentStep + 1}/{steps.length}
                         </span>
                     </div>
@@ -297,14 +297,14 @@ const Walkthrough = () => {
                         {steps.map((_, idx) => (
                             <div
                                 key={idx}
-                                className={`w-2 h-2 rounded-none transition-all ${idx === currentStep ? 'bg-[#CCFF00] scale-125' : 'bg-white/20'}`}
+                                className={`w-2 h-2 rounded-custom-none transition-all ${idx === currentStep ? 'bg-[#CCFF00] scale-125' : 'bg-white/20'}`}
                             />
                         ))}
                     </div>
 
                     <button
                         onClick={handleNext}
-                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border border-[#CCFF00] px-5 py-3 rounded-none text-[10px] font-medium shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex items-center gap-3 transition-colors  active:bg-[#CCFF00]/20"
+                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border border-[#CCFF00] px-5 py-3 rounded-custom-none text-[10px] font-medium shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex items-center gap-3 transition-colors  active:bg-[#CCFF00]/20"
                     >
                         {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
                         {currentStep === steps.length - 1 ? <CheckCircle size={16} className="stroke-[3px]" /> : <ChevronRight size={16} className="stroke-[3px]" />}

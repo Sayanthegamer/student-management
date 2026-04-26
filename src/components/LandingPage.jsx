@@ -23,7 +23,7 @@ const LandingPage = () => {
         </div>
         <div className="hidden md:flex text-xs font-bold  text-[var(--text-muted)] items-center gap-3">
             <span>[ SYSTEM ONLINE ]</span>
-            <span className="w-1.5 h-1.5 bg-[#CCFF00] rounded-full" />
+            <span className="w-1.5 h-1.5 bg-[#CCFF00] rounded-custom-full" />
         </div>
       </header>
 

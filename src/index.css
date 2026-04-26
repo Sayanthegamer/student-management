@@ -28,8 +28,8 @@ input, select, textarea {
   font-size: 16px !important; /* Prevents iOS zoom on focus */
 }
 
-/* Smooth rounded corners via utility class to avoid global style leaking */
-.rounded {
+/* Project-specific smooth rounded corners via utility class to avoid global style leaking and shadowing tailwind's native rounded class */
+.rounded-custom {
   border-radius: 8px;
 }
 

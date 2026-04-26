@@ -130,7 +130,7 @@ function App() {
             {showMobileAdd && (
               <button
                 onClick={handleAddClick}
-                className="p-1.5 border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-md transition-colors touch-manipulation"
+                className="p-1.5 border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-custom-md transition-colors touch-manipulation"
                 aria-label="Add student"
               >
                 <Plus size={18} className="stroke-[2px]" />
@@ -151,7 +151,7 @@ function App() {
           {/* Global Project Header mimicking the screenshots */}
           <div className="hidden md:block w-full border-b border-[var(--border-color)] bg-[var(--bg-main)]">
             <div className="max-w-6xl mx-auto px-8 pt-10 pb-6 flex items-start gap-6">
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-[var(--border-color)] flex items-center justify-center shrink-0 shadow-sm">
+              <div className="w-24 h-24 rounded-custom-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-[var(--border-color)] flex items-center justify-center shrink-0 shadow-sm">
                 <span className="text-4xl">🎓</span>
               </div>
               <div className="flex flex-col flex-1">
@@ -204,16 +204,14 @@ function App() {
             </Routes>
           </Suspense>
         </main>
-        <div className="hidden">
-           <BottomNavigation />
-        </div>
+        <BottomNavigation />
       </div>
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
           <div
-            className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 scale-in shadow-2xl rounded-xl"
+            className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 scale-in shadow-2xl rounded-custom-xl"
             onClick={e => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -225,13 +223,13 @@ function App() {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="px-4 py-2 text-sm font-medium border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-md transition-colors"
+                className="px-4 py-2 text-sm font-medium border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-custom-md transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 text-sm font-medium bg-rose-500 text-white hover:bg-rose-600 rounded-md transition-colors"
+                className="px-4 py-2 text-sm font-medium bg-rose-500 text-white hover:bg-rose-600 rounded-custom-md transition-colors"
               >
                 Delete
               </button>

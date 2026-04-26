@@ -22,14 +22,15 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
             {/* Mobile Close Button */}
             <button
                 onClick={onClose}
-                className="md:hidden absolute top-4 right-4 p-2 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-card-hover)] rounded-md transition-all"
+                className="md:hidden absolute top-4 right-4 p-2 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-card-hover)] rounded-custom-md transition-all"
+                aria-label="Close sidebar"
             >
                 <X size={18} />
             </button>
 
             {/* Profile / Project Selector Header */}
-            <div className="flex items-center gap-3 px-2 py-2 mt-2 cursor-pointer hover:bg-[var(--bg-card-hover)] rounded-lg transition-colors group">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shrink-0 border border-[var(--border-color)]">
+            <div className="flex items-center gap-3 px-2 py-2 mt-2 cursor-pointer hover:bg-[var(--bg-card-hover)] rounded-custom-lg transition-colors group">
+                <div className="w-8 h-8 rounded-custom-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shrink-0 border border-[var(--border-color)]">
                     <span className="text-xs font-semibold text-white">{user?.email?.[0].toUpperCase() || 'S'}</span>
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
@@ -51,7 +52,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                             showToast('Sign out failed: ' + (err?.message || 'Unknown error'), 'error');
                         }
                     }}
-                    className="p-1.5 text-[var(--text-muted)] hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all rounded-md hover:bg-[var(--bg-card)]"
+                    className="p-1.5 text-[var(--text-muted)] hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all rounded-custom-md hover:bg-[var(--bg-card)]"
                     aria-label="Sign out"
                 >
                     <LogOut size={14} />
@@ -74,7 +75,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                 to={item.path}
                                 onClick={onClose}
                                 className={({ isActive }) => `
-                                    flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-150 group
+                                    flex items-center gap-3 px-3 py-2 rounded-custom-md transition-colors duration-150 group
                                     ${isActive
                                         ? 'bg-[var(--bg-card)] text-white'
                                         : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white'

@@ -13,7 +13,7 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) 
                 <p className="m-0 text-[var(--text-muted)] text-sm font-medium tracking-wide">{title}</p>
                 <h3 className="mt-1 text-3xl md:text-4xl text-[var(--text-primary)] font-semibold tracking-tight">{value}</h3>
             </div>
-            <div className={`p-2 shrink-0 rounded-lg bg-[var(--bg-main)] border border-[var(--border-color)] ${colorClass}`}>
+            <div className={`p-2 shrink-0 rounded-custom-lg bg-[var(--bg-main)] border border-[var(--border-color)] ${colorClass}`}>
                 <Icon size={20} className="stroke-[2px]" />
             </div>
         </div>
@@ -57,7 +57,7 @@ const Overview = ({ students, onAddStudent }) => {
         return (
             <div className="p-6 md:p-12 max-w-5xl mx-auto text-center">
                 <div className="card-base p-8 md:p-16 flex flex-col items-center gap-6">
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 border border-[var(--border-color)] rounded-2xl flex items-center justify-center">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 border border-[var(--border-color)] rounded-custom-2xl flex items-center justify-center">
                         <Users size={32} className="text-[var(--text-primary)]" />
                     </div>
                     <div className="max-w-md">
@@ -120,8 +120,8 @@ const Overview = ({ students, onAddStudent }) => {
                     <h3 className="m-0 text-[var(--text-primary)] text-sm font-medium">
                         Activity Stream
                     </h3>
-                    <span className="text-[10px] font-medium text-[var(--text-secondary)] px-2 py-0.5 rounded flex items-center gap-1.5 border border-[var(--border-color)]">
-                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span className="text-[10px] font-medium text-[var(--text-secondary)] px-2 py-0.5 rounded-custom flex items-center gap-1.5 border border-[var(--border-color)]">
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-custom-full animate-pulse"></div>
                         Live
                     </span>
                 </div>
@@ -130,7 +130,7 @@ const Overview = ({ students, onAddStudent }) => {
                     {activities.length > 0 ? (
                         activities.map((activity) => (
                             <div key={activity.id} className="flex items-start gap-4 p-5 hover:bg-[var(--bg-card-hover)] transition-colors group">
-                                <div className={`p-2.5 shrink-0 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] ${activity.type === 'fee' ? 'text-emerald-400' :
+                                <div className={`p-2.5 shrink-0 rounded-custom-lg border border-[var(--border-color)] bg-[var(--bg-card)] ${activity.type === 'fee' ? 'text-emerald-400' :
                                     activity.type === 'student' ? 'text-blue-400' :
                                         activity.type === 'tc' ? 'text-rose-400' :
                                             activity.type === 'admission' ? 'text-amber-400' :
@@ -159,7 +159,7 @@ const Overview = ({ students, onAddStudent }) => {
                         ))
                     ) : (
                         <div className="text-center py-16">
-                            <div className="w-12 h-12 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-center mx-auto mb-4">
+                            <div className="w-12 h-12 rounded-custom-xl bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-center mx-auto mb-4">
                                 <Activity size={24} className="text-[var(--text-muted)]" />
                             </div>
                             <p className="text-[var(--text-secondary)] text-sm">No activity recorded yet.</p>

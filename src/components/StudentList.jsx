@@ -107,7 +107,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     if (students.length === 0) {
         return (
             <div className="card-base p-8 md:p-16 text-center max-w-2xl mx-auto mt-8">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 border border-[var(--border-color)] rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 border border-[var(--border-color)] rounded-custom-2xl flex items-center justify-center mx-auto mb-6">
                     <UserPlus size={32} className="text-[var(--text-primary)]" />
                 </div>
                 <h2 className="text-xl md:text-2xl font-semibold text-white mb-2">No students yet</h2>
@@ -134,13 +134,16 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 placeholder="Search students..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 bg-[var(--bg-main)] border border-[var(--border-color)] focus:border-white text-[var(--text-primary)] rounded-md outline-none transition-all text-sm placeholder:text-[var(--text-muted)]"
+                                className="w-full pl-9 pr-4 py-2 bg-[var(--bg-main)] border border-[var(--border-color)] focus:border-white text-[var(--text-primary)] rounded-custom-md outline-none transition-all text-sm placeholder:text-[var(--text-muted)]"
                             />
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`p-2 border rounded-md transition-all flex items-center justify-center ${showFilters ? 'bg-[var(--bg-card-hover)] border-[var(--border-color)] text-white' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-white'}`}
+                                className={`p-2 border rounded-custom-md transition-all flex items-center justify-center ${showFilters ? 'bg-[var(--bg-card-hover)] border-[var(--border-color)] text-white' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-white'}`}
+                                aria-label="Toggle filters"
+                                aria-expanded={showFilters}
+                                aria-controls="filter-panel"
                             >
                                 <Filter size={16} />
                             </button>
@@ -153,13 +156,13 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 </div>
 
                 {showFilters && (
-                    <div className="p-4 bg-[var(--bg-card)] border-b border-[var(--border-color)] grid grid-cols-2 md:grid-cols-5 gap-4 slide-down">
+                    <div id="filter-panel" className="p-4 bg-[var(--bg-card)] border-b border-[var(--border-color)] grid grid-cols-2 md:grid-cols-5 gap-4 slide-down">
                         <div className="col-span-1">
                             <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Class</label>
                             <select
                                 value={filterClass}
                                 onChange={(e) => setFilterClass(e.target.value)}
-                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
                             >
                                 <option value="">All Classes</option>
                                 {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -170,7 +173,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <select
                                 value={filterSection}
                                 onChange={(e) => setFilterSection(e.target.value)}
-                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
                             >
                                 <option value="">All Sections</option>
                                 {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
@@ -181,7 +184,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <select
                                 value={filterFeeStatus}
                                 onChange={(e) => setFilterFeeStatus(e.target.value)}
-                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
                             >
                                 <option value="">All Statuses</option>
                                 <option value="Paid">Paid</option>
@@ -205,7 +208,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
+                                    className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
                                 >
                                     <option value="name">Name</option>
                                     <option value="rollNo">Roll No</option>
@@ -214,7 +217,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             </div>
                             <button
                                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                className="p-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md text-[var(--text-secondary)] hover:text-white transition-all h-[38px] w-[38px] flex items-center justify-center outline-none focus:border-white"
+                                className="p-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-secondary)] hover:text-white transition-all h-[38px] w-[38px] flex items-center justify-center outline-none focus:border-white"
                                 aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                             >
                                 {sortOrder === 'asc' ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
@@ -269,7 +272,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                     <tr key={student.id} className="hover:bg-[var(--bg-card-hover)] transition-colors group">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-full border border-[var(--border-color)] bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300 flex items-center justify-center font-semibold text-sm shrink-0">
+                                                <div className="w-9 h-9 rounded-custom-full border border-[var(--border-color)] bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300 flex items-center justify-center font-semibold text-sm shrink-0">
                                                     {student.name.charAt(0)}
                                                 </div>
                                                 <div className="min-w-0">
@@ -286,7 +289,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <span
-                                                className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold border rounded-md ${status === 'Paid'
+                                                className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold border rounded-custom-md ${status === 'Paid'
                                                     ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
                                                     : status === 'Overdue'
                                                         ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
@@ -300,21 +303,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                             <div className="flex gap-2 justify-end opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => handlePayFeeClick(student)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-custom-md hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors"
                                                     title="Collect Fee"
                                                 >
                                                     <IndianRupee size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onEdit(student)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-custom-md hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
                                                     title="Edit Record"
                                                 >
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(student.id)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-custom-md hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition-colors"
                                                     title="Delete Record"
                                                 >
                                                     <Trash2 size={16} />
@@ -328,7 +331,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 <tr>
                                     <td colSpan="4" className="py-20 text-center bg-[var(--bg-main)]">
                                         <div className="flex flex-col items-center gap-3">
-                                            <div className="p-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)]">
+                                            <div className="p-3 rounded-custom-xl border border-[var(--border-color)] bg-[var(--bg-card)]">
                                                 <Search size={24} className="text-[var(--text-muted)]" />
                                             </div>
                                             <div>

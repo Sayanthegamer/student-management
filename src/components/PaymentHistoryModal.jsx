@@ -23,7 +23,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
         >
-            <div className={`bg-[var(--bg-card)] rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
                 <div className="bg-[#CCFF00] px-4 md:px-6 py-6 md:py-8 text-black relative flex-shrink-0 border-b border-[#CCFF00]">
                     <div className="relative z-10 pr-12">
@@ -37,7 +37,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                     </div>
                     <button
                         onClick={handleClose}
-                        className="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 min-h-[40px] min-w-[40px] md:min-h-[48px] md:min-w-[48px] bg-transparent border border-black hover:bg-black hover:text-[#CCFF00] text-black rounded-none transition-colors z-20 flex items-center justify-center shrink-0"
+                        className="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 min-h-[40px] min-w-[40px] md:min-h-[48px] md:min-w-[48px] bg-transparent border border-black hover:bg-black hover:text-[#CCFF00] text-black rounded-custom-none transition-colors z-20 flex items-center justify-center shrink-0"
                     >
                         <X size={20} className="stroke-[3px] md:w-6 md:h-6" />
                     </button>
@@ -45,12 +45,12 @@ const PaymentHistoryModal = ({ student, onClose }) => {
 
                 <div className="overflow-y-auto p-4 md:p-8 flex-1 bg-[var(--bg-card)]">
                     {sortedHistory.length === 0 ? (
-                        <div className="text-center py-20 bg-[var(--bg-main)] rounded-none border border-[var(--border-color)]">
+                        <div className="text-center py-20 bg-[var(--bg-main)] rounded-custom-none border border-[var(--border-color)]">
                             <Calendar size={48} className="mx-auto mb-4 text-white/20 stroke-[1px]" />
                             <p className="text-[var(--text-secondary)] font-medium  text-sm">No transactions recorded</p>
                         </div>
                     ) : (
-                        <div className="overflow-hidden rounded-none border border-[var(--border-color)] shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] bg-[var(--bg-main)]">
+                        <div className="overflow-hidden rounded-custom-none border border-[var(--border-color)] shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] bg-[var(--bg-main)]">
                             <table className="hidden md:table w-full text-left border-collapse">
                                 <thead className="bg-[var(--bg-main)] text-[var(--text-secondary)] text-[10px]  font-medium border-b border-[var(--border-color)]">
                                     <tr>
@@ -68,7 +68,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                 {new Date(payment.date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
                                             </td>
                                             <td className="px-5 py-5">
-                                                <span className="bg-[#CCFF00] text-black px-2 py-1 rounded-none text-[9px] font-medium  border border-[#CCFF00]">
+                                                <span className="bg-[#CCFF00] text-black px-2 py-1 rounded-custom-none text-[9px] font-medium  border border-[#CCFF00]">
                                                     {payment.month}
                                                 </span>
                                             </td>
@@ -101,7 +101,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                             <div>
                                                 <p className="text-sm font-mono text-white">{new Date(payment.date).toLocaleDateString()}</p>
                                                 <div className="mt-3">
-                                                    <span className="inline-block bg-[#CCFF00] text-black px-2 py-1 rounded-none text-[9px] font-medium  border border-[#CCFF00]">
+                                                    <span className="inline-block bg-[#CCFF00] text-black px-2 py-1 rounded-custom-none text-[9px] font-medium  border border-[#CCFF00]">
                                                         {payment.month}
                                                     </span>
                                                 </div>
