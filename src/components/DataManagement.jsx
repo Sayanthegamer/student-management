@@ -188,6 +188,9 @@ const DataManagement = ({ students, onImportSuccess }) => {
 
                     {importStatus && (
                         <div
+                            role={importStatus === 'error' ? 'alert' : 'status'}
+                            aria-live={importStatus === 'error' ? 'assertive' : 'polite'}
+                            aria-atomic="true"
                             className={`mt-6 p-4 md:p-6 rounded-[16px] flex items-start gap-4 border animate-fadeIn ${importStatus === 'error'
                                 ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                                 : importStatus === 'loading'

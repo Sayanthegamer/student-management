@@ -257,8 +257,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                         <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
                                             <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.date}</td>
                                             <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.month}</td>
-                                            <td className="px-6 py-4 text-emerald-600 font-bold text-sm">₹{payment.amount}</td>
-                                            <td className="px-6 py-4 text-rose-600 font-bold text-sm">{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
+                                            <td className="px-6 py-4 text-[var(--color-positive)] font-bold text-sm">₹{payment.amount}</td>
+                                            <td className="px-6 py-4 text-[var(--color-negative)] font-bold text-sm">{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
                                         </tr>
                                     ))}
                                 </tbody>

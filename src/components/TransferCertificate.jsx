@@ -226,7 +226,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                 <button
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
                     className="bg-[var(--bg-main)] border border-[var(--border-color)] p-3 text-[var(--text-secondary)] font-medium hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] rounded-[12px] transition-colors flex items-center justify-center min-h-[44px] min-w-[44px]"
-                    title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                    title={sortOrder === 'asc' ? 'Change sort to descending' : 'Change sort to ascending'}
                     aria-label={sortOrder === 'asc' ? 'Change sort to descending' : 'Change sort to ascending'}
                 >
                     {sortOrder === 'asc' ? '↓' : '↑'}

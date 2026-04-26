@@ -76,7 +76,7 @@ function ToastItem({ toast, onDismiss }) {
       className={`
         pointer-events-auto
         ${styles.bg}
-        border border-[var(--border-color)] rounded-[12px]
+        border ${styles.border} rounded-[12px]
         p-0
         flex items-stretch
         shadow-lg
