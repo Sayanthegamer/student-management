@@ -77,6 +77,7 @@ const LandingPage = () => {
             <ArrowRight size={18} />
           </button>
           <button 
+            onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
             className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-200 border border-[var(--border-highlight)] rounded-[12px] bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] hover:-translate-y-0.5 shadow-sm w-full sm:w-auto"
           >
             Learn More
@@ -85,7 +86,7 @@ const LandingPage = () => {
       </main>
 
       {/* Features Grid */}
-      <section className="w-full max-w-6xl mx-auto px-6 pb-24 z-10 slide-up" style={{ animationDelay: '0.3s' }}>
+      <section id="features" className="w-full max-w-6xl mx-auto px-6 pb-24 z-10 slide-up" style={{ animationDelay: '0.3s' }}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature, idx) => (
             <div key={idx} className="bg-[var(--bg-card)] p-8 rounded-[16px] border border-[var(--border-color)] shadow-sm hover:shadow-md hover:border-[var(--border-highlight)] transition-all">

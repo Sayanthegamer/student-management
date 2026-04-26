@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
 import AdmissionCard from './AdmissionCard';
+import { statusHexColors } from '../utils/statusColors';
 import { logActivity } from '../utils/storage';
 
 const StatusCard = ({ student, color, onMove }) => {
@@ -16,18 +17,21 @@ const StatusCard = ({ student, color, onMove }) => {
                     onClick={() => setShowActions(!showActions)}
                     className="p-1.5 rounded-[8px] hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
                     aria-label="Toggle actions"
+                    aria-expanded={showActions}
+                    aria-haspopup="true"
                 >
                     <MoreVertical size={16} />
                 </button>
             </div>
 
             {showActions && (
-                <div className="absolute right-4 top-10 bg-[var(--bg-card)] shadow-lg border border-[var(--border-color)] rounded-[12px] py-1 z-20 w-48 animate-in fade-in zoom-in-95 duration-100 overflow-hidden">
+                <div className="absolute right-4 top-10 bg-[var(--bg-card)] shadow-lg border border-[var(--border-color)] rounded-[12px] py-1 z-20 w-48 animate-in fade-in zoom-in-95 duration-100 overflow-hidden" role="menu" aria-hidden={!showActions}>
                     <div className="px-4 py-2.5 text-[10px] font-bold tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-color)] bg-[var(--bg-main)]/50">Move To</div>
                     {student.admissionStatus !== 'Confirmed' && (
                         <button
                             onClick={() => { onMove(student, 'Confirmed'); setShowActions(false); }}
                             className="w-full text-left px-4 py-2.5 text-sm font-semibold text-emerald-600 hover:bg-emerald-50 flex items-center gap-2.5 transition-colors"
+                            role="menuitem"
                         >
                             <CheckCircle size={14} className="stroke-[2.5px]" /> Confirmed
                         </button>
@@ -36,6 +40,7 @@ const StatusCard = ({ student, color, onMove }) => {
                         <button
                             onClick={() => { onMove(student, 'Provisional'); setShowActions(false); }}
                             className="w-full text-left px-4 py-2.5 text-sm font-semibold text-amber-600 hover:bg-amber-50 flex items-center gap-2.5 transition-colors"
+                            role="menuitem"
                         >
                             <Clock size={14} className="stroke-[2.5px]" /> Provisional
                         </button>
@@ -44,6 +49,7 @@ const StatusCard = ({ student, color, onMove }) => {
                         <button
                             onClick={() => { onMove(student, 'Cancelled'); setShowActions(false); }}
                             className="w-full text-left px-4 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors"
+                            role="menuitem"
                         >
                             <XCircle size={14} className="stroke-[2.5px]" /> Cancelled
                         </button>
@@ -270,7 +276,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Confirmed"
                     count={confirmed.length}
                     total={filteredStudents.length}
-                    color="#059669"
+                    color={statusHexColors.Confirmed}
                     icon={CheckCircle}
                     students={confirmed}
                     onMove={handleMoveStudent}
@@ -279,7 +285,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Provisional"
                     count={provisional.length}
                     total={filteredStudents.length}
-                    color="#d97706"
+                    color={statusHexColors.Provisional}
                     icon={Clock}
                     students={provisional}
                     onMove={handleMoveStudent}
@@ -288,7 +294,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Cancelled"
                     count={cancelled.length}
                     total={filteredStudents.length}
-                    color="#e11d48"
+                    color={statusHexColors.Cancelled}
                     icon={XCircle}
                     students={cancelled}
                     onMove={handleMoveStudent}
@@ -297,7 +303,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Transferred"
                     count={transferred.length}
                     total={filteredStudents.length}
-                    color="#9333ea"
+                    color={statusHexColors.Transferred}
                     icon={FileText}
                     students={transferred}
                     onMove={handleMoveStudent}

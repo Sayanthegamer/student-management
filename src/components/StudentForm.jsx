@@ -255,8 +255,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 <tbody className="divide-y divide-[var(--border-color)] bg-[var(--bg-card)]">
                                     {initialData.feeHistory.slice(-5).reverse().map((payment) => (
                                         <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
-                                            <td className="px-6 py-4 text-[var(--text-primary)] font-bold text-sm">{payment.date}</td>
-                                            <td className="px-6 py-4 text-[var(--text-primary)] font-bold text-sm">{payment.month}</td>
+                                            <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.date}</td>
+                                            <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.month}</td>
                                             <td className="px-6 py-4 text-emerald-600 font-bold text-sm">₹{payment.amount}</td>
                                             <td className="px-6 py-4 text-rose-600 font-bold text-sm">{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
                                         </tr>

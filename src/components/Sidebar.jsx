@@ -52,7 +52,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                             showToast('Sign out failed: ' + (err?.message || 'Unknown error'), 'error');
                         }
                     }}
-                    className="p-1.5 text-[var(--text-muted)] hover:text-rose-500 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all rounded-[12px] hover:bg-rose-50"
+                    className="p-1.5 text-[var(--text-muted)] hover:text-rose-500 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-all rounded-[12px] hover:bg-rose-50"
                     aria-label="Sign out"
                 >
                     <LogOut size={14} />

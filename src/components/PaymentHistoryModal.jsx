@@ -142,10 +142,10 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                             <td className="px-5 py-5 text-[var(--text-primary)] font-mono font-semibold text-right text-sm">
                                                 ₹{Number(payment.amount).toLocaleString()}
                                             </td>
-                                            <td className="px-5 py-5 text-rose-600 text-right font-mono font-bold text-sm">
+                                            <td className="px-5 py-5 text-[var(--color-negative)] text-right font-mono font-bold text-sm">
                                                 {payment.fine > 0 ? `₹${payment.fine}` : '—'}
                                             </td>
-                                            <td className="px-5 py-5 text-emerald-600 font-bold text-right text-sm">
+                                            <td className="px-5 py-5 text-[var(--color-positive)] font-bold text-right text-sm">
                                                 ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                             </td>
                                         </tr>
@@ -154,7 +154,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                 <tfoot className="bg-[var(--bg-main)] text-[var(--text-primary)] border-t border-[var(--border-color)] font-medium">
                                     <tr>
                                         <td colSpan="4" className="px-5 py-5 text-right text-[10px] uppercase font-bold tracking-wider text-[var(--text-secondary)]">Cumulative Settlement:</td>
-                                        <td className="px-5 py-5 text-right text-lg font-bold text-emerald-600">
+                                        <td className="px-5 py-5 text-right text-lg font-bold text-[var(--color-positive)]">
                                             ₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}
                                         </td>
                                     </tr>
@@ -174,11 +174,11 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-base font-bold text-emerald-600">
+                                                <p className="text-base font-bold text-[var(--color-positive)]">
                                                     ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                                 </p>
                                                 {payment.fine > 0 && (
-                                                    <p className="text-xs text-rose-600 font-medium mt-1 bg-rose-50 px-2 py-0.5 rounded-[6px] inline-block">
+                                                    <p className="text-xs text-[var(--color-negative)] font-medium mt-1 bg-rose-50 px-2 py-0.5 rounded-[6px] inline-block">
                                                         Incl. ₹{payment.fine} fine
                                                     </p>
                                                 )}
@@ -189,7 +189,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                 <div className="bg-[var(--bg-main)] p-5 text-[var(--text-primary)] border-t border-[var(--border-color)]">
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-bold text-[var(--text-secondary)]">Grand Total Paid</span>
-                                        <span className="text-xl font-bold text-emerald-600">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}</span>
+                                        <span className="text-xl font-bold text-[var(--color-positive)]">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}</span>
                                     </div>
                                 </div>
                             </div>

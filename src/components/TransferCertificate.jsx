@@ -227,6 +227,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
                     className="bg-[var(--bg-main)] border border-[var(--border-color)] p-3 text-[var(--text-secondary)] font-medium hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] rounded-[12px] transition-colors flex items-center justify-center min-h-[44px] min-w-[44px]"
                     title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                    aria-label={sortOrder === 'asc' ? 'Change sort to descending' : 'Change sort to ascending'}
                 >
                     {sortOrder === 'asc' ? '↓' : '↑'}
                 </button>
@@ -336,6 +337,8 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
 
 const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel }) => {
     const [isClosing, setIsClosing] = useState(false);
+    const dialogRef = React.useRef(null);
+    const previousActiveElementRef = React.useRef(null);
 
     const handleExit = (callback) => {
         setIsClosing(true);
@@ -345,6 +348,62 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
         }, 200);
     };
 
+    // Focus trap and keyboard handling
+    React.useEffect(() => {
+        previousActiveElementRef.current = document.activeElement;
+
+        if (dialogRef.current) {
+            const focusableElements = dialogRef.current.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusableElements.length > 0) {
+                focusableElements[0].focus();
+            }
+        }
+
+        const handleKeyDown = (e) => {
+            if (!dialogRef.current) return;
+
+            if (e.key === 'Escape') {
+                handleExit(onCancel);
+                return;
+            }
+
+            if (e.key === 'Tab') {
+                const focusableElements = dialogRef.current.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        };
+
+        if (dialogRef.current) {
+            dialogRef.current.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            if (dialogRef.current) {
+                dialogRef.current.removeEventListener('keydown', handleKeyDown);
+            }
+            if (previousActiveElementRef.current) {
+                previousActiveElementRef.current.focus();
+            }
+        };
+    }, []);
+
     return createPortal(
         <div 
             className={`fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex justify-center items-center z-50 modal-backdrop ${isClosing ? 'closing' : ''}`}
@@ -352,9 +411,9 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                 if (e.target === e.currentTarget) handleExit(onCancel);
             }}
         >
-            <div className={`bg-[var(--bg-card)] rounded-[24px] shadow-xl border border-[var(--border-color)] w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div ref={dialogRef} className={`bg-[var(--bg-card)] rounded-[24px] shadow-xl border border-[var(--border-color)] w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="issue-tc-title">
             <div className="relative">
-                <h3 className="mt-0 text-rose-400 bg-rose-500/10 px-6 py-5 md:py-8 text-xl font-bold border-b border-rose-500/20 flex items-center gap-3">
+                <h3 id="issue-tc-title" className="mt-0 text-rose-400 bg-rose-500/10 px-6 py-5 md:py-8 text-xl font-bold border-b border-rose-500/20 flex items-center gap-3">
                     <AlertTriangle size={24} className="text-rose-400 stroke-[2.5px]" />
                     Issue Transfer Certificate
                 </h3>

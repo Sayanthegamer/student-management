@@ -12,12 +12,12 @@ const toastIcons = {
 
 const toastStyles = {
   success: {
-    border: 'border-[var(--accent-primary)]/30',
+    border: 'border-[var(--success)]/30',
     bg: 'bg-[var(--bg-card)]',
-    iconBg: 'bg-[var(--accent-primary)]/10',
-    iconColor: 'text-[var(--accent-primary)]',
+    iconBg: 'bg-[var(--success)]/10',
+    iconColor: 'text-[var(--success)]',
     textColor: 'text-[var(--text-primary)]',
-    accent: 'bg-[var(--accent-primary)]',
+    accent: 'bg-[var(--success)]',
   },
   error: {
     border: 'border-rose-500/30',

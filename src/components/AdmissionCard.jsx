@@ -1,12 +1,6 @@
 import React from 'react';
 import { UserX, Clock, CheckCircle, XCircle } from 'lucide-react';
-
-const statusStyles = {
-  Provisional: 'bg-amber-50 text-amber-700 border-amber-200',
-  Confirmed: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  Cancelled: 'bg-rose-50 text-rose-700 border-rose-200',
-  Transferred: 'bg-purple-50 text-purple-700 border-purple-200',
-};
+import { statusStyles } from '../utils/statusColors';
 
 const statusIcons = {
   Provisional: Clock,
