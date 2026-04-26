@@ -136,11 +136,11 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 </div>
 
                 {isTransferred && (
-                    <div className="mx-6 mt-6 p-4 bg-amber-50 border border-amber-200 rounded-[12px] flex items-start gap-3">
-                        <AlertCircle size={20} className="text-amber-600 shrink-0 mt-0.5 stroke-[2.5px]" />
+                    <div className="mx-6 mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-[12px] flex items-start gap-3">
+                        <AlertCircle size={20} className="text-amber-400 shrink-0 mt-0.5 stroke-[2.5px]" />
                         <div className="flex-1 min-w-0">
-                            <p className="text-amber-700 font-bold text-sm">Transferred Student</p>
-                            <p className="text-amber-600 text-xs mt-1">
+                            <p className="text-amber-400 font-bold text-sm">Transferred Student</p>
+                            <p className="text-amber-400/70 text-xs mt-1">
                                 This student has been issued a Transfer Certificate. Please verify if this payment is appropriate.
                             </p>
                         </div>
@@ -190,7 +190,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 )}
                             </div>
                             {error && (
-                                <div className="flex items-center gap-2 mt-2 text-rose-600 text-xs font-medium bg-rose-50 p-3 rounded-[8px] border border-rose-100">
+                                <div className="flex items-center gap-2 mt-2 text-rose-400 text-xs font-medium bg-rose-500/10 p-3 rounded-[8px] border border-rose-500/20">
                                     <AlertCircle size={14} className="stroke-[2.5px]" />
                                     {error}
                                 </div>
@@ -242,7 +242,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 <p className="text-xs text-[var(--text-muted)] mt-0.5">Automated settlement</p>
                             </div>
                             <div className="text-right">
-                                <span className="text-3xl font-bold text-emerald-600 tracking-tight">
+                                <span className="text-3xl font-bold text-emerald-400 tracking-tight">
                                     ₹{totalPayable.toLocaleString()}
                                 </span>
                             </div>

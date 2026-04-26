@@ -30,7 +30,7 @@ const StatusCard = ({ student, color, onMove }) => {
                     {student.admissionStatus !== 'Confirmed' && (
                         <button
                             onClick={() => { onMove(student, 'Confirmed'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-emerald-600 hover:bg-emerald-50 flex items-center gap-2.5 transition-colors"
+                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-emerald-400 hover:bg-emerald-500/10 flex items-center gap-2.5 transition-colors"
                             role="menuitem"
                         >
                             <CheckCircle size={14} className="stroke-[2.5px]" /> Confirmed
@@ -39,7 +39,7 @@ const StatusCard = ({ student, color, onMove }) => {
                     {student.admissionStatus !== 'Provisional' && (
                         <button
                             onClick={() => { onMove(student, 'Provisional'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-amber-600 hover:bg-amber-50 flex items-center gap-2.5 transition-colors"
+                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-amber-400 hover:bg-amber-500/10 flex items-center gap-2.5 transition-colors"
                             role="menuitem"
                         >
                             <Clock size={14} className="stroke-[2.5px]" /> Provisional
@@ -48,7 +48,7 @@ const StatusCard = ({ student, color, onMove }) => {
                     {student.admissionStatus !== 'Cancelled' && (
                         <button
                             onClick={() => { onMove(student, 'Cancelled'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors"
+                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-rose-400 hover:bg-rose-500/10 flex items-center gap-2.5 transition-colors"
                             role="menuitem"
                         >
                             <XCircle size={14} className="stroke-[2.5px]" /> Cancelled
@@ -70,7 +70,7 @@ const StatusCard = ({ student, color, onMove }) => {
                     <Clock size={12} />
                     {student.admissionDate || 'N/A'}
                 </span>
-                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-[8px] border ${student.feesStatus === 'Paid' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
+                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-[8px] border ${student.feesStatus === 'Paid' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
                     {student.feesStatus || 'Pending'}
                 </span>
             </div>

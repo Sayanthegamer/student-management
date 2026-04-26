@@ -55,7 +55,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
           <>
             <button
               onClick={() => onUpdateStatus(student, 'Confirmed')}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-[12px] hover:bg-emerald-600 hover:text-white transition-colors font-bold text-xs touch-manipulation min-h-[44px]"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-[12px] hover:bg-emerald-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
               aria-label="Confirm admission"
             >
               <CheckCircle size={16} className="stroke-[2.5px]" />
@@ -63,7 +63,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
             </button>
             <button
               onClick={() => onUpdateStatus(student, 'Cancelled')}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-rose-600 bg-rose-50 border border-rose-200 rounded-[12px] hover:bg-rose-600 hover:text-white transition-colors font-bold text-xs touch-manipulation min-h-[44px]"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-[12px] hover:bg-rose-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
               aria-label="Cancel admission"
             >
               <XCircle size={16} className="stroke-[2.5px]" />
@@ -75,7 +75,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
         {status === 'Confirmed' && (
           <button
             onClick={() => onUpdateStatus(student, 'Transferred')}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-purple-600 bg-purple-50 border border-purple-200 rounded-[12px] hover:bg-purple-600 hover:text-white transition-colors font-bold text-xs touch-manipulation min-h-[44px]"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-[12px] hover:bg-purple-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
             aria-label="Mark as transferred"
           >
             <UserX size={16} className="stroke-[2.5px]" />
@@ -86,7 +86,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
         {(status === 'Cancelled' || status === 'Transferred') && (
           <button
             onClick={() => onUpdateStatus(student, 'Provisional')}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-amber-600 bg-amber-50 border border-amber-200 rounded-[12px] hover:bg-amber-600 hover:text-white transition-colors font-bold text-xs touch-manipulation min-h-[44px]"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-[12px] hover:bg-amber-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
             aria-label="Reset status"
           >
             <Clock size={16} className="stroke-[2.5px]" />

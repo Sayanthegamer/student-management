@@ -5,15 +5,15 @@ import { getActivities } from '../utils/storage';
 
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
     <div 
-        className="card-base p-5 flex flex-col gap-3 transition-all duration-300 slide-up group hover:bg-[var(--bg-card-hover)]"
-        style={{ animationDelay: `${index * 50}ms` }}
+        className="card-base p-5 flex flex-col gap-3 transition-all duration-300 group hover:bg-[var(--bg-card-hover)] hover:-translate-y-0.5 glow-accent"
+        style={{ animation: `fade-in-up-anim 0.4s var(--spring-bounce) both`, animationDelay: `${index * 80}ms` }}
     >
         <div className="flex justify-between items-start gap-3">
             <div className="min-w-0 flex-1">
                 <p className="m-0 text-[var(--text-muted)] text-sm font-medium tracking-wide">{title}</p>
-                <h3 className="mt-1 text-3xl md:text-4xl text-[var(--text-primary)] font-semibold tracking-tight">{value}</h3>
+                <h3 className="mt-1 text-3xl md:text-4xl text-[var(--text-primary)] font-semibold tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{value}</h3>
             </div>
-            <div className={`p-2.5 shrink-0 rounded-[12px] flex items-center justify-center ${colorClass}`}>
+            <div className={`p-2.5 shrink-0 rounded-[12px] flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${colorClass}`}>
                 <Icon size={22} className="stroke-[2px]" />
             </div>
         </div>
@@ -92,7 +92,7 @@ const Overview = ({ students, onAddStudent }) => {
                     title="Total Students"
                     value={totalStudents}
                     icon={Users}
-                    colorClass="text-blue-600 bg-blue-50 border border-blue-100"
+                    colorClass="text-blue-400 bg-blue-500/10 border border-blue-500/20"
                     subtext="Active enrollment"
                     index={0}
                 />
@@ -100,7 +100,7 @@ const Overview = ({ students, onAddStudent }) => {
                     title="Fees Collected"
                     value={`₹${feesCollected.toLocaleString()}`}
                     icon={IndianRupee}
-                    colorClass="text-emerald-600 bg-emerald-50 border border-emerald-100"
+                    colorClass="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
                     subtext={`${new Date().toLocaleString('default', { month: 'long' })} collection`}
                     index={1}
                 />
@@ -108,7 +108,7 @@ const Overview = ({ students, onAddStudent }) => {
                     title="Pending Fees"
                     value={pendingFeesCount}
                     icon={AlertCircle}
-                    colorClass="text-amber-600 bg-amber-50 border border-amber-100"
+                    colorClass="text-amber-400 bg-amber-500/10 border border-amber-500/20"
                     subtext="Awaiting payment"
                     index={2}
                 />
@@ -121,19 +121,23 @@ const Overview = ({ students, onAddStudent }) => {
                         Activity Stream
                     </h3>
                     <span className="text-[10px] font-medium text-[var(--text-secondary)] px-2 py-0.5 rounded-custom flex items-center gap-1.5 border border-[var(--border-color)]">
-                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-custom-full animate-pulse"></div>
+                        <span className="w-1.5 h-1.5 rounded-custom-full text-emerald-500" aria-hidden="true" style={{ backgroundColor: 'currentcolor', animation: 'gentle-pulse 2s ease-in-out infinite' }}></span>
                         Live
                     </span>
                 </div>
 
                 <div className="divide-y divide-[var(--border-color)] bg-[var(--bg-card)]">
                     {activities.length > 0 ? (
-                        activities.map((activity) => (
-                            <div key={activity.id} className="flex items-start gap-4 p-5 hover:bg-[var(--bg-card-hover)] transition-colors group">
-                                <div className={`p-2.5 shrink-0 rounded-[12px] border ${activity.type === 'fee' ? 'text-emerald-600 bg-emerald-50 border-emerald-100' :
-                                    activity.type === 'student' ? 'text-blue-600 bg-blue-50 border-blue-100' :
-                                        activity.type === 'tc' ? 'text-rose-600 bg-rose-50 border-rose-100' :
-                                            activity.type === 'admission' ? 'text-amber-600 bg-amber-50 border-amber-100' :
+                        activities.map((activity, idx) => (
+                            <div 
+                                key={activity.id} 
+                                className="flex items-start gap-4 p-5 hover:bg-[var(--bg-card-hover)] transition-colors group"
+                                style={{ animation: `fade-in-up-anim 0.3s var(--spring-bounce) both`, animationDelay: `${idx * 50}ms` }}
+                            >
+                                <div className={`p-2.5 shrink-0 rounded-[12px] border transition-transform duration-200 group-hover:scale-105 ${activity.type === 'fee' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' :
+                                    activity.type === 'student' ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :
+                                        activity.type === 'tc' ? 'text-rose-400 bg-rose-500/10 border-rose-500/20' :
+                                            activity.type === 'admission' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
                                                 'text-[var(--text-secondary)] bg-[var(--bg-main)] border-[var(--border-color)]'
                                     }`}>
                                     {activity.type === 'fee' && <IndianRupee size={18} />}

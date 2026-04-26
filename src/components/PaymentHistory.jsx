@@ -186,7 +186,7 @@ const PaymentHistory = ({ students }) => {
                                                 <p className="font-bold text-[var(--text-primary)] text-sm truncate flex items-center gap-3">
                                                     {student.name}
                                                     {student.admissionStatus === 'Transferred' && (
-                                                        <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-2 py-1 rounded-[12px] border border-rose-100 uppercase tracking-wide">Exit</span>
+                                                        <span className="text-[10px] font-bold bg-rose-500/10 text-rose-400 px-2 py-1 rounded-[12px] border border-rose-500/20 uppercase tracking-wide">Exit</span>
                                                     )}
                                                 </p>
                                                 <p className="text-[var(--text-secondary)] font-mono text-[10px] truncate mt-1">Roll: {student.rollNo}</p>
@@ -198,7 +198,7 @@ const PaymentHistory = ({ students }) => {
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex flex-col gap-1">
-                                            <span className="text-base font-bold text-emerald-600 tracking-wider">₹{getTotalPaid(student).toLocaleString()}</span>
+                                            <span className="text-base font-bold text-emerald-400 tracking-wider">₹{getTotalPaid(student).toLocaleString()}</span>
                                             <span className="text-[10px] text-[var(--text-secondary)] font-medium tracking-wide">Gross Total</span>
                                         </div>
                                     </td>

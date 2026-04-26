@@ -49,7 +49,7 @@ const SyncErrorModal = ({ error, students, onDismiss }) => {
           </div>
           <button
             onClick={onDismiss}
-            className="absolute top-6 right-6 text-rose-400 hover:text-rose-600 hover:bg-rose-100 p-2 rounded-full transition-colors flex items-center justify-center"
+            className="absolute top-6 right-6 text-rose-400 hover:text-rose-600 hover:bg-rose-500/10 p-2 rounded-full transition-colors flex items-center justify-center"
             aria-label="Close"
           >
             <X size={20} className="stroke-[2.5px]" />

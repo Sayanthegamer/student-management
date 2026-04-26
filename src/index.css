@@ -34,6 +34,13 @@
   --color-status-transferred: #a855f7;
 
   --font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+
+  /* Spring-physics animation tokens */
+  --spring-bounce: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring-snappy: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring-duration: 0.5s;
+  --spring-duration-fast: 0.3s;
 }
 
 * {
@@ -117,11 +124,11 @@ body {
 
 @layer utilities {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 font-medium text-sm cursor-pointer transition-all duration-200 border rounded-[12px];
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 font-medium text-sm cursor-pointer transition-all duration-200 border rounded-[12px] active:scale-[0.97];
   }
 
   .btn-primary {
-    @apply bg-[var(--accent-primary)] text-white border-transparent hover:bg-[var(--accent-hover)] shadow-md shadow-[var(--accent-primary)]/20;
+    @apply bg-[var(--accent-primary)] text-white border-transparent hover:bg-[var(--accent-hover)] shadow-md shadow-[var(--accent-primary)]/20 hover:shadow-lg hover:shadow-[var(--accent-primary)]/30;
   }
 
   .btn-secondary {
@@ -134,89 +141,156 @@ body {
 
   /* Card base utility */
   .card-base {
-    @apply bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden;
+    @apply bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden;
   }
 }
 
 /* ============================================
-   ANIMATION KEYFRAMES
+   ANIMATION KEYFRAMES — Spring Physics
 ============================================ */
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes slideUp {
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slide-up-anim {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes slideDown {
+@keyframes slide-down-anim {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-12px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes scaleIn {
-  from {
+/* Spring overshoot for modals/dialogs */
+@keyframes scale-in-anim {
+  0% {
     opacity: 0;
     transform: scale(0.95);
   }
-
-  to {
+  60% {
+    opacity: 1;
+    transform: scale(1.01);
+  }
+  100% {
     opacity: 1;
     transform: scale(1);
   }
 }
 
-@keyframes scaleOut {
+@keyframes scale-out-anim {
   from {
     opacity: 1;
     transform: scale(1);
   }
-
   to {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.96);
   }
 }
 
-@keyframes fadeOut {
+/* Staggerable fade + rise for list items */
+@keyframes fade-in-up-anim {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Toast entrance — spring from right */
+@keyframes slide-in-from-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-4px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Toast exit */
+@keyframes slide-out-to-right {
   from {
     opacity: 1;
+    transform: translateX(0);
   }
-
   to {
     opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Soft breathing glow for live indicators */
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 currentcolor;
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 6px 2px currentcolor;
+  }
+}
+
+/* Shimmer sweep for skeleton/badges */
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
 
-  100% {
-    background-position: 200% 0;
+/* Toast progress bar countdown */
+@keyframes toast-countdown {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* Gradient mesh drift for backgrounds */
+@keyframes mesh-drift {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(2%, -1%) rotate(1deg);
+  }
+  66% {
+    transform: translate(-1%, 2%) rotate(-0.5deg);
   }
 }
 
@@ -232,41 +306,84 @@ body {
 }
 
 /* ============================================
-   UTILITY CLASSES
+   UTILITY CLASSES — Spring-timed
 ============================================ */
 
-/* Page transitions - Subtle Fade only */
 .page-enter {
-  animation: fadeIn 0.2s ease-out;
+  animation: fade-in 0.25s var(--spring-bounce) both;
 }
 
 .slide-up {
-  animation: slideUp 0.3s ease-out;
+  animation: slide-up-anim var(--spring-duration-fast) var(--spring-bounce) both;
 }
 
 .slide-down {
-  animation: slideDown 0.3s ease-out;
+  animation: slide-down-anim var(--spring-duration-fast) var(--spring-bounce) both;
 }
 
 .scale-in {
-  animation: scaleIn 0.2s ease-out forwards;
+  animation: scale-in-anim var(--spring-duration) var(--spring-bounce) both;
 }
 
 .scale-out {
-  animation: scaleOut 0.2s ease-in forwards;
+  animation: scale-out-anim 0.2s ease-in both;
 }
 
 .fade-out {
-  animation: fadeOut 0.2s ease-in forwards;
+  animation: fade-out 0.2s ease-in both;
+}
+
+.fade-in-up {
+  animation: fade-in-up-anim var(--spring-duration-fast) var(--spring-bounce) both;
 }
 
 /* Modal backdrop */
 .modal-backdrop {
-  animation: fadeIn 0.2s ease-out forwards;
+  animation: fade-in 0.2s ease-out both;
 }
 
 .modal-backdrop.closing {
-  animation: fadeOut 0.2s ease-in forwards;
+  animation: fade-out 0.2s ease-in both;
+}
+
+/* Glow accent for hover effects */
+.glow-accent {
+  box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  transition: box-shadow 0.3s var(--spring-bounce);
+}
+.glow-accent:hover {
+  box-shadow: 0 0 20px 0 rgba(99, 102, 241, 0.15);
+}
+
+/* Gradient mesh background utility */
+.gradient-mesh {
+  position: relative;
+  overflow: hidden;
+}
+.gradient-mesh::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+  animation: mesh-drift 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dot grid overlay for depth */
+.dot-grid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Better focus styles for modern UI */
@@ -322,7 +439,7 @@ button, a, input, select, textarea {
 
 /* Apply page transitions to main content - Subtle Fade Only */
 main>div {
-  animation: fadeIn 0.25s ease-out;
+  animation: fade-in 0.25s ease-out;
 }
 
 /* Table row hover with smooth highlight */
