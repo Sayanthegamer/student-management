@@ -62,8 +62,8 @@ export const normalizeStudent = (student) => {
     student_id: student.id,
     amount: parseFloat(fee.amount),
     date: new Date(fee.date).toISOString(),
-    month: fee.month, // Use dedicated column
-    type: 'Fee',
+    month: fee.month || null, // Admission fees have no month
+    type: fee.type || 'Fee',
     // Pack extra fields into description
     description: JSON.stringify({
       remarks: fee.remarks,
@@ -118,6 +118,10 @@ export const normalizeStudent = (student) => {
     // Status change metadata (Issue 4 fix)
     last_status_change_date: statusChangeDateVal,
     last_status_changed_by: student.lastStatusChangedBy || student.last_status_changed_by || undefined,
+
+    // Admission fee & concession
+    admission_fee: student.admissionFee != null ? Number(student.admissionFee) : undefined,
+    concession_amount: student.concessionAmount != null ? Number(student.concessionAmount) : undefined,
   };
 
   // Only include tc_details if it's present in the student object
@@ -147,7 +151,8 @@ export const denormalizeStudents = (studentsData, feesData) => {
       id: fee.id,
       amount: fee.amount,
       date: fee.date ? fee.date.split('T')[0] : '',
-      month: fee.month || extraDetails.month, // Support legacy/migrated data if needed
+      month: fee.month || extraDetails.month || '', // Admission fees may have no month
+      type: fee.type || 'Fee', // Preserve fee type (Admission/Fee)
       remarks: extraDetails.remarks || '', // ← Explicitly extract
       fine: extraDetails.fine || 0         // ← Explicitly extract (default 0)
     });
@@ -198,6 +203,10 @@ export const denormalizeStudents = (studentsData, feesData) => {
       // Status change metadata (Issue 4 fix)
       lastStatusChangeDate: s.last_status_change_date,
       lastStatusChangedBy: s.last_status_changed_by,
+
+      // Admission fee & concession
+      admissionFee: s.admission_fee || 0,
+      concessionAmount: s.concession_amount || 0,
 
       // Calculated fields - recalculated from data, not stored (Issue 2 fix)
       feesAmount,

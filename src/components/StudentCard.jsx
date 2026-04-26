@@ -19,6 +19,11 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
       >
         {status}
       </span>
+      {Number(student.concessionAmount) > 0 && (
+        <span className="inline-flex items-center px-2 py-1 text-[9px] font-bold border rounded-[12px] shrink-0 bg-purple-500/10 border-purple-500/20 text-purple-400 uppercase tracking-wider" title={`Concession: ₹${Number(student.concessionAmount).toLocaleString()}`}>
+          Concession
+        </span>
+      )}
     </div>
 
     <div className="grid grid-cols-2 gap-2 text-xs mb-4">

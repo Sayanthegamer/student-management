@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Save, X, User, GraduationCap, IndianRupee, Calendar, CheckCircle2 } from 'lucide-react';
+import { Save, X, User, GraduationCap, IndianRupee, Calendar, CheckCircle2, Ticket } from 'lucide-react';
 import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
-import { CLASS_FEES } from '../utils/constants';
+import { CLASS_FEES, ADMISSION_FEES } from '../utils/constants';
 
-const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange }) => (
+const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange, disabled = false, readOnly = false }) => (
     <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-[var(--text-secondary)] px-1 flex items-center gap-2">
             {Icon && <Icon size={14} />}
@@ -17,6 +17,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 onChange={onChange}
                 className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm"
                 required={required}
+                disabled={disabled}
             >
                 {options.map(opt => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -28,15 +29,19 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm placeholder:text-[var(--text-muted)]"
+                className={`w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm placeholder:text-[var(--text-muted)] ${readOnly ? 'opacity-60 pointer-events-none' : ''}`}
                 placeholder={placeholder}
                 required={required}
+                disabled={disabled}
+                readOnly={readOnly}
             />
         )}
     </div>
 );
 
 const StudentForm = ({ onSave, onCancel, initialData = null }) => {
+    const isNewStudent = !initialData;
+
     const [formData, setFormData] = useState(initialData || {
         name: '',
         class: '',
@@ -47,7 +52,9 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         feesStatus: 'Pending',
         fine: '',
         admissionDate: new Date().toISOString().split('T')[0],
-        admissionStatus: 'Confirmed'
+        admissionStatus: 'Confirmed',
+        admissionFee: '',
+        concessionAmount: '',
     });
 
     const handleChange = (e) => {
@@ -55,20 +62,34 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
         if (name === 'class') {
             const fee = CLASS_FEES[value] || '';
+            const admFee = ADMISSION_FEES[value] || formData.admissionFee || '';
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
-                feesAmount: fee
+                feesAmount: fee,
+                // Only auto-fill admission fee if there's a configured value AND we're creating new student
+                ...(isNewStudent && ADMISSION_FEES[value] ? { admissionFee: admFee } : {})
             }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
 
+    // Calculate net admission fee
+    const grossAdmissionFee = Number(formData.admissionFee) || 0;
+    const concessionAmount = Number(formData.concessionAmount) || 0;
+    const netAdmissionFee = Math.max(0, grossAdmissionFee - concessionAmount);
+    const hasConcession = concessionAmount > 0;
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         let dataToSave = { ...formData };
+
+        // Ensure numeric values are stored properly
+        dataToSave.admissionFee = grossAdmissionFee;
+        dataToSave.concessionAmount = concessionAmount;
+
         if (initialData && initialData.admissionStatus !== formData.admissionStatus) {
             dataToSave.lastStatusChangeDate = new Date().toISOString().split('T')[0];
             dataToSave.lastStatusChangedBy = 'form-edit';
@@ -77,7 +98,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         if (initialData) {
             logActivity('student', `Updated details for student: ${formData.name}`);
         } else {
-            logActivity('student', `Admitted new student: ${formData.name} (Class ${formData.class})`);
+            logActivity('student', `Admitted new student: ${formData.name} (Class ${formData.class})${hasConcession ? ' with concession' : ''}`);
         }
 
         onSave(dataToSave);
@@ -158,16 +179,17 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             />
                         </div>
 
-                        {/* Administrative Details Group */}
+                        {/* Fee Details Group */}
                         <div className="space-y-5">
                             <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-color)] mb-4">
                                 <IndianRupee size={18} className="text-[var(--accent-primary)]" />
                                 <h3 className="font-medium text-[var(--text-primary)] text-base">Fee Details</h3>
                             </div>
 
+                            {/* Monthly Fee Section */}
                             <div className="grid grid-cols-2 gap-4">
                                 <InputField 
-                                    label="Base Fee (₹)" 
+                                    label="Monthly Fee (₹)" 
                                     name="feesAmount" 
                                     type="number" 
                                     placeholder="500" 
@@ -219,6 +241,76 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         </div>
                     </div>
 
+                    {/* Admission Fee Section — full width below the 2-col grid */}
+                    <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-5 md:p-6 space-y-5">
+                        <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-color)]">
+                            <Ticket size={18} className="text-[var(--accent-primary)]" />
+                            <h3 className="font-medium text-[var(--text-primary)] text-base">Admission Fee</h3>
+                            {hasConcession && (
+                                <span className="ml-auto text-[10px] font-bold px-2.5 py-1 rounded-[8px] bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                                    Concession Applied
+                                </span>
+                            )}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-[var(--text-secondary)] px-1">
+                                    Gross Admission Fee (₹)
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold text-sm">₹</span>
+                                    <input
+                                        type="number"
+                                        name="admissionFee"
+                                        value={formData.admissionFee}
+                                        onChange={handleChange}
+                                        className="w-full pl-8 pr-3 py-2.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-sm font-semibold"
+                                        placeholder="e.g. 40000"
+                                        min="0"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-[var(--text-secondary)] px-1">
+                                    Concession Amount (₹)
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-400 font-bold text-sm">−₹</span>
+                                    <input
+                                        type="number"
+                                        name="concessionAmount"
+                                        value={formData.concessionAmount}
+                                        onChange={handleChange}
+                                        className="w-full pl-10 pr-3 py-2.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-amber-400 text-sm font-semibold"
+                                        placeholder="0"
+                                        min="0"
+                                        max={grossAdmissionFee || undefined}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-[var(--text-secondary)] px-1">
+                                    Net Admission Fee
+                                </label>
+                                <div className={`px-4 py-2.5 rounded-custom-md border text-sm font-bold tabular-nums ${
+                                    hasConcession 
+                                        ? 'bg-amber-500/5 border-amber-500/20 text-amber-400' 
+                                        : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400'
+                                }`}>
+                                    ₹{netAdmissionFee.toLocaleString()}
+                                    {hasConcession && (
+                                        <span className="text-[10px] font-medium ml-2 text-amber-400/60">
+                                            (saved ₹{concessionAmount.toLocaleString()})
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="flex flex-col sm:flex-row gap-3 pt-6 mt-2 border-t border-[var(--border-color)]">
                         <button
                             type="button" 
@@ -247,6 +339,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             <table className="w-full text-left border-collapse border border-[var(--border-color)]">
                                 <thead className="bg-[var(--bg-main)] border-b border-[var(--border-color)]">
                                     <tr>
+                                        <th className="px-6 py-4 text-[10px] font-medium text-[var(--text-secondary)] ">Type</th>
                                         <th className="px-6 py-4 text-[10px] font-medium text-[var(--text-secondary)] ">Date</th>
                                         <th className="px-6 py-4 text-[10px] font-medium text-[var(--text-secondary)] ">Month</th>
                                         <th className="px-6 py-4 text-[10px] font-medium text-[var(--text-secondary)] ">Amount</th>
@@ -256,8 +349,17 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 <tbody className="divide-y divide-[var(--border-color)] bg-[var(--bg-card)]">
                                     {initialData.feeHistory.slice(-5).reverse().map((payment) => (
                                         <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
+                                            <td className="px-6 py-4 text-sm">
+                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[6px] border uppercase tracking-wider ${
+                                                    payment.type === 'Admission' 
+                                                        ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' 
+                                                        : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                }`}>
+                                                    {payment.type || 'Monthly'}
+                                                </span>
+                                            </td>
                                             <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.date}</td>
-                                            <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.month}</td>
+                                            <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.month || '—'}</td>
                                             <td className="px-6 py-4 text-[var(--color-positive)] font-bold text-sm">₹{payment.amount}</td>
                                             <td className={`px-6 py-4 text-sm ${payment.fine > 0 ? 'text-[var(--color-negative)] font-bold' : 'text-[var(--text-muted)] font-normal'}`}>{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
                                         </tr>

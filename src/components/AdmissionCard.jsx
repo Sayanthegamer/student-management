@@ -32,6 +32,13 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
           {status}
         </span>
       </div>
+      {Number(student.concessionAmount) > 0 && (
+        <div className="flex items-center gap-2 mb-3 -mt-1">
+          <span className="inline-flex items-center px-2 py-0.5 text-[9px] font-bold border rounded-[8px] bg-purple-500/10 border-purple-500/20 text-purple-400 uppercase tracking-wider ml-auto" title={`Concession: ₹${Number(student.concessionAmount).toLocaleString()}`}>
+            Concession: ₹{Number(student.concessionAmount).toLocaleString()}
+          </span>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-2 text-xs mb-4">
         <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">

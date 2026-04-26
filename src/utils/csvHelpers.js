@@ -150,6 +150,10 @@ export const validateAndCoerceStudent = (obj) => {
         feesStatus: obj.feesStatus || obj.fees_status || 'Pending',
         fine: safeParseNumber(obj.fine) || '',
 
+        // Admission fee & concession
+        admissionFee: safeParseNumber(obj.admissionFee || obj.admission_fee) || 0,
+        concessionAmount: safeParseNumber(obj.concessionAmount || obj.concession_amount) || 0,
+
         // Arrays and Objects
         feeHistory: obj.feeHistory || [],
         tcDetails: obj.tcDetails || null,

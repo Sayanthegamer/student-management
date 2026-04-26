@@ -121,6 +121,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                             <table className="hidden md:table w-full text-left border-collapse">
                                 <thead className="bg-[var(--bg-main)] text-[var(--text-secondary)] text-[10px] font-bold tracking-wider uppercase border-b border-[var(--border-color)]">
                                     <tr>
+                                        <th className="px-5 py-4 border-b border-[var(--border-color)]">Type</th>
                                         <th className="px-5 py-4 border-b border-[var(--border-color)]">Date</th>
                                         <th className="px-5 py-4 border-b border-[var(--border-color)]">Period</th>
                                         <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Base</th>
@@ -131,13 +132,26 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                 <tbody className="divide-y divide-[var(--border-color)]">
                                     {sortedHistory.map((payment) => (
                                         <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
+                                            <td className="px-5 py-5">
+                                                <span className={`text-[10px] font-bold px-2 py-1 rounded-[6px] border uppercase tracking-wider ${
+                                                    payment.type === 'Admission'
+                                                        ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                                                        : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                }`}>
+                                                    {payment.type || 'Monthly'}
+                                                </span>
+                                            </td>
                                             <td className="px-5 py-5 text-[var(--text-primary)] font-semibold text-sm">
                                                 {new Date(payment.date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
                                             </td>
                                             <td className="px-5 py-5">
-                                                <span className="bg-[var(--accent-light)] text-[var(--accent-primary)] px-2 py-1 rounded-[8px] text-[10px] font-bold border border-[var(--accent-primary)]/20">
-                                                    {payment.month}
-                                                </span>
+                                                {payment.month ? (
+                                                    <span className="bg-[var(--accent-light)] text-[var(--accent-primary)] px-2 py-1 rounded-[8px] text-[10px] font-bold border border-[var(--accent-primary)]/20">
+                                                        {payment.month}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[var(--text-muted)] text-xs">—</span>
+                                                )}
                                             </td>
                                             <td className="px-5 py-5 text-[var(--text-primary)] font-mono font-semibold text-right text-sm">
                                                 ₹{Number(payment.amount).toLocaleString()}
@@ -153,7 +167,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                 </tbody>
                                 <tfoot className="bg-[var(--bg-main)] text-[var(--text-primary)] border-t border-[var(--border-color)] font-medium">
                                     <tr>
-                                        <td colSpan="4" className="px-5 py-5 text-right text-[10px] uppercase font-bold tracking-wider text-[var(--text-secondary)]">Cumulative Settlement:</td>
+                                        <td colSpan="5" className="px-5 py-5 text-right text-[10px] uppercase font-bold tracking-wider text-[var(--text-secondary)]">Cumulative Settlement:</td>
                                         <td className="px-5 py-5 text-right text-lg font-bold text-[var(--color-positive)]">
                                             ₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}
                                         </td>
@@ -166,12 +180,23 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                     <div key={payment.id} className="p-5 bg-[var(--bg-card)]">
                                         <div className="flex justify-between items-start mb-2">
                                             <div>
-                                                <p className="text-sm font-semibold text-[var(--text-primary)]">{new Date(payment.date).toLocaleDateString()}</p>
-                                                <div className="mt-3">
-                                                    <span className="inline-block bg-[var(--accent-light)] text-[var(--accent-primary)] px-2 py-1 rounded-[8px] text-[10px] font-bold border border-[var(--accent-primary)]/20">
-                                                        {payment.month}
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[6px] border uppercase tracking-wider ${
+                                                        payment.type === 'Admission'
+                                                            ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                                                            : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                    }`}>
+                                                        {payment.type || 'Monthly'}
                                                     </span>
                                                 </div>
+                                                <p className="text-sm font-semibold text-[var(--text-primary)]">{new Date(payment.date).toLocaleDateString()}</p>
+                                                {payment.month && (
+                                                    <div className="mt-3">
+                                                        <span className="inline-block bg-[var(--accent-light)] text-[var(--accent-primary)] px-2 py-1 rounded-[8px] text-[10px] font-bold border border-[var(--accent-primary)]/20">
+                                                            {payment.month}
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-base font-bold text-[var(--color-positive)]">
