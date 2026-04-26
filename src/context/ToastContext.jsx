@@ -12,36 +12,36 @@ const toastIcons = {
 
 const toastStyles = {
   success: {
-    border: 'border-[#CCFF00]',
-    bg: 'bg-[#0a0a0a]',
-    iconBg: 'bg-[#CCFF00]',
-    iconColor: 'text-black',
-    textColor: 'text-white',
-    accent: 'bg-[#CCFF00]',
+    border: 'border-[var(--success)]/30',
+    bg: 'bg-[var(--bg-card)]',
+    iconBg: 'bg-[var(--success)]/10',
+    iconColor: 'text-[var(--success)]',
+    textColor: 'text-[var(--text-primary)]',
+    accent: 'bg-[var(--success)]',
   },
   error: {
-    border: 'border-rose-500',
-    bg: 'bg-[#0a0a0a]',
-    iconBg: 'bg-rose-500',
-    iconColor: 'text-black',
-    textColor: 'text-white',
-    accent: 'bg-rose-500',
+    border: 'border-[var(--color-negative)]/30',
+    bg: 'bg-[var(--bg-card)]',
+    iconBg: 'bg-[var(--color-negative)]/10',
+    iconColor: 'text-[var(--color-negative)]',
+    textColor: 'text-[var(--text-primary)]',
+    accent: 'bg-[var(--color-negative)]',
   },
   warning: {
-    border: 'border-amber-400',
-    bg: 'bg-[#0a0a0a]',
-    iconBg: 'bg-amber-400',
-    iconColor: 'text-black',
-    textColor: 'text-white',
-    accent: 'bg-amber-400',
+    border: 'border-[var(--color-warning)]/30',
+    bg: 'bg-[var(--bg-card)]',
+    iconBg: 'bg-[var(--color-warning)]/10',
+    iconColor: 'text-[var(--color-warning)]',
+    textColor: 'text-[var(--text-primary)]',
+    accent: 'bg-[var(--color-warning)]',
   },
   info: {
-    border: 'border-white/40',
-    bg: 'bg-[#0a0a0a]',
-    iconBg: 'bg-white',
-    iconColor: 'text-black',
-    textColor: 'text-white',
-    accent: 'bg-white',
+    border: 'border-[var(--border-color)]',
+    bg: 'bg-[var(--bg-card)]',
+    iconBg: 'bg-[var(--bg-main)]',
+    iconColor: 'text-[var(--text-secondary)]',
+    textColor: 'text-[var(--text-primary)]',
+    accent: 'bg-[var(--text-secondary)]',
   },
 };
 
@@ -76,10 +76,10 @@ function ToastItem({ toast, onDismiss }) {
       className={`
         pointer-events-auto
         ${styles.bg}
-        border-2 ${styles.border}
+        border ${styles.border} rounded-[12px]
         p-0
         flex items-stretch
-        shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]
+        shadow-lg
         slide-down
         max-w-sm
         w-[calc(100vw-2rem)]
@@ -99,7 +99,7 @@ function ToastItem({ toast, onDismiss }) {
 
       {/* Content */}
       <div className="flex-1 p-3 min-w-0 flex items-center">
-        <p className={`${styles.textColor} text-sm font-black uppercase tracking-wide leading-tight`}>
+        <p className={`${styles.textColor} text-sm font-medium leading-tight`}>
           {message}
         </p>
       </div>
@@ -110,10 +110,10 @@ function ToastItem({ toast, onDismiss }) {
         className={`
           px-3
           ${styles.textColor}
-          hover:bg-white/10
+          hover:bg-[var(--hover-overlay)]
           transition-colors
           flex items-center justify-center
-          border-l-2 ${styles.border}
+          border-l border-[var(--border-color)]
         `}
         aria-label="Dismiss notification"
       >

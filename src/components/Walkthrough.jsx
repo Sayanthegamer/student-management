@@ -315,7 +315,7 @@ const Walkthrough = () => {
             {/* Spotlight Overlay */}
             {/* We use a huge box-shadow on the spotlight div to create the dark overlay around it */}
             <div
-                className="absolute transition-all duration-300 ease-in-out rounded-custom-none pointer-events-none border-[3px] border-[#CCFF00]"
+                className="absolute transition-all duration-300 ease-in-out rounded-[16px] pointer-events-none border-[3px] border-[var(--accent-primary)]"
                 style={{
                     top: spotlightStyle.top,
                     left: spotlightStyle.left,
@@ -339,12 +339,12 @@ const Walkthrough = () => {
                 aria-labelledby={`walkthrough-title-${currentStep}`}
                 aria-describedby={`walkthrough-desc-${currentStep}`}
                 tabIndex="-1"
-                className="absolute pointer-events-auto bg-[var(--bg-card)] p-8 rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
+                className="absolute pointer-events-auto bg-[var(--bg-card)] p-8 rounded-[24px] shadow-xl w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
                 style={tooltipPosition}
             >
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
-                        <span className="bg-[#CCFF00] text-black text-[10px] font-medium  px-3 py-1 rounded-custom-none border border-[#CCFF00]">
+                        <span className="bg-[var(--accent-primary)] text-white text-[10px] font-bold px-3 py-1 rounded-[8px] border border-[var(--accent-primary)]">
                             Step {currentStep + 1}/{steps.length}
                         </span>
                     </div>
@@ -360,7 +360,7 @@ const Walkthrough = () => {
                     <button
                         onClick={handlePrev}
                         disabled={currentStep === 0}
-                        className={`flex items-center gap-2 text-[10px] font-medium  transition-colors ${currentStep === 0 ? 'text-white/20 cursor-not-allowed' : 'text-[var(--text-secondary)] hover:text-[#CCFF00]'}`}
+                        className={`flex items-center gap-2 text-[10px] font-bold transition-colors ${currentStep === 0 ? 'text-white/20 cursor-not-allowed' : 'text-[var(--text-secondary)] hover:text-[var(--accent-primary)]'}`}
                     >
                         <ChevronLeft size={16} className="stroke-[3px]" /> Previous
                     </button>
@@ -370,14 +370,14 @@ const Walkthrough = () => {
                         {steps.map((_, idx) => (
                             <div
                                 key={idx}
-                                className={`w-2 h-2 rounded-custom-none transition-all ${idx === currentStep ? 'bg-[#CCFF00] scale-125' : 'bg-white/20'}`}
+                                className={`w-2 h-2 rounded-full transition-all ${idx === currentStep ? 'bg-[var(--accent-primary)] scale-125' : 'bg-white/20'}`}
                             />
                         ))}
                     </div>
 
                     <button
                         onClick={handleNext}
-                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border border-[#CCFF00] px-5 py-3 rounded-custom-none text-[10px] font-medium shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex items-center gap-3 transition-colors  active:bg-[#CCFF00]/20"
+                        className="bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] hover:text-white text-white border border-[var(--accent-primary)] hover:border-[var(--accent-hover)] px-5 py-3 rounded-[12px] text-[10px] font-bold shadow-md flex items-center gap-3 transition-colors active:scale-[0.98]"
                     >
                         {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
                         {currentStep === steps.length - 1 ? <CheckCircle size={16} className="stroke-[3px]" /> : <ChevronRight size={16} className="stroke-[3px]" />}

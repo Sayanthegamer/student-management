@@ -89,37 +89,37 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
         >
-            <div ref={dialogRef} className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="payment-ledger-title" aria-describedby="payment-ledger-desc">
+            <div ref={dialogRef} className={`bg-[var(--bg-main)] rounded-[16px] shadow-lg w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[var(--border-color)] ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="payment-ledger-title" aria-describedby="payment-ledger-desc">
 
-                <div className="bg-[#CCFF00] px-4 md:px-6 py-6 md:py-8 text-black relative flex-shrink-0 border-b border-[#CCFF00]">
+                <div className="bg-[var(--bg-card)] px-4 md:px-6 py-5 md:py-6 text-[var(--text-primary)] relative flex-shrink-0 border-b border-[var(--border-color)]">
                     <div className="relative z-10 pr-12">
-                        <h3 id="payment-ledger-title" className="text-lg sm:text-xl md:text-2xl font-medium  flex items-center gap-2 md:gap-4 break-words leading-tight">
-                            <FileText className="text-black stroke-[3px] shrink-0" size={24} />
+                        <h3 id="payment-ledger-title" className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2 md:gap-3 break-words leading-tight">
+                            <FileText className="text-[var(--accent-primary)] stroke-[2.5px] shrink-0" size={24} />
                             Payment Ledger
                         </h3>
-                        <p id="payment-ledger-desc" className="text-black/60 mt-2 text-[9px] sm:text-[10px] font-mono  leading-tight">
-                            Beneficiary: <span className="text-black font-medium  text-xs sm:text-sm">{student.name}</span> <br className="sm:hidden" /> <span className="hidden sm:inline">—</span> {student.class}-{student.section}
+                        <p id="payment-ledger-desc" className="text-[var(--text-secondary)] mt-2 text-xs sm:text-sm leading-tight">
+                            Beneficiary: <span className="text-[var(--text-primary)] font-bold">{student.name}</span> <br className="sm:hidden" /> <span className="hidden sm:inline">—</span> {student.class}-{student.section}
                         </p>
                     </div>
                     <button
                         onClick={handleClose}
                         aria-label="Close payment ledger"
-                        className="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 min-h-[40px] min-w-[40px] md:min-h-[48px] md:min-w-[48px] bg-transparent border border-black hover:bg-black hover:text-[#CCFF00] text-black rounded-custom-none transition-colors z-20 flex items-center justify-center shrink-0"
+                        className="absolute top-4 right-4 md:top-6 md:right-6 p-2 min-h-[40px] min-w-[40px] bg-transparent border border-[var(--border-color)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] text-[var(--text-secondary)] rounded-[12px] transition-colors z-20 flex items-center justify-center shrink-0"
                     >
-                        <X size={20} className="stroke-[3px] md:w-6 md:h-6" />
+                        <X size={20} className="stroke-[2.5px]" />
                     </button>
                 </div>
 
-                <div className="overflow-y-auto p-4 md:p-8 flex-1 bg-[var(--bg-card)]">
+                <div className="overflow-y-auto p-4 md:p-8 flex-1 bg-[var(--bg-main)]">
                     {sortedHistory.length === 0 ? (
-                        <div className="text-center py-20 bg-[var(--bg-main)] rounded-custom-none border border-[var(--border-color)]">
-                            <Calendar size={48} className="mx-auto mb-4 text-white/20 stroke-[1px]" />
-                            <p className="text-[var(--text-secondary)] font-medium  text-sm">No transactions recorded</p>
+                        <div className="text-center py-20 bg-[var(--bg-card)] rounded-[12px] border border-[var(--border-color)]">
+                            <Calendar size={48} className="mx-auto mb-4 text-[var(--text-muted)]" />
+                            <p className="text-[var(--text-secondary)] font-medium text-sm">No transactions recorded</p>
                         </div>
                     ) : (
-                        <div className="overflow-hidden rounded-custom-none border border-[var(--border-color)] shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] bg-[var(--bg-main)]">
+                        <div className="overflow-hidden rounded-[12px] border border-[var(--border-color)] shadow-sm bg-[var(--bg-card)]">
                             <table className="hidden md:table w-full text-left border-collapse">
-                                <thead className="bg-[var(--bg-main)] text-[var(--text-secondary)] text-[10px]  font-medium border-b border-[var(--border-color)]">
+                                <thead className="bg-[var(--bg-main)] text-[var(--text-secondary)] text-[10px] font-bold tracking-wider uppercase border-b border-[var(--border-color)]">
                                     <tr>
                                         <th className="px-5 py-4 border-b border-[var(--border-color)]">Date</th>
                                         <th className="px-5 py-4 border-b border-[var(--border-color)]">Period</th>
@@ -128,57 +128,57 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                         <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Total</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/10">
+                                <tbody className="divide-y divide-[var(--border-color)]">
                                     {sortedHistory.map((payment) => (
-                                        <tr key={payment.id} className="hover:bg-white/5 transition-colors">
-                                            <td className="px-5 py-5 text-white font-mono text-sm">
+                                        <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
+                                            <td className="px-5 py-5 text-[var(--text-primary)] font-semibold text-sm">
                                                 {new Date(payment.date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
                                             </td>
                                             <td className="px-5 py-5">
-                                                <span className="bg-[#CCFF00] text-black px-2 py-1 rounded-custom-none text-[9px] font-medium  border border-[#CCFF00]">
+                                                <span className="bg-[var(--accent-light)] text-[var(--accent-primary)] px-2 py-1 rounded-[8px] text-[10px] font-bold border border-[var(--accent-primary)]/20">
                                                     {payment.month}
                                                 </span>
                                             </td>
-                                            <td className="px-5 py-5 text-white font-mono text-right text-sm">
+                                            <td className="px-5 py-5 text-[var(--text-primary)] font-mono font-semibold text-right text-sm">
                                                 ₹{Number(payment.amount).toLocaleString()}
                                             </td>
-                                            <td className="px-5 py-5 text-rose-500 text-right font-mono font-bold text-sm">
+                                            <td className="px-5 py-5 text-[var(--color-negative)] text-right font-mono font-bold text-sm">
                                                 {payment.fine > 0 ? `₹${payment.fine}` : '—'}
                                             </td>
-                                            <td className="px-5 py-5 text-[#CCFF00] font-medium tracking-widest text-right text-sm">
+                                            <td className="px-5 py-5 text-[var(--color-positive)] font-bold text-right text-sm">
                                                 ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
-                                <tfoot className="bg-[var(--bg-card)] text-white border-t border-[var(--border-color)] font-medium">
+                                <tfoot className="bg-[var(--bg-main)] text-[var(--text-primary)] border-t border-[var(--border-color)] font-medium">
                                     <tr>
-                                        <td colSpan="4" className="px-5 py-5 text-right text-[10px]  text-[var(--text-secondary)]">Cumulative Settlement:</td>
-                                        <td className="px-5 py-5 text-right text-lg font-medium tracking-widest text-[#CCFF00]">
+                                        <td colSpan="4" className="px-5 py-5 text-right text-[10px] uppercase font-bold tracking-wider text-[var(--text-secondary)]">Cumulative Settlement:</td>
+                                        <td className="px-5 py-5 text-right text-lg font-bold text-[var(--color-positive)]">
                                             ₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}
                                         </td>
                                     </tr>
                                 </tfoot>
                             </table>
 
-                            <div className="md:hidden flex flex-col divide-y divide-white/10">
+                            <div className="md:hidden flex flex-col divide-y divide-[var(--border-color)]">
                                 {sortedHistory.map((payment) => (
-                                    <div key={payment.id} className="p-5 bg-transparent">
+                                    <div key={payment.id} className="p-5 bg-[var(--bg-card)]">
                                         <div className="flex justify-between items-start mb-2">
                                             <div>
-                                                <p className="text-sm font-mono text-white">{new Date(payment.date).toLocaleDateString()}</p>
+                                                <p className="text-sm font-semibold text-[var(--text-primary)]">{new Date(payment.date).toLocaleDateString()}</p>
                                                 <div className="mt-3">
-                                                    <span className="inline-block bg-[#CCFF00] text-black px-2 py-1 rounded-custom-none text-[9px] font-medium  border border-[#CCFF00]">
+                                                    <span className="inline-block bg-[var(--accent-light)] text-[var(--accent-primary)] px-2 py-1 rounded-[8px] text-[10px] font-bold border border-[var(--accent-primary)]/20">
                                                         {payment.month}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-base font-medium tracking-widest text-[#CCFF00]">
+                                                <p className="text-base font-bold text-[var(--color-positive)]">
                                                     ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                                 </p>
                                                 {payment.fine > 0 && (
-                                                    <p className="text-[9px] text-rose-500 font-medium  mt-1">
+                                                    <p className="text-xs text-[var(--color-negative)] font-medium mt-1 bg-rose-50 px-2 py-0.5 rounded-[6px] inline-block">
                                                         Incl. ₹{payment.fine} fine
                                                     </p>
                                                 )}
@@ -186,10 +186,10 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                         </div>
                                     </div>
                                 ))}
-                                <div className="bg-[var(--bg-card)] p-5 text-white border-t border-[var(--border-color)]">
+                                <div className="bg-[var(--bg-main)] p-5 text-[var(--text-primary)] border-t border-[var(--border-color)]">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-[10px] font-medium  text-[var(--text-secondary)]">Grand Total Paid</span>
-                                        <span className="text-xl font-medium text-[#CCFF00] tracking-widest">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}</span>
+                                        <span className="text-xs font-bold text-[var(--text-secondary)]">Grand Total Paid</span>
+                                        <span className="text-xl font-bold text-[var(--color-positive)]">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}</span>
                                     </div>
                                 </div>
                             </div>

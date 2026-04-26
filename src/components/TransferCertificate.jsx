@@ -154,9 +154,9 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     };
 
     return (
-        <div className="bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border border-[var(--border-color)] p-3 md:p-8 max-w-6xl mx-auto">
-            <h2 className="text-white mb-8 text-2xl md:text-3xl flex items-center gap-4 font-medium  flex-wrap">
-                <FileText size={32} className="text-[#CCFF00] stroke-[3px]" />
+        <div className="bg-[var(--bg-card)] rounded-[16px] shadow-sm border border-[var(--border-color)] p-4 md:p-8 max-w-6xl mx-auto">
+            <h2 className="text-[var(--text-primary)] mb-8 text-2xl md:text-3xl flex items-center gap-3 font-bold tracking-tight flex-wrap">
+                <FileText size={32} className="text-[var(--accent-primary)] stroke-[2.5px]" />
                 Transfer Certificate
             </h2>
 
@@ -164,18 +164,18 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
             <div className="flex flex-row gap-3 md:gap-4 mb-6 md:mb-8 border-b border-[var(--border-color)] pb-4 md:pb-6">
                 <button
                     onClick={() => setView('active')}
-                    className={`flex-1 px-4 py-3 text-xs sm:text-sm transition-colors  font-medium whitespace-nowrap text-center ${view === 'active'
-                        ? 'bg-[#CCFF00] text-black border border-[#CCFF00]'
-                        : 'bg-transparent text-[var(--text-secondary)] border border-transparent hover:border-white/50 hover:text-white'
+                    className={`flex-1 px-4 py-3 text-xs sm:text-sm transition-colors font-bold whitespace-nowrap text-center rounded-[12px] border ${view === 'active'
+                        ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
+                        : 'bg-[var(--bg-main)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)]/50 hover:text-[var(--accent-primary)]'
                         }`}
                 >
                     Issue TC (Active)
                 </button>
                 <button
                     onClick={() => setView('transferred')}
-                    className={`flex-1 px-4 py-3 text-xs sm:text-sm transition-colors  font-medium whitespace-nowrap text-center ${view === 'transferred'
-                        ? 'bg-[#CCFF00] text-black border border-[#CCFF00]'
-                        : 'bg-transparent text-[var(--text-secondary)] border border-transparent hover:border-white/50 hover:text-white'
+                    className={`flex-1 px-4 py-3 text-xs sm:text-sm transition-colors font-bold whitespace-nowrap text-center rounded-[12px] border ${view === 'transferred'
+                        ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
+                        : 'bg-[var(--bg-main)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)]/50 hover:text-[var(--accent-primary)]'
                         }`}
                 >
                     History
@@ -185,84 +185,89 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
             {/* Filters & Controls */}
             <div className="flex gap-2.5 md:gap-4 mb-6 md:mb-8 flex-wrap items-center">
                 <div className="relative flex-1 min-w-[240px]">
-                    <Search size={24} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] stroke-[3px]" />
+                    <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
                     <input
                         type="text"
-                        placeholder="SEARCH STUDENT..."
+                        placeholder="Search student..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-2.5 md:py-3 rounded-custom-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  placeholder:text-white/20 pl-12"
+                        className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-2.5 md:py-3 rounded-[12px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium placeholder:text-[var(--text-muted)] pl-12"
+                        aria-label="Search students"
                     />
                 </div>
 
                 <select
                     value={filterClass}
                     onChange={(e) => setFilterClass(e.target.value)}
-                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-custom-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto min-w-[120px] md:min-w-[140px]"
+                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-[12px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium appearance-none w-auto min-w-[120px] md:min-w-[140px] cursor-pointer"
+                    aria-label="Filter by class"
                 >
-                    <option value="">ALL CLASSES</option>
-                    {classes.map(c => <option key={c} value={c}>CLASS {c}</option>)}
+                    <option value="">All Classes</option>
+                    {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
                 </select>
 
                 <select
                     value={filterSection}
                     onChange={(e) => setFilterSection(e.target.value)}
-                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-custom-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto min-w-[120px] md:min-w-[140px]"
+                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-[12px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium appearance-none w-auto min-w-[120px] md:min-w-[140px] cursor-pointer"
+                    aria-label="Filter by section"
                 >
-                    <option value="">ALL SECTIONS</option>
-                    {sections.map(s => <option key={s} value={s}>SEC {s}</option>)}
+                    <option value="">All Sections</option>
+                    {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
                 </select>
 
                 <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-custom-none text-white outline-none transition-colors focus:border-[#CCFF00] font-medium  appearance-none w-auto"
+                    className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-[12px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium appearance-none w-auto cursor-pointer"
+                    aria-label="Sort by"
                 >
-                    <option value="name">SORT: NAME</option>
-                    <option value="rollNo">SORT: ROLL NO</option>
-                    <option value="class">SORT: CLASS</option>
+                    <option value="name">Sort: Name</option>
+                    <option value="rollNo">Sort: Roll No</option>
+                    <option value="class">Sort: Class</option>
                 </select>
 
                 <button
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                    className="btn bg-[var(--bg-main)] border border-[var(--border-color)] p-3 text-white font-medium hover:border-white rounded-custom-none transition-colors"
-                    title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                    className="bg-[var(--bg-main)] border border-[var(--border-color)] p-3 text-[var(--text-secondary)] font-medium hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] rounded-[12px] transition-colors flex items-center justify-center min-h-[44px] min-w-[44px]"
+                    title={sortOrder === 'asc' ? 'Change sort to descending' : 'Change sort to ascending'}
+                    aria-label={sortOrder === 'asc' ? 'Change sort to descending' : 'Change sort to ascending'}
                 >
                     {sortOrder === 'asc' ? '↓' : '↑'}
                 </button>
             </div>
 
             {/* Table View (Desktop) */}
-            <div className="hidden md:block overflow-hidden rounded-custom-none border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <div className="hidden md:block overflow-hidden rounded-[12px] border border-[var(--border-color)] bg-[var(--bg-main)]">
                 <table className="w-full border-collapse text-left">
                     <thead className="bg-[var(--bg-main)] border-b border-[var(--border-color)]">
                         <tr>
-                            <th className="p-4 font-medium text-[var(--text-secondary)] text-[10px] ">Name</th>
-                            <th className="p-4 font-medium text-[var(--text-secondary)] text-[10px] ">Class/Sec</th>
-                            <th className="p-4 font-medium text-[var(--text-secondary)] text-[10px] ">Roll No</th>
-                            <th className="p-4 font-medium text-[var(--text-secondary)] text-[10px] ">{view === 'active' ? 'Admission Date' : 'Date of Leaving'}</th>
-                            <th className="p-4 font-medium text-[var(--text-secondary)] text-[10px]  text-right">{view === 'active' ? 'Action' : 'Reason'}</th>
+                            <th className="p-4 font-bold tracking-wider uppercase text-[var(--text-secondary)] text-[10px]">Name</th>
+                            <th className="p-4 font-bold tracking-wider uppercase text-[var(--text-secondary)] text-[10px]">Class/Sec</th>
+                            <th className="p-4 font-bold tracking-wider uppercase text-[var(--text-secondary)] text-[10px]">Roll No</th>
+                            <th className="p-4 font-bold tracking-wider uppercase text-[var(--text-secondary)] text-[10px]">{view === 'active' ? 'Admission Date' : 'Date of Leaving'}</th>
+                            <th className="p-4 font-bold tracking-wider uppercase text-[var(--text-secondary)] text-[10px] text-right">{view === 'active' ? 'Action' : 'Reason'}</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/10">
+                    <tbody className="divide-y divide-[var(--border-color)]">
                         {currentStudents.map(student => (
-                            <tr key={student.id} className="hover:bg-white/5 transition-colors">
-                                <td className="p-4 text-white font-medium  text-sm">{student.name}</td>
-                                <td className="p-4 text-white font-medium  text-sm">{student.class} - {student.section}</td>
-                                <td className="p-4 text-white font-medium  text-sm">{student.rollNo}</td>
-                                <td className="p-4 text-white font-medium  text-sm">
+                            <tr key={student.id} className="hover:bg-[var(--bg-card-hover)] transition-colors bg-[var(--bg-card)]">
+                                <td className="p-4 text-[var(--text-primary)] font-bold text-sm">{student.name}</td>
+                                <td className="p-4 text-[var(--text-primary)] font-medium text-sm">{student.class} - {student.section}</td>
+                                <td className="p-4 text-[var(--text-primary)] font-mono font-medium text-sm">{student.rollNo}</td>
+                                <td className="p-4 text-[var(--text-primary)] font-medium text-sm">
                                     {view === 'active' ? student.admissionDate : student.tcDetails?.dateOfLeaving}
                                 </td>
                                 <td className="p-4 text-right">
                                     {view === 'active' ? (
                                         <button
                                             onClick={() => handleIssueClick(student)}
-                                            className="inline-flex items-center gap-2 px-4 py-2 border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-black  font-medium text-[10px] rounded-custom-none bg-transparent transition-colors"
+                                            className="inline-flex items-center gap-2 px-4 py-2 border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-600 hover:text-white font-bold text-xs rounded-[8px] transition-colors"
                                         >
                                             Issue TC
                                         </button>
                                     ) : (
-                                        <span className="text-[var(--text-secondary)] text-xs font-mono tracking-wide uppercase">
+                                        <span className="text-[var(--text-secondary)] text-xs font-mono font-semibold tracking-wide uppercase">
                                             {student.tcDetails?.reason || 'N/A'}
                                         </span>
                                     )}
@@ -271,10 +276,10 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                         ))}
                         {currentStudents.length === 0 && (
                             <tr>
-                                <td colSpan="5" className="p-16 text-center text-[var(--text-secondary)]">
+                                <td colSpan="5" className="p-16 text-center text-[var(--text-secondary)] bg-[var(--bg-card)]">
                                     <div className="flex flex-col items-center gap-4">
-                                        <Search size={48} className="opacity-20 stroke-[1px]" />
-                                        <p className=" font-medium text-sm">{view === 'active'
+                                        <Search size={48} className="text-[var(--text-muted)]" />
+                                        <p className="font-medium text-sm text-[var(--text-primary)]">{view === 'active'
                                             ? 'No active students found matching your filters.'
                                             : 'No transferred students found in the last 3 months.'}</p>
                                     </div>
@@ -296,12 +301,16 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                         />
                     ))
                 ) : (
-                    <div className="py-16 text-center border border-[var(--border-color)] bg-[var(--bg-main)]">
-                        <div className="p-6 w-24 h-24 flex items-center justify-center mx-auto mb-4">
-                            <Search size={48} className="text-white/30 stroke-[1px]" />
+                    <div className="py-16 text-center border border-[var(--border-color)] rounded-[16px] bg-[var(--bg-card)] shadow-sm">
+                        <div className="w-20 h-20 flex items-center justify-center mx-auto mb-4 bg-[var(--bg-main)] rounded-[16px] border border-[var(--border-color)]">
+                            <Search size={32} className="text-[var(--text-muted)]" />
                         </div>
-                        <p className="text-white font-medium  text-lg">No results found</p>
-                        <p className="text-[var(--text-secondary)]  font-mono text-xs mt-2">Try adjusting your filters</p>
+                        <p className="text-[var(--text-primary)] font-bold text-lg">
+                            {view === 'transferred' ? 'No transferred students found in the last 3 months.' : 'No results found'}
+                        </p>
+                        {view !== 'transferred' && (
+                            <p className="text-[var(--text-secondary)] font-medium text-sm mt-1">Try adjusting your filters</p>
+                        )}
                     </div>
                 )}
             </div>
@@ -336,40 +345,111 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
 
 const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel }) => {
     const [isClosing, setIsClosing] = useState(false);
+    const dialogRef = React.useRef(null);
+    const previousActiveElementRef = React.useRef(null);
+    const onCancelRef = React.useRef(null);
+
+    const exitTimerRef = React.useRef(null);
+
+    // Keep onCancel ref up to date
+    onCancelRef.current = onCancel;
 
     const handleExit = (callback) => {
+        if (isClosing) return;
         setIsClosing(true);
-        setTimeout(() => {
+        exitTimerRef.current = setTimeout(() => {
             callback();
             setIsClosing(false);
+            exitTimerRef.current = null;
         }, 200);
     };
 
+    // Focus trap and keyboard handling
+    React.useEffect(() => {
+        previousActiveElementRef.current = document.activeElement;
+        const dialogEl = dialogRef.current;
+
+        if (dialogEl) {
+            const focusableElements = dialogEl.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusableElements.length > 0) {
+                focusableElements[0].focus();
+            }
+        }
+
+        const handleKeyDown = (e) => {
+            if (!dialogEl) return;
+
+            if (e.key === 'Escape') {
+                handleExit(onCancelRef.current);
+                return;
+            }
+
+            if (e.key === 'Tab') {
+                const focusableElements = dialogEl.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        };
+
+        if (dialogEl) {
+            dialogEl.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            if (dialogEl) {
+                dialogEl.removeEventListener('keydown', handleKeyDown);
+            }
+            if (exitTimerRef.current) {
+                clearTimeout(exitTimerRef.current);
+            }
+            if (previousActiveElementRef.current) {
+                previousActiveElementRef.current.focus();
+            }
+        };
+    }, []);
+
     return createPortal(
         <div 
-            className={`fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex justify-center items-center z-50 modal-backdrop ${isClosing ? 'closing' : ''}`}
+            className={`fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex justify-center items-center z-50 modal-backdrop ${isClosing ? 'closing' : ''}`}
             onClick={(e) => {
                 if (e.target === e.currentTarget) handleExit(onCancel);
             }}
         >
-            <div className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border border-rose-500 w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div ref={dialogRef} className={`bg-[var(--bg-card)] rounded-[24px] shadow-xl border border-[var(--border-color)] w-[90%] max-w-lg max-h-[90vh] overflow-y-auto ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="issue-tc-title">
             <div className="relative">
-                <h3 className="mt-0 text-black bg-rose-500 px-6 py-5 md:py-8 text-xl font-medium  border-b border-rose-500">
+                <h3 id="issue-tc-title" className="mt-0 text-rose-400 bg-rose-500/10 px-6 py-5 md:py-8 text-xl font-bold border-b border-rose-500/20 flex items-center gap-3">
+                    <AlertTriangle size={24} className="text-rose-400 stroke-[2.5px]" />
                     Issue Transfer Certificate
                 </h3>
                 <button
                     onClick={() => handleExit(onCancel)}
-                    className="absolute top-3 right-3 md:top-6 md:right-6 text-black border border-black hover:bg-black hover:text-rose-500 p-3 min-h-[48px] min-w-[48px] rounded-custom-none transition-colors z-20 flex items-center justify-center"
+                    className="absolute top-3 right-3 md:top-6 md:right-6 text-rose-400 hover:bg-rose-500/20 p-3 min-h-[44px] min-w-[44px] rounded-[12px] transition-colors z-20 flex items-center justify-center"
                     aria-label="Close"
                 >
-                    <X size={20} className="stroke-[3px]" />
+                    <X size={20} className="stroke-[2.5px]" />
                 </button>
             </div>
 
                 <div className="p-5 md:p-10">
-                    <div className="mb-8 border-b border-white/10 pb-6">
-                        <p className="m-0 mb-2 font-medium text-2xl text-white ">{student.name}</p>
-                        <p className="m-0 text-[var(--text-secondary)] font-mono tracking-wide uppercase text-sm">Class: {student.class} - {student.section} | Roll: {student.rollNo}</p>
+                    <div className="mb-8 border-b border-[var(--border-color)] pb-6">
+                        <p className="m-0 mb-2 font-bold text-2xl text-[var(--text-primary)]">{student.name}</p>
+                        <p className="m-0 text-[var(--text-secondary)] font-mono tracking-wide text-sm">Class: {student.class} - {student.section} | Roll: {student.rollNo}</p>
                     </div>
 
                     <div className="flex flex-col gap-6">
@@ -381,11 +461,12 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                         />
                     </div>
                     <div>
-                        <label className="block mb-2 text-[10px] text-[var(--text-secondary)]  font-medium">Reason for Leaving</label>
+                        <label htmlFor="reason-select" className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Reason for Leaving</label>
                         <select
+                            id="reason-select"
                             value={tcDetails.reason}
                             onChange={e => setTcDetails({ ...tcDetails, reason: e.target.value })}
-                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-custom-none text-white focus:border-rose-500  font-medium text-sm outline-none appearance-none transition-colors"
+                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-[12px] text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium text-sm outline-none appearance-none transition-colors cursor-pointer"
                         >
                             <option>Completed Course</option>
                             <option>Parent's Transfer</option>
@@ -394,22 +475,24 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                         </select>
                     </div>
                     <div>
-                        <label className="block mb-2 text-[10px] text-[var(--text-secondary)]  font-medium">Conduct</label>
+                        <label htmlFor="conduct-input" className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Conduct</label>
                         <input
+                            id="conduct-input"
                             type="text"
                             value={tcDetails.conduct}
                             onChange={e => setTcDetails({ ...tcDetails, conduct: e.target.value })}
-                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-custom-none text-white focus:border-rose-500  font-medium text-sm outline-none transition-colors"
+                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-[12px] text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium text-sm outline-none transition-colors"
                         />
                     </div>
                     <div>
-                        <label className="block mb-2 text-[10px] text-[var(--text-secondary)]  font-medium">Remarks</label>
+                        <label htmlFor="remarks-input" className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Remarks</label>
                         <input
+                            id="remarks-input"
                             type="text"
                             value={tcDetails.remarks}
                             onChange={e => setTcDetails({ ...tcDetails, remarks: e.target.value })}
-                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-custom-none text-white focus:border-rose-500  font-medium text-sm outline-none transition-colors placeholder:text-white/20"
-                            placeholder="OPTIONAL..."
+                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-[12px] text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium text-sm outline-none transition-colors placeholder:text-[var(--text-muted)]"
+                            placeholder="Optional..."
                         />
                     </div>
                 </div>
@@ -417,14 +500,14 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                 <div className="flex flex-col sm:flex-row gap-4 mt-10">
                     <button
                         onClick={() => handleExit(onConfirm)}
-                        className="btn flex-1 bg-rose-500 border border-rose-500 text-black hover:bg-white hover:border-white font-medium  rounded-custom-none p-3.5 md:p-4 transition-colors justify-center flex items-center gap-3 min-h-[48px]"
+                        className="flex-1 bg-rose-600 text-white hover:bg-rose-700 font-bold rounded-[12px] p-3.5 md:p-4 transition-colors justify-center flex items-center gap-3 min-h-[48px]"
                     >
-                        <AlertTriangle size={20} className="stroke-[3px]" />
+                        <AlertTriangle size={20} className="stroke-[2.5px]" />
                         Confirm TC
                     </button>
                     <button
                         onClick={() => handleExit(onCancel)}
-                        className="btn flex-1 bg-transparent border border-[var(--border-color)] text-white hover:border-white font-medium  rounded-custom-none p-3.5 md:p-4 transition-colors justify-center flex items-center min-h-[48px]"
+                        className="flex-1 bg-[var(--bg-main)] border border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] font-bold rounded-[12px] p-3.5 md:p-4 transition-colors justify-center flex items-center min-h-[48px]"
                     >
                         Cancel
                     </button>

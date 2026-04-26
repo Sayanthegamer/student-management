@@ -107,10 +107,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     if (students.length === 0) {
         return (
             <div className="card-base p-8 md:p-16 text-center max-w-2xl mx-auto mt-8">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 border border-[var(--border-color)] rounded-custom-2xl flex items-center justify-center mx-auto mb-6">
-                    <UserPlus size={32} className="text-[var(--text-primary)]" />
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 rounded-[16px] flex items-center justify-center mx-auto mb-6">
+                    <UserPlus size={32} className="text-[var(--accent-primary)]" />
                 </div>
-                <h2 className="text-xl md:text-2xl font-semibold text-white mb-2">No students yet</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] mb-2">No students yet</h2>
                 <p className="text-[var(--text-secondary)] text-sm md:text-base mb-8">Start building your database by adding your first student record.</p>
                 <button onClick={onAdd} className="btn btn-primary mx-auto">
                     <Plus size={18} />
@@ -122,7 +122,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
     return (
         <div className="max-w-6xl mx-auto p-4 md:px-8 md:py-6">
-            <h2 className="text-white text-xl font-medium mb-4 mt-2">Student Directory</h2>
+            <h2 className="text-[var(--text-primary)] text-xl font-bold mb-4 mt-2 tracking-tight">Student Directory</h2>
 
             <div className="card-base overflow-hidden page-enter flex flex-col mb-10">
                 <div className="px-5 py-3.5 border-b border-[var(--border-color)] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--bg-card)]">
@@ -140,7 +140,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         <div className="flex items-center gap-2 shrink-0">
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`p-2 border rounded-custom-md transition-all flex items-center justify-center ${showFilters ? 'bg-[var(--bg-card-hover)] border-[var(--border-color)] text-white' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-white'}`}
+                                className={`p-2 border rounded-[12px] transition-all flex items-center justify-center ${showFilters ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/20 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)]'}`}
                                 aria-label="Toggle filters"
                                 aria-expanded={showFilters}
                                 aria-controls="filter-panel"
@@ -243,11 +243,11 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <div className="bg-[var(--bg-card)] border border-[var(--border-color)] w-16 h-16 flex items-center justify-center mx-auto mb-4">
                                 <Search size={24} className="text-white/30" />
                             </div>
-                            <p className="text-white font-medium text-base ">No results found</p>
+                            <p className="text-[var(--text-primary)] font-bold text-base ">No results found</p>
                             <p className="text-[var(--text-secondary)] font-mono text-xs mt-2 uppercase">Try adjusting your filters or search term</p>
                             <button
                                 onClick={handleClearFilters}
-                                className="text-[#CCFF00] text-sm font-medium hover:underline mt-6  px-4"
+                                className="text-[var(--accent-primary)] text-sm font-semibold hover:underline mt-6  px-4"
                             >
                                 Clear all filters
                             </button>
@@ -272,7 +272,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                     <tr key={student.id} className="hover:bg-[var(--bg-card-hover)] transition-colors group">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-custom-full border border-[var(--border-color)] bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300 flex items-center justify-center font-semibold text-sm shrink-0">
+                                                <div className="w-9 h-9 rounded-full border border-[var(--accent-primary)]/20 bg-[var(--accent-light)] text-[var(--accent-primary)] flex items-center justify-center font-bold text-sm shrink-0">
                                                     {student.name.charAt(0)}
                                                 </div>
                                                 <div className="min-w-0">
@@ -289,11 +289,11 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <span
-                                                className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold border rounded-custom-md ${status === 'Paid'
-                                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                                                className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold border rounded-[12px] ${status === 'Paid'
+                                                    ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
                                                     : status === 'Overdue'
-                                                        ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
-                                                        : 'bg-amber-500/10 border-amber-500/20 text-amber-400'
+                                                        ? 'bg-rose-50 border-rose-100 text-rose-600'
+                                                        : 'bg-amber-50 border-amber-100 text-amber-600'
                                                     }`}
                                             >
                                                 {status}
@@ -303,21 +303,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                             <div className="flex gap-2 justify-end opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => handlePayFeeClick(student)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-custom-md hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors"
                                                     title="Collect Fee"
                                                 >
                                                     <IndianRupee size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onEdit(student)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-custom-md hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
                                                     title="Edit Record"
                                                 >
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(student.id)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-custom-md hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition-colors"
                                                     title="Delete Record"
                                                 >
                                                     <Trash2 size={16} />
@@ -340,7 +340,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                             </div>
                                             <button
                                                 onClick={handleClearFilters}
-                                                className="text-blue-400 text-xs font-medium hover:underline mt-2"
+                                                className="text-[var(--accent-primary)] text-xs font-semibold hover:underline mt-2"
                                             >
                                                 Clear all filters
                                             </button>

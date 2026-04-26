@@ -1,117 +1,115 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ShieldCheck, Zap, Database, ArrowRight } from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
+  const features = [
+    {
+      icon: <Zap className="text-[var(--accent-primary)] w-6 h-6" />,
+      title: 'Lightning Fast',
+      desc: 'Optimized performance with synchronous local mutations and background syncing.'
+    },
+    {
+      icon: <Database className="text-[var(--accent-primary)] w-6 h-6" />,
+      title: 'Data Reliability',
+      desc: 'Your records are stored securely with automatic offline capabilities and syncing.'
+    },
+    {
+      icon: <ShieldCheck className="text-[var(--accent-primary)] w-6 h-6" />,
+      title: 'Advanced Security',
+      desc: 'Enterprise-grade security ensuring student data remains private and protected.'
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] text-[#e0e0e0] font-sans selection:bg-[#CCFF00] selection:text-black overflow-x-hidden relative">
+    <div className="min-h-screen bg-[var(--bg-main)] selection:bg-[var(--accent-light)] selection:text-[var(--accent-primary)] relative overflow-hidden flex flex-col">
+      {/* Background gradients for a premium SaaS look */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[var(--accent-primary)] opacity-5 rounded-full blur-[100px] pointer-events-none" aria-hidden="true" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[var(--accent-primary)] opacity-5 rounded-full blur-[100px] pointer-events-none" aria-hidden="true" />
 
-      {/* Engineering Grid Overlay */}
-      <div 
-        className="absolute inset-0 opacity-[0.04] pointer-events-none z-0" 
-        style={{ 
-            backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', 
-            backgroundSize: '4rem 4rem' 
-        }} 
-      />
-
-      {/* Top Bar - Stark & Minimal */}
-      <header className="absolute top-0 w-full flex justify-between items-center p-6 md:p-8 border-b border-white/10 z-20">
-        <div className="flex flex-col">
-            <h1 className="text-xl md:text-2xl font-medium tracking-tighter uppercase text-white leading-none">STD::MGR_PRO</h1>
+      {/* Header */}
+      <header className="w-full flex justify-between items-center px-6 py-6 md:px-12 z-20">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-[var(--accent-primary)] flex items-center justify-center text-white font-bold">
+            <span className="text-sm">🎓</span>
+          </div>
+          <span className="font-bold text-[var(--text-primary)] text-xl tracking-tight">StdMgr Pro</span>
         </div>
-        <div className="hidden md:flex text-xs font-bold  text-[var(--text-muted)] items-center gap-3">
-            <span>[ SYSTEM ONLINE ]</span>
-            <span className="w-1.5 h-1.5 bg-[#CCFF00] rounded-custom-full" />
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => navigate('/login')}
+            className="text-[var(--text-secondary)] font-medium hover:text-[var(--accent-primary)] transition-colors"
+          >
+            Log in
+          </button>
+          <button 
+            onClick={() => navigate('/login')}
+            className="hidden md:inline-flex items-center justify-center gap-2 px-5 py-2.5 font-semibold text-sm cursor-pointer transition-all duration-200 border border-transparent rounded-[12px] bg-[var(--accent-primary)] text-white hover:bg-[var(--accent-hover)] shadow-md shadow-[var(--accent-primary)]/20"
+          >
+            Get Started
+          </button>
         </div>
       </header>
 
-      {/* Hero Content - Massive Typography */}
-      <main className="min-h-screen w-full flex flex-col justify-end pb-12 pt-40 px-6 md:px-12 z-10 relative">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-6 items-end">
-          
-          <div className="md:col-span-8 flex flex-col">
-            {/* The Anti-Headline */}
-            <h2 className="text-[14vw] md:text-[8.5vw] leading-[0.85] font-medium uppercase tracking-tighter text-[#CCFF00] mb-6 drop-shadow-[0_0_30px_rgba(204,255,0,0.15)]">
-              Zero <br/>Latency.
-            </h2>
-            
-            <div className="w-full h-[1px] bg-white/10 mb-6 hidden md:block" />
-            
-            <p className="text-xl md:text-[2.5rem] font-medium text-white max-w-3xl leading-[1.2] tracking-tight">
-              Most school software is built like a legacy bank. We built this like a high-frequency trading engine.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <span className="px-4 py-2 border border-[var(--border-color)] text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">No Spinners</span>
-              <span className="px-4 py-2 border border-[var(--border-color)] text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Instant Interactions</span>
-              <span className="px-4 py-2 border border-[var(--border-color)] text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Offline Capable</span>
-            </div>
-          </div>
-
-          <div className="md:col-span-4 flex flex-col items-start md:items-end justify-end space-y-6 pt-12 md:pt-0">
-             <button 
-                onClick={() => navigate('/login')}
-                className="group relative inline-flex items-center justify-center w-full md:w-auto px-8 py-5 md:py-6 bg-[#CCFF00] text-black font-medium  text-lg md:text-xl hover:bg-white transition-all overflow-hidden"
-             >
-                <div className="absolute inset-0 border border-transparent group-hover:border-black transition-colors pointer-events-none scale-105 opacity-0 group-hover:opacity-100" />
-                <span className="relative z-10 flex items-center gap-4 whitespace-nowrap">
-                  Initialize System
-                  <svg className="w-6 h-6 shrink-0 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </span>
-             </button>
-             <div className="border border-[var(--border-color)] bg-white/5 p-5 md:text-right max-w-sm w-full">
-                <p className="text-sm font-medium text-white uppercase leading-snug">
-                    Note: We removed all artificial loading screens. The system reacts instantly to your inputs.
-                </p>
-             </div>
-          </div>
+      {/* Hero Section */}
+      <main className="flex-1 w-full flex flex-col items-center text-center px-6 pt-20 md:pt-32 pb-16 z-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-light)] text-[var(--accent-primary)] text-sm font-semibold mb-8 border border-[var(--accent-primary)]/10 scale-in">
+          <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-pulse" />
+          System Online
+        </div>
+        
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-[var(--text-primary)] tracking-tight max-w-4xl mb-6 slide-up">
+          Manage your students with <span className="text-[var(--accent-primary)]">unmatched clarity.</span>
+        </h1>
+        
+        <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mb-10 slide-up" style={{ animationDelay: '0.1s' }}>
+          The complete platform for modern school administration. Streamline records, fee collection, admissions, and certificates in one elegant interface.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto slide-up" style={{ animationDelay: '0.2s' }}>
+          <button 
+            onClick={() => navigate('/login')}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-200 border border-transparent rounded-[12px] bg-[var(--accent-primary)] text-white hover:bg-[var(--accent-hover)] hover:-translate-y-0.5 shadow-lg shadow-[var(--accent-primary)]/25 w-full sm:w-auto"
+          >
+            Initialize Dashboard
+            <ArrowRight size={18} />
+          </button>
+          <button
+            onClick={() => {
+              const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+              const behavior = prefersReducedMotion ? 'auto' : 'smooth';
+              document.getElementById('features')?.scrollIntoView({ behavior });
+            }}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-200 border border-[var(--border-highlight)] rounded-[12px] bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] hover:-translate-y-0.5 shadow-sm w-full sm:w-auto"
+          >
+            Learn More
+          </button>
         </div>
       </main>
 
-      {/* Features - Brutalist Grid (Desktop) */}
-      <section className="border-t border-white/10 w-full bg-[#CCFF00] text-black hidden md:block mt-12 md:mt-0 relative z-10">
-        <div className="grid grid-cols-3 divide-x border-b border-black divide-black">
-           {[
-             { num: "01", title: "LOCAL-FIRST", desc: "Your data lives directly in browser memory. Mutations are synchronous. Network I/O happens in the background. Zero blocking." },
-             { num: "02", title: "FEE ENGINE", desc: "Algorithmic late-fine calculations. Multi-month batched ledger transactions. Zero manual math required." },
-             { num: "03", title: "TC GENERATOR", desc: "Instant transfer certificate issuance strictly linked to internal student admission lifecycle states." }
-           ].map(f => (
-             <div key={f.num} className="p-12 hover:bg-black hover:text-[#CCFF00] transition-colors duration-300 group">
-                <div className="text-6xl font-medium mb-12 opacity-10 group-hover:opacity-100 transition-opacity tracking-tighter">{f.num}</div>
-                <h3 className="text-3xl font-medium uppercase tracking-tighter mb-4 leading-none">{f.title}</h3>
-                <p className="font-mono text-sm leading-relaxed font-bold opacity-80">{f.desc}</p>
-             </div>
-           ))}
-        </div>
-        
-        {/* Footer info inside the green block */}
-        <div className="p-6 flex justify-between items-center font-mono text-xs uppercase font-bold px-12">
-            <span>// System Designed for Advanced Administration</span>
-            <span>END OF BUFFER</span>
+      {/* Features Grid */}
+      <section id="features" className="w-full max-w-6xl mx-auto px-6 pb-24 z-10 slide-up" style={{ animationDelay: '0.3s' }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {features.map((feature) => (
+            <div key={feature.title} className="bg-[var(--bg-card)] p-8 rounded-[16px] border border-[var(--border-color)] shadow-sm hover:shadow-md hover:border-[var(--border-highlight)] transition-all">
+              <div className="w-12 h-12 rounded-[12px] bg-[var(--accent-light)] flex items-center justify-center mb-6">
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-bold text-[var(--text-primary)] mb-3">{feature.title}</h3>
+              <p className="text-[var(--text-secondary)] leading-relaxed">
+                {feature.desc}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
-
-      {/* Features - Mobile Fallback */}
-      <section className="md:hidden border-t border-white/10 w-full bg-[var(--bg-main)] text-[#CCFF00] divide-y divide-white/10 relative z-10">
-         {[
-             { num: "01", title: "LOCAL-FIRST", desc: "Data lives in session storage. Mutations are synchronous. Zero blocking." },
-             { num: "02", title: "FEE ENGINE", desc: "Algorithmic fine calculations. Multi-month batched transactions." },
-             { num: "03", title: "TC GENERATOR", desc: "Instant transfer certificate issuance linked to lifecycle states." }
-           ].map(f => (
-             <div key={f.num} className="p-6 relative overflow-hidden group">
-                <div className="absolute right-[-10%] top-[-10%] text-[8rem] font-medium opacity-[0.03] text-white leading-none pointer-events-none">{f.num}</div>
-                <div className="text-3xl font-medium mb-6 text-white">{f.num}</div>
-                <h3 className="text-2xl font-medium uppercase tracking-tighter mb-2 text-[#CCFF00]">{f.title}</h3>
-                <p className="font-mono text-sm leading-relaxed text-[var(--text-secondary)]">{f.desc}</p>
-             </div>
-           ))}
-           <div className="p-6 bg-white/5 font-mono text-[10px] uppercase text-[var(--text-muted)] text-center">
-               END OF BUFFER // SYSTEM DESIGNED FOR ADVANCED ADMINISTRATION
-           </div>
-      </section>
+      
+      {/* Footer */}
+      <footer className="w-full py-8 border-t border-[var(--border-color)] text-center text-[var(--text-muted)] text-sm z-10 bg-[var(--bg-main)]">
+        &copy; {new Date().getFullYear()} Student Manager Pro. All rights reserved.
+      </footer>
     </div>
   );
 };

@@ -115,32 +115,32 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
         >
-            <div className={`bg-[#0a0a0a] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border-2 border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`}>
+            <div className={`bg-[var(--bg-main)] rounded-[16px] shadow-lg w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border border-[var(--border-color)] ${isClosing ? 'scale-out' : 'scale-in'}`}>
 
-                <div className="bg-[#CCFF00] px-6 py-4 md:py-8 text-black relative overflow-visible">
+                <div className="bg-[var(--bg-card)] px-6 py-4 md:py-6 text-[var(--text-primary)] relative border-b border-[var(--border-color)]">
                     <div className="relative z-10">
-                        <h3 className="m-0 text-xl md:text-2xl font-black uppercase tracking-widest flex items-center gap-3">
-                            <IndianRupee size={28} className="text-black stroke-[3px]" />
+                        <h3 className="m-0 text-xl md:text-2xl font-bold tracking-tight flex items-center gap-3">
+                            <IndianRupee size={28} className="text-[var(--accent-primary)] stroke-[2.5px]" />
                             Record Fee Payment
                         </h3>
-                        <p className="text-black/70 mt-2 text-sm font-mono tracking-wide uppercase">
-                            Academic Fee Collection: <span className="text-black font-black">{student.name}</span>
+                        <p className="text-[var(--text-secondary)] mt-2 text-sm">
+                            Academic Fee Collection: <span className="text-[var(--text-primary)] font-bold">{student.name}</span>
                         </p>
                     </div>
                     <button
                         onClick={handleClose}
-                        className="absolute top-3 right-3 md:top-6 md:right-6 text-black border-2 border-black hover:bg-black hover:text-[#CCFF00] p-3 min-h-[48px] min-w-[48px] rounded-custom-none transition-colors z-20 flex items-center justify-center"
+                        className="absolute top-4 right-4 md:top-6 md:right-6 text-[var(--text-secondary)] border border-[var(--border-color)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] p-2 rounded-[12px] transition-colors z-20 flex items-center justify-center"
                     >
-                        <X size={20} className="stroke-[3px]" />
+                        <X size={20} className="stroke-[2.5px]" />
                     </button>
                 </div>
 
                 {isTransferred && (
-                    <div className="mx-6 mt-6 p-4 bg-[#050505] border-2 border-amber-500 rounded-custom-none flex items-start gap-3">
-                        <AlertCircle size={20} className="text-amber-500 shrink-0 mt-0.5 stroke-[3px]" />
+                    <div className="mx-6 mt-6 p-4 bg-amber-50 border border-amber-200 rounded-[12px] flex items-start gap-3">
+                        <AlertCircle size={20} className="text-amber-600 shrink-0 mt-0.5 stroke-[2.5px]" />
                         <div className="flex-1 min-w-0">
-                            <p className="text-amber-500 uppercase tracking-widest font-black text-sm">Transferred Student</p>
-                            <p className="text-amber-500/70 text-xs mt-1 font-mono tracking-wide">
+                            <p className="text-amber-700 font-bold text-sm">Transferred Student</p>
+                            <p className="text-amber-600 text-xs mt-1">
                                 This student has been issued a Transfer Certificate. Please verify if this payment is appropriate.
                             </p>
                         </div>
@@ -156,13 +156,13 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                             required
                         />
 
-                        <div className="space-y-4 bg-[#050505] p-5 rounded-custom-none border-2 border-white/40">
+                        <div className="space-y-4 bg-[var(--bg-card)] p-5 rounded-[12px] border border-[var(--border-color)]">
                             <div className="flex justify-between items-center">
-                                <label className="text-[10px] font-black text-white/50 uppercase tracking-widest px-1">Duration</label>
+                                <label className="text-sm font-semibold text-[var(--text-secondary)] px-1">Duration</label>
                                 <button
                                     type="button"
                                     onClick={() => setIsMultiMonth(!isMultiMonth)}
-                                    className={`text-[10px] font-black px-3 py-1.5 rounded-custom-none transition-colors uppercase tracking-widest border ${isMultiMonth ? 'bg-[#CCFF00] text-black border-[#CCFF00]' : 'border-white/50 text-white/50 hover:border-white hover:text-white bg-transparent'}`}
+                                    className={`text-xs font-bold px-3 py-1.5 rounded-[8px] transition-colors border ${isMultiMonth ? 'bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20' : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] bg-transparent'}`}
                                 >
                                     {isMultiMonth ? 'Multi-Month Mode' : 'Switch to Multi-Month'}
                                 </button>
@@ -178,7 +178,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 />
                                 {isMultiMonth && (
                                     <>
-                                        <span className="text-[#CCFF00] font-black">→</span>
+                                        <span className="text-[var(--accent-primary)] font-bold">→</span>
                                         <CustomMonthPicker
                                             value={endMonth}
                                             onChange={setEndMonth}
@@ -190,8 +190,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 )}
                             </div>
                             {error && (
-                                <div className="flex items-center gap-2 mt-2 text-rose-500 text-[10px] font-black bg-rose-500/10 p-2 border-2 border-rose-500/30 uppercase tracking-widest">
-                                    <AlertCircle size={14} className="stroke-[3px]" />
+                                <div className="flex items-center gap-2 mt-2 text-rose-600 text-xs font-medium bg-rose-50 p-3 rounded-[8px] border border-rose-100">
+                                    <AlertCircle size={14} className="stroke-[2.5px]" />
                                     {error}
                                 </div>
                             )}
@@ -199,63 +199,63 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-[10px] font-black text-white/50 uppercase tracking-widest px-1">Base Amount (₹)</label>
+                                <label className="text-sm font-semibold text-[var(--text-secondary)] px-1">Base Amount (₹)</label>
                                 <div className="relative">
-                                    <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 stroke-[3px]" />
+                                    <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] stroke-[2.5px]" />
                                     <input
                                         type="number"
                                         value={amount}
                                         onChange={(e) => setAmount(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-3 md:py-4 bg-[#050505] border-2 border-white/40 rounded-custom-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm"
+                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors text-sm"
                                         required
                                     />
                                 </div>
                             </div>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-[10px] font-black text-white/50 uppercase tracking-widest px-1">Late Fine (₹)</label>
+                                <label className="text-sm font-semibold text-[var(--text-secondary)] px-1">Late Fine (₹)</label>
                                 <div className="relative">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 font-black">₹</div>
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold">₹</div>
                                     <input
                                         type="number"
                                         value={fine}
                                         readOnly
-                                        className="w-full pl-12 pr-4 py-3 md:py-4 bg-white/5 border-2 border-white/10 rounded-custom-none text-white/50 font-black uppercase tracking-widest outline-none text-sm pointer-events-none"
+                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-muted)] font-bold outline-none text-sm pointer-events-none"
                                     />
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-[10px] font-black text-white/50 uppercase tracking-widest px-1">Payment Remarks</label>
+                            <label className="text-sm font-semibold text-[var(--text-secondary)] px-1">Payment Remarks</label>
                             <input
                                 type="text"
                                 value={remarks}
                                 onChange={(e) => setRemarks(e.target.value)}
-                                className="w-full px-4 py-3 md:py-4 bg-[#050505] border-2 border-white/40 rounded-custom-none text-white font-black uppercase tracking-widest focus:border-[#CCFF00] outline-none transition-colors text-sm placeholder:text-white/20"
-                                placeholder="E.G. UPI ID OR CASH"
+                                className="w-full px-4 py-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-primary)] font-semibold focus:border-[var(--accent-primary)] outline-none transition-colors text-sm placeholder:text-[var(--text-muted)]"
+                                placeholder="E.g. UPI ID or Cash"
                             />
                         </div>
 
-                        <div className="bg-transparent border-t border-b border-white/40 py-6 text-white flex justify-between items-center mt-2">
+                        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-5 text-[var(--text-primary)] flex justify-between items-center mt-2">
                             <div>
-                                <p className="text-[10px] font-black text-[#CCFF00] uppercase tracking-widest">Total Collection</p>
-                                <p className="text-xs font-mono tracking-wide text-white/70 mt-0.5 uppercase">Automated settlement</p>
+                                <p className="text-sm font-bold text-[var(--text-secondary)]">Total Collection</p>
+                                <p className="text-xs text-[var(--text-muted)] mt-0.5">Automated settlement</p>
                             </div>
                             <div className="text-right">
-                                <span className="text-4xl font-black uppercase tracking-widest text-[#CCFF00]">
+                                <span className="text-3xl font-bold text-emerald-600 tracking-tight">
                                     ₹{totalPayable.toLocaleString()}
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-4 md:p-6 bg-transparent">
+                    <div className="p-4 md:p-6 bg-transparent border-t border-[var(--border-color)]">
                         <button
                             type="submit"
                             disabled={!!error}
-                            className={`w-full bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest py-3.5 md:py-5 rounded-custom-none transition-colors flex items-center justify-center gap-3 group min-h-[48px] ${error ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
+                            className={`w-full bg-[var(--accent-primary)] border border-[var(--accent-primary)] hover:bg-[var(--accent-hover)] text-white font-bold py-3.5 md:py-4 rounded-[12px] transition-all flex items-center justify-center gap-2 min-h-[48px] shadow-sm ${error ? 'opacity-50 cursor-not-allowed' : 'active:scale-[0.98]'}`}
                         >
-                            <CheckCircle2 size={24} className="stroke-[3px] group-hover:scale-110 transition-transform" />
+                            <CheckCircle2 size={20} className="stroke-[2.5px]" />
                             <span className="md:hidden">Pay</span>
                             <span className="hidden md:inline">Complete Transaction</span>
                         </button>

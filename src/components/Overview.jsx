@@ -13,8 +13,8 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) 
                 <p className="m-0 text-[var(--text-muted)] text-sm font-medium tracking-wide">{title}</p>
                 <h3 className="mt-1 text-3xl md:text-4xl text-[var(--text-primary)] font-semibold tracking-tight">{value}</h3>
             </div>
-            <div className={`p-2 shrink-0 rounded-custom-lg bg-[var(--bg-main)] border border-[var(--border-color)] ${colorClass}`}>
-                <Icon size={20} className="stroke-[2px]" />
+            <div className={`p-2.5 shrink-0 rounded-[12px] flex items-center justify-center ${colorClass}`}>
+                <Icon size={22} className="stroke-[2px]" />
             </div>
         </div>
         {subtext && (
@@ -80,7 +80,7 @@ const Overview = ({ students, onAddStudent }) => {
         <div className="p-4 md:px-8 md:py-6 max-w-6xl mx-auto page-enter">
             {/* The global header provides the context now, so Overview just jumps into content. */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 mt-2">
-                <h2 className="text-white text-xl font-medium">Environments & Stats</h2>
+                <h2 className="text-[var(--text-primary)] text-xl font-bold tracking-tight">Environments & Stats</h2>
                 <div className="flex items-center gap-2 text-[var(--text-secondary)] text-sm font-medium">
                     <Clock size={14} />
                     {new Date().toLocaleDateString('default', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -92,7 +92,7 @@ const Overview = ({ students, onAddStudent }) => {
                     title="Total Students"
                     value={totalStudents}
                     icon={Users}
-                    colorClass="text-blue-400"
+                    colorClass="text-blue-600 bg-blue-50 border border-blue-100"
                     subtext="Active enrollment"
                     index={0}
                 />
@@ -100,7 +100,7 @@ const Overview = ({ students, onAddStudent }) => {
                     title="Fees Collected"
                     value={`₹${feesCollected.toLocaleString()}`}
                     icon={IndianRupee}
-                    colorClass="text-emerald-400"
+                    colorClass="text-emerald-600 bg-emerald-50 border border-emerald-100"
                     subtext={`${new Date().toLocaleString('default', { month: 'long' })} collection`}
                     index={1}
                 />
@@ -108,13 +108,13 @@ const Overview = ({ students, onAddStudent }) => {
                     title="Pending Fees"
                     value={pendingFeesCount}
                     icon={AlertCircle}
-                    colorClass="text-amber-400"
+                    colorClass="text-amber-600 bg-amber-50 border border-amber-100"
                     subtext="Awaiting payment"
                     index={2}
                 />
             </div>
 
-            <h2 className="text-white text-xl font-medium mb-4">Recent Updates</h2>
+            <h2 className="text-[var(--text-primary)] text-xl font-bold tracking-tight mb-4">Recent Updates</h2>
             <div className="card-base" id="recent-activities">
                 <div className="px-5 py-3.5 border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--bg-card)]">
                     <h3 className="m-0 text-[var(--text-primary)] text-sm font-medium">
@@ -130,11 +130,11 @@ const Overview = ({ students, onAddStudent }) => {
                     {activities.length > 0 ? (
                         activities.map((activity) => (
                             <div key={activity.id} className="flex items-start gap-4 p-5 hover:bg-[var(--bg-card-hover)] transition-colors group">
-                                <div className={`p-2.5 shrink-0 rounded-custom-lg border border-[var(--border-color)] bg-[var(--bg-card)] ${activity.type === 'fee' ? 'text-emerald-400' :
-                                    activity.type === 'student' ? 'text-blue-400' :
-                                        activity.type === 'tc' ? 'text-rose-400' :
-                                            activity.type === 'admission' ? 'text-amber-400' :
-                                                'text-[var(--text-secondary)]'
+                                <div className={`p-2.5 shrink-0 rounded-[12px] border ${activity.type === 'fee' ? 'text-emerald-600 bg-emerald-50 border-emerald-100' :
+                                    activity.type === 'student' ? 'text-blue-600 bg-blue-50 border-blue-100' :
+                                        activity.type === 'tc' ? 'text-rose-600 bg-rose-50 border-rose-100' :
+                                            activity.type === 'admission' ? 'text-amber-600 bg-amber-50 border-amber-100' :
+                                                'text-[var(--text-secondary)] bg-[var(--bg-main)] border-[var(--border-color)]'
                                     }`}>
                                     {activity.type === 'fee' && <IndianRupee size={18} />}
                                     {activity.type === 'student' && <UserPlus size={18} />}

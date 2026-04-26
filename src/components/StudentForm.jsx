@@ -93,7 +93,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </div>
                     <button 
                         onClick={onCancel} 
-                        className="p-2 border border-[var(--border-color)] rounded-custom-md bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white transition-colors z-20 flex items-center justify-center"
+                        className="p-2 border border-[var(--border-color)] rounded-[12px] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] transition-colors z-20 flex items-center justify-center"
+                        aria-label="Close"
                     >
                         <X size={18} />
                     </button>
@@ -104,7 +105,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         {/* Personal Information Group */}
                         <div className="space-y-5">
                             <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-color)] mb-4">
-                                <User size={18} className="text-blue-400" />
+                                <User size={18} className="text-[var(--accent-primary)]" />
                                 <h3 className="font-medium text-[var(--text-primary)] text-base">Personal Info</h3>
                             </div>
                             
@@ -160,7 +161,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         {/* Administrative Details Group */}
                         <div className="space-y-5">
                             <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-color)] mb-4">
-                                <IndianRupee size={18} className="text-emerald-400" />
+                                <IndianRupee size={18} className="text-[var(--accent-primary)]" />
                                 <h3 className="font-medium text-[var(--text-primary)] text-base">Fee Details</h3>
                             </div>
 
@@ -239,7 +240,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
                     <div className="bg-[var(--bg-card)] p-6 md:p-8 border-t border-[var(--border-color)]">
                         <div className="flex items-center gap-3 mb-6">
-                            <Calendar size={18} className="text-blue-400" />
+                            <Calendar size={18} className="text-[var(--accent-primary)]" />
                             <h3 className="font-medium text-[var(--text-primary)] text-base">Recent Payment History</h3>
                         </div>
                         <div className="overflow-x-auto">
@@ -252,13 +253,13 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                         <th className="px-6 py-4 text-[10px] font-medium text-[var(--text-secondary)] ">Fine</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/10 bg-[var(--bg-card)]">
+                                <tbody className="divide-y divide-[var(--border-color)] bg-[var(--bg-card)]">
                                     {initialData.feeHistory.slice(-5).reverse().map((payment) => (
-                                        <tr key={payment.id} className="hover:bg-white/5 transition-colors">
-                                            <td className="px-6 py-4 text-white font-medium  text-sm">{payment.date}</td>
-                                            <td className="px-6 py-4 text-white font-medium  text-sm">{payment.month}</td>
-                                            <td className="px-6 py-4 text-emerald-400 font-medium  text-sm">₹{payment.amount}</td>
-                                            <td className="px-6 py-4 text-rose-500 font-medium  text-sm">{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
+                                        <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
+                                            <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.date}</td>
+                                            <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.month}</td>
+                                            <td className="px-6 py-4 text-[var(--color-positive)] font-bold text-sm">₹{payment.amount}</td>
+                                            <td className={`px-6 py-4 text-sm ${payment.fine > 0 ? 'text-[var(--color-negative)] font-bold' : 'text-[var(--text-muted)] font-normal'}`}>{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
                                         </tr>
                                     ))}
                                 </tbody>

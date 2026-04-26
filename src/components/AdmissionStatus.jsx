@@ -3,49 +3,55 @@ import React, { useState } from 'react';
 import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
 import AdmissionCard from './AdmissionCard';
+import { statusHexColors } from '../utils/statusColors';
 import { logActivity } from '../utils/storage';
 
 const StatusCard = ({ student, color, onMove }) => {
     const [showActions, setShowActions] = useState(false);
 
     return (
-        <div className="bg-[var(--bg-main)] border border-[var(--border-color)] shadow-sm rounded-custom-xl p-5 hover:border-[#CCFF00] transition-colors group relative">
+        <div className="bg-[var(--bg-main)] border border-[var(--border-color)] shadow-sm rounded-[12px] p-5 hover:border-[var(--accent-primary)]/50 transition-colors group relative hover:shadow-md">
             <div className="flex justify-between items-start mb-3">
-                <h4 className="m-0 text-white font-semibold text-base  group-hover:text-[#CCFF00] transition-colors">{student.name}</h4>
+                <h4 className="m-0 text-[var(--text-primary)] font-bold text-sm group-hover:text-[var(--accent-primary)] transition-colors">{student.name}</h4>
                 <button
                     onClick={() => setShowActions(!showActions)}
-                    className="p-2 rounded-custom-xl hover:bg-white/10 text-[var(--text-secondary)] hover:text-white transition-colors"
+                    className="p-1.5 rounded-[8px] hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
                     aria-label="Toggle actions"
+                    aria-expanded={showActions}
+                    aria-haspopup="true"
                 >
-                    <MoreVertical size={20} />
+                    <MoreVertical size={16} />
                 </button>
             </div>
 
             {showActions && (
-                <div className="absolute right-4 top-12 bg-[var(--bg-card)] shadow-sm border border-[var(--border-color)] rounded-custom-xl py-1 z-20 w-48 animate-in fade-in zoom-in-95 duration-100">
-                    <div className="px-4 py-3 text-[10px] font-semibold text-[var(--text-secondary)]  border-b border-[var(--border-color)]">Move To</div>
+                <div className="absolute right-4 top-10 bg-[var(--bg-card)] shadow-lg border border-[var(--border-color)] rounded-[12px] py-1 z-20 w-48 animate-in fade-in zoom-in-95 duration-100 overflow-hidden" role="menu" aria-hidden={!showActions}>
+                    <div className="px-4 py-2.5 text-[10px] font-bold tracking-wider text-[var(--text-secondary)] uppercase border-b border-[var(--border-color)] bg-[var(--bg-main)]/50">Move To</div>
                     {student.admissionStatus !== 'Confirmed' && (
                         <button
                             onClick={() => { onMove(student, 'Confirmed'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-3 text-sm font-bold text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black flex items-center gap-3  transition-colors"
+                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-emerald-600 hover:bg-emerald-50 flex items-center gap-2.5 transition-colors"
+                            role="menuitem"
                         >
-                            <CheckCircle size={16} className="stroke-[3px]" /> Confirmed
+                            <CheckCircle size={14} className="stroke-[2.5px]" /> Confirmed
                         </button>
                     )}
                     {student.admissionStatus !== 'Provisional' && (
                         <button
                             onClick={() => { onMove(student, 'Provisional'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-3 text-sm font-bold text-amber-400 hover:bg-amber-400 hover:text-black flex items-center gap-3  transition-colors"
+                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-amber-600 hover:bg-amber-50 flex items-center gap-2.5 transition-colors"
+                            role="menuitem"
                         >
-                            <Clock size={16} className="stroke-[3px]" /> Provisional
+                            <Clock size={14} className="stroke-[2.5px]" /> Provisional
                         </button>
                     )}
                     {student.admissionStatus !== 'Cancelled' && (
                         <button
                             onClick={() => { onMove(student, 'Cancelled'); setShowActions(false); }}
-                            className="w-full text-left px-4 py-3 text-sm font-bold text-rose-500 hover:bg-rose-500 hover:text-black flex items-center gap-3  transition-colors"
+                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors"
+                            role="menuitem"
                         >
-                            <XCircle size={16} className="stroke-[3px]" /> Cancelled
+                            <XCircle size={14} className="stroke-[2.5px]" /> Cancelled
                         </button>
                     )}
                 </div>
@@ -55,16 +61,16 @@ const StatusCard = ({ student, color, onMove }) => {
                 <div className="fixed inset-0 z-10" onClick={() => setShowActions(false)}></div>
             )}
 
-            <p className="m-0 text-xs text-white/70 font-mono mb-3 ">
-                Class: {student.class}-{student.section} <span className="text-white/20 mx-2">|</span> Roll: {student.rollNo}
+            <p className="m-0 text-xs text-[var(--text-secondary)] font-mono mb-3">
+                Class: <span className="font-semibold text-[var(--text-primary)]">{student.class}-{student.section}</span> <span className="text-[var(--border-color)] mx-2">|</span> Roll: <span className="font-semibold text-[var(--text-primary)]">{student.rollNo}</span>
             </p>
 
-            <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
-                <span className="text-[10px] text-[var(--text-secondary)] font-mono flex items-center gap-2">
-                    <Clock size={14} />
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--border-color)]">
+                <span className="text-[10px] text-[var(--text-muted)] font-mono flex items-center gap-1.5 font-semibold">
+                    <Clock size={12} />
                     {student.admissionDate || 'N/A'}
                 </span>
-                <span className={`text-[9px] font-semibold px-2 py-1 rounded-custom-xl border  ${student.feesStatus === 'Paid' ? 'bg-[#CCFF00] text-black border-[#CCFF00]' : 'bg-amber-500 text-black border-amber-500'}`}>
+                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-[8px] border ${student.feesStatus === 'Paid' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
                     {student.feesStatus || 'Pending'}
                 </span>
             </div>
@@ -76,27 +82,27 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
     const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
 
     return (
-        <div className="w-full md:w-auto md:flex-1 md:min-w-[320px] flex flex-col h-full bg-[var(--bg-card)] rounded-custom-xl border border-white/10 p-4">
+        <div className="w-full md:w-auto md:flex-1 md:min-w-[320px] flex flex-col h-full bg-[var(--bg-main)] rounded-[16px] border border-[var(--border-color)] p-4 shadow-sm">
             <div
-                className="flex flex-col mb-4 bg-[var(--bg-main)] p-5 rounded-custom-xl border border-[var(--border-color)] shadow-sm sticky top-0 z-10"
+                className="flex flex-col mb-4 bg-[var(--bg-card)] p-5 rounded-[12px] border border-[var(--border-color)] shadow-sm sticky top-0 z-10"
                 style={{ borderTop: `4px solid ${color}` }}
             >
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                        <Icon size={20} color={color} className="stroke-[3px]" />
-                        <h3 className="m-0 text-sm font-semibold text-white ">{title}</h3>
+                        <Icon size={20} style={{ color: color }} className="stroke-[2.5px]" />
+                        <h3 className="m-0 text-sm font-bold text-[var(--text-primary)]">{title}</h3>
                     </div>
-                    <span className="bg-white/10 text-white px-3 py-1 rounded-custom-xl text-xs font-semibold border border-[var(--border-color)]">
+                    <span className="bg-[var(--bg-main)] text-[var(--text-primary)] px-3 py-1 rounded-[8px] text-xs font-bold border border-[var(--border-color)] shadow-sm">
                         {count}
                     </span>
                 </div>
-                <div className="w-full bg-white/10 h-2 rounded-custom-xl overflow-hidden">
+                <div className="w-full bg-[var(--bg-main)] h-2 rounded-full overflow-hidden border border-[var(--border-color)]">
                     <div
-                        className="h-full rounded-custom-xl transition-all duration-500"
+                        className="h-full rounded-full transition-all duration-500"
                         style={{ width: `${percentage}%`, backgroundColor: color }}
                     ></div>
                 </div>
-                <p className="text-[10px]  text-[var(--text-secondary)] mt-3 text-right font-mono">{percentage}% of total</p>
+                <p className="text-[10px] font-bold tracking-wider text-[var(--text-secondary)] mt-3 text-right uppercase">{percentage}% of total</p>
             </div>
 
             <div className="flex flex-col gap-4 overflow-y-auto pr-1 pb-2 flex-1 custom-scrollbar">
@@ -104,7 +110,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
                     <StatusCard key={student.id} student={student} color={color} onMove={onMove} />
                 ))}
                 {students.length === 0 && (
-                    <div className="p-8 text-center text-white/30 border border-white/10 rounded-custom-xl bg-transparent font-semibold  mt-4">
+                    <div className="p-8 text-center text-[var(--text-muted)] border border-dashed border-[var(--border-color)] rounded-[12px] bg-[var(--bg-card)] font-semibold mt-4 text-sm">
                         No students
                     </div>
                 )}
@@ -160,11 +166,11 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
 
     return (
         <div className="max-w-[1600px] mx-auto p-4 md:px-8 md:py-6 h-full flex flex-col">
-            <h2 className="text-white text-xl font-medium mb-4 mt-2">Admission Board</h2>
+            <h2 className="text-[var(--text-primary)] text-2xl font-bold mb-4 mt-2 tracking-tight">Admission Board</h2>
 
             <div className="flex flex-col gap-4 md:gap-6 mb-6">
                 {/* Filters */}
-                <div className="flex gap-3 flex-wrap items-center bg-[var(--bg-card)] p-4 rounded-custom-xl border border-[var(--border-color)] shadow-sm">
+                <div className="flex gap-3 flex-wrap items-center bg-[var(--bg-card)] p-4 rounded-[12px] border border-[var(--border-color)] shadow-sm">
                     <div className="relative flex-1 min-w-[200px] sm:max-w-xs">
                         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" aria-hidden="true" />
                         <input
@@ -173,7 +179,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             aria-label="Search applicants"
-                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2 rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-white pl-9 text-sm placeholder:text-[var(--text-muted)]"
+                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] pl-9 text-sm font-medium placeholder:text-[var(--text-muted)]"
                         />
                     </div>
 
@@ -183,7 +189,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
                         aria-label="Filter by class"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2 rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-white w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
+                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
                     >
                         <option value="">All Classes</option>
                         {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -193,7 +199,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
                         aria-label="Filter by section"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2 rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-white w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
+                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
                     >
                         <option value="">All Sections</option>
                         {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
@@ -203,14 +209,14 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                         value={filterFeeStatus}
                         onChange={(e) => setFilterFeeStatus(e.target.value)}
                         aria-label="Filter by fee status"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2 rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-white w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
+                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
                     >
                         <option value="">All Fees</option>
                         <option value="Paid">Paid</option>
                         <option value="Pending">Pending</option>
                     </select>
 
-                    <div className="h-10 w-px bg-white/20 mx-2 hidden md:block"></div>
+                    <div className="h-10 w-px bg-[var(--border-color)] mx-2 hidden md:block"></div>
 
                     <div className="flex items-center gap-3">
                         <button
@@ -223,13 +229,13 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                                     setFilterMonth(`${yyyy}-${mm}`);
                                 }
                             }}
-                            className={`p-3 rounded-custom-xl border transition-colors ${showMonthFilter
-                                ? 'bg-[#CCFF00] border-[#CCFF00] text-black'
-                                : 'bg-[var(--bg-main)] border-[var(--border-color)] text-white hover:border-[#CCFF00] hover:text-[#CCFF00]'}`}
+                            className={`p-2.5 rounded-[8px] border transition-colors ${showMonthFilter
+                                ? 'bg-[var(--accent-primary)] border-[var(--accent-primary)] text-white'
+                                : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'}`}
                             title="Filter by Admission Month"
                             aria-label="Filter by month"
                         >
-                            <Filter size={20} className="stroke-[3px]" />
+                            <Filter size={18} className="stroke-[2.5px]" />
                         </button>
 
                         {showMonthFilter && (
@@ -255,23 +261,22 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                         />
                     ))
                 ) : (
-                    <div className="py-20 text-center border border-[var(--border-color)] bg-[var(--bg-main)] mx-4">
-                        <div className="w-24 h-24 flex items-center justify-center mx-auto mb-4">
-                            <Search size={48} className="text-white/20 stroke-[1px]" />
+                    <div className="py-20 text-center border border-[var(--border-color)] rounded-[16px] bg-[var(--bg-card)] mx-4 shadow-sm">
+                        <div className="w-20 h-20 flex items-center justify-center mx-auto mb-4 bg-[var(--bg-main)] rounded-[16px] border border-[var(--border-color)]">
+                            <Search size={32} className="text-[var(--text-muted)]" />
                         </div>
-                        <p className="text-white font-semibold  text-lg">No results found</p>
-                        <p className="text-[var(--text-secondary)] font-mono text-xs  mt-2">Try adjusting your filters</p>
+                        <p className="text-[var(--text-primary)] font-bold text-lg">No results found</p>
+                        <p className="text-[var(--text-secondary)] font-medium text-sm mt-1">Try adjusting your filters</p>
                     </div>
                 )}
             </div>
 
-            {/* Desktop Kanban Board */}
             <div className="hidden md:flex flex-col md:flex-row gap-6 md:overflow-x-auto pb-5 h-auto md:h-full items-start">
                 <StatusColumn
                     title="Confirmed"
                     count={confirmed.length}
                     total={filteredStudents.length}
-                    color="#CCFF00"
+                    color={statusHexColors.Confirmed}
                     icon={CheckCircle}
                     students={confirmed}
                     onMove={handleMoveStudent}
@@ -280,7 +285,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Provisional"
                     count={provisional.length}
                     total={filteredStudents.length}
-                    color="#fbbf24"
+                    color={statusHexColors.Provisional}
                     icon={Clock}
                     students={provisional}
                     onMove={handleMoveStudent}
@@ -289,7 +294,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Cancelled"
                     count={cancelled.length}
                     total={filteredStudents.length}
-                    color="#f43f5e"
+                    color={statusHexColors.Cancelled}
                     icon={XCircle}
                     students={cancelled}
                     onMove={handleMoveStudent}
@@ -298,7 +303,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     title="Transferred"
                     count={transferred.length}
                     total={filteredStudents.length}
-                    color="#c084fc"
+                    color={statusHexColors.Transferred}
                     icon={FileText}
                     students={transferred}
                     onMove={handleMoveStudent}

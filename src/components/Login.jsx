@@ -38,15 +38,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[#CCFF00] selection:text-black">
+    <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[var(--accent-primary)] selection:text-white">
       <div className="max-w-md w-full">
         {/* Logo Section */}
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 bg-[#CCFF00] border border-[#CCFF00] flex items-center justify-center mb-4 transition-transform hover:scale-105 duration-300">
-            <GraduationCap size={32} className="text-black" />
+          <div className="w-16 h-16 bg-[var(--accent-primary)] border border-[var(--accent-primary)] flex items-center justify-center mb-4 transition-transform hover:scale-105 duration-300">
+            <GraduationCap size={32} className="text-white" />
           </div>
           <h1 className="text-3xl font-medium text-white tracking-widest uppercase">STD::MGR</h1>
-          <p className="text-[#CCFF00] font-mono mt-2 text-sm">ACCESS PORTAL ///</p>
+          <p className="text-[var(--accent-primary)] font-mono mt-2 text-sm">ACCESS PORTAL ///</p>
         </div>
 
         <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 md:p-10 transition-all duration-300">
@@ -67,7 +67,7 @@ export default function Login() {
           )}
 
           {message && (
-            <div className="mb-6 p-4 bg-[#CCFF00]/10 text-[#CCFF00] flex items-start gap-3 text-sm border border-[#CCFF00] animate-fadeIn">
+            <div className="mb-6 p-4 bg-[var(--accent-light)] text-[var(--accent-primary)] flex items-start gap-3 text-sm border border-[var(--accent-primary)]/20 animate-fadeIn">
               <ShieldCheck size={18} className="shrink-0 mt-0.5" />
               <p className="font-bold tracking-wide uppercase">{message}</p>
             </div>
@@ -81,7 +81,7 @@ export default function Login() {
                 <input
                   type="email"
                   required
-                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[#CCFF00] transition-all outline-none text-sm font-medium"
+                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[var(--accent-primary)] transition-all outline-none text-sm font-medium"
                   placeholder="admin@institution.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -97,7 +97,7 @@ export default function Login() {
                   type="password"
                   required
                   minLength={6}
-                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[#CCFF00] transition-all outline-none text-sm font-medium focus:ring-0"
+                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[var(--accent-primary)] transition-all outline-none text-sm font-medium focus:ring-0"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -111,7 +111,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-5 px-4 mt-2 bg-[#CCFF00] border border-[#CCFF00] hover:bg-white hover:border-white text-black font-medium  transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="w-full py-5 px-4 mt-2 bg-[var(--accent-primary)] border border-[var(--accent-primary)] hover:bg-[var(--accent-hover)] hover:border-[var(--accent-hover)] text-white font-medium  transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {loading ? (
                 <Loader2 className="animate-spin" size={20} />
@@ -140,9 +140,9 @@ export default function Login() {
               className="text-sm font-bold text-[var(--text-secondary)] hover:text-white transition-all uppercase tracking-wide"
             >
               {isLogin ? (
-                <span>New? <span className="text-[#CCFF00] hover:text-white border-b border-[#CCFF00]">Create Account</span></span>
+                <span>New? <span className="text-[var(--accent-primary)] hover:text-white border-b border-[var(--accent-primary)]">Create Account</span></span>
               ) : (
-                <span>Registered? <span className="text-[#CCFF00] hover:text-white border-b border-[#CCFF00]">Log In</span></span>
+                <span>Registered? <span className="text-[var(--accent-primary)] hover:text-white border-b border-[var(--accent-primary)]">Log In</span></span>
               )}
             </button>
           </div>
