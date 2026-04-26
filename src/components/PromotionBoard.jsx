@@ -42,7 +42,7 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
         }
         // Deselect all when class filter changes
         setSelectedStudents(new Set());
-    }, [filterClass]);
+    }, [filterClass, filterSection]);
 
     const handleSelectAll = (e) => {
         if (e.target.checked) {
@@ -190,11 +190,11 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
                                                     onClick={() => handleSelectStudent(student.id)}
                                                 >
                                                     <td className="px-5 py-4">
-                                                        <input 
-                                                            type="checkbox" 
+                                                        <input
+                                                            type="checkbox"
                                                             className="w-4 h-4 rounded-[4px] border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/30 cursor-pointer"
                                                             checked={selectedStudents.has(student.id)}
-                                                            onChange={() => {}} // handled by row click
+                                                            readOnly
                                                         />
                                                     </td>
                                                     <td className="px-5 py-4 text-[var(--text-secondary)] font-mono text-sm">{student.rollNo}</td>
@@ -266,13 +266,13 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
                                     onClick={handlePromote}
                                     disabled={!canPromote}
                                     className={`w-full py-3 rounded-[8px] font-bold text-sm flex items-center justify-center gap-2 transition-all ${
-                                        canPromote 
-                                            ? 'bg-[var(--accent-primary)] text-white shadow-md hover:bg-[var(--accent-hover)] hover:shadow-lg' 
+                                        canPromote
+                                            ? 'bg-[var(--accent-primary)] text-white shadow-md hover:bg-[var(--accent-hover)] hover:shadow-lg'
                                             : 'bg-[var(--bg-main)] text-[var(--text-muted)] border border-[var(--border-color)] cursor-not-allowed'
                                     }`}
                                 >
                                     <UserCheck size={18} />
-                                    Promote {selectedStudents.size > 0 ? `${selectedStudents.size} ` : ''}Students
+                                    Promote {selectedStudents.size > 0 ? `${selectedStudents.size} ` : ''}{selectedStudents.size === 1 ? 'Student' : 'Students'}
                                 </button>
                             </div>
                         )}
