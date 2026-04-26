@@ -131,6 +131,7 @@ const PaymentHistory = ({ students }) => {
                         <button
                             onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
                             className="p-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-none text-white hover:border-white transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center cursor-pointer"
+                            aria-label={`Set sort order to ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                         >
                             {sortOrder === 'asc' ? <ChevronDown size={20} className="stroke-[3px]" /> : <ChevronUp size={20} className="stroke-[3px]" />}
                         </button>

@@ -297,24 +297,24 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="flex gap-2 justify-end opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex gap-2 justify-end opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => handlePayFeeClick(student)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors"
                                                     title="Collect Fee"
                                                 >
                                                     <IndianRupee size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onEdit(student)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/30 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
                                                     title="Edit Record"
                                                 >
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(student.id)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition-colors"
                                                     title="Delete Record"
                                                 >
                                                     <Trash2 size={16} />

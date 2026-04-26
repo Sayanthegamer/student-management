@@ -360,6 +360,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                 <button
                     onClick={() => handleExit(onCancel)}
                     className="absolute top-3 right-3 md:top-6 md:right-6 text-black border border-black hover:bg-black hover:text-rose-500 p-3 min-h-[48px] min-w-[48px] rounded-none transition-colors z-20 flex items-center justify-center"
+                    aria-label="Close"
                 >
                     <X size={20} className="stroke-[3px]" />
                 </button>

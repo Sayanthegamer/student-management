@@ -20,10 +20,10 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
   const StatusIcon = statusIcons[status] || Clock;
 
   return (
-    <div className="bg-[var(--bg-card)] border border-white/20 p-4 transition-all duration-200 slide-up group hover:border-[#CCFF00]">
+    <div className="card-base p-4 transition-all duration-200 slide-up group hover:border-[var(--text-secondary)]">
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="w-11 h-11 bg-[#CCFF00] text-black border border-[#CCFF00] flex items-center justify-center font-medium text-base shrink-0">
+          <div className="w-11 h-11 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-[var(--border-color)] rounded-xl flex items-center justify-center font-medium text-base shrink-0">
             {student.name.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
@@ -32,7 +32,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
           </div>
         </div>
         <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium border  shrink-0 ${statusStyles[status] || statusStyles.Provisional}`}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium border rounded-md shrink-0 ${statusStyles[status] || statusStyles.Provisional}`}
         >
           <StatusIcon size={12} className="stroke-[3px]" />
           {status}
@@ -40,18 +40,18 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
       </div>
 
       <div className="grid grid-cols-2 gap-2 text-xs mb-4">
-        <div className="bg-[var(--bg-main)] border border-white/10 p-2.5">
+        <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md p-2.5">
           <p className="text-[9px]  text-[var(--text-muted)] font-medium mb-1">Class</p>
-          <p className="text-white font-medium uppercase tracking-wider text-xs">{student.class} - {student.section}</p>
+          <p className="text-[var(--text-primary)] font-medium uppercase tracking-wider text-xs">{student.class} - {student.section}</p>
         </div>
-        <div className="bg-[var(--bg-main)] border border-white/10 p-2.5">
+        <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md p-2.5">
           <p className="text-[9px]  text-[var(--text-muted)] font-medium mb-1">Student ID</p>
-          <p className="text-white font-mono text-[10px]">{student.id.slice(0, 8)}</p>
+          <p className="text-[var(--text-primary)] font-mono text-[10px]">{student.id.slice(0, 8)}</p>
         </div>
         {student.parentContact && (
-          <div className="col-span-2 bg-[var(--bg-main)] border border-white/10 p-2.5">
+          <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md p-2.5">
             <p className="text-[9px]  text-[var(--text-muted)] font-medium mb-1">Parent Contact</p>
-            <p className="text-white font-mono text-xs">{student.parentContact}</p>
+            <p className="text-[var(--text-primary)] font-mono text-xs">{student.parentContact}</p>
           </div>
         )}
       </div>

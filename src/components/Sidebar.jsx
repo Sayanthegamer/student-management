@@ -39,15 +39,20 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                     <span className="text-[11px] text-[var(--text-muted)] truncate">Student Manager Pro</span>
                 </div>
                 <button
-                    onClick={() => {
+                    onClick={async () => {
                         if (syncStatus === 'syncing') {
                             showToast('Please wait for synchronization to finish before signing out.', 'warning');
                             return;
                         }
-                        signOut();
+                        try {
+                            await signOut();
+                            showToast('Signed out successfully', 'success');
+                        } catch (err) {
+                            showToast('Sign out failed: ' + (err?.message || 'Unknown error'), 'error');
+                        }
                     }}
-                    className="p-1.5 text-[var(--text-muted)] hover:text-white opacity-0 group-hover:opacity-100 transition-all rounded-md hover:bg-[var(--bg-card)]"
-                    title="Sign Out"
+                    className="p-1.5 text-[var(--text-muted)] hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all rounded-md hover:bg-[var(--bg-card)]"
+                    aria-label="Sign out"
                 >
                     <LogOut size={14} />
                 </button>
@@ -90,7 +95,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
 
             <div className="mt-auto pt-4 border-t border-[var(--border-color)] flex flex-col gap-4">
                 <div className="px-2">
-                    <SyncIndicator status={syncStatus} onSync={onSync} darkMode={true} />
+                    <SyncIndicator status={syncStatus} onSync={onSync} />
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Download, Upload, AlertTriangle, CheckCircle, Database, Github, FileJson, FileSpreadsheet } from 'lucide-react';
 import { saveStudents } from '../utils/storage';
 import { convertToCSV, parseCSV } from '../utils/csvHelpers';
@@ -6,6 +6,7 @@ import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 const DataManagement = ({ students, onImportSuccess }) => {
     const [importStatus, setImportStatus] = useState(null); // 'success', 'error', 'loading'
     const [message, setMessage] = useState('');
+    const fileInputRef = useRef(null);
 
     const handleExport = () => {
         try {
@@ -145,17 +146,22 @@ const DataManagement = ({ students, onImportSuccess }) => {
                             <p className="text-white/70 mb-8 text-[10px] md:text-xs font-mono  leading-relaxed">
                                 Upload a previously exported .csv or .json file to restore your database. The system will automatically generate a safety backup of your current data before proceeding.
                             </p>
-                            <label className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-emerald-400 text-black font-medium rounded-none border border-emerald-400 hover:bg-transparent hover:text-emerald-400 transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] text-center cursor-pointer  active:bg-emerald-400/20 flex items-center justify-center gap-2 text-xs md:text-base leading-tight min-h-[48px]">
+                            <button
+                                onClick={() => fileInputRef.current?.click()}
+                                className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-emerald-400 text-black font-medium rounded-none border border-emerald-400 hover:bg-transparent hover:text-emerald-400 transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] text-center cursor-pointer active:bg-emerald-400/20 flex items-center justify-center gap-2 text-xs md:text-base leading-tight min-h-[48px]"
+                            >
                                 <Upload size={18} className="md:hidden stroke-[3px]" />
                                 <span className="md:hidden">Import</span>
                                 <span className="hidden md:inline">Select File to Restore</span>
-                                <input
-                                    type="file"
-                                    accept=".csv,.json"
-                                    onChange={handleImport}
-                                    className="hidden"
-                                />
-                            </label>
+                            </button>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept=".csv,.json"
+                                onChange={handleImport}
+                                className="sr-only"
+                                aria-label="Upload backup file"
+                            />
                         </div>
                     </div>
                 </div>

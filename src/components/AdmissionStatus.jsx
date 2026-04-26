@@ -15,6 +15,7 @@ const StatusCard = ({ student, color, onMove }) => {
                 <button
                     onClick={() => setShowActions(!showActions)}
                     className="p-2 rounded-xl hover:bg-white/10 text-[var(--text-secondary)] hover:text-white transition-colors"
+                    aria-label="Toggle actions"
                 >
                     <MoreVertical size={20} />
                 </button>
@@ -219,6 +220,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                                 ? 'bg-[#CCFF00] border-[#CCFF00] text-black'
                                 : 'bg-[var(--bg-main)] border-[var(--border-color)] text-white hover:border-[#CCFF00] hover:text-[#CCFF00]'}`}
                             title="Filter by Admission Month"
+                            aria-label="Filter by month"
                         >
                             <Filter size={20} className="stroke-[3px]" />
                         </button>

@@ -212,9 +212,16 @@ function App() {
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
-          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 scale-in shadow-2xl rounded-xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold text-white mb-2">Delete Student?</h3>
-            <p className="text-[var(--text-secondary)] text-sm mb-6">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
+          <div
+            className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 scale-in shadow-2xl rounded-xl"
+            onClick={e => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-confirm-title"
+            aria-describedby="delete-confirm-desc"
+          >
+            <h3 id="delete-confirm-title" className="text-lg font-semibold text-white mb-2">Delete Student?</h3>
+            <p id="delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}

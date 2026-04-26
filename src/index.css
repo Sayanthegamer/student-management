@@ -28,13 +28,9 @@ input, select, textarea {
   font-size: 16px !important; /* Prevents iOS zoom on focus */
 }
 
-/* Smooth rounded corners globally like Stitch */
-* {
+/* Smooth rounded corners via utility class to avoid global style leaking */
+.rounded {
   border-radius: 8px;
-}
-/* Revert border radius for elements that shouldn't have it globally forced */
-body, main, html, .app-container {
-  border-radius: 0;
 }
 
 ::selection {
@@ -234,7 +230,7 @@ body {
 
 /* Better focus styles for modern UI */
 :focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline: 2px solid var(--accent-primary);
   outline-offset: 1px;
 }
 

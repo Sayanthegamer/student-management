@@ -126,7 +126,7 @@ export default function Login() {
 
           <div className="mt-8 flex flex-col items-center gap-6">
             {isLogin && (
-              <Link to="/forgot-password" size="sm" className="text-sm border-b border-transparent text-[var(--text-secondary)] hover:text-white hover:border-white font-bold uppercase tracking-wide transition-all">
+              <Link to="/forgot-password" className="text-sm border-b border-transparent text-[var(--text-secondary)] hover:text-white hover:border-white font-bold uppercase tracking-wide transition-all">
                   Forgot password?
               </Link>
             )}
