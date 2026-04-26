@@ -9,6 +9,8 @@ import { Mail, ArrowLeft, Loader2, CheckCircle, AlertCircle } from 'lucide-react
  * @returns {JSX.Element} The rendered forgot password component.
  */
 const ForgotPassword = () => {
+    const RESET_CONFIRMATION = 'If an account exists with this email, a password reset link has been sent.';
+
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(null); // 'success' | 'error' | null
@@ -32,13 +34,13 @@ const ForgotPassword = () => {
             if (error) throw error;
 
             setStatus('success');
-            setMessage('If an account exists with this email, a password reset link has been sent.');
+            setMessage(RESET_CONFIRMATION);
         } catch (error) {
             // Security: Do not expose raw internal error messages. Use a generic message.
             // To prevent user enumeration, always pretend it succeeded.
             console.error('Password reset request error:', error);
             setStatus('success');
-            setMessage('If an account exists with this email, a password reset link has been sent.');
+            setMessage(RESET_CONFIRMATION);
         } finally {
             setLoading(false);
         }

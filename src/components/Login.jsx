@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { LogIn, UserPlus, AlertCircle, Loader2, GraduationCap, ShieldCheck, Mail, Lock } from 'lucide-react';
+import { sendErrorTelemetry } from '../utils/telemetry';
 
 /**
  * Component for user authentication, handling both login and signup flows.
@@ -37,7 +38,8 @@ export default function Login() {
       }
     } catch (err) {
       // Security: Do not expose raw internal error messages. Use a generic message.
-      console.error('Authentication error:', err);
+      console.error('Authentication error occurred');
+      sendErrorTelemetry('Login.handleSubmit', err);
       setError(isLogin ? 'Invalid email or password.' : 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
