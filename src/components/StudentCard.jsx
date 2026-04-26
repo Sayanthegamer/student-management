@@ -3,19 +3,19 @@ import { Edit2, IndianRupee, Trash2 } from 'lucide-react';
 
 
 const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee }) => (
-  <div className="card-base p-4 transition-all duration-200 slide-up group hover:border-[var(--text-secondary)]">
+  <div className="card-base p-4 transition-all duration-300 group hover:border-[var(--border-highlight)] hover:-translate-y-0.5 glow-accent">
     <div className="flex items-start justify-between gap-3 mb-4">
       <div className="flex items-center gap-3 min-w-0 flex-1">
-        <div className="w-11 h-11 rounded-[12px] bg-[var(--accent-light)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 flex items-center justify-center font-bold text-lg shrink-0 uppercase">
+        <div className="w-11 h-11 rounded-[12px] bg-[var(--accent-light)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 flex items-center justify-center font-bold text-lg shrink-0 uppercase shadow-sm shadow-[var(--accent-primary)]/10 transition-shadow duration-300 group-hover:shadow-md group-hover:shadow-[var(--accent-primary)]/20">
           {student.name.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[var(--text-primary)] font-medium text-sm truncate leading-tight tracking-wide">{student.name}</p>
-          <p className="text-[var(--text-secondary)] text-[10px] font-mono tracking-wider truncate mt-0.5">ID: {student.id.slice(0, 8)}</p>
+          <p className="text-[var(--text-muted)] text-[10px] font-mono tracking-wider truncate mt-0.5">ID: {student.id.slice(0, 8)}</p>
         </div>
       </div>
       <span
-        className={`inline-flex items-center px-2.5 py-1 text-[10px] font-bold border rounded-[12px] shrink-0 ${status === 'Paid' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : status === 'Overdue' ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-amber-50 border-amber-100 text-amber-600'}`}
+        className={`inline-flex items-center px-2.5 py-1 text-[10px] font-bold border rounded-[12px] shrink-0 ${status === 'Paid' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : status === 'Overdue' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-amber-500/10 border-amber-500/20 text-amber-400'}`}
       >
         {status}
       </span>
@@ -35,7 +35,7 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
     <div className="flex items-center gap-2">
       <button
         onClick={() => onPayFee(student)}
-        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 rounded-[12px] transition-colors font-semibold text-xs touch-manipulation min-h-[40px]"
+        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-400 rounded-[12px] transition-all duration-200 font-semibold text-xs touch-manipulation min-h-[40px] active:scale-[0.97]"
         aria-label="Collect fee"
       >
         <IndianRupee size={16} />
@@ -43,14 +43,14 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
       </button>
       <button
         onClick={() => onEdit(student)}
-        className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 rounded-[12px] transition-colors touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center"
+        className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-blue-500/10 hover:border-blue-500/20 hover:text-blue-400 rounded-[12px] transition-all duration-200 touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center active:scale-[0.95]"
         aria-label="Edit student"
       >
         <Edit2 size={16} />
       </button>
       <button
         onClick={() => onDelete(student.id)}
-        className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 rounded-[12px] transition-colors touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center"
+        className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-rose-500/10 hover:border-rose-500/20 hover:text-rose-400 rounded-[12px] transition-all duration-200 touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center active:scale-[0.95]"
         aria-label="Delete student"
       >
         <Trash2 size={16} />

@@ -75,16 +75,22 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                 to={item.path}
                                 onClick={onClose}
                                 className={({ isActive }) => `
-                                    flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-colors duration-150 group font-semibold
+                                    flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-all duration-200 group font-semibold relative
                                     ${isActive
                                         ? 'bg-[var(--accent-light)] text-[var(--accent-primary)]'
-                                        : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--accent-primary)]'
+                                        : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--accent-primary)] hover:translate-x-0.5'
                                     }
                                 `}
                             >
                                 {({ isActive }) => (
                                     <>
-                                        <Icon size={18} className={`${isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-muted)] group-hover:text-[var(--accent-primary)]'}`} />
+                                        {isActive && (
+                                            <span 
+                                                className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-[var(--accent-primary)] rounded-full" 
+                                                style={{ animation: 'scaleIn 0.3s var(--spring-snappy) both' }}
+                                            />
+                                        )}
+                                        <Icon size={18} className={`transition-colors duration-200 ${isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-muted)] group-hover:text-[var(--accent-primary)]'}`} />
                                         <span className="text-sm">{item.label}</span>
                                     </>
                                 )}

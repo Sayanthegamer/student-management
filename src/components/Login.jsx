@@ -38,19 +38,22 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[var(--accent-primary)] selection:text-white">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[var(--accent-primary)] selection:text-white gradient-mesh">
+      <div className="max-w-md w-full relative z-10">
         {/* Logo Section */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 bg-[var(--accent-primary)] border border-[var(--accent-primary)] flex items-center justify-center mb-4 transition-transform hover:scale-105 duration-300">
+        <div className="flex flex-col items-center mb-10 fade-in-up">
+          <div className="w-16 h-16 rounded-[20px] bg-[var(--accent-primary)] border border-[var(--accent-primary)] flex items-center justify-center mb-4 transition-transform hover:scale-105 duration-300 shadow-lg shadow-[var(--accent-primary)]/25">
             <GraduationCap size={32} className="text-white" />
           </div>
           <h1 className="text-3xl font-medium text-white tracking-widest uppercase">STD::MGR</h1>
           <p className="text-[var(--accent-primary)] font-mono mt-2 text-sm">ACCESS PORTAL ///</p>
         </div>
 
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 md:p-10 transition-all duration-300">
-          <div className="mb-8 border-b border-white/10 pb-6">
+        <div 
+          className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[20px] p-8 md:p-10 transition-all duration-300 glow-accent fade-in-up"
+          style={{ animationDelay: '0.1s' }}
+        >
+          <div className="mb-8 border-b border-[var(--border-color)] pb-6">
             <h2 className="text-2xl font-medium text-white uppercase tracking-tight">
               {isLogin ? 'Initialize Session' : 'Register Administrator'}
             </h2>
@@ -60,28 +63,28 @@ export default function Login() {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-rose-500/10 text-rose-500 flex items-start gap-3 text-sm border border-rose-500 animate-fadeIn">
+            <div className="mb-6 p-4 bg-rose-500/10 text-rose-400 flex items-start gap-3 text-sm border border-rose-500/20 rounded-[12px] fade-in-up">
               <AlertCircle size={18} className="shrink-0 mt-0.5" />
               <p className="font-bold tracking-wide uppercase">{error}</p>
             </div>
           )}
 
           {message && (
-            <div className="mb-6 p-4 bg-[var(--accent-light)] text-[var(--accent-primary)] flex items-start gap-3 text-sm border border-[var(--accent-primary)]/20 animate-fadeIn">
+            <div className="mb-6 p-4 bg-[var(--accent-light)] text-[var(--accent-primary)] flex items-start gap-3 text-sm border border-[var(--accent-primary)]/20 rounded-[12px] fade-in-up">
               <ShieldCheck size={18} className="shrink-0 mt-0.5" />
               <p className="font-bold tracking-wide uppercase">{message}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-xs font-medium text-white  mb-3">Email Address</label>
-              <div className="relative">
-                <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+            <div className="fade-in-up" style={{ animationDelay: '0.15s' }}>
+              <label className="block text-xs font-medium text-[var(--text-secondary)] mb-3">Email Address</label>
+              <div className="relative group">
+                <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--accent-primary)]" />
                 <input
                   type="email"
                   required
-                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[var(--accent-primary)] transition-all outline-none text-sm font-medium"
+                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-white focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
                   placeholder="admin@institution.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -89,44 +92,49 @@ export default function Login() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-medium text-white  mb-3">Password</label>
-              <div className="relative">
-                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+            <div className="fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <label className="block text-xs font-medium text-[var(--text-secondary)] mb-3">Password</label>
+              <div className="relative group">
+                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--accent-primary)]" />
                 <input
                   type="password"
                   required
                   minLength={6}
-                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[var(--accent-primary)] transition-all outline-none text-sm font-medium focus:ring-0"
+                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-white focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               {!isLogin && (
-                <p className="mt-2 text-[10px] text-[var(--text-secondary)] font-mono tracking-wide uppercase">Minimum 6 characters</p>
+                <p className="mt-2 text-[10px] text-[var(--text-muted)] font-mono tracking-wide uppercase">Minimum 6 characters</p>
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-5 px-4 mt-2 bg-[var(--accent-primary)] border border-[var(--accent-primary)] hover:bg-[var(--accent-hover)] hover:border-[var(--accent-hover)] text-white font-medium  transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
-            >
-              {loading ? (
-                <Loader2 className="animate-spin" size={20} />
-              ) : (
-                <>
-                  {isLogin ? <LogIn size={20} className="group-hover:translate-x-1 transition-transform stroke-[3px]" /> : <UserPlus size={20} className="group-hover:scale-110 transition-transform stroke-[3px]" />}
-                  {isLogin ? 'Log In' : 'Register'}
-                </>
-              )}
-            </button>
+            <div className="fade-in-up" style={{ animationDelay: '0.25s' }}>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-5 px-4 mt-2 bg-[var(--accent-primary)] border border-[var(--accent-primary)] hover:bg-[var(--accent-hover)] hover:border-[var(--accent-hover)] text-white font-medium rounded-[12px] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden active:scale-[0.98] shadow-md shadow-[var(--accent-primary)]/20 hover:shadow-lg hover:shadow-[var(--accent-primary)]/30"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin" size={20} />
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" style={{ animation: 'shimmerSweep 1.5s ease-in-out infinite' }} />
+                  </>
+                ) : (
+                  <>
+                    {isLogin ? <LogIn size={20} className="group-hover:translate-x-1 transition-transform stroke-[3px]" /> : <UserPlus size={20} className="group-hover:scale-110 transition-transform stroke-[3px]" />}
+                    {isLogin ? 'Log In' : 'Register'}
+                  </>
+                )}
+              </button>
+            </div>
           </form>
 
           <div className="mt-8 flex flex-col items-center gap-6">
             {isLogin && (
-              <Link to="/forgot-password" className="text-sm border-b border-transparent text-[var(--text-secondary)] hover:text-white hover:border-white font-bold uppercase tracking-wide transition-all">
+              <Link to="/forgot-password" className="text-sm border-b border-transparent text-[var(--text-secondary)] hover:text-white hover:border-white/30 font-bold uppercase tracking-wide transition-all">
                   Forgot password?
               </Link>
             )}
@@ -140,15 +148,15 @@ export default function Login() {
               className="text-sm font-bold text-[var(--text-secondary)] hover:text-white transition-all uppercase tracking-wide"
             >
               {isLogin ? (
-                <span>New? <span className="text-[var(--accent-primary)] hover:text-white border-b border-[var(--accent-primary)]">Create Account</span></span>
+                <span>New? <span className="text-[var(--accent-primary)] hover:text-white border-b border-[var(--accent-primary)]/30">Create Account</span></span>
               ) : (
-                <span>Registered? <span className="text-[var(--accent-primary)] hover:text-white border-b border-[var(--accent-primary)]">Log In</span></span>
+                <span>Registered? <span className="text-[var(--accent-primary)] hover:text-white border-b border-[var(--accent-primary)]/30">Log In</span></span>
               )}
             </button>
           </div>
         </div>
 
-        <p className="mt-10 text-center text-white/30 text-xs font-mono ">
+        <p className="mt-10 text-center text-[var(--text-muted)]/40 text-xs font-mono">
           SYSTEM_VER: 2.0.4 <br /> CLASSIFICATION: CONFIDENTIAL
         </p>
       </div>

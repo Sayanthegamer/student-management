@@ -67,9 +67,15 @@ function ToastContainer({ toasts, onDismiss }) {
 }
 
 function ToastItem({ toast, onDismiss }) {
-  const { message, type, id } = toast;
+  const { message, type, id, duration } = toast;
   const styles = toastStyles[type] || toastStyles.info;
   const Icon = toastIcons[type] || Info;
+  const [isExiting, setIsExiting] = React.useState(false);
+
+  const handleDismiss = () => {
+    setIsExiting(true);
+    setTimeout(() => onDismiss(id), 200);
+  };
 
   return (
     <div
@@ -78,47 +84,64 @@ function ToastItem({ toast, onDismiss }) {
         ${styles.bg}
         border ${styles.border} rounded-[12px]
         p-0
-        flex items-stretch
+        flex flex-col
         shadow-lg
-        slide-down
         max-w-sm
         w-[calc(100vw-2rem)]
         sm:w-auto
         sm:min-w-[320px]
+        overflow-hidden
       `}
+      style={{
+        animation: isExiting 
+          ? 'slideOutToRight 0.2s ease-in both' 
+          : 'slideInFromRight 0.5s var(--spring-bounce) both',
+      }}
       role="alert"
       aria-live="polite"
     >
-      {/* Accent bar */}
-      <div className={`w-1 ${styles.accent} shrink-0`} />
+      <div className="flex items-stretch">
+        {/* Accent bar */}
+        <div className={`w-1 ${styles.accent} shrink-0`} />
 
-      {/* Icon */}
-      <div className={`${styles.iconBg} p-3 flex items-center justify-center shrink-0`}>
-        <Icon size={20} className={`${styles.iconColor} stroke-[3px]`} />
+        {/* Icon */}
+        <div className={`${styles.iconBg} p-3 flex items-center justify-center shrink-0`}>
+          <Icon size={20} className={`${styles.iconColor} stroke-[3px]`} />
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 p-3 min-w-0 flex items-center">
+          <p className={`${styles.textColor} text-sm font-medium leading-tight`}>
+            {message}
+          </p>
+        </div>
+
+        {/* Close button */}
+        <button
+          onClick={handleDismiss}
+          className={`
+            px-3
+            ${styles.textColor}
+            hover:bg-[var(--hover-overlay)]
+            transition-colors
+            flex items-center justify-center
+            border-l border-[var(--border-color)]
+          `}
+          aria-label="Dismiss notification"
+        >
+          <X size={16} className="stroke-[3px] opacity-50 hover:opacity-100" />
+        </button>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 p-3 min-w-0 flex items-center">
-        <p className={`${styles.textColor} text-sm font-medium leading-tight`}>
-          {message}
-        </p>
+      {/* Auto-dismiss countdown bar */}
+      <div className="w-full h-[2px] bg-[var(--border-color)]/30">
+        <div 
+          className={`h-full ${styles.accent} opacity-40`}
+          style={{ 
+            animation: `toastCountdown ${duration || 4000}ms linear both`,
+          }}
+        />
       </div>
-
-      {/* Close button */}
-      <button
-        onClick={() => onDismiss(id)}
-        className={`
-          px-3
-          ${styles.textColor}
-          hover:bg-[var(--hover-overlay)]
-          transition-colors
-          flex items-center justify-center
-          border-l border-[var(--border-color)]
-        `}
-        aria-label="Dismiss notification"
-      >
-        <X size={16} className="stroke-[3px] opacity-50 hover:opacity-100" />
-      </button>
     </div>
   );
 }

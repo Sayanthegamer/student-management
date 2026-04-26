@@ -178,7 +178,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                     ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                                 </p>
                                                 {payment.fine > 0 && (
-                                                    <p className="text-xs text-[var(--color-negative)] font-medium mt-1 bg-rose-50 px-2 py-0.5 rounded-[6px] inline-block">
+                                                    <p className="text-xs text-[var(--color-negative)] font-medium mt-1 bg-rose-500/10 px-2 py-0.5 rounded-[6px] inline-block">
                                                         Incl. ₹{payment.fine} fine
                                                     </p>
                                                 )}

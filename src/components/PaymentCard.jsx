@@ -26,7 +26,7 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
           </div>
         </div>
         {student.admissionStatus === 'Transferred' && (
-          <span className="inline-flex items-center px-2.5 py-1 text-[10px] font-bold border rounded-[12px] bg-rose-50 border-rose-100 text-rose-600 shrink-0">
+          <span className="inline-flex items-center px-2.5 py-1 text-[10px] font-bold border rounded-[12px] bg-rose-500/10 border-rose-500/20 text-rose-400 shrink-0">
             Exit
           </span>
         )}
@@ -37,11 +37,11 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
           <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Class</p>
           <p className="text-[var(--text-primary)] font-bold tracking-wider text-xs">{student.class} - {student.section}</p>
         </div>
-        <div className="bg-emerald-50 border border-emerald-100 rounded-[12px] p-2.5">
-          <p className="text-[10px] text-emerald-600 font-medium mb-1 tracking-wide">Total Paid</p>
+        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-[12px] p-2.5">
+          <p className="text-[10px] text-emerald-400 font-medium mb-1 tracking-wide">Total Paid</p>
           <div className="flex items-center gap-1">
-            <IndianRupee size={12} className="text-emerald-600 stroke-[2.5px]" />
-            <p className="text-emerald-600 font-bold text-sm tracking-wider">₹{getTotalPaid(student).toLocaleString()}</p>
+            <IndianRupee size={12} className="text-emerald-400 stroke-[2.5px]" />
+            <p className="text-emerald-400 font-bold text-sm tracking-wider">₹{getTotalPaid(student).toLocaleString()}</p>
           </div>
         </div>
         <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">

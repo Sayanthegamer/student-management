@@ -134,7 +134,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 placeholder="Search students..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 bg-[var(--bg-main)] border border-[var(--border-color)] focus:border-white text-[var(--text-primary)] rounded-custom-md outline-none transition-all text-sm placeholder:text-[var(--text-muted)]"
+                                className="w-full pl-9 pr-4 py-2 bg-[var(--bg-main)] border border-[var(--border-color)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 text-[var(--text-primary)] rounded-custom-md outline-none transition-all text-sm placeholder:text-[var(--text-muted)]"
                             />
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
@@ -290,10 +290,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                         <td className="px-6 py-4">
                                             <span
                                                 className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold border rounded-[12px] ${status === 'Paid'
-                                                    ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
+                                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
                                                     : status === 'Overdue'
-                                                        ? 'bg-rose-50 border-rose-100 text-rose-600'
-                                                        : 'bg-amber-50 border-amber-100 text-amber-600'
+                                                        ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+                                                        : 'bg-amber-500/10 border-amber-500/20 text-amber-400'
                                                     }`}
                                             >
                                                 {status}
@@ -303,21 +303,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                             <div className="flex gap-2 justify-end opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => handlePayFeeClick(student)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all active:scale-95"
                                                     title="Collect Fee"
                                                 >
                                                     <IndianRupee size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onEdit(student)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/20 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all active:scale-95"
                                                     title="Edit Record"
                                                 >
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(student.id)}
-                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/20 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500/30 transition-all active:scale-95"
                                                     title="Delete Record"
                                                 >
                                                     <Trash2 size={16} />
