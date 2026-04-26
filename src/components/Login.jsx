@@ -115,12 +115,14 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
+                aria-busy={loading}
                 className="w-full py-5 px-4 mt-2 bg-[var(--accent-primary)] border border-[var(--accent-primary)] hover:bg-[var(--accent-hover)] hover:border-[var(--accent-hover)] text-white font-medium rounded-[12px] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden active:scale-[0.98] shadow-md shadow-[var(--accent-primary)]/20 hover:shadow-lg hover:shadow-[var(--accent-primary)]/30"
               >
                 {loading ? (
                   <>
                     <Loader2 className="animate-spin" size={20} />
-                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" style={{ animation: 'shimmerSweep 1.5s ease-in-out infinite' }} />
+                    <span aria-live="polite">{isLogin ? 'Logging in…' : 'Registering…'}</span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" style={{ animation: 'shimmer-sweep 1.5s ease-in-out infinite' }} />
                   </>
                 ) : (
                   <>

@@ -215,7 +215,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
                             role={importStatus === 'error' ? 'alert' : 'status'}
                             aria-live={importStatus === 'error' ? 'assertive' : 'polite'}
                             aria-atomic="true"
-                            className={`mt-6 p-4 md:p-6 rounded-[16px] flex items-start gap-4 border animate-fadeIn ${cfg.container}`}
+                            className={`mt-6 p-4 md:p-6 rounded-[16px] flex items-start gap-4 border animate-[fade-in] ${cfg.container}`}
                         >
                             <div className={`mt-0.5 p-2 rounded-[12px] bg-[var(--bg-card)] border ${cfg.iconWrapper}`}>
                                 <StatusIcon size={20} className={`stroke-[2.5px] ${cfg.iconClass || ''}`} />

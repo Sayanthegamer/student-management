@@ -67,15 +67,9 @@ function ToastContainer({ toasts, onDismiss }) {
 }
 
 function ToastItem({ toast, onDismiss }) {
-  const { message, type, id, duration } = toast;
+  const { message, type, id, duration, exiting } = toast;
   const styles = toastStyles[type] || toastStyles.info;
   const Icon = toastIcons[type] || Info;
-  const [isExiting, setIsExiting] = React.useState(false);
-
-  const handleDismiss = () => {
-    setIsExiting(true);
-    setTimeout(() => onDismiss(id), 200);
-  };
 
   return (
     <div
@@ -93,9 +87,9 @@ function ToastItem({ toast, onDismiss }) {
         overflow-hidden
       `}
       style={{
-        animation: isExiting 
-          ? 'slideOutToRight 0.2s ease-in both' 
-          : 'slideInFromRight 0.5s var(--spring-bounce) both',
+        animation: exiting 
+          ? 'slide-out-to-right 0.2s ease-in both' 
+          : 'slide-in-from-right 0.5s var(--spring-bounce) both',
       }}
       role="alert"
       aria-live="polite"
@@ -118,7 +112,7 @@ function ToastItem({ toast, onDismiss }) {
 
         {/* Close button */}
         <button
-          onClick={handleDismiss}
+          onClick={() => onDismiss(id)}
           className={`
             px-3
             ${styles.textColor}
@@ -138,7 +132,7 @@ function ToastItem({ toast, onDismiss }) {
         <div 
           className={`h-full ${styles.accent} opacity-40`}
           style={{ 
-            animation: `toastCountdown ${duration || 4000}ms linear both`,
+            animation: `toast-countdown ${duration || 4000}ms linear both`,
           }}
         />
       </div>
@@ -150,41 +144,62 @@ export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const toastIdRef = useRef(0);
   const timeoutsRef = useRef(new Map());
+  const exitTimeoutsRef = useRef(new Map());
 
-  const dismissToast = useCallback((id) => {
+  // Final removal — strips the toast from state
+  const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-    // Clear timeout if exists
-    const timeoutId = timeoutsRef.current.get(id);
-    if (timeoutId) {
-      clearTimeout(timeoutId);
+    timeoutsRef.current.delete(id);
+    exitTimeoutsRef.current.delete(id);
+  }, []);
+
+  // Marks a toast as exiting (triggers slide-out animation),
+  // then schedules removal after 200ms for the animation to finish.
+  const markToastExiting = useCallback((id) => {
+    // Prevent double-exit
+    if (exitTimeoutsRef.current.has(id)) return;
+
+    // Clear any pending auto-dismiss timeout so it can't race
+    const autoTimeoutId = timeoutsRef.current.get(id);
+    if (autoTimeoutId) {
+      clearTimeout(autoTimeoutId);
       timeoutsRef.current.delete(id);
     }
-  }, []);
+
+    // Set the exiting flag on the toast
+    setToasts((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, exiting: true } : t))
+    );
+
+    // Remove after exit animation completes
+    const exitId = setTimeout(() => removeToast(id), 200);
+    exitTimeoutsRef.current.set(id, exitId);
+  }, [removeToast]);
 
   const showToast = useCallback((message, type = 'info', duration = 4000) => {
     const id = ++toastIdRef.current;
-    const toast = { id, message, type, duration };
+    const toast = { id, message, type, duration, exiting: false };
 
     setToasts((prev) => [...prev, toast]);
 
-    // Auto-dismiss after duration
+    // Auto-dismiss: initiate the same exit flow after duration
     const timeoutId = setTimeout(() => {
-      dismissToast(id);
+      markToastExiting(id);
     }, duration);
     timeoutsRef.current.set(id, timeoutId);
 
     return id;
-  }, [dismissToast]);
+  }, [markToastExiting]);
 
   const value = {
     showToast,
-    dismissToast,
+    dismissToast: markToastExiting,
   };
 
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+      <ToastContainer toasts={toasts} onDismiss={markToastExiting} />
     </ToastContext.Provider>
   );
 }

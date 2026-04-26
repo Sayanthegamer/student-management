@@ -6,7 +6,7 @@ import { getActivities } from '../utils/storage';
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
     <div 
         className="card-base p-5 flex flex-col gap-3 transition-all duration-300 group hover:bg-[var(--bg-card-hover)] hover:-translate-y-0.5 glow-accent"
-        style={{ animation: `fadeInUp 0.4s var(--spring-bounce) both`, animationDelay: `${index * 80}ms` }}
+        style={{ animation: `fade-in-up-anim 0.4s var(--spring-bounce) both`, animationDelay: `${index * 80}ms` }}
     >
         <div className="flex justify-between items-start gap-3">
             <div className="min-w-0 flex-1">
@@ -121,7 +121,7 @@ const Overview = ({ students, onAddStudent }) => {
                         Activity Stream
                     </h3>
                     <span className="text-[10px] font-medium text-[var(--text-secondary)] px-2 py-0.5 rounded-custom flex items-center gap-1.5 border border-[var(--border-color)]">
-                        <div className="w-1.5 h-1.5 rounded-custom-full text-emerald-500" style={{ backgroundColor: 'currentColor', animation: 'gentlePulse 2s ease-in-out infinite' }}></div>
+                        <span className="w-1.5 h-1.5 rounded-custom-full text-emerald-500" aria-hidden="true" style={{ backgroundColor: 'currentcolor', animation: 'gentle-pulse 2s ease-in-out infinite' }}></span>
                         Live
                     </span>
                 </div>
@@ -132,7 +132,7 @@ const Overview = ({ students, onAddStudent }) => {
                             <div 
                                 key={activity.id} 
                                 className="flex items-start gap-4 p-5 hover:bg-[var(--bg-card-hover)] transition-colors group"
-                                style={{ animation: `fadeInUp 0.3s var(--spring-bounce) both`, animationDelay: `${idx * 50}ms` }}
+                                style={{ animation: `fade-in-up-anim 0.3s var(--spring-bounce) both`, animationDelay: `${idx * 50}ms` }}
                             >
                                 <div className={`p-2.5 shrink-0 rounded-[12px] border transition-transform duration-200 group-hover:scale-105 ${activity.type === 'fee' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' :
                                     activity.type === 'student' ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :

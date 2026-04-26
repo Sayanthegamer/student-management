@@ -149,17 +149,17 @@ body {
    ANIMATION KEYFRAMES — Spring Physics
 ============================================ */
 
-@keyframes fadeIn {
+@keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes fadeOut {
+@keyframes fade-out {
   from { opacity: 1; }
   to { opacity: 0; }
 }
 
-@keyframes slideUp {
+@keyframes slide-up-anim {
   from {
     opacity: 0;
     transform: translateY(16px);
@@ -170,7 +170,7 @@ body {
   }
 }
 
-@keyframes slideDown {
+@keyframes slide-down-anim {
   from {
     opacity: 0;
     transform: translateY(-12px);
@@ -182,7 +182,7 @@ body {
 }
 
 /* Spring overshoot for modals/dialogs */
-@keyframes scaleIn {
+@keyframes scale-in-anim {
   0% {
     opacity: 0;
     transform: scale(0.95);
@@ -197,7 +197,7 @@ body {
   }
 }
 
-@keyframes scaleOut {
+@keyframes scale-out-anim {
   from {
     opacity: 1;
     transform: scale(1);
@@ -209,7 +209,7 @@ body {
 }
 
 /* Staggerable fade + rise for list items */
-@keyframes fadeInUp {
+@keyframes fade-in-up-anim {
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -221,7 +221,7 @@ body {
 }
 
 /* Toast entrance — spring from right */
-@keyframes slideInFromRight {
+@keyframes slide-in-from-right {
   0% {
     opacity: 0;
     transform: translateX(100%) scale(0.95);
@@ -237,7 +237,7 @@ body {
 }
 
 /* Toast exit */
-@keyframes slideOutToRight {
+@keyframes slide-out-to-right {
   from {
     opacity: 1;
     transform: translateX(0);
@@ -249,19 +249,19 @@ body {
 }
 
 /* Soft breathing glow for live indicators */
-@keyframes gentlePulse {
+@keyframes gentle-pulse {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 0 0 currentColor;
+    box-shadow: 0 0 0 0 currentcolor;
   }
   50% {
     opacity: 0.7;
-    box-shadow: 0 0 6px 2px currentColor;
+    box-shadow: 0 0 6px 2px currentcolor;
   }
 }
 
 /* Shimmer sweep for skeleton/badges */
-@keyframes shimmerSweep {
+@keyframes shimmer-sweep {
   0% {
     background-position: -200% 0;
   }
@@ -276,13 +276,13 @@ body {
 }
 
 /* Toast progress bar countdown */
-@keyframes toastCountdown {
+@keyframes toast-countdown {
   from { width: 100%; }
   to { width: 0%; }
 }
 
 /* Gradient mesh drift for backgrounds */
-@keyframes meshDrift {
+@keyframes mesh-drift {
   0%, 100% {
     transform: translate(0, 0) rotate(0deg);
   }
@@ -310,40 +310,40 @@ body {
 ============================================ */
 
 .page-enter {
-  animation: fadeIn 0.25s var(--spring-bounce) both;
+  animation: fade-in 0.25s var(--spring-bounce) both;
 }
 
 .slide-up {
-  animation: slideUp var(--spring-duration-fast) var(--spring-bounce) both;
+  animation: slide-up-anim var(--spring-duration-fast) var(--spring-bounce) both;
 }
 
 .slide-down {
-  animation: slideDown var(--spring-duration-fast) var(--spring-bounce) both;
+  animation: slide-down-anim var(--spring-duration-fast) var(--spring-bounce) both;
 }
 
 .scale-in {
-  animation: scaleIn var(--spring-duration) var(--spring-bounce) both;
+  animation: scale-in-anim var(--spring-duration) var(--spring-bounce) both;
 }
 
 .scale-out {
-  animation: scaleOut 0.2s ease-in both;
+  animation: scale-out-anim 0.2s ease-in both;
 }
 
 .fade-out {
-  animation: fadeOut 0.2s ease-in both;
+  animation: fade-out 0.2s ease-in both;
 }
 
 .fade-in-up {
-  animation: fadeInUp var(--spring-duration-fast) var(--spring-bounce) both;
+  animation: fade-in-up-anim var(--spring-duration-fast) var(--spring-bounce) both;
 }
 
 /* Modal backdrop */
 .modal-backdrop {
-  animation: fadeIn 0.2s ease-out both;
+  animation: fade-in 0.2s ease-out both;
 }
 
 .modal-backdrop.closing {
-  animation: fadeOut 0.2s ease-in both;
+  animation: fade-out 0.2s ease-in both;
 }
 
 /* Glow accent for hover effects */
@@ -370,7 +370,7 @@ body {
     radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
-  animation: meshDrift 20s ease-in-out infinite;
+  animation: mesh-drift 20s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
 }

@@ -87,7 +87,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                         {isActive && (
                                             <span 
                                                 className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-[var(--accent-primary)] rounded-full" 
-                                                style={{ animation: 'scaleIn 0.3s var(--spring-snappy) both' }}
+                                                style={{ animation: 'scale-in-anim 0.3s var(--spring-snappy) both' }}
                                             />
                                         )}
                                         <Icon size={18} className={`transition-colors duration-200 ${isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-muted)] group-hover:text-[var(--accent-primary)]'}`} />

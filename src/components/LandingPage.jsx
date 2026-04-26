@@ -57,12 +57,12 @@ const LandingPage = () => {
           style={{
             backgroundImage: 'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.08) 50%, transparent 100%)',
             backgroundSize: '200% 100%',
-            animation: 'fadeInUp 0.4s var(--spring-bounce) both, shimmerSweep 3s ease-in-out infinite 1s',
+            animation: 'fade-in-up-anim 0.4s var(--spring-bounce) both, shimmer-sweep 3s ease-in-out infinite 1s',
           }}
         >
           <span 
             className="w-2 h-2 rounded-full bg-[var(--accent-primary)]" 
-            style={{ animation: 'gentlePulse 2s ease-in-out infinite' }}
+            style={{ animation: 'gentle-pulse 2s ease-in-out infinite' }}
           />
           System Online
         </div>
@@ -87,7 +87,7 @@ const LandingPage = () => {
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto fade-in-up" style={{ animationDelay: '0.24s' }}>
           <button 
             onClick={() => navigate('/login')}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-300 border border-transparent rounded-[12px] bg-[var(--accent-primary)] text-white hover:bg-[var(--accent-hover)] hover:-translate-y-1 shadow-lg shadow-[var(--accent-primary)]/25 hover:shadow-xl hover:shadow-[var(--accent-primary)]/35 w-full sm:w-auto active:scale-[0.97]"
+            className="group inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-300 border border-transparent rounded-[12px] bg-[var(--accent-primary)] text-white hover:bg-[var(--accent-hover)] hover:-translate-y-1 shadow-lg shadow-[var(--accent-primary)]/25 hover:shadow-xl hover:shadow-[var(--accent-primary)]/35 w-full sm:w-auto active:scale-[0.97]"
           >
             Initialize Dashboard
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
