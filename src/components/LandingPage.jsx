@@ -5,7 +5,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#e0e0e0] font-sans selection:bg-[#CCFF00] selection:text-black overflow-x-hidden relative">
+    <div className="min-h-screen bg-[var(--bg-main)] text-[#e0e0e0] font-sans selection:bg-[#CCFF00] selection:text-black overflow-x-hidden relative">
 
       {/* Engineering Grid Overlay */}
       <div 
@@ -19,9 +19,9 @@ const LandingPage = () => {
       {/* Top Bar - Stark & Minimal */}
       <header className="absolute top-0 w-full flex justify-between items-center p-6 md:p-8 border-b border-white/10 z-20">
         <div className="flex flex-col">
-            <h1 className="text-xl md:text-2xl font-black tracking-tighter uppercase text-white leading-none">STD::MGR_PRO</h1>
+            <h1 className="text-xl md:text-2xl font-medium tracking-tighter uppercase text-white leading-none">STD::MGR_PRO</h1>
         </div>
-        <div className="hidden md:flex text-xs font-bold uppercase tracking-widest text-white/40 items-center gap-3">
+        <div className="hidden md:flex text-xs font-bold  text-[var(--text-muted)] items-center gap-3">
             <span>[ SYSTEM ONLINE ]</span>
             <span className="w-1.5 h-1.5 bg-[#CCFF00] rounded-full" />
         </div>
@@ -33,7 +33,7 @@ const LandingPage = () => {
           
           <div className="md:col-span-8 flex flex-col">
             {/* The Anti-Headline */}
-            <h2 className="text-[14vw] md:text-[8.5vw] leading-[0.85] font-black uppercase tracking-tighter text-[#CCFF00] mb-6 drop-shadow-[0_0_30px_rgba(204,255,0,0.15)]">
+            <h2 className="text-[14vw] md:text-[8.5vw] leading-[0.85] font-medium uppercase tracking-tighter text-[#CCFF00] mb-6 drop-shadow-[0_0_30px_rgba(204,255,0,0.15)]">
               Zero <br/>Latency.
             </h2>
             
@@ -43,18 +43,18 @@ const LandingPage = () => {
               Most school software is built like a legacy bank. We built this like a high-frequency trading engine.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <span className="px-4 py-2 border-2 border-white/40 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">No Spinners</span>
-              <span className="px-4 py-2 border-2 border-white/40 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Instant Interactions</span>
-              <span className="px-4 py-2 border-2 border-white/40 text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Offline Capable</span>
+              <span className="px-4 py-2 border border-[var(--border-color)] text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">No Spinners</span>
+              <span className="px-4 py-2 border border-[var(--border-color)] text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Instant Interactions</span>
+              <span className="px-4 py-2 border border-[var(--border-color)] text-white font-bold text-sm md:text-base uppercase tracking-wide hover:bg-white hover:text-black transition-colors cursor-default">Offline Capable</span>
             </div>
           </div>
 
           <div className="md:col-span-4 flex flex-col items-start md:items-end justify-end space-y-6 pt-12 md:pt-0">
              <button 
                 onClick={() => navigate('/login')}
-                className="group relative inline-flex items-center justify-center w-full md:w-auto px-8 py-5 md:py-6 bg-[#CCFF00] text-black font-black uppercase tracking-widest text-lg md:text-xl hover:bg-white transition-all overflow-hidden"
+                className="group relative inline-flex items-center justify-center w-full md:w-auto px-8 py-5 md:py-6 bg-[#CCFF00] text-black font-medium  text-lg md:text-xl hover:bg-white transition-all overflow-hidden"
              >
-                <div className="absolute inset-0 border-2 border-transparent group-hover:border-black transition-colors pointer-events-none scale-105 opacity-0 group-hover:opacity-100" />
+                <div className="absolute inset-0 border border-transparent group-hover:border-black transition-colors pointer-events-none scale-105 opacity-0 group-hover:opacity-100" />
                 <span className="relative z-10 flex items-center gap-4 whitespace-nowrap">
                   Initialize System
                   <svg className="w-6 h-6 shrink-0 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -62,8 +62,8 @@ const LandingPage = () => {
                   </svg>
                 </span>
              </button>
-             <div className="border-2 border-white/40 bg-white/5 p-5 md:text-right max-w-sm w-full">
-                <p className="text-sm font-black text-white uppercase leading-snug">
+             <div className="border border-[var(--border-color)] bg-white/5 p-5 md:text-right max-w-sm w-full">
+                <p className="text-sm font-medium text-white uppercase leading-snug">
                     Note: We removed all artificial loading screens. The system reacts instantly to your inputs.
                 </p>
              </div>
@@ -80,8 +80,8 @@ const LandingPage = () => {
              { num: "03", title: "TC GENERATOR", desc: "Instant transfer certificate issuance strictly linked to internal student admission lifecycle states." }
            ].map(f => (
              <div key={f.num} className="p-12 hover:bg-black hover:text-[#CCFF00] transition-colors duration-300 group">
-                <div className="text-6xl font-black mb-12 opacity-10 group-hover:opacity-100 transition-opacity tracking-tighter">{f.num}</div>
-                <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 leading-none">{f.title}</h3>
+                <div className="text-6xl font-medium mb-12 opacity-10 group-hover:opacity-100 transition-opacity tracking-tighter">{f.num}</div>
+                <h3 className="text-3xl font-medium uppercase tracking-tighter mb-4 leading-none">{f.title}</h3>
                 <p className="font-mono text-sm leading-relaxed font-bold opacity-80">{f.desc}</p>
              </div>
            ))}
@@ -95,20 +95,20 @@ const LandingPage = () => {
       </section>
 
       {/* Features - Mobile Fallback */}
-      <section className="md:hidden border-t border-white/10 w-full bg-[#050505] text-[#CCFF00] divide-y divide-white/10 relative z-10">
+      <section className="md:hidden border-t border-white/10 w-full bg-[var(--bg-main)] text-[#CCFF00] divide-y divide-white/10 relative z-10">
          {[
              { num: "01", title: "LOCAL-FIRST", desc: "Data lives in session storage. Mutations are synchronous. Zero blocking." },
              { num: "02", title: "FEE ENGINE", desc: "Algorithmic fine calculations. Multi-month batched transactions." },
              { num: "03", title: "TC GENERATOR", desc: "Instant transfer certificate issuance linked to lifecycle states." }
            ].map(f => (
              <div key={f.num} className="p-6 relative overflow-hidden group">
-                <div className="absolute right-[-10%] top-[-10%] text-[8rem] font-black opacity-[0.03] text-white leading-none pointer-events-none">{f.num}</div>
-                <div className="text-3xl font-black mb-6 text-white">{f.num}</div>
-                <h3 className="text-2xl font-black uppercase tracking-tighter mb-2 text-[#CCFF00]">{f.title}</h3>
-                <p className="font-mono text-sm leading-relaxed text-white/50">{f.desc}</p>
+                <div className="absolute right-[-10%] top-[-10%] text-[8rem] font-medium opacity-[0.03] text-white leading-none pointer-events-none">{f.num}</div>
+                <div className="text-3xl font-medium mb-6 text-white">{f.num}</div>
+                <h3 className="text-2xl font-medium uppercase tracking-tighter mb-2 text-[#CCFF00]">{f.title}</h3>
+                <p className="font-mono text-sm leading-relaxed text-[var(--text-secondary)]">{f.desc}</p>
              </div>
            ))}
-           <div className="p-6 bg-white/5 font-mono text-[10px] uppercase text-white/40 text-center">
+           <div className="p-6 bg-white/5 font-mono text-[10px] uppercase text-[var(--text-muted)] text-center">
                END OF BUFFER // SYSTEM DESIGNED FOR ADVANCED ADMINISTRATION
            </div>
       </section>

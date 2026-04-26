@@ -106,119 +106,123 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
     if (students.length === 0) {
         return (
-            <div className="bg-[#0a0a0a] border-2 border-white/40 p-6 md:p-16 text-center max-w-2xl mx-auto">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-[#CCFF00] border-2 border-[#CCFF00] text-black flex items-center justify-center mx-auto mb-6">
-                    <UserPlus size={32} className="md:size-[40px] stroke-[2px]" />
+            <div className="card-base p-8 md:p-16 text-center max-w-2xl mx-auto mt-8">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 border border-[var(--border-color)] rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <UserPlus size={32} className="text-[var(--text-primary)]" />
                 </div>
-                <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight mb-2">No students yet</h2>
-                <p className="text-white/60 font-mono mb-8 text-base md:text-lg">Start building your database by adding your first student record.</p>
-                <button onClick={onAdd} className="px-6 md:px-8 py-3 md:py-4 bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 mx-auto min-h-[48px]">
-                    <Plus size={20} className="stroke-[3px]" />
-                    <span className="hidden md:inline">Initialize Student</span>
-                    <span className="md:hidden">Add</span>
+                <h2 className="text-xl md:text-2xl font-semibold text-white mb-2">No students yet</h2>
+                <p className="text-[var(--text-secondary)] text-sm md:text-base mb-8">Start building your database by adding your first student record.</p>
+                <button onClick={onAdd} className="btn btn-primary mx-auto">
+                    <Plus size={18} />
+                    <span>Add Student</span>
                 </button>
             </div>
         );
     }
 
     return (
-        <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
-            <div className="bg-[#0a0a0a] border-2 border-white/40 overflow-hidden page-enter flex flex-col">
-                <div className="p-3 md:p-6 border-b border-white/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-widest">Student Directory</h2>
-                        <p className="text-white/50 text-xs font-mono tracking-wide mt-1 uppercase">Manage and track student records and fees</p>
-                    </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full md:w-auto">
-                        <div className="relative flex-1 sm:min-w-[220px] md:w-64">
-                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 stroke-[2.5px]" />
+        <div className="max-w-6xl mx-auto p-4 md:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                <div>
+                    <h2 className="text-white text-2xl font-semibold">Student Directory</h2>
+                    <p className="text-[var(--text-secondary)] text-sm mt-1">Manage and track student records and fees.</p>
+                </div>
+            </div>
+
+            <div className="card-base overflow-hidden page-enter flex flex-col mb-8">
+                <div className="p-4 md:p-5 border-b border-[var(--border-color)] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--bg-card)]">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
+                        <div className="relative flex-1 sm:max-w-md">
+                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
                             <input
                                 type="text"
-                                placeholder="SEARCH STUDENTS..."
+                                placeholder="Search students..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 bg-[#050505] border-2 border-white/40 focus:border-[#CCFF00] text-white outline-none transition-all text-sm font-black tracking-widest uppercase placeholder:text-white/20"
+                                className="w-full pl-9 pr-4 py-2 bg-[var(--bg-main)] border border-[var(--border-color)] focus:border-white text-[var(--text-primary)] rounded-md outline-none transition-all text-sm placeholder:text-[var(--text-muted)]"
                             />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 shrink-0">
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`p-2.5 border transition-all ${showFilters ? 'bg-[#CCFF00] border-[#CCFF00] text-black' : 'bg-[#050505] border-white/40 text-white hover:bg-white/10'}`}
+                                className={`p-2 border rounded-md transition-all flex items-center justify-center ${showFilters ? 'bg-[var(--bg-card-hover)] border-[var(--border-color)] text-white' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-white'}`}
                             >
-                                <Filter size={20} className="stroke-[2.5px]" />
+                                <Filter size={16} />
                             </button>
-                            <button onClick={onAdd} className="px-5 py-2.5 bg-[#CCFF00] border-2 border-[#CCFF00] hover:bg-white hover:border-white text-black font-black uppercase tracking-widest transition-colors hidden md:flex items-center gap-2">
-                                <Plus size={18} className="stroke-[3px]" />
-                                Add <span className="hidden lg:inline">Student</span>
+                            <button onClick={onAdd} className="btn btn-primary hidden md:flex">
+                                <Plus size={16} />
+                                <span>Add Student</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
                 {showFilters && (
-                    <div className="p-3 md:p-5 bg-[#050505] border-b border-white/40 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 slide-down">
+                    <div className="p-4 bg-[var(--bg-card)] border-b border-[var(--border-color)] grid grid-cols-2 md:grid-cols-5 gap-4 slide-down">
                         <div className="col-span-1">
-                            <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Class</label>
+                            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Class</label>
                             <select
                                 value={filterClass}
                                 onChange={(e) => setFilterClass(e.target.value)}
-                                className="w-full bg-[#0a0a0a] border-2 border-white/40 px-3 py-2.5 text-xs text-white outline-none focus:border-[#CCFF00] font-black tracking-widest uppercase"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
                             >
-                                <option value="">ALL CLASSES</option>
-                                {classes.map(c => <option key={c} value={c}>CLASS {c}</option>)}
+                                <option value="">All Classes</option>
+                                {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
                             </select>
                         </div>
                         <div className="col-span-1">
-                            <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Section</label>
+                            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Section</label>
                             <select
                                 value={filterSection}
                                 onChange={(e) => setFilterSection(e.target.value)}
-                                className="w-full bg-[#0a0a0a] border-2 border-white/40 px-3 py-2.5 text-xs text-white outline-none focus:border-[#CCFF00] font-black tracking-widest uppercase"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
                             >
-                                <option value="">ALL SECTIONS</option>
-                                {sections.map(s => <option key={s} value={s}>SEC {s}</option>)}
+                                <option value="">All Sections</option>
+                                {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
                             </select>
                         </div>
                         <div className="col-span-1">
-                            <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Fee Status</label>
+                            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Fee Status</label>
                             <select
                                 value={filterFeeStatus}
                                 onChange={(e) => setFilterFeeStatus(e.target.value)}
-                                className="w-full bg-[#0a0a0a] border-2 border-white/40 px-3 py-2.5 text-xs text-white outline-none focus:border-[#CCFF00] font-black tracking-widest uppercase"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
                             >
-                                <option value="">ALL STATUS</option>
-                                <option value="Paid">PAID</option>
-                                <option value="Pending">PENDING</option>
-                                <option value="Overdue">OVERDUE</option>
+                                <option value="">All Statuses</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Overdue">Overdue</option>
                             </select>
                         </div>
                         <div className="col-span-1">
-                            <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Fee Month</label>
-                            <CustomMonthPicker
-                                value={filterMonth}
-                                onChange={setFilterMonth}
-                                compact={true}
-                            />
+                            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Fee Month</label>
+                            <div className="h-[38px]">
+                                <CustomMonthPicker
+                                    value={filterMonth}
+                                    onChange={setFilterMonth}
+                                    compact={true}
+                                />
+                            </div>
                         </div>
                         <div className="col-span-2 md:col-span-1 flex items-end gap-2">
                             <div className="flex-1">
-                                <label className="block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Sort By</label>
+                                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Sort By</label>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full bg-[#0a0a0a] border-2 border-white/40 px-3 py-2.5 text-xs text-white outline-none focus:border-[#CCFF00] font-black tracking-widest uppercase"
+                                    className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
                                 >
-                                    <option value="name">NAME</option>
-                                    <option value="rollNo">ROLL NO</option>
-                                    <option value="class">CLASS</option>
+                                    <option value="name">Name</option>
+                                    <option value="rollNo">Roll No</option>
+                                    <option value="class">Class</option>
                                 </select>
                             </div>
                             <button
                                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                className="p-2.5 bg-[#0a0a0a] border-2 border-white/40 text-white hover:bg-white/10 transition-all min-h-[40px] min-w-[40px] flex items-center justify-center outline-none focus:border-[#CCFF00]"
+                                className="p-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md text-[var(--text-secondary)] hover:text-white transition-all h-[38px] w-[38px] flex items-center justify-center outline-none focus:border-white"
                                 aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                             >
-                                {sortOrder === 'asc' ? <ChevronDown size={18} className="stroke-[3px]" /> : <ChevronUp size={18} className="stroke-[3px]" />}
+                                {sortOrder === 'asc' ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
                             </button>
                         </div>
                     </div>
@@ -226,7 +230,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
                 <div className="md:hidden p-3 space-y-3">
                     {currentStudents.length > 0 ? (
-                        currentStudents.map((student, index) => (
+                        currentStudents.map((student) => (
                             <StudentCard
                                 key={student.id}
                                 student={student}
@@ -237,15 +241,15 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             />
                         ))
                     ) : (
-                        <div className="py-16 text-center border-2 border-white/40 bg-[#050505]">
-                            <div className="bg-[#0a0a0a] border-2 border-white/40 w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <div className="py-16 text-center border border-[var(--border-color)] bg-[var(--bg-main)]">
+                            <div className="bg-[var(--bg-card)] border border-[var(--border-color)] w-16 h-16 flex items-center justify-center mx-auto mb-4">
                                 <Search size={24} className="text-white/30" />
                             </div>
-                            <p className="text-white font-black text-base uppercase tracking-widest">No results found</p>
-                            <p className="text-white/50 font-mono text-xs mt-2 uppercase">Try adjusting your filters or search term</p>
+                            <p className="text-white font-medium text-base ">No results found</p>
+                            <p className="text-[var(--text-secondary)] font-mono text-xs mt-2 uppercase">Try adjusting your filters or search term</p>
                             <button
                                 onClick={handleClearFilters}
-                                className="text-[#CCFF00] text-sm font-black hover:underline mt-6 uppercase tracking-widest px-4"
+                                className="text-[#CCFF00] text-sm font-medium hover:underline mt-6  px-4"
                             >
                                 Clear all filters
                             </button>
@@ -254,71 +258,71 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 </div>
 
                 <div className="hidden md:block flex-1 overflow-x-auto">
-                    <table className="w-full text-left border-collapse border-t border-b border-white/40">
+                    <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-[#050505] border-b border-white/40">
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Student Info</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Class Details</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest">Fee Status ({filterMonth})</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-white/50 uppercase tracking-widest text-right">Actions</th>
+                            <tr className="bg-[var(--bg-main)] border-b border-[var(--border-color)]">
+                                <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Student Info</th>
+                                <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Class Details</th>
+                                <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Fee Status ({filterMonth})</th>
+                                <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/10 bg-[#0a0a0a]">
+                        <tbody className="divide-y divide-[var(--border-color)] bg-[var(--bg-card)]">
                             {currentStudents.map(student => {
                                 const status = getFeeStatusForMonth(student, filterMonth);
                                 return (
-                                    <tr key={student.id} className="hover:bg-white/5 transition-colors group">
+                                    <tr key={student.id} className="hover:bg-[var(--bg-card-hover)] transition-colors group">
                                         <td className="px-6 py-4">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 border-2 border-[#CCFF00] bg-[#CCFF00] text-black flex items-center justify-center font-black text-base shrink-0 uppercase">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-full border border-[var(--border-color)] bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300 flex items-center justify-center font-semibold text-sm shrink-0">
                                                     {student.name.charAt(0)}
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <p className="font-black text-white text-sm uppercase tracking-widest truncate">{student.name}</p>
-                                                    <p className="text-white/40 font-mono text-xs mt-1 uppercase truncate">ID: {student.id.slice(0, 8)}</p>
+                                                    <p className="font-medium text-[var(--text-primary)] text-sm truncate">{student.name}</p>
+                                                    <p className="text-[var(--text-muted)] text-xs mt-0.5 truncate">ID: {student.id.slice(0, 8)}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 border-l border-white/10">
+                                        <td className="px-6 py-4">
                                             <div className="flex flex-col">
-                                                <span className="text-sm text-white font-black uppercase tracking-widest">CLASS {student.class} - {student.section}</span>
-                                                <span className="text-xs text-white/50 font-mono mt-1 uppercase">ROLL NO: {student.rollNo}</span>
+                                                <span className="text-sm text-[var(--text-primary)] font-medium">Class {student.class} - {student.section}</span>
+                                                <span className="text-xs text-[var(--text-muted)] mt-0.5">Roll No: {student.rollNo}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 border-l border-white/10">
+                                        <td className="px-6 py-4">
                                             <span
-                                                className={`inline-flex items-center px-3 py-1 text-[10px] font-black border uppercase tracking-widest ${status === 'Paid'
-                                                    ? 'bg-emerald-400 border-emerald-400 text-black'
+                                                className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold border rounded-md ${status === 'Paid'
+                                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
                                                     : status === 'Overdue'
-                                                        ? 'bg-rose-500 border-rose-500 text-black'
-                                                        : 'bg-amber-400 border-amber-400 text-black'
+                                                        ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+                                                        : 'bg-amber-500/10 border-amber-500/20 text-amber-400'
                                                     }`}
                                             >
                                                 {status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-right border-l border-white/10">
-                                            <div className="flex gap-2 justify-end">
+                                        <td className="px-6 py-4 text-right">
+                                            <div className="flex gap-2 justify-end opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => handlePayFeeClick(student)}
-                                                    className="p-2 border-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 transition-colors"
                                                     title="Collect Fee"
                                                 >
-                                                    <IndianRupee size={16} className="stroke-[3px]" />
+                                                    <IndianRupee size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onEdit(student)}
-                                                    className="p-2 border-2 border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/30 transition-colors"
                                                     title="Edit Record"
                                                 >
-                                                    <Edit2 size={16} className="stroke-[3px]" />
+                                                    <Edit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(student.id)}
-                                                    className="p-2 border-2 border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-black transition-colors"
+                                                    className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-md hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 transition-colors"
                                                     title="Delete Record"
                                                 >
-                                                    <Trash2 size={16} className="stroke-[3px]" />
+                                                    <Trash2 size={16} />
                                                 </button>
                                             </div>
                                         </td>
@@ -327,18 +331,18 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             })}
                             {currentStudents.length === 0 && (
                                 <tr>
-                                    <td colSpan="4" className="py-24 text-center">
-                                        <div className="flex flex-col items-center gap-4">
-                                            <div className="p-4 border-2 border-white/40 bg-[#050505]">
-                                                <Search size={32} className="text-white/30" />
+                                    <td colSpan="4" className="py-20 text-center bg-[var(--bg-main)]">
+                                        <div className="flex flex-col items-center gap-3">
+                                            <div className="p-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)]">
+                                                <Search size={24} className="text-[var(--text-muted)]" />
                                             </div>
                                             <div>
-                                                <p className="text-white font-black uppercase tracking-widest">No results found</p>
-                                                <p className="text-white/50 font-mono text-sm mt-1 uppercase">Try adjusting your filters or search term</p>
+                                                <p className="text-[var(--text-primary)] font-medium text-sm">No results found</p>
+                                                <p className="text-[var(--text-secondary)] text-xs mt-1">Try adjusting your filters or search term</p>
                                             </div>
                                             <button
                                                 onClick={handleClearFilters}
-                                                className="text-[#CCFF00] text-sm font-black hover:underline uppercase tracking-widest mt-2"
+                                                className="text-blue-400 text-xs font-medium hover:underline mt-2"
                                             >
                                                 Clear all filters
                                             </button>
@@ -350,7 +354,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     </table>
                 </div>
 
-                <div className="px-4 py-3 bg-[#050505] border-t border-white/40">
+                <div className="px-6 py-4 bg-[var(--bg-card)] border-t border-[var(--border-color)]">
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}

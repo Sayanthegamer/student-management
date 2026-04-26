@@ -36,12 +36,12 @@ const SyncIndicator = ({ status, onSync, darkMode = false }) => {
   const config = getStatusConfig();
   const Icon = config.icon;
 
-  const bgClasses = "bg-[#0a0a0a] border-white/20";
+  const bgClasses = "bg-[var(--bg-card)] border-white/20";
   const textClasses = "text-white/70";
 
   return (
     <div className="flex items-center gap-3">
-      <div className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-none border-2 text-[10px] font-black uppercase tracking-widest transition-all min-w-[140px] ${bgClasses}`}>
+      <div className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-none border text-[10px] font-medium  transition-all min-w-[140px] ${bgClasses}`}>
         <Icon size={12} className={`${config.color} ${config.animate || ''} stroke-[3px]`} />
         <span className={textClasses}>{config.text}</span>
       </div>
@@ -49,7 +49,7 @@ const SyncIndicator = ({ status, onSync, darkMode = false }) => {
         <button
           onClick={onSync}
           disabled={status === 'syncing' || status === 'synced'}
-          className={`p-2 rounded-none border-2 transition-all ${status === 'syncing' || status === 'synced'
+          className={`p-2 rounded-none border transition-all ${status === 'syncing' || status === 'synced'
               ? 'border-white/10 text-white/20 cursor-not-allowed'
               : 'border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black active:scale-95'
             }`}

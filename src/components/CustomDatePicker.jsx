@@ -71,12 +71,12 @@ const CustomDatePicker = ({ value, onChange, label, required, className = '' }) 
 
     const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, '0'));
 
-    const selectClasses = "w-full bg-[#050505] border-2 border-white/40 px-4 py-4 rounded-none text-white font-black uppercase tracking-widest outline-none transition-colors focus:border-[#CCFF00] text-sm";
+    const selectClasses = "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-4 rounded-none text-white font-medium  outline-none transition-colors focus:border-[#CCFF00] text-sm";
 
     return (
         <div className={className}>
             {label && (
-                <label className="text-[10px] font-black text-white/50 uppercase tracking-widest px-1 mb-1.5 block">
+                <label className="text-[10px] font-medium text-[var(--text-secondary)]  px-1 mb-1.5 block">
                     {label} {required && <span className="text-[#CCFF00] ml-1">*</span>}
                 </label>
             )}

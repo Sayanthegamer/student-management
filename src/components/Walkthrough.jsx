@@ -261,33 +261,33 @@ const Walkthrough = () => {
 
             {/* Full screen backdrop for when there is NO target (center steps) */}
             {!step.target && (
-                <div className="absolute inset-0 bg-[#050505]/90 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-[var(--bg-main)]/90 transition-opacity duration-300" />
             )}
 
             {/* Tooltip Card */}
             <div
-                className="absolute pointer-events-auto bg-[#0a0a0a] p-8 rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border-2 border-white/40 z-[110]"
+                className="absolute pointer-events-auto bg-[var(--bg-card)] p-8 rounded-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
                 style={tooltipPosition}
             >
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
-                        <span className="bg-[#CCFF00] text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-none border-2 border-[#CCFF00]">
+                        <span className="bg-[#CCFF00] text-black text-[10px] font-medium  px-3 py-1 rounded-none border border-[#CCFF00]">
                             Step {currentStep + 1}/{steps.length}
                         </span>
                     </div>
-                    <button onClick={() => handleClose(true)} className="text-white/50 hover:text-white transition-colors">
+                    <button onClick={() => handleClose(true)} className="text-[var(--text-secondary)] hover:text-white transition-colors">
                         <X size={24} className="stroke-[3px]" />
                     </button>
                 </div>
 
-                <h3 className="text-xl font-black text-white mb-3 uppercase tracking-widest">{step.title}</h3>
-                <p className="text-white/70 mb-8 leading-relaxed font-mono text-xs uppercase tracking-widest">{step.description}</p>
+                <h3 className="text-xl font-medium text-white mb-3 ">{step.title}</h3>
+                <p className="text-white/70 mb-8 leading-relaxed font-mono text-xs ">{step.description}</p>
 
                 <div className="flex flex-wrap items-center justify-between gap-4">
                     <button
                         onClick={handlePrev}
                         disabled={currentStep === 0}
-                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${currentStep === 0 ? 'text-white/20 cursor-not-allowed' : 'text-white/50 hover:text-[#CCFF00]'}`}
+                        className={`flex items-center gap-2 text-[10px] font-medium  transition-colors ${currentStep === 0 ? 'text-white/20 cursor-not-allowed' : 'text-[var(--text-secondary)] hover:text-[#CCFF00]'}`}
                     >
                         <ChevronLeft size={16} className="stroke-[3px]" /> Previous
                     </button>
@@ -304,7 +304,7 @@ const Walkthrough = () => {
 
                     <button
                         onClick={handleNext}
-                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border-2 border-[#CCFF00] px-5 py-3 rounded-none text-[10px] font-black shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex items-center gap-3 transition-colors uppercase tracking-widest active:bg-[#CCFF00]/20"
+                        className="bg-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] text-black border border-[#CCFF00] px-5 py-3 rounded-none text-[10px] font-medium shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] flex items-center gap-3 transition-colors  active:bg-[#CCFF00]/20"
                     >
                         {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
                         {currentStep === steps.length - 1 ? <CheckCircle size={16} className="stroke-[3px]" /> : <ChevronRight size={16} className="stroke-[3px]" />}

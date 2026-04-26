@@ -1,13 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  /* Accessible Brutalist Theme */
-  --bg-gradient: #050505;
+  /* Stitch-inspired Dark Theme */
+  --bg-main: #0B0B0C;
+  --bg-sidebar: #131315;
+  --bg-card: #151517;
+  --bg-card-hover: #1A1A1D;
+  --border-color: #27272A;
+  --border-highlight: #3F3F46;
   
-  /* Replace glass with solid, harsh sections */
-  --glass-bg: #0a0a0a;
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-shadow: none;
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+
+  --accent-primary: #3B82F6; /* Optional, a nice blue if needed, though mostly monochrome */
+  --accent-hover: #2563EB;
 
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -21,26 +28,45 @@ input, select, textarea {
   font-size: 16px !important; /* Prevents iOS zoom on focus */
 }
 
-/* Global Brutalist Overrides */
+/* Smooth rounded corners globally like Stitch */
 * {
-  /* Force sharp edges globally */
-  border-radius: 0px !important;
+  border-radius: 8px;
+}
+/* Revert border radius for elements that shouldn't have it globally forced */
+body, main, html, .app-container {
+  border-radius: 0;
 }
 
 ::selection {
-  background: #CCFF00;
-  color: #000;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
 
 body {
   margin: 0;
   font-family: var(--font-family);
-  background: var(--bg-gradient);
+  background: var(--bg-main);
   min-height: 100dvh;
-  color: #e0e0e0;
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
+}
+
+/* Custom Scrollbar for a cleaner look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 
 /* Hardware acceleration for smooth animations */
@@ -54,15 +80,24 @@ body {
 
 @layer utilities {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-black uppercase tracking-wider cursor-pointer transition-all duration-200 border;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 font-medium text-sm cursor-pointer transition-colors duration-200 border rounded-md;
   }
 
   .btn-primary {
-    @apply bg-[#CCFF00] text-black border-[#CCFF00] hover:bg-white hover:border-white;
+    @apply bg-white text-black border-white hover:bg-gray-200;
+  }
+
+  .btn-secondary {
+    @apply bg-[#1C1C1E] text-white border-[#27272A] hover:bg-[#27272A];
   }
 
   .btn-danger {
-    @apply bg-transparent text-rose-500 border-rose-500 hover:bg-rose-500 hover:text-black;
+    @apply bg-transparent text-rose-500 border-rose-500/50 hover:bg-rose-500/10 hover:border-rose-500;
+  }
+
+  /* Card base utility */
+  .card-base {
+    @apply bg-[#151517] border border-[#27272A] rounded-xl overflow-hidden;
   }
 }
 
@@ -197,10 +232,10 @@ body {
   animation: fadeOut 0.2s ease-in forwards;
 }
 
-/* Better focus styles for brutalism */
+/* Better focus styles for modern UI */
 :focus-visible {
-  outline: 2px solid #CCFF00;
-  outline-offset: 2px;
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 1px;
 }
 
 /* Base interactive elements should have transitions, but not everything */

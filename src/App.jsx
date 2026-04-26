@@ -120,20 +120,20 @@ function App() {
   return (
     <ErrorBoundary>
       <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
-      <div className="app-container flex h-[100dvh] overflow-hidden bg-[#050505] text-[#e0e0e0]">
+      <div className="app-container flex h-[100dvh] overflow-hidden bg-[var(--bg-main)] text-[var(--text-primary)] font-sans">
         {/* Mobile Header - Simplified */}
-        <div className="md:hidden fixed top-0 left-0 right-0 bg-[#0a0a0a] border-b border-white/40 z-30 flex items-center px-4 justify-between pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))]">
+        <div className="md:hidden fixed top-0 left-0 right-0 bg-[var(--bg-sidebar)] border-b border-[var(--border-color)] z-30 flex items-center px-4 justify-between pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))]">
           <div className="flex items-center gap-2">
-            <span className="font-black tracking-widest uppercase text-white text-base">STD::MGR</span>
+            <span className="font-semibold text-[var(--text-primary)] text-base">StdMgr</span>
           </div>
           <div className="flex items-center gap-2">
             {showMobileAdd && (
               <button
                 onClick={handleAddClick}
-                className="p-2 border-2 border-[#CCFF00] text-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors touch-manipulation"
+                className="p-1.5 border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-md transition-colors touch-manipulation"
                 aria-label="Add student"
               >
-                <Plus size={20} className="stroke-[3px]" />
+                <Plus size={18} className="stroke-[2px]" />
               </button>
             )}
             <SyncIndicator status={syncStatus} onSync={forceSync} />
@@ -141,12 +141,12 @@ function App() {
         </div>
 
         {/* Sidebar - Desktop Only */}
-        <div className="hidden md:block md:relative md:w-[260px] md:z-0 flex-shrink-0 md:p-4">
+        <div className="hidden md:block md:relative md:w-[260px] md:z-0 flex-shrink-0 border-r border-[var(--border-color)] bg-[var(--bg-sidebar)]">
           <Sidebar onClose={() => { }} syncStatus={syncStatus} onSync={forceSync} />
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto relative pt-[calc(3.5rem+env(safe-area-inset-top,0px))] md:pt-0 w-full pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
+        <main className="flex-1 overflow-y-auto relative pt-[calc(3.5rem+env(safe-area-inset-top,0px))] md:pt-0 w-full pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-0 bg-[var(--bg-main)]">
           <Suspense fallback={<SkeletonLoader />}>
             <Walkthrough />
             <Routes>
@@ -188,19 +188,19 @@ function App() {
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
-          <div className="bg-[#050505] border-2 border-white/40 max-w-sm w-full p-8 scale-in shadow-2xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">Delete Student?</h3>
-            <p className="text-white/60 font-mono text-xs mb-8">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
-            <div className="flex gap-4">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 scale-in shadow-2xl rounded-xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-white mb-2">Delete Student?</h3>
+            <p className="text-[var(--text-secondary)] text-sm mb-6">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 px-4 py-3 border-2 border-white/40 text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
+                className="px-4 py-2 text-sm font-medium border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-md transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="flex-1 px-4 py-3 bg-rose-500 text-black font-black uppercase tracking-wider hover:bg-rose-600 transition-colors"
+                className="px-4 py-2 text-sm font-medium bg-rose-500 text-white hover:bg-rose-600 rounded-md transition-colors"
               >
                 Delete
               </button>
