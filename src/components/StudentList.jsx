@@ -288,16 +288,23 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span
-                                                className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold border rounded-[12px] ${status === 'Paid'
-                                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                                                    : status === 'Overdue'
-                                                        ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
-                                                        : 'bg-amber-500/10 border-amber-500/20 text-amber-400'
-                                                    }`}
-                                            >
-                                                {status}
-                                            </span>
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <span
+                                                    className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold border rounded-[12px] ${status === 'Paid'
+                                                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                                                        : status === 'Overdue'
+                                                            ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+                                                            : 'bg-amber-500/10 border-amber-500/20 text-amber-400'
+                                                        }`}
+                                                >
+                                                    {status}
+                                                </span>
+                                                {Number(student.concessionAmount) > 0 && (
+                                                    <span className="inline-flex items-center px-2 py-0.5 text-[9px] font-bold border rounded-[8px] bg-purple-500/10 border-purple-500/20 text-purple-400 uppercase tracking-wider" title={`Concession: ₹${Number(student.concessionAmount).toLocaleString()}`}>
+                                                        Concession
+                                                    </span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex gap-2 justify-end opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">

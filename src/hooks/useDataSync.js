@@ -55,6 +55,24 @@ export const useDataSync = () => {
     const id = crypto.randomUUID();
     const newStudent = { ...studentData, id };
 
+    // Auto-create admission fee record if admission fee is set (clamp to non-negative)
+    const grossAdmission = Math.max(0, Number(studentData.admissionFee) || 0);
+    const concession = Math.max(0, Number(studentData.concessionAmount) || 0);
+    const netAdmission = Math.max(0, grossAdmission - concession);
+
+    if (netAdmission > 0) {
+      const admissionPayment = {
+        id: crypto.randomUUID(),
+        date: studentData.admissionDate || new Date().toISOString().split('T')[0],
+        month: '', // Admission fees are not tied to a specific month
+        amount: netAdmission,
+        fine: 0,
+        type: 'Admission',
+        remarks: concession > 0 ? `Admission fee (Concession: ₹${concession})` : 'Admission fee',
+      };
+      newStudent.feeHistory = [admissionPayment, ...(newStudent.feeHistory || [])];
+    }
+
     // 1. Local Update (Optimistic)
     const updatedList = localAddStudent(newStudent);
     setStudents(updatedList);

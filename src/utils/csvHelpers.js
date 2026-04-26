@@ -116,6 +116,12 @@ export const validateAndCoerceStudent = (obj) => {
         return isNaN(num) ? undefined : num;
     };
 
+    // Calculate parsed and clamped admission and concession
+    const parsedAdmission = safeParseNumber(obj.admissionFee ?? obj.admission_fee) || 0;
+    const parsedConcession = safeParseNumber(obj.concessionAmount ?? obj.concession_amount) || 0;
+    const admissionFee = Math.max(0, parsedAdmission);
+    const concessionAmount = Math.max(0, Math.min(parsedConcession, admissionFee));
+
     // Coerce types and return cleaned object
     const result = {
         // Required fields
@@ -149,6 +155,10 @@ export const validateAndCoerceStudent = (obj) => {
                    (obj.fees_amount ? String(obj.fees_amount) : ''),
         feesStatus: obj.feesStatus || obj.fees_status || 'Pending',
         fine: safeParseNumber(obj.fine) || '',
+
+        // Admission fee & concession
+        admissionFee,
+        concessionAmount,
 
         // Arrays and Objects
         feeHistory: obj.feeHistory || [],

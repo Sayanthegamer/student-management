@@ -24,6 +24,18 @@ export const CLASS_FEES = {
 };
 
 /**
+ * Admission fee schedule by class.
+ * Empty for now — user must enter manually during admission.
+ * Fill in values here to auto-populate the admission fee field per class.
+ * Example: 'Play School': '5000'
+ */
+export const ADMISSION_FEES = {
+  // 'Play School': '',
+  // 'Nursery': '',
+  // Add values here when ready for auto-fill
+};
+
+/**
  * Calculate late fine based on payment date vs monthly deadline (20th).
  *
  * Fine logic:
