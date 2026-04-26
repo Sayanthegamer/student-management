@@ -40,7 +40,10 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
         } else {
             setPromotionFee('');
         }
-        // Deselect all when class filter changes
+    }, [filterClass]);
+
+    // Deselect all when class or section filter changes
+    React.useEffect(() => {
         setSelectedStudents(new Set());
     }, [filterClass, filterSection]);
 
