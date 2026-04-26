@@ -186,27 +186,47 @@ const DataManagement = ({ students, onImportSuccess }) => {
                         </div>
                     </div>
 
-                    {importStatus && (
+                    {importStatus && (() => {
+                        const statusConfig = {
+                            error: {
+                                container: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+                                iconWrapper: 'border-rose-500/20 text-rose-400',
+                                Icon: AlertTriangle,
+                                title: 'Import Failed',
+                            },
+                            loading: {
+                                container: 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-[var(--accent-primary)]/20 opacity-80',
+                                iconWrapper: 'border-[var(--accent-primary)]/20 text-[var(--accent-primary)]',
+                                Icon: Upload,
+                                title: 'Importing…',
+                                iconClass: 'animate-pulse',
+                            },
+                            success: {
+                                container: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+                                iconWrapper: 'border-emerald-500/20 text-emerald-400',
+                                Icon: CheckCircle,
+                                title: 'Operation Successful',
+                            },
+                        };
+                        const cfg = statusConfig[importStatus] || statusConfig.success;
+                        const { Icon: StatusIcon } = cfg;
+                        return (
                         <div
                             role={importStatus === 'error' ? 'alert' : 'status'}
                             aria-live={importStatus === 'error' ? 'assertive' : 'polite'}
                             aria-atomic="true"
-                            className={`mt-6 p-4 md:p-6 rounded-[16px] flex items-start gap-4 border animate-fadeIn ${importStatus === 'error'
-                                ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                                : importStatus === 'loading'
-                                    ? 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-[var(--accent-primary)]/20 opacity-80'
-                                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                }`}
+                            className={`mt-6 p-4 md:p-6 rounded-[16px] flex items-start gap-4 border animate-fadeIn ${cfg.container}`}
                         >
-                            <div className={`mt-0.5 p-2 rounded-[12px] bg-[var(--bg-card)] border ${importStatus === 'error' ? 'border-rose-500/20 text-rose-400' : importStatus === 'loading' ? 'border-[var(--accent-primary)]/20 text-[var(--accent-primary)]' : 'border-emerald-500/20 text-emerald-400'}`}>
-                                {importStatus === 'error' ? <AlertTriangle size={20} className="stroke-[2.5px]" /> : importStatus === 'loading' ? <Upload size={20} className="stroke-[2.5px] animate-pulse" /> : <CheckCircle size={20} className="stroke-[2.5px]" />}
+                            <div className={`mt-0.5 p-2 rounded-[12px] bg-[var(--bg-card)] border ${cfg.iconWrapper}`}>
+                                <StatusIcon size={20} className={`stroke-[2.5px] ${cfg.iconClass || ''}`} />
                             </div>
                             <div className="flex flex-col">
-                                <span className="font-bold text-sm md:text-base">{importStatus === 'error' ? 'Import Failed' : importStatus === 'loading' ? 'Importing…' : 'Operation Successful'}</span>
+                                <span className="font-bold text-sm md:text-base">{cfg.title}</span>
                                 <span className="text-xs md:text-sm mt-1 opacity-90">{message}</span>
                             </div>
                         </div>
-                    )}
+                        );
+                    })()}
                 </div>
             </div>
 

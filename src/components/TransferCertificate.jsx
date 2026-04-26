@@ -192,6 +192,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-2.5 md:py-3 rounded-[12px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium placeholder:text-[var(--text-muted)] pl-12"
+                        aria-label="Search students"
                     />
                 </div>
 
@@ -199,6 +200,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                     value={filterClass}
                     onChange={(e) => setFilterClass(e.target.value)}
                     className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-[12px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium appearance-none w-auto min-w-[120px] md:min-w-[140px] cursor-pointer"
+                    aria-label="Filter by class"
                 >
                     <option value="">All Classes</option>
                     {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -208,6 +210,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                     value={filterSection}
                     onChange={(e) => setFilterSection(e.target.value)}
                     className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-[12px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium appearance-none w-auto min-w-[120px] md:min-w-[140px] cursor-pointer"
+                    aria-label="Filter by section"
                 >
                     <option value="">All Sections</option>
                     {sections.map(s => <option key={s} value={s}>Sec {s}</option>)}
@@ -217,6 +220,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                     className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 md:px-4 py-2.5 md:py-3 rounded-[12px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium appearance-none w-auto cursor-pointer"
+                    aria-label="Sort by"
                 >
                     <option value="name">Sort: Name</option>
                     <option value="rollNo">Sort: Roll No</option>
@@ -340,11 +344,15 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
     const dialogRef = React.useRef(null);
     const previousActiveElementRef = React.useRef(null);
 
+    const exitTimerRef = React.useRef(null);
+
     const handleExit = (callback) => {
+        if (isClosing) return;
         setIsClosing(true);
-        setTimeout(() => {
+        exitTimerRef.current = setTimeout(() => {
             callback();
             setIsClosing(false);
+            exitTimerRef.current = null;
         }, 200);
     };
 
@@ -398,6 +406,9 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
             if (dialogRef.current) {
                 dialogRef.current.removeEventListener('keydown', handleKeyDown);
             }
+            if (exitTimerRef.current) {
+                clearTimeout(exitTimerRef.current);
+            }
             if (previousActiveElementRef.current) {
                 previousActiveElementRef.current.focus();
             }
@@ -441,8 +452,9 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                         />
                     </div>
                     <div>
-                        <label className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Reason for Leaving</label>
+                        <label htmlFor="reason-select" className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Reason for Leaving</label>
                         <select
+                            id="reason-select"
                             value={tcDetails.reason}
                             onChange={e => setTcDetails({ ...tcDetails, reason: e.target.value })}
                             className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 md:py-4 rounded-[12px] text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] font-medium text-sm outline-none appearance-none transition-colors cursor-pointer"
@@ -454,8 +466,9 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                         </select>
                     </div>
                     <div>
-                        <label className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Conduct</label>
+                        <label htmlFor="conduct-input" className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Conduct</label>
                         <input
+                            id="conduct-input"
                             type="text"
                             value={tcDetails.conduct}
                             onChange={e => setTcDetails({ ...tcDetails, conduct: e.target.value })}
@@ -463,8 +476,9 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                         />
                     </div>
                     <div>
-                        <label className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Remarks</label>
+                        <label htmlFor="remarks-input" className="block mb-2 text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Remarks</label>
                         <input
+                            id="remarks-input"
                             type="text"
                             value={tcDetails.remarks}
                             onChange={e => setTcDetails({ ...tcDetails, remarks: e.target.value })}

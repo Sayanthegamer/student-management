@@ -94,6 +94,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     <button 
                         onClick={onCancel} 
                         className="p-2 border border-[var(--border-color)] rounded-[12px] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] transition-colors z-20 flex items-center justify-center"
+                        aria-label="Close"
                     >
                         <X size={18} />
                     </button>
@@ -258,7 +259,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                             <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.date}</td>
                                             <td className="px-6 py-4 text-[var(--text-primary)] font-medium text-sm">{payment.month}</td>
                                             <td className="px-6 py-4 text-[var(--color-positive)] font-bold text-sm">₹{payment.amount}</td>
-                                            <td className="px-6 py-4 text-[var(--color-negative)] font-bold text-sm">{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
+                                            <td className={`px-6 py-4 text-sm ${payment.fine > 0 ? 'text-[var(--color-negative)] font-bold' : 'text-[var(--text-muted)] font-normal'}`}>{payment.fine > 0 ? `₹${payment.fine}` : '—'}</td>
                                         </tr>
                                     ))}
                                 </tbody>

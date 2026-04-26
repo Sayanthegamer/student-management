@@ -20,20 +20,20 @@ const toastStyles = {
     accent: 'bg-[var(--success)]',
   },
   error: {
-    border: 'border-rose-500/30',
+    border: 'border-[var(--color-negative)]/30',
     bg: 'bg-[var(--bg-card)]',
-    iconBg: 'bg-rose-500/10',
-    iconColor: 'text-rose-500',
+    iconBg: 'bg-[var(--color-negative)]/10',
+    iconColor: 'text-[var(--color-negative)]',
     textColor: 'text-[var(--text-primary)]',
-    accent: 'bg-rose-500',
+    accent: 'bg-[var(--color-negative)]',
   },
   warning: {
-    border: 'border-amber-500/30',
+    border: 'border-[var(--color-warning)]/30',
     bg: 'bg-[var(--bg-card)]',
-    iconBg: 'bg-amber-500/10',
-    iconColor: 'text-amber-500',
+    iconBg: 'bg-[var(--color-warning)]/10',
+    iconColor: 'text-[var(--color-warning)]',
     textColor: 'text-[var(--text-primary)]',
-    accent: 'bg-amber-500',
+    accent: 'bg-[var(--color-warning)]',
   },
   info: {
     border: 'border-[var(--border-color)]',
@@ -110,7 +110,7 @@ function ToastItem({ toast, onDismiss }) {
         className={`
           px-3
           ${styles.textColor}
-          hover:bg-white/5
+          hover:bg-[var(--hover-overlay)]
           transition-colors
           flex items-center justify-center
           border-l border-[var(--border-color)]

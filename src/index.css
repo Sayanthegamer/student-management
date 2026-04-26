@@ -20,6 +20,18 @@
   --success: #10B981;
   --color-positive: #10B981;
   --color-negative: #F43F5E;
+  --color-warning: #F59E0B;
+
+  --destructive: #F43F5E;
+  --destructive-foreground: #FFF1F2;
+
+  --hover-overlay: rgba(255, 255, 255, 0.05);
+
+  /* Status tokens */
+  --color-status-confirmed: #10b981;
+  --color-status-provisional: #f59e0b;
+  --color-status-cancelled: #f43f5e;
+  --color-status-transferred: #a855f7;
 
   --font-family: 'Manrope', system-ui, -apple-system, sans-serif;
 }

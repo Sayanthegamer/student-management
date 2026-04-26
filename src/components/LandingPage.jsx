@@ -88,8 +88,8 @@ const LandingPage = () => {
       {/* Features Grid */}
       <section id="features" className="w-full max-w-6xl mx-auto px-6 pb-24 z-10 slide-up" style={{ animationDelay: '0.3s' }}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map((feature, idx) => (
-            <div key={idx} className="bg-[var(--bg-card)] p-8 rounded-[16px] border border-[var(--border-color)] shadow-sm hover:shadow-md hover:border-[var(--border-highlight)] transition-all">
+          {features.map((feature) => (
+            <div key={feature.title} className="bg-[var(--bg-card)] p-8 rounded-[16px] border border-[var(--border-color)] shadow-sm hover:shadow-md hover:border-[var(--border-highlight)] transition-all">
               <div className="w-12 h-12 rounded-[12px] bg-[var(--accent-light)] flex items-center justify-center mb-6">
                 {feature.icon}
               </div>

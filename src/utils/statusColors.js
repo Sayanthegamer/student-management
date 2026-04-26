@@ -5,20 +5,20 @@
  * Uses CSS custom properties so colors adapt to the active theme.
  */
 
-// Tailwind utility classes for status badge styling (theme-aware)
+// Tailwind utility classes for status badge styling (theme-aware via CSS vars)
 export const statusStyles = {
-  Provisional: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  Confirmed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  Cancelled: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-  Transferred: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  Provisional: 'bg-[var(--color-status-provisional)]/10 text-[var(--color-status-provisional)] border-[var(--color-status-provisional)]/20',
+  Confirmed: 'bg-[var(--color-status-confirmed)]/10 text-[var(--color-status-confirmed)] border-[var(--color-status-confirmed)]/20',
+  Cancelled: 'bg-[var(--color-status-cancelled)]/10 text-[var(--color-status-cancelled)] border-[var(--color-status-cancelled)]/20',
+  Transferred: 'bg-[var(--color-status-transferred)]/10 text-[var(--color-status-transferred)] border-[var(--color-status-transferred)]/20',
 };
 
 // Color values for progress bars, border-top accents, and icon tinting
 // in contexts where inline `style` objects are needed (e.g. StatusColumn).
-// Using theme-aware values that work with dark mode.
+// Falls back to literal hex if CSS var is unavailable.
 export const statusHexColors = {
-  Confirmed: '#10b981',   // emerald-500
-  Provisional: '#f59e0b', // amber-500
-  Cancelled: '#f43f5e',   // rose-500
-  Transferred: '#a855f7', // purple-500
+  Confirmed: 'var(--color-status-confirmed, #10b981)',
+  Provisional: 'var(--color-status-provisional, #f59e0b)',
+  Cancelled: 'var(--color-status-cancelled, #f43f5e)',
+  Transferred: 'var(--color-status-transferred, #a855f7)',
 };

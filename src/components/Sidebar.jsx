@@ -31,7 +31,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
             {/* Profile / Project Selector Header */}
             <div className="flex items-center gap-3 px-2 py-2 mt-2 cursor-pointer hover:bg-[var(--bg-card-hover)] rounded-custom-lg transition-colors group">
                 <div className="w-8 h-8 rounded-full bg-[var(--accent-primary)] flex items-center justify-center shrink-0 border border-[var(--accent-primary)]/20 shadow-sm">
-                    <span className="text-xs font-bold text-white">{user?.email?.[0].toUpperCase() || 'S'}</span>
+                    <span className="text-xs font-bold text-white">{user?.email?.[0]?.toUpperCase() || 'S'}</span>
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -52,7 +52,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                             showToast('Sign out failed: ' + (err?.message || 'Unknown error'), 'error');
                         }
                     }}
-                    className="p-1.5 text-[var(--text-muted)] hover:text-rose-500 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-all rounded-[12px] hover:bg-rose-500/10"
+                    className="p-1.5 text-[var(--text-muted)] hover:text-[var(--destructive)] opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-all rounded-[12px] hover:bg-[var(--destructive)]/10"
                     aria-label="Sign out"
                 >
                     <LogOut size={14} />
