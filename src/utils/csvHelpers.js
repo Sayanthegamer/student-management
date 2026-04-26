@@ -151,8 +151,13 @@ export const validateAndCoerceStudent = (obj) => {
         fine: safeParseNumber(obj.fine) || '',
 
         // Admission fee & concession
-        admissionFee: safeParseNumber(obj.admissionFee ?? obj.admission_fee) || 0,
-        concessionAmount: safeParseNumber(obj.concessionAmount ?? obj.concession_amount) || 0,
+        admissionFee: Math.max(0, safeParseNumber(obj.admissionFee ?? obj.admission_fee) || 0),
+        concessionAmount: (() => {
+            const parsedAdmission = safeParseNumber(obj.admissionFee ?? obj.admission_fee) || 0;
+            const admissionFee = Math.max(0, parsedAdmission);
+            const parsedConcession = safeParseNumber(obj.concessionAmount ?? obj.concession_amount) || 0;
+            return Math.max(0, Math.min(parsedConcession, admissionFee));
+        })(),
 
         // Arrays and Objects
         feeHistory: obj.feeHistory || [],
