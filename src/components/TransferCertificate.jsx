@@ -305,8 +305,12 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                         <div className="w-20 h-20 flex items-center justify-center mx-auto mb-4 bg-[var(--bg-main)] rounded-[16px] border border-[var(--border-color)]">
                             <Search size={32} className="text-[var(--text-muted)]" />
                         </div>
-                        <p className="text-[var(--text-primary)] font-bold text-lg">No results found</p>
-                        <p className="text-[var(--text-secondary)] font-medium text-sm mt-1">Try adjusting your filters</p>
+                        <p className="text-[var(--text-primary)] font-bold text-lg">
+                            {view === 'transferred' ? 'No transferred students found in the last 3 months.' : 'No results found'}
+                        </p>
+                        {view !== 'transferred' && (
+                            <p className="text-[var(--text-secondary)] font-medium text-sm mt-1">Try adjusting your filters</p>
+                        )}
                     </div>
                 )}
             </div>
@@ -343,8 +347,12 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
     const [isClosing, setIsClosing] = useState(false);
     const dialogRef = React.useRef(null);
     const previousActiveElementRef = React.useRef(null);
+    const onCancelRef = React.useRef(null);
 
     const exitTimerRef = React.useRef(null);
+
+    // Keep onCancel ref up to date
+    onCancelRef.current = onCancel;
 
     const handleExit = (callback) => {
         if (isClosing) return;
@@ -374,7 +382,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
             if (!dialogEl) return;
 
             if (e.key === 'Escape') {
-                handleExit(onCancel);
+                handleExit(onCancelRef.current);
                 return;
             }
 
@@ -414,7 +422,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                 previousActiveElementRef.current.focus();
             }
         };
-    }, [onCancel]);
+    }, []);
 
     return createPortal(
         <div 
