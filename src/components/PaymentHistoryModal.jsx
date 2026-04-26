@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, IndianRupee, FileText } from 'lucide-react';
 
 const PaymentHistoryModal = ({ student, onClose }) => {
     const history = student.feeHistory || [];
     const [isClosing, setIsClosing] = useState(false);
+    const dialogRef = useRef(null);
+    const previousActiveElementRef = useRef(null);
 
     const sortedHistory = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -16,6 +18,70 @@ const PaymentHistoryModal = ({ student, onClose }) => {
         }, 200);
     };
 
+    // Focus trap and keyboard handling
+    useEffect(() => {
+        // Save previously focused element
+        previousActiveElementRef.current = document.activeElement;
+
+        // Focus the first focusable element inside the dialog
+        if (dialogRef.current) {
+            const focusableElements = dialogRef.current.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusableElements.length > 0) {
+                focusableElements[0].focus();
+            }
+        }
+
+        // Keyboard handler for focus trap and Escape key
+        const handleKeyDown = (e) => {
+            if (!dialogRef.current) return;
+
+            // Handle Escape key
+            if (e.key === 'Escape') {
+                handleClose();
+                return;
+            }
+
+            // Handle Tab key for focus trap
+            if (e.key === 'Tab') {
+                const focusableElements = dialogRef.current.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) {
+                    // Shift + Tab
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    // Tab
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        };
+
+        if (dialogRef.current) {
+            dialogRef.current.addEventListener('keydown', handleKeyDown);
+        }
+
+        // Cleanup: restore focus and remove event listener
+        return () => {
+            if (dialogRef.current) {
+                dialogRef.current.removeEventListener('keydown', handleKeyDown);
+            }
+            if (previousActiveElementRef.current) {
+                previousActiveElementRef.current.focus();
+            }
+        };
+    }, []);
+
     return createPortal(
         <div 
             className={`fixed inset-0 bg-slate-900/80 z-50 flex items-start md:items-center p-3 md:p-4 backdrop-blur-sm modal-backdrop safe-area-inset-bottom ${isClosing ? 'closing' : ''}`}
@@ -23,7 +89,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
         >
-            <div className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="payment-ledger-title" aria-describedby="payment-ledger-desc">
+            <div ref={dialogRef} className={`bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[#CCFF00] ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="payment-ledger-title" aria-describedby="payment-ledger-desc">
 
                 <div className="bg-[#CCFF00] px-4 md:px-6 py-6 md:py-8 text-black relative flex-shrink-0 border-b border-[#CCFF00]">
                     <div className="relative z-10 pr-12">

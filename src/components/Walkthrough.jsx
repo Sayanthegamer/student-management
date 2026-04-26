@@ -9,6 +9,7 @@ const Walkthrough = () => {
     const [tooltipPosition, setTooltipPosition] = useState({});
     const navigate = useNavigate();
     const dialogRef = useRef(null);
+    const previousActiveElementRef = useRef(null);
 
     useEffect(() => {
         const hasSeenWalkthrough = localStorage.getItem('hasSeenWalkthrough_v1');
@@ -22,6 +23,11 @@ const Walkthrough = () => {
         setIsVisible(false);
         if (dontShowAgain) {
             localStorage.setItem('hasSeenWalkthrough_v1', 'true');
+        }
+        // Restore focus to previously focused element
+        if (previousActiveElementRef.current) {
+            previousActiveElementRef.current.focus();
+            previousActiveElementRef.current = null;
         }
     };
 
@@ -119,11 +125,64 @@ const Walkthrough = () => {
         }
     ];
 
-    // Focus the dialog when the step changes
+    // Focus trap and keyboard handling when dialog is visible
     useEffect(() => {
-        if (isVisible && dialogRef.current) {
+        if (!isVisible) return;
+
+        // Save previously focused element on mount
+        if (!previousActiveElementRef.current) {
+            previousActiveElementRef.current = document.activeElement;
+        }
+
+        // Focus the dialog
+        if (dialogRef.current) {
             dialogRef.current.focus();
         }
+
+        // Keyboard handler for focus trap and Escape key
+        const handleKeyDown = (e) => {
+            if (!dialogRef.current) return;
+
+            // Handle Escape key
+            if (e.key === 'Escape') {
+                handleClose(true);
+                return;
+            }
+
+            // Handle Tab key for focus trap
+            if (e.key === 'Tab') {
+                const focusableElements = dialogRef.current.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) {
+                    // Shift + Tab
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    // Tab
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        };
+
+        if (dialogRef.current) {
+            dialogRef.current.addEventListener('keydown', handleKeyDown);
+        }
+
+        // Cleanup
+        return () => {
+            if (dialogRef.current) {
+                dialogRef.current.removeEventListener('keydown', handleKeyDown);
+            }
+        };
     }, [currentStep, isVisible]);
 
     // Update spotlight and tooltip position when step changes
