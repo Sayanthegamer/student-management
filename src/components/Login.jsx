@@ -78,10 +78,11 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="fade-in-up" style={{ animationDelay: '0.15s' }}>
-              <label className="block text-xs font-medium text-[var(--text-secondary)] mb-3">Email Address</label>
+              <label htmlFor="email" className="block text-xs font-medium text-[var(--text-secondary)] mb-3">Email Address</label>
               <div className="relative group">
                 <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--accent-primary)]" />
                 <input
+                  id="email"
                   type="email"
                   required
                   className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-white focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
@@ -93,10 +94,11 @@ export default function Login() {
             </div>
 
             <div className="fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <label className="block text-xs font-medium text-[var(--text-secondary)] mb-3">Password</label>
+              <label htmlFor="password" className="block text-xs font-medium text-[var(--text-secondary)] mb-3">Password</label>
               <div className="relative group">
                 <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--accent-primary)]" />
                 <input
+                  id="password"
                   type="password"
                   required
                   minLength={6}

@@ -439,7 +439,7 @@ button, a, input, select, textarea {
 
 /* Apply page transitions to main content - Subtle Fade Only */
 main>div {
-  animation: fadeIn 0.25s ease-out;
+  animation: fade-in 0.25s ease-out;
 }
 
 /* Table row hover with smooth highlight */

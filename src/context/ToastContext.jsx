@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { CheckCircle2, XCircle, AlertCircle, X, Info } from 'lucide-react';
 
 const ToastContext = createContext(null);
@@ -195,6 +195,23 @@ export function ToastProvider({ children }) {
     showToast,
     dismissToast: markToastExiting,
   };
+
+  // Cleanup all pending timers on unmount
+  useEffect(() => {
+    return () => {
+      // Clear all auto-dismiss timeouts
+      timeoutsRef.current.forEach((timeoutId) => {
+        clearTimeout(timeoutId);
+      });
+      timeoutsRef.current.clear();
+
+      // Clear all exit animation timeouts
+      exitTimeoutsRef.current.forEach((timeoutId) => {
+        clearTimeout(timeoutId);
+      });
+      exitTimeoutsRef.current.clear();
+    };
+  }, []);
 
   return (
     <ToastContext.Provider value={value}>
