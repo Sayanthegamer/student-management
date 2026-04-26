@@ -161,7 +161,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         {/* Administrative Details Group */}
                         <div className="space-y-5">
                             <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-color)] mb-4">
-                                <IndianRupee size={18} className="text-emerald-600" />
+                                <IndianRupee size={18} className="text-[var(--accent-primary)]" />
                                 <h3 className="font-medium text-[var(--text-primary)] text-base">Fee Details</h3>
                             </div>
 

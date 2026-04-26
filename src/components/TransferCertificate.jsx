@@ -359,9 +359,10 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
     // Focus trap and keyboard handling
     React.useEffect(() => {
         previousActiveElementRef.current = document.activeElement;
+        const dialogEl = dialogRef.current;
 
-        if (dialogRef.current) {
-            const focusableElements = dialogRef.current.querySelectorAll(
+        if (dialogEl) {
+            const focusableElements = dialogEl.querySelectorAll(
                 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
             );
             if (focusableElements.length > 0) {
@@ -370,7 +371,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
         }
 
         const handleKeyDown = (e) => {
-            if (!dialogRef.current) return;
+            if (!dialogEl) return;
 
             if (e.key === 'Escape') {
                 handleExit(onCancel);
@@ -378,7 +379,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
             }
 
             if (e.key === 'Tab') {
-                const focusableElements = dialogRef.current.querySelectorAll(
+                const focusableElements = dialogEl.querySelectorAll(
                     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
                 );
                 const firstElement = focusableElements[0];
@@ -398,13 +399,13 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
             }
         };
 
-        if (dialogRef.current) {
-            dialogRef.current.addEventListener('keydown', handleKeyDown);
+        if (dialogEl) {
+            dialogEl.addEventListener('keydown', handleKeyDown);
         }
 
         return () => {
-            if (dialogRef.current) {
-                dialogRef.current.removeEventListener('keydown', handleKeyDown);
+            if (dialogEl) {
+                dialogEl.removeEventListener('keydown', handleKeyDown);
             }
             if (exitTimerRef.current) {
                 clearTimeout(exitTimerRef.current);
@@ -413,7 +414,7 @@ const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel })
                 previousActiveElementRef.current.focus();
             }
         };
-    }, []);
+    }, [onCancel]);
 
     return createPortal(
         <div 

@@ -76,8 +76,12 @@ const LandingPage = () => {
             Initialize Dashboard
             <ArrowRight size={18} />
           </button>
-          <button 
-            onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+          <button
+            onClick={() => {
+              const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+              const behavior = prefersReducedMotion ? 'auto' : 'smooth';
+              document.getElementById('features')?.scrollIntoView({ behavior });
+            }}
             className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-200 border border-[var(--border-highlight)] rounded-[12px] bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] hover:-translate-y-0.5 shadow-sm w-full sm:w-auto"
           >
             Learn More
