@@ -11,6 +11,11 @@ const navItems = [
   { path: '/data', label: 'Settings', icon: Settings },
 ];
 
+/**
+ * Mobile bottom navigation bar component.
+ *
+ * @returns {JSX.Element} The rendered bottom navigation component.
+ */
 const BottomNavigation = () => (
   <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg-main)]/95 backdrop-blur-md border-t border-[var(--border-color)] pb-[env(safe-area-inset-bottom,0px)]">
     <div className="w-full flex items-center justify-around pointer-events-auto">

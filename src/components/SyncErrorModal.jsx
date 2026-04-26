@@ -3,6 +3,15 @@ import { Download, AlertTriangle, X } from 'lucide-react';
 import { convertToCSV } from '../utils/csvHelpers';
 import { useToast } from '../context/ToastContext';
 
+/**
+ * Modal component to display synchronization errors and provide a way to download a backup.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object|null|undefined} props.error - The error object containing details of the sync failure.
+ * @param {Object[]} props.students - The current local list of students for backup purposes.
+ * @param {Function} props.onDismiss - Callback function to dismiss the error modal.
+ * @returns {JSX.Element|null} The rendered sync error modal, or null if no error.
+ */
 const SyncErrorModal = ({ error, students, onDismiss }) => {
   const { showToast } = useToast();
 

@@ -5,6 +5,15 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import SyncIndicator from './SyncIndicator';
 
+/**
+ * The main sidebar navigation component.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClose - Callback function to close the sidebar (used in mobile view).
+ * @param {string} props.syncStatus - The current synchronization status.
+ * @param {Function} props.onSync - Callback function to manually trigger synchronization.
+ * @returns {JSX.Element} The rendered sidebar component.
+ */
 const Sidebar = ({ onClose, syncStatus, onSync }) => {
     const { signOut, user } = useAuth();
     const { showToast } = useToast();

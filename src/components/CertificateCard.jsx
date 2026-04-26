@@ -1,6 +1,14 @@
 import React from 'react';
 import { FileText, Download, Calendar, School, Award } from 'lucide-react';
 
+/**
+ * A memoized functional component that displays a transfer certificate card for a student.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.student - The student object.
+ * @param {Function} props.onGenerateTC - Callback function to initiate TC generation.
+ * @returns {JSX.Element} The rendered certificate card component.
+ */
 const CertificateCard = React.memo(({ student, onGenerateTC }) => {
   const hasTC = student.tcDetails && student.tcDetails.issueDate;
   const tcDate = hasTC ? new Date(student.tcDetails.issueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : null;

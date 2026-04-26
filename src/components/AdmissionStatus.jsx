@@ -6,6 +6,15 @@ import AdmissionCard from './AdmissionCard';
 import { statusHexColors } from '../utils/statusColors';
 import { logActivity } from '../utils/storage';
 
+/**
+ * A sub-component to display the admission status card within the kanban board.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.student - The student object.
+ * @param {string} props.color - The theme color for the specific status column.
+ * @param {Function} props.onMove - Callback function to handle moving the student to a new status.
+ * @returns {JSX.Element} The rendered status card component.
+ */
 const StatusCard = ({ student, color, onMove }) => {
     const [showActions, setShowActions] = useState(false);
 
@@ -119,6 +128,15 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
     );
 };
 
+/**
+ * Component that renders a Kanban-style board for managing student admission statuses.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object[]} props.students - The array of student objects.
+ * @param {Function} props.onUpdateStudent - Callback function to update a student.
+ * @param {Object} props.user - The current authenticated user.
+ * @returns {JSX.Element} The rendered admission status board component.
+ */
 const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterClass, setFilterClass] = useState('');

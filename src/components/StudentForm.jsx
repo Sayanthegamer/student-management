@@ -4,6 +4,12 @@ import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
 import { CLASS_FEES, ADMISSION_FEES } from '../utils/constants';
 
+/**
+ * A sub-component for rendering form input fields consistently.
+ *
+ * @param {Object} props - The component props.
+ * @returns {JSX.Element} The rendered input field component.
+ */
 const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange, disabled = false, readOnly = false }) => (
     <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-[var(--text-secondary)] px-1 flex items-center gap-2">
@@ -39,6 +45,15 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
     </div>
 );
 
+/**
+ * Component for adding or editing a student's details.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.onSave - Callback function when the form is submitted and saved.
+ * @param {Function} props.onCancel - Callback function when the form is canceled.
+ * @param {Object} [props.initialData] - The initial student data if editing an existing student.
+ * @returns {JSX.Element} The rendered student form component.
+ */
 const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const isNewStudent = !initialData;
 

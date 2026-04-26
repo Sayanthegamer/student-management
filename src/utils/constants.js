@@ -47,6 +47,7 @@ export const PROMOTION_FEES = {
 /**
  * Standard ordered progression of classes.
  * Used for automatic next-class calculation during student promotion.
+ * @type {string[]}
  */
 export const CLASS_ORDER = [
   'Play School',
@@ -72,6 +73,9 @@ export const CLASS_ORDER = [
 /**
  * Get the next logical class for a given class.
  * Returns null if the current class is the highest or not found.
+ *
+ * @param {string} currentClass - The current class of the student.
+ * @returns {string|null} The next class, or null if highest/not found.
  */
 export const getNextClass = (currentClass) => {
   const currentIndex = CLASS_ORDER.indexOf(currentClass);

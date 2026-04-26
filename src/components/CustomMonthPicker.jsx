@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
+/**
+ * A custom month picker component that provides separate dropdowns for year and month.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.value - The current month value in 'YYYY-MM' format.
+ * @param {Function} props.onChange - Callback function called when the month changes.
+ * @param {string} [props.label] - The label for the month picker.
+ * @param {boolean} [props.required=false] - Whether the month field is required.
+ * @param {string} [props.className=''] - Additional CSS classes.
+ * @param {boolean} [props.compact=false] - Whether to render in a compact layout.
+ * @returns {JSX.Element} The rendered custom month picker component.
+ */
 const CustomMonthPicker = ({ value, onChange, label, required, className = '', compact = false }) => {
     // 1. Initialize State
 

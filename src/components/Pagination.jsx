@@ -1,6 +1,17 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+/**
+ * Component for handling pagination navigation.
+ *
+ * @param {Object} props - The component props.
+ * @param {number} props.currentPage - The current active page.
+ * @param {number} props.totalPages - The total number of pages.
+ * @param {Function} props.onPageChange - Callback function to handle page changes.
+ * @param {number} props.totalItems - The total number of items being paginated.
+ * @param {number} props.itemsPerPage - The number of items displayed per page.
+ * @returns {JSX.Element|null} The rendered pagination component, or null if 1 or fewer pages.
+ */
 const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPerPage }) => {
     if (totalPages <= 1) return null;
 

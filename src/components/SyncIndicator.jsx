@@ -1,6 +1,14 @@
 import React from 'react';
 import { Cloud, CloudOff, RefreshCw, CheckCircle, AlertTriangle } from 'lucide-react';
 
+/**
+ * Component to display the current synchronization status with the cloud.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.status - The current sync status ('synced', 'syncing', 'error', 'unsaved').
+ * @param {Function} [props.onSync] - Optional callback function to manually trigger a sync.
+ * @returns {JSX.Element} The rendered sync indicator component.
+ */
 const SyncIndicator = ({ status, onSync }) => {
   const getStatusConfig = () => {
     switch (status) {

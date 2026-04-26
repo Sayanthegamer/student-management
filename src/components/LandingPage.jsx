@@ -2,6 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, Zap, Database, ArrowRight } from 'lucide-react';
 
+/**
+ * The initial landing page component for unauthenticated users.
+ *
+ * @returns {JSX.Element} The rendered landing page component.
+ */
 const LandingPage = () => {
   const navigate = useNavigate();
 

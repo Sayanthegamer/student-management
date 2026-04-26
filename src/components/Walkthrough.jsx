@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * Component that displays an interactive product walkthrough for new users.
+ *
+ * @returns {JSX.Element|null} The rendered walkthrough component, or null when not visible.
+ */
 const Walkthrough = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);

@@ -1,6 +1,14 @@
 import React from 'react';
 import { IndianRupee, FileText, Calendar, User } from 'lucide-react';
 
+/**
+ * A memoized functional component that displays a summary card of a student's payment history.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.student - The student object.
+ * @param {Function} props.onViewHistory - Callback function when the view history button is clicked.
+ * @returns {JSX.Element} The rendered payment card component.
+ */
 const PaymentCard = React.memo(({ student, onViewHistory }) => {
   const getTotalPaid = (student) => {
     if (!student.feeHistory) return 0;

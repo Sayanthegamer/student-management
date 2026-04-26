@@ -1,10 +1,9 @@
 /**
  * Converts an array of student objects to a CSV string.
- * Handles nested objects/arrays by serializing them to JSON strings.
- */
-/**
- * Converts an array of student objects to a CSV string.
  * Handles nested objects/arrays by serializing them to a readable string format.
+ *
+ * @param {Object[]} data - The array of student objects.
+ * @returns {string} The CSV formatted string.
  */
 export const convertToCSV = (data) => {
     if (!data || !data.length) return '';
@@ -178,6 +177,9 @@ export const validateAndCoerceStudent = (obj) => {
 /**
  * Parses a CSV string back into an array of student objects.
  * Deserializes nested custom formats back into objects/arrays.
+ *
+ * @param {string} csvText - The CSV formatted string.
+ * @returns {Object[]} The array of parsed student objects.
  */
 export const parseCSV = (csvText) => {
     const lines = csvText.split('\n');

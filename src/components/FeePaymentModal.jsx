@@ -6,6 +6,15 @@ import CustomMonthPicker from './CustomMonthPicker';
 import { logActivity } from '../utils/storage';
 import { calculateFine } from '../utils/constants';
 
+/**
+ * A modal component for recording a fee payment for a student.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.student - The student object making the payment.
+ * @param {Function} props.onClose - Callback function to close the modal.
+ * @param {Function} props.onSave - Callback function to save the payment.
+ * @returns {JSX.Element} The rendered fee payment modal component.
+ */
 const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
     const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
