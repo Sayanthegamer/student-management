@@ -46,7 +46,9 @@ const ResetPassword = () => {
             showToast('Password updated successfully! You can now log in.', 'success');
             navigate('/');
         } catch (err) {
-            setError(err.message);
+            // Security: Do not expose raw internal error messages. Use a generic message.
+            console.error('Password reset error:', err);
+            setError('Failed to update password. Please try again or request a new link.');
         } finally {
             setLoading(false);
         }
@@ -80,9 +82,9 @@ const ResetPassword = () => {
                         <input
                             type="password"
                             required
-                            minLength={6}
+                            minLength={8}
                             className="w-full px-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[var(--accent-primary)] transition-colors outline-none text-sm font-medium"
-                            placeholder="MINIMUM 6 CHARACTERS"
+                            placeholder="MINIMUM 8 CHARACTERS"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />

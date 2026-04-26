@@ -56,7 +56,7 @@ export default function Login() {
           <p className="text-[var(--accent-primary)] font-mono mt-2 text-sm">ACCESS PORTAL ///</p>
         </div>
 
-        <div 
+        <div
           className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[20px] p-8 md:p-10 transition-all duration-300 glow-accent fade-in-up"
           style={{ animationDelay: '0.1s' }}
         >
@@ -108,7 +108,7 @@ export default function Login() {
                   id="password"
                   type="password"
                   required
-                  minLength={isLogin ? undefined : 8}
+                  minLength={8}
                   className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-white focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
                   placeholder="••••••••"
                   value={password}
