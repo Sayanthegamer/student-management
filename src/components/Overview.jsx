@@ -77,19 +77,17 @@ const Overview = ({ students, onAddStudent }) => {
     }
 
     return (
-        <div className="p-4 md:p-8 max-w-6xl mx-auto page-enter">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                <div>
-                    <h2 className="text-white text-2xl font-semibold">Overview</h2>
-                    <p className="text-[var(--text-secondary)] text-sm mt-1">Here's what's happening today.</p>
-                </div>
-                <div className="flex items-center gap-2 text-[var(--text-secondary)] bg-[var(--bg-card)] border border-[var(--border-color)] px-4 py-2 rounded-lg text-sm font-medium">
-                    <Clock size={16} />
+        <div className="p-4 md:px-8 md:py-6 max-w-6xl mx-auto page-enter">
+            {/* The global header provides the context now, so Overview just jumps into content. */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 mt-2">
+                <h2 className="text-white text-xl font-medium">Environments & Stats</h2>
+                <div className="flex items-center gap-2 text-[var(--text-secondary)] text-sm font-medium">
+                    <Clock size={14} />
                     {new Date().toLocaleDateString('default', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:gap-6 mb-8 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 md:gap-6 mb-10 lg:grid-cols-3">
                 <StatCard
                     title="Total Students"
                     value={totalStudents}
@@ -116,18 +114,19 @@ const Overview = ({ students, onAddStudent }) => {
                 />
             </div>
 
+            <h2 className="text-white text-xl font-medium mb-4">Recent Updates</h2>
             <div className="card-base" id="recent-activities">
-                <div className="px-6 py-4 border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--bg-card)]">
-                    <h3 className="m-0 text-white text-base font-medium flex items-center gap-2">
+                <div className="px-5 py-3.5 border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--bg-card)]">
+                    <h3 className="m-0 text-[var(--text-primary)] text-sm font-medium">
                         Activity Stream
                     </h3>
-                    <span className="text-xs font-medium text-[var(--text-primary)] bg-white/5 border border-[var(--border-color)] px-2.5 py-1 rounded-md flex items-center gap-2">
+                    <span className="text-[10px] font-medium text-[var(--text-secondary)] px-2 py-0.5 rounded flex items-center gap-1.5 border border-[var(--border-color)]">
                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
                         Live
                     </span>
                 </div>
 
-                <div className="divide-y divide-[var(--border-color)] bg-[var(--bg-main)]">
+                <div className="divide-y divide-[var(--border-color)] bg-[var(--bg-card)]">
                     {activities.length > 0 ? (
                         activities.map((activity) => (
                             <div key={activity.id} className="flex items-start gap-4 p-5 hover:bg-[var(--bg-card-hover)] transition-colors group">

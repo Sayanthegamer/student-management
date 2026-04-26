@@ -121,16 +121,11 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     }
 
     return (
-        <div className="max-w-6xl mx-auto p-4 md:p-8">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <div>
-                    <h2 className="text-white text-2xl font-semibold">Student Directory</h2>
-                    <p className="text-[var(--text-secondary)] text-sm mt-1">Manage and track student records and fees.</p>
-                </div>
-            </div>
+        <div className="max-w-6xl mx-auto p-4 md:px-8 md:py-6">
+            <h2 className="text-white text-xl font-medium mb-4 mt-2">Student Directory</h2>
 
-            <div className="card-base overflow-hidden page-enter flex flex-col mb-8">
-                <div className="p-4 md:p-5 border-b border-[var(--border-color)] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--bg-card)]">
+            <div className="card-base overflow-hidden page-enter flex flex-col mb-10">
+                <div className="px-5 py-3.5 border-b border-[var(--border-color)] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--bg-card)]">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
                         <div className="relative flex-1 sm:max-w-md">
                             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />

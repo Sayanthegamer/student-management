@@ -9,7 +9,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
     const { signOut, user } = useAuth();
     const { showToast } = useToast();
     const menuItems = [
-        { path: '/overview', label: 'Dashboard', icon: LayoutDashboard },
+        { path: '/overview', label: 'Overview', icon: LayoutDashboard },
         { path: '/students', label: 'Students', icon: Users },
         { path: '/payment-history', label: 'Fee History', icon: IndianRupee },
         { path: '/admission', label: 'Admissions', icon: ClipboardCheck },
@@ -56,8 +56,8 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
             <div className="w-full h-px bg-[var(--border-color)] my-1"></div>
 
             <div className="flex-1 overflow-y-auto">
-                <div className="mb-2 px-2">
-                    <span className="text-xs font-semibold text-[var(--text-muted)] tracking-wider mb-2 block">Menu</span>
+                <div className="mb-2 px-2 mt-4">
+                    <span className="text-xs font-medium text-[var(--text-muted)] tracking-wide mb-2 block">Projects</span>
                 </div>
                 <nav className="flex flex-col gap-0.5">
                     {menuItems.map((item) => {

@@ -147,6 +147,28 @@ function App() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto relative pt-[calc(3.5rem+env(safe-area-inset-top,0px))] md:pt-0 w-full pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-0 bg-[var(--bg-main)]">
+
+          {/* Global Project Header mimicking the screenshots */}
+          <div className="hidden md:block w-full border-b border-[var(--border-color)] bg-[var(--bg-main)]">
+            <div className="max-w-6xl mx-auto px-8 pt-10 pb-6 flex items-start gap-6">
+              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-[var(--border-color)] flex items-center justify-center shrink-0 shadow-sm">
+                <span className="text-4xl">🎓</span>
+              </div>
+              <div className="flex flex-col flex-1">
+                <div className="flex items-center justify-between w-full">
+                  <h1 className="text-3xl font-semibold text-white tracking-tight">Student Manager Pro</h1>
+                  <div className="flex items-center gap-3">
+                     <button onClick={forceSync} className="btn btn-secondary">Sync Data</button>
+                     <button onClick={handleAddClick} className="btn btn-primary">Add Student</button>
+                  </div>
+                </div>
+                <p className="text-[var(--text-secondary)] mt-2 text-sm max-w-2xl leading-relaxed">
+                  The complete system for managing student records, fee payments, and admissions.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <Suspense fallback={<SkeletonLoader />}>
             <Walkthrough />
             <Routes>
@@ -182,7 +204,9 @@ function App() {
             </Routes>
           </Suspense>
         </main>
-        <BottomNavigation />
+        <div className="hidden">
+           <BottomNavigation />
+        </div>
       </div>
 
       {/* Delete Confirmation Modal */}
