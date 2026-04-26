@@ -21,11 +21,21 @@ const Overview = lazy(() => import('./components/Overview'));
 const StudentList = lazy(() => import('./components/StudentList'));
 const StudentForm = lazy(() => import('./components/StudentForm'));
 const AdmissionStatus = lazy(() => import('./components/AdmissionStatus'));
+const PromotionBoard = lazy(() => import('./components/PromotionBoard'));
 const DataManagement = lazy(() => import('./components/DataManagement'));
 const TransferCertificate = lazy(() => import('./components/TransferCertificate'));
 const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
 const Walkthrough = lazy(() => import('./components/Walkthrough'));
 
+/**
+ * Root application component that provides the authenticated app layout, routing, and student-management handlers.
+ *
+ * Renders authentication-aware routes (login and public landing for unauthenticated users; full app layout for authenticated users),
+ * global UI chrome (sidebar, headers, bottom navigation), sync/error handling, and routes for student workflows (listing, add/edit, payments,
+ * admissions, promotions, transfer certificates, and data import).
+ *
+ * @returns {JSX.Element} The React element tree for the application UI, including routing, layout, sync guards, and modals. 
+ */
 function App() {
   const { user, loading } = useAuth();
   const { showToast } = useToast();
@@ -199,6 +209,7 @@ function App() {
               } />
               <Route path="/payment-history" element={<PaymentHistory students={students} />} />
               <Route path="/admission" element={<AdmissionStatus students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
+              <Route path="/promotions" element={<PromotionBoard students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/data" element={<DataManagement students={students} onImportSuccess={handleImportSuccess} />} />
             </Routes>

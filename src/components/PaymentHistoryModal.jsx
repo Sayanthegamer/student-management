@@ -131,14 +131,16 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                 </thead>
                                 <tbody className="divide-y divide-[var(--border-color)]">
                                     {sortedHistory.map((payment) => {
-                                        const displayType = payment.type === 'Admission' ? 'Admission' : 'Monthly';
+                                        const displayType = payment.type === 'Admission' ? 'Admission' : payment.type === 'Promotion' ? 'Promotion' : 'Monthly';
                                         return (
                                         <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
                                             <td className="px-5 py-5">
                                                 <span className={`text-[10px] font-bold px-2 py-1 rounded-[6px] border uppercase tracking-wider ${
                                                     displayType === 'Admission'
                                                         ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                                                        : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                        : displayType === 'Promotion'
+                                                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                                                            : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                 }`}>
                                                     {displayType}
                                                 </span>
@@ -180,7 +182,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
 
                             <div className="md:hidden flex flex-col divide-y divide-[var(--border-color)]">
                                 {sortedHistory.map((payment) => {
-                                    const displayType = payment.type === 'Admission' ? 'Admission' : 'Monthly';
+                                    const displayType = payment.type === 'Admission' ? 'Admission' : payment.type === 'Promotion' ? 'Promotion' : 'Monthly';
                                     return (
                                     <div key={payment.id} className="p-5 bg-[var(--bg-card)]">
                                         <div className="flex justify-between items-start mb-2">
@@ -189,7 +191,9 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[6px] border uppercase tracking-wider ${
                                                         displayType === 'Admission'
                                                             ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                                                            : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                            : displayType === 'Promotion'
+                                                                ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                                                                : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                     }`}>
                                                         {displayType}
                                                     </span>

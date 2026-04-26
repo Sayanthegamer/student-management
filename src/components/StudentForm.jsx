@@ -348,14 +348,16 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 </thead>
                                 <tbody className="divide-y divide-[var(--border-color)] bg-[var(--bg-card)]">
                                     {initialData.feeHistory.slice(-5).reverse().map((payment) => {
-                                        const displayType = payment.type === 'Admission' ? 'Admission' : 'Monthly';
+                                        const displayType = payment.type === 'Admission' ? 'Admission' : payment.type === 'Promotion' ? 'Promotion' : 'Monthly';
                                         return (
                                         <tr key={payment.id} className="hover:bg-[var(--bg-card-hover)] transition-colors">
                                             <td className="px-6 py-4 text-sm">
                                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[6px] border uppercase tracking-wider ${
                                                     displayType === 'Admission' 
                                                         ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' 
-                                                        : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                        : displayType === 'Promotion'
+                                                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                                                            : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                 }`}>
                                                     {displayType}
                                                 </span>

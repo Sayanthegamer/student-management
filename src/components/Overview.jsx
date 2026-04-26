@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock } from 'lucide-react';
+import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight } from 'lucide-react';
 import { getActivities } from '../utils/storage';
 
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
@@ -138,12 +138,14 @@ const Overview = ({ students, onAddStudent }) => {
                                     activity.type === 'student' ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :
                                         activity.type === 'tc' ? 'text-rose-400 bg-rose-500/10 border-rose-500/20' :
                                             activity.type === 'admission' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
-                                                'text-[var(--text-secondary)] bg-[var(--bg-main)] border-[var(--border-color)]'
+                                                activity.type === 'promotion' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
+                                                    'text-[var(--text-secondary)] bg-[var(--bg-main)] border-[var(--border-color)]'
                                     }`}>
                                     {activity.type === 'fee' && <IndianRupee size={18} />}
                                     {activity.type === 'student' && <UserPlus size={18} />}
                                     {activity.type === 'tc' && <FileText size={18} />}
                                     {activity.type === 'admission' && <Users size={18} />}
+                                    {activity.type === 'promotion' && <ArrowRight size={18} />}
                                     {activity.type === 'system' && <Activity size={18} />}
                                 </div>
                                 <div className="flex-1 min-w-0 py-0.5">
