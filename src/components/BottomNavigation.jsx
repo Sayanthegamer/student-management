@@ -21,13 +21,13 @@ const BottomNavigation = () => (
               key={item.path}
               to={item.path}
               className={({ isActive }) => `
-                flex flex-col items-center justify-center gap-0.5 py-2.5 flex-1 border-b-[3px] transition-colors px-0.5 min-h-[56px]
-                ${isActive ? 'border-[#CCFF00] bg-[#CCFF00]/10 text-[#CCFF00]' : 'border-transparent text-[var(--text-secondary)] active:text-white'}
+                flex flex-col items-center justify-center gap-0.5 py-2.5 flex-1 border-t-[3px] transition-colors px-0.5 min-h-[56px]
+                ${isActive ? 'border-[var(--accent-primary)] bg-[var(--accent-light)] text-[var(--accent-primary)]' : 'border-transparent text-[var(--text-secondary)] active:text-[var(--accent-primary)]'}
               `}
             >
               {({ isActive }) => (
                 <>
-                  <Icon size={20} className={`${isActive ? 'text-[#CCFF00]' : 'text-[var(--text-secondary)]'} stroke-[2.5px]`} />
+                  <Icon size={20} className={`${isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-secondary)]'} stroke-[2.5px]`} />
                   <span className="text-[10px] font-medium uppercase tracking-tighter sm:tracking-normal text-center mt-0.5 truncate w-full px-0.5 leading-tight">{item.label}</span>
                 </>
               )}

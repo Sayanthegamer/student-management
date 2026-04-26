@@ -151,12 +151,12 @@ function App() {
           {/* Global Project Header mimicking the screenshots */}
           <div className="hidden md:block w-full border-b border-[var(--border-color)] bg-[var(--bg-main)]">
             <div className="max-w-6xl mx-auto px-8 pt-10 pb-6 flex items-start gap-6">
-              <div className="w-24 h-24 rounded-custom-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-[var(--border-color)] flex items-center justify-center shrink-0 shadow-sm">
+              <div className="w-24 h-24 rounded-custom-2xl bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 flex items-center justify-center shrink-0 shadow-sm">
                 <span className="text-4xl">🎓</span>
               </div>
               <div className="flex flex-col flex-1">
                 <div className="flex items-center justify-between w-full">
-                  <h1 className="text-3xl font-semibold text-white tracking-tight">Student Manager Pro</h1>
+                  <h1 className="text-3xl font-semibold text-[var(--text-primary)] tracking-tight">Student Manager Pro</h1>
                   <div className="flex items-center gap-3">
                      <button onClick={forceSync} className="btn btn-secondary">Sync Data</button>
                      <button onClick={handleAddClick} className="btn btn-primary">Add Student</button>
@@ -218,7 +218,7 @@ function App() {
             aria-labelledby="delete-confirm-title"
             aria-describedby="delete-confirm-desc"
           >
-            <h3 id="delete-confirm-title" className="text-lg font-semibold text-white mb-2">Delete Student?</h3>
+            <h3 id="delete-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] mb-2">Delete Student?</h3>
             <p id="delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
             <div className="flex justify-end gap-3">
               <button

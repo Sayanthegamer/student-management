@@ -37,16 +37,16 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[#CCFF00] selection:text-black">
+        <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[var(--accent-primary)] selection:text-white">
             <div className="max-w-md w-full bg-[var(--bg-card)] p-8 md:p-10 border border-[var(--border-color)]">
-                <Link to="/" className="inline-flex items-center gap-2 text-sm text-[#CCFF00] hover:text-white font-bold uppercase tracking-wider mb-8 transition-colors">
+                <Link to="/" className="inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] hover:text-white font-bold uppercase tracking-wider mb-8 transition-colors">
                     <ArrowLeft size={16} />
                     Back to Login
                 </Link>
 
                 <div className="text-center mb-8 border-b border-white/10 pb-6">
-                    <div className="w-12 h-12 border border-[#CCFF00] bg-[#CCFF00] flex items-center justify-center mx-auto mb-6">
-                        <Mail className="text-black" size={24} />
+                    <div className="w-12 h-12 border border-[var(--accent-primary)] bg-[var(--accent-primary)] flex items-center justify-center mx-auto mb-6">
+                        <Mail className="text-white" size={24} />
                     </div>
                     <h1 className="text-2xl font-medium text-white uppercase tracking-tight mb-2">
                         Reset Password
@@ -57,7 +57,7 @@ const ForgotPassword = () => {
                 </div>
 
                 {message && (
-                    <div className={`mb-6 p-4 flex items-start gap-3 border ${status === 'error' ? 'bg-rose-500/10 text-rose-500 border-rose-500' : 'bg-[#CCFF00]/10 text-[#CCFF00] border-[#CCFF00]'}`}>
+                    <div className={`mb-6 p-4 flex items-start gap-3 border ${status === 'error' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' : 'bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20'}`}>
                         {status === 'error' ? <AlertCircle size={20} className="shrink-0 mt-0.5" /> : <CheckCircle size={20} className="shrink-0 mt-0.5" />}
                         <span className="text-sm font-bold tracking-wide uppercase">{message}</span>
                     </div>
@@ -69,7 +69,7 @@ const ForgotPassword = () => {
                         <input
                             type="email"
                             required
-                            className="w-full px-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[#CCFF00] transition-colors outline-none text-sm font-medium"
+                            className="w-full px-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[var(--accent-primary)] transition-colors outline-none text-sm font-medium"
                             placeholder="ADMIN@INSTITUTION.EDU"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -79,7 +79,7 @@ const ForgotPassword = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-5 px-4 bg-[#CCFF00] border border-[#CCFF00] hover:bg-white hover:border-white text-black font-medium  transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                        className="w-full py-5 px-4 bg-[var(--accent-primary)] border border-[var(--accent-primary)] hover:bg-[var(--accent-hover)] hover:border-[var(--accent-hover)] text-white font-medium  transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                     >
                         {loading ? <Loader2 className="animate-spin" size={20} /> : 'Send Reset Link'}
                     </button>

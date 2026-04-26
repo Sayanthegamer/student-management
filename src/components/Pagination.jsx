@@ -9,18 +9,18 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
 
     return (
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 pt-6 border-t border-[var(--border-color)]">
-            <div className="text-xs text-[var(--text-muted)] font-mono ">
-                Showing <span className="font-medium text-[#CCFF00]">{startItem}</span> to <span className="font-medium text-[#CCFF00]">{endItem}</span> of <span className="font-medium text-[#CCFF00]">{totalItems}</span> results
+            <div className="text-xs text-[var(--text-secondary)] font-medium">
+                Showing <span className="font-bold text-[var(--text-primary)]">{startItem}</span> to <span className="font-bold text-[var(--text-primary)]">{endItem}</span> of <span className="font-bold text-[var(--text-primary)]">{totalItems}</span> results
             </div>
 
             <div className="flex flex-wrap justify-center items-center gap-2 w-full sm:w-auto">
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="p-2 border border-[var(--border-color)] text-white hover:bg-white hover:text-black hover:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shrink-0 min-w-[44px] min-h-[44px]"
+                    className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] disabled:opacity-50 disabled:hover:border-[var(--border-color)] disabled:hover:text-[var(--text-secondary)] disabled:cursor-not-allowed transition-colors rounded-[12px] flex items-center justify-center shrink-0 min-w-[44px] min-h-[44px]"
                     aria-label="Previous Page"
                 >
-                    <ChevronLeft size={20} className="stroke-[3px]" />
+                    <ChevronLeft size={20} className="stroke-[2.5px]" />
                 </button>
 
                 <div className="flex flex-wrap justify-center items-center gap-1 flex-1 sm:flex-none">
@@ -41,9 +41,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                             <button
                                 key={pageNum}
                                 onClick={() => onPageChange(pageNum)}
-                                className={`w-11 h-11 sm:w-10 sm:h-10 text-xs sm:text-sm font-medium transition-colors border shrink-0 flex items-center justify-center ${currentPage === pageNum
-                                        ? 'bg-[#CCFF00] text-black border-[#CCFF00]'
-                                        : 'text-white border-[var(--border-color)] hover:bg-white/10 hover:border-white'
+                                className={`w-11 h-11 sm:w-10 sm:h-10 text-xs sm:text-sm font-bold transition-colors border rounded-[12px] shrink-0 flex items-center justify-center ${currentPage === pageNum
+                                        ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
+                                        : 'bg-[var(--bg-main)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
                                     }`}
                             >
                                 {pageNum}
@@ -55,10 +55,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="p-2 border border-[var(--border-color)] text-white hover:bg-white hover:text-black hover:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shrink-0 min-w-[44px] min-h-[44px]"
+                    className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] disabled:opacity-50 disabled:hover:border-[var(--border-color)] disabled:hover:text-[var(--text-secondary)] disabled:cursor-not-allowed transition-colors rounded-[12px] flex items-center justify-center shrink-0 min-w-[44px] min-h-[44px]"
                     aria-label="Next Page"
                 >
-                    <ChevronRight size={20} className="stroke-[3px]" />
+                    <ChevronRight size={20} className="stroke-[2.5px]" />
                 </button>
             </div>
         </div>

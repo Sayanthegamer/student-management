@@ -58,12 +58,12 @@ const CustomMonthPicker = ({ value, onChange, label, required, className = '', c
     };
 
     const inputClasses = compact 
-        ? "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-3 rounded-none text-white font-medium  outline-none transition-colors focus:border-[#CCFF00] text-sm"
-        : "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-4 rounded-none text-white font-medium  outline-none transition-colors focus:border-[#CCFF00] text-sm";
+        ? "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[10px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-sm appearance-none cursor-pointer"
+        : "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3.5 rounded-[12px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-sm appearance-none cursor-pointer";
 
     return (
         <div className={className}>
-            {label && <label className="text-[10px] font-medium text-[var(--text-secondary)]  px-1 mb-1.5 block">{label}</label>}
+            {label && <label className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2 block">{label}</label>}
             <div className={`flex ${compact ? 'gap-1' : 'gap-2'}`}>
                 <div className="relative flex-1">
                     <select

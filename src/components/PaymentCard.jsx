@@ -14,51 +14,51 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
   };
 
   return (
-    <div className="bg-[var(--bg-card)] border border-white/20 p-4 transition-all duration-200 slide-up group hover:border-[#CCFF00]">
+    <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[16px] p-4 transition-all duration-200 slide-up group hover:shadow-md hover:border-[var(--accent-primary)]/30">
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="w-11 h-11 bg-[#CCFF00] text-black border border-[#CCFF00] flex items-center justify-center shrink-0">
-            <User size={20} className="stroke-[3px]" />
+          <div className="w-11 h-11 rounded-[12px] bg-[var(--accent-light)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 flex items-center justify-center shrink-0">
+            <User size={20} className="stroke-[2.5px]" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-white font-medium  text-sm truncate leading-tight">{student.name}</p>
-            <p className="text-[var(--text-secondary)] font-mono text-[10px] uppercase tracking-wider truncate mt-0.5">Roll: {student.rollNo}</p>
+            <p className="text-[var(--text-primary)] font-bold text-sm truncate leading-tight">{student.name}</p>
+            <p className="text-[var(--text-secondary)] font-mono text-[10px] tracking-wider truncate mt-0.5">Roll: {student.rollNo}</p>
           </div>
         </div>
         {student.admissionStatus === 'Transferred' && (
-          <span className="inline-flex items-center px-2.5 py-1 text-[10px] font-medium border  bg-rose-500 text-black border-rose-500 shrink-0">
+          <span className="inline-flex items-center px-2.5 py-1 text-[10px] font-bold border rounded-[12px] bg-rose-50 border-rose-100 text-rose-600 shrink-0">
             Exit
           </span>
         )}
       </div>
 
       <div className="grid grid-cols-2 gap-2 text-xs mb-4">
-        <div className="bg-[var(--bg-main)] border border-white/10 p-2.5">
-          <p className="text-[9px]  text-[var(--text-muted)] font-medium mb-1">Class</p>
-          <p className="text-white font-medium uppercase tracking-wider text-xs">{student.class} - {student.section}</p>
+        <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
+          <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Class</p>
+          <p className="text-[var(--text-primary)] font-bold tracking-wider text-xs">{student.class} - {student.section}</p>
         </div>
-        <div className="bg-[#CCFF00]/10 border border-[#CCFF00]/30 p-2.5">
-          <p className="text-[9px]  text-[#CCFF00] font-medium mb-1">Total Paid</p>
+        <div className="bg-emerald-50 border border-emerald-100 rounded-[12px] p-2.5">
+          <p className="text-[10px] text-emerald-600 font-medium mb-1 tracking-wide">Total Paid</p>
           <div className="flex items-center gap-1">
-            <IndianRupee size={12} className="text-[#CCFF00] stroke-[3px]" />
-            <p className="text-[#CCFF00] font-medium text-sm tracking-wider">₹{getTotalPaid(student).toLocaleString()}</p>
+            <IndianRupee size={12} className="text-emerald-600 stroke-[2.5px]" />
+            <p className="text-emerald-600 font-bold text-sm tracking-wider">₹{getTotalPaid(student).toLocaleString()}</p>
           </div>
         </div>
-        <div className="col-span-2 bg-[var(--bg-main)] border border-white/10 p-2.5">
-          <p className="text-[9px]  text-[var(--text-muted)] font-medium mb-1">Last Payment</p>
+        <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
+          <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Last Payment</p>
           <div className="flex items-center gap-2">
             <Calendar size={14} className="text-[var(--text-muted)]" />
-            <p className="text-white font-mono text-xs">{getLastPaymentDate(student)}</p>
+            <p className="text-[var(--text-primary)] font-mono text-xs font-semibold">{getLastPaymentDate(student)}</p>
           </div>
         </div>
       </div>
 
       <button
         onClick={() => onViewHistory(student)}
-        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-[#CCFF00] bg-transparent border border-[var(--border-color)] hover:border-[#CCFF00] hover:bg-[#CCFF00] hover:text-black transition-colors font-medium  text-xs touch-manipulation min-h-[44px]"
+        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-[var(--accent-primary)] bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 rounded-[12px] hover:bg-[var(--accent-hover)] hover:text-white transition-colors font-semibold text-xs touch-manipulation min-h-[44px]"
         aria-label="View payment history"
       >
-        <FileText size={16} className="stroke-[3px]" />
+        <FileText size={16} className="stroke-[2.5px]" />
         <span className="hidden sm:inline">View History</span>
       </button>
     </div>

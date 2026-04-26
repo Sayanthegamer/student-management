@@ -110,53 +110,51 @@ const DataManagement = ({ students, onImportSuccess }) => {
 
     return (
         <div className="max-w-5xl mx-auto px-3 md:px-6 lg:px-8 py-4 md:py-8">
-            <div className="bg-[var(--bg-main)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border border-[var(--border-color)] overflow-hidden page-enter">
-                <div className="p-4 md:p-10 border-b border-[var(--border-color)] bg-[var(--bg-card)]">
+            <div className="bg-[var(--bg-card)] rounded-[24px] shadow-sm border border-[var(--border-color)] overflow-hidden page-enter">
+                <div className="p-6 md:p-10 border-b border-[var(--border-color)] bg-[var(--bg-main)]">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-2">
-                        <div className="p-3 md:p-4 bg-[#CCFF00] text-black border border-[#CCFF00] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] shrink-0">
-                            <Database size={24} className="stroke-[3px] md:w-8 md:h-8" />
+                        <div className="p-3 md:p-4 bg-[var(--accent-light)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 rounded-[16px] shrink-0">
+                            <Database size={32} className="stroke-[2.5px]" />
                         </div>
                         <div>
-                            <h2 className="text-xl md:text-4xl font-medium text-white tracking-widest uppercase">System Data Management</h2>
-                            <p className="text-[#CCFF00]/70 font-mono text-xs md:text-sm  mt-2">Backup, restore, and audit your institutional records.</p>
+                            <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] tracking-tight">System Data Management</h2>
+                            <p className="text-[var(--text-secondary)] text-sm mt-2">Backup, restore, and audit your institutional records.</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-3 md:p-10 grid md:grid-cols-2 gap-4 md:gap-6">
+                <div className="p-4 md:p-10 grid md:grid-cols-2 gap-4 md:gap-6 bg-[var(--bg-card)]">
                     <div className="group relative">
-                        <div className="relative bg-[var(--bg-card)] p-4 md:p-8 rounded-custom-none border border-[var(--border-color)] shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-[#CCFF00] h-full flex flex-col group">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-transparent border border-[#CCFF00] text-[#CCFF00] rounded-custom-none flex items-center justify-center mb-6 group-hover:bg-[#CCFF00] group-hover:text-black transition-colors shrink-0">
-                                <FileSpreadsheet size={20} className="stroke-[3px] md:w-7 md:h-7" />
+                        <div className="relative bg-[var(--bg-main)] p-6 md:p-8 rounded-[20px] border border-[var(--border-color)] shadow-sm transition-all duration-300 hover:shadow-md hover:border-[var(--accent-primary)]/50 h-full flex flex-col group">
+                            <div className="w-12 h-12 md:w-14 md:h-14 bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] rounded-[14px] flex items-center justify-center mb-6 group-hover:bg-[var(--accent-primary)] group-hover:text-white transition-colors shrink-0">
+                                <FileSpreadsheet size={24} className="stroke-[2.5px]" />
                             </div>
-                            <h3 className="text-lg md:text-xl font-medium text-white  mb-4">Export Records</h3>
-                            <p className="text-white/70 mb-8 text-[10px] md:text-xs font-mono  leading-relaxed">
+                            <h3 className="text-lg md:text-xl font-bold text-[var(--text-primary)] mb-4">Export Records</h3>
+                            <p className="text-[var(--text-secondary)] mb-8 text-xs md:text-sm leading-relaxed">
                                 Generate a comprehensive CSV export compatible with Microsoft Excel and Google Sheets. This includes full student profiles, fee histories, and status metadata.
                             </p>
-                            <button onClick={handleExport} className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-[#CCFF00] text-black font-medium rounded-custom-none border border-[#CCFF00] hover:bg-transparent hover:text-[#CCFF00] transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]  active:bg-[#CCFF00]/20 text-xs md:text-base text-center leading-tight flex items-center justify-center gap-2 min-h-[48px]">
-                                <Download size={18} className="md:hidden stroke-[3px]" />
-                                <span className="md:hidden">Export</span>
-                                <span className="hidden md:inline">Download Database (.csv)</span>
+                            <button onClick={handleExport} className="mt-auto w-full py-3.5 md:py-4 px-4 bg-[var(--accent-primary)] text-white font-bold rounded-[12px] hover:bg-[var(--accent-hover)] transition-colors active:scale-[0.98] text-sm md:text-base text-center leading-tight flex items-center justify-center gap-2 min-h-[48px]">
+                                <Download size={20} className="stroke-[2.5px]" />
+                                <span>Download Database (.csv)</span>
                             </button>
                         </div>
                     </div>
 
                     <div className="group relative">
-                        <div className="relative bg-[var(--bg-card)] p-4 md:p-8 rounded-custom-none border border-[var(--border-color)] shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] transition-colors hover:border-emerald-400 h-full flex flex-col group">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-transparent border border-emerald-400 text-emerald-400 rounded-custom-none flex items-center justify-center mb-6 group-hover:bg-emerald-400 group-hover:text-black transition-colors shrink-0">
-                                <FileJson size={20} className="stroke-[3px] md:w-7 md:h-7" />
+                        <div className="relative bg-[var(--bg-main)] p-6 md:p-8 rounded-[20px] border border-[var(--border-color)] shadow-sm transition-all duration-300 hover:shadow-md hover:border-emerald-500/50 h-full flex flex-col group">
+                            <div className="w-12 h-12 md:w-14 md:h-14 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-[14px] flex items-center justify-center mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-colors shrink-0">
+                                <FileJson size={24} className="stroke-[2.5px]" />
                             </div>
-                            <h3 className="text-lg md:text-xl font-medium text-white  mb-4">Import Backup</h3>
-                            <p className="text-white/70 mb-8 text-[10px] md:text-xs font-mono  leading-relaxed">
+                            <h3 className="text-lg md:text-xl font-bold text-[var(--text-primary)] mb-4">Import Backup</h3>
+                            <p className="text-[var(--text-secondary)] mb-8 text-xs md:text-sm leading-relaxed">
                                 Upload a previously exported .csv or .json file to restore your database. The system will automatically generate a safety backup of your current data before proceeding.
                             </p>
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="mt-auto w-full py-3 md:py-4 px-2 md:px-4 bg-emerald-400 text-black font-medium rounded-custom-none border border-emerald-400 hover:bg-transparent hover:text-emerald-400 transition-colors shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] text-center cursor-pointer active:bg-emerald-400/20 flex items-center justify-center gap-2 text-xs md:text-base leading-tight min-h-[48px]"
+                                className="mt-auto w-full py-3.5 md:py-4 px-4 bg-emerald-600 text-white font-bold rounded-[12px] hover:bg-emerald-500 transition-colors active:scale-[0.98] text-center cursor-pointer flex items-center justify-center gap-2 text-sm md:text-base leading-tight min-h-[48px]"
                             >
-                                <Upload size={18} className="md:hidden stroke-[3px]" />
-                                <span className="md:hidden">Import</span>
-                                <span className="hidden md:inline">Select File to Restore</span>
+                                <Upload size={20} className="stroke-[2.5px]" />
+                                <span>Select File to Restore</span>
                             </button>
                             <input
                                 ref={fileInputRef}
@@ -170,18 +168,18 @@ const DataManagement = ({ students, onImportSuccess }) => {
                     </div>
                 </div>
 
-                <div className="px-4 pb-6 md:px-10 md:pb-12">
-                    <div className="bg-[var(--bg-card)] rounded-custom-none p-5 md:p-8 border border-[var(--border-color)]">
-                        <h3 className="text-white font-medium mb-4 flex items-center gap-3 ">
-                            <AlertTriangle size={24} className="text-amber-400 stroke-[3px]" />
+                <div className="px-4 pb-6 md:px-10 md:pb-10 bg-[var(--bg-card)]">
+                    <div className="bg-[var(--bg-main)] rounded-[16px] p-6 md:p-8 border border-[var(--border-color)]">
+                        <h3 className="text-[var(--text-primary)] font-bold mb-4 flex items-center gap-3 text-lg">
+                            <AlertTriangle size={24} className="text-amber-500 stroke-[2.5px]" />
                             Import Specification
                         </h3>
-                        <p className="text-[var(--text-secondary)] text-xs font-mono mb-6 ">
+                        <p className="text-[var(--text-secondary)] text-sm mb-6">
                             For successful data mapping, ensure your column headers match the system requirements.
                         </p>
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-wrap gap-2 md:gap-3">
                             {['id', 'name', 'class', 'section', 'rollNo', 'guardianName', 'admissionDate', 'admissionStatus', 'feesAmount', 'feesStatus', 'feeHistory'].map(field => (
-                                <code key={field} className="px-3 py-1.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-none text-[10px] font-medium text-[#CCFF00]  shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
+                                <code key={field} className="px-3 py-1.5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[8px] text-xs font-mono font-medium text-[var(--accent-primary)]">
                                     {field}
                                 </code>
                             ))}
@@ -190,29 +188,29 @@ const DataManagement = ({ students, onImportSuccess }) => {
 
                     {importStatus && (
                         <div
-                            className={`mt-8 p-6 rounded-custom-none flex items-start gap-4 border shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] animate-fadeIn ${importStatus === 'error'
-                                ? 'bg-rose-500/10 text-rose-500 border-rose-500'
-                                : 'bg-[#CCFF00]/10 text-[#CCFF00] border-[#CCFF00]'
+                            className={`mt-6 p-4 md:p-6 rounded-[16px] flex items-start gap-4 border animate-fadeIn ${importStatus === 'error'
+                                ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                                 }`}
                         >
-                            <div className={`mt-0.5 p-2 rounded-custom-none bg-transparent border ${importStatus === 'error' ? 'border-rose-500' : 'border-[#CCFF00]'}`}>
-                                {importStatus === 'error' ? <AlertTriangle size={20} className="stroke-[3px] text-rose-500" /> : <CheckCircle size={20} className="stroke-[3px] text-[#CCFF00]" />}
+                            <div className={`mt-0.5 p-2 rounded-[12px] bg-[var(--bg-card)] border ${importStatus === 'error' ? 'border-rose-500/20 text-rose-400' : 'border-emerald-500/20 text-emerald-400'}`}>
+                                {importStatus === 'error' ? <AlertTriangle size={20} className="stroke-[2.5px]" /> : <CheckCircle size={20} className="stroke-[2.5px]" />}
                             </div>
                             <div className="flex flex-col">
-                                <span className="font-medium text-sm ">{importStatus === 'error' ? 'Import Failed' : 'Operation Successful'}</span>
-                                <span className="text-[10px] font-mono mt-1 opacity-90 ">{message}</span>
+                                <span className="font-bold text-sm md:text-base">{importStatus === 'error' ? 'Import Failed' : 'Operation Successful'}</span>
+                                <span className="text-xs md:text-sm mt-1 opacity-90">{message}</span>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
 
-            <div className="mt-12 flex justify-center pb-8">
+            <div className="mt-8 flex justify-center pb-8">
                 <a
                     href="https://github.com/Sayanthegamer/student-management"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-3 text-[var(--text-secondary)] hover:text-[#CCFF00] transition-colors text-xs font-medium "
+                    className="group flex items-center gap-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors text-sm font-bold"
                 >
                     <Github size={20} className="transition-transform group-hover:rotate-12" />
                     Source Documentation

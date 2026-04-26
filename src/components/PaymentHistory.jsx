@@ -70,15 +70,15 @@ const PaymentHistory = ({ students }) => {
 
     return (
         <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
-            <div className="bg-[var(--bg-card)] rounded-custom-none shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] border border-[var(--border-color)] overflow-hidden page-enter">
+            <div className="bg-[var(--bg-card)] rounded-[16px] shadow-sm border border-[var(--border-color)] overflow-hidden page-enter">
                 <div className="p-4 md:p-8 border-b border-[var(--border-color)] flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex items-center gap-4">
-                        <div className="p-3 bg-[#CCFF00] text-black border border-[#CCFF00] rounded-custom-none">
-                            <IndianRupee size={28} className="stroke-[3px]" />
+                        <div className="p-3 bg-[var(--accent-light)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 rounded-[16px]">
+                            <IndianRupee size={28} className="stroke-[2.5px]" />
                         </div>
                         <div>
-                            <h2 className="text-2xl md:text-3xl font-medium  text-white">Payment Audit</h2>
-                            <p className="text-[var(--text-secondary)] font-mono text-xs  mt-2">Detailed financial records for all students</p>
+                            <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] tracking-tight">Payment Audit</h2>
+                            <p className="text-[var(--text-secondary)] text-sm mt-1">Detailed financial records for all students</p>
                         </div>
                     </div>
                     
@@ -91,7 +91,7 @@ const PaymentHistory = ({ students }) => {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 aria-label="Search by name, roll number, or class"
-                                className="w-full pl-12 pr-4 py-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-xl focus:border-white transition-colors outline-none text-[var(--text-primary)] font-medium placeholder:text-[var(--text-muted)]"
+                                className="w-full pl-12 pr-4 py-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] focus:border-[var(--accent-primary)] transition-colors outline-none text-[var(--text-primary)] font-medium placeholder:text-[var(--text-muted)]"
                             />
                         </div>
                     </div>
@@ -102,7 +102,7 @@ const PaymentHistory = ({ students }) => {
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
                         aria-label="Filter by class"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-custom-xl text-[var(--text-primary)] font-medium outline-none focus:border-white appearance-none cursor-pointer flex-1 md:min-w-[160px]"
+                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 md:min-w-[160px]"
                     >
                         <option value="">All Classes</option>
                         {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -112,7 +112,7 @@ const PaymentHistory = ({ students }) => {
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
                         aria-label="Filter by section"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-custom-xl text-[var(--text-primary)] font-medium outline-none focus:border-white appearance-none cursor-pointer flex-1 md:min-w-[160px]"
+                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 md:min-w-[160px]"
                     >
                         <option value="">All Sections</option>
                         {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
@@ -125,7 +125,7 @@ const PaymentHistory = ({ students }) => {
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
                             aria-label="Sort by"
-                            className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-custom-xl text-[var(--text-primary)] font-medium outline-none focus:border-white appearance-none cursor-pointer flex-1"
+                            className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1"
                         >
                             <option value="name">Sort by: Name</option>
                             <option value="rollNo">Sort by: Roll No</option>
@@ -134,10 +134,10 @@ const PaymentHistory = ({ students }) => {
 
                         <button
                             onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                            className="p-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-xl text-[var(--text-secondary)] hover:border-white hover:text-white transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center cursor-pointer"
+                            className="p-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center cursor-pointer"
                             aria-label={`Set sort order to ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                         >
-                            {sortOrder === 'asc' ? <ChevronDown size={20} className="stroke-[3px]" /> : <ChevronUp size={20} className="stroke-[3px]" />}
+                            {sortOrder === 'asc' ? <ChevronDown size={20} className="stroke-[2.5px]" /> : <ChevronUp size={20} className="stroke-[2.5px]" />}
                         </button>
                     </div>
                 </div>
@@ -153,12 +153,12 @@ const PaymentHistory = ({ students }) => {
                             />
                         ))
                     ) : (
-                        <div className="py-16 text-center border border-[var(--border-color)] bg-[var(--bg-main)] mx-4">
-                            <div className="p-6 w-24 h-24 flex items-center justify-center mx-auto mb-4">
-                                <Search size={48} className="text-white/30 stroke-[1px]" />
+                        <div className="py-16 text-center border border-[var(--border-color)] bg-[var(--bg-main)] mx-4 rounded-[12px]">
+                            <div className="p-6 w-24 h-24 flex items-center justify-center mx-auto mb-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-full">
+                                <Search size={32} className="text-[var(--text-muted)]" />
                             </div>
-                            <p className="text-white font-medium  text-lg">No results found</p>
-                            <p className="text-[var(--text-secondary)] font-mono text-xs  mt-2">Try adjusting your filters</p>
+                            <p className="text-[var(--text-primary)] font-bold text-lg">No results found</p>
+                            <p className="text-[var(--text-secondary)] font-mono text-xs mt-2">Try adjusting your filters</p>
                         </div>
                     )}
                 </div>
@@ -176,41 +176,41 @@ const PaymentHistory = ({ students }) => {
                         </thead>
                         <tbody className="divide-y divide-white/10">
                             {filteredStudents.map(student => (
-                                <tr key={student.id} className="hover:bg-white/5 transition-colors group">
+                                <tr key={student.id} className="hover:bg-[var(--bg-card-hover)] transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-custom-none bg-[#CCFF00] text-black border border-[#CCFF00] flex items-center justify-center font-medium text-xs shrink-0">
-                                                <User size={18} className="stroke-[3px]" />
+                                            <div className="w-10 h-10 rounded-full bg-[var(--accent-light)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 flex items-center justify-center font-bold text-sm shrink-0">
+                                                <User size={18} className="stroke-[2px]" />
                                             </div>
                                             <div className="min-w-0">
-                                                <p className="font-medium text-white text-sm  truncate flex items-center gap-3">
+                                                <p className="font-bold text-[var(--text-primary)] text-sm truncate flex items-center gap-3">
                                                     {student.name}
                                                     {student.admissionStatus === 'Transferred' && (
-                                                        <span className="text-[9px] font-medium bg-rose-500 text-black px-2 py-1 rounded-custom-none border border-rose-500 uppercase tracking-tighter">Exit</span>
+                                                        <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-2 py-1 rounded-[12px] border border-rose-100 uppercase tracking-wide">Exit</span>
                                                     )}
                                                 </p>
-                                                <p className="text-[var(--text-secondary)] font-mono text-[10px] truncate  mt-1">Roll: {student.rollNo}</p>
+                                                <p className="text-[var(--text-secondary)] font-mono text-[10px] truncate mt-1">Roll: {student.rollNo}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className="text-sm text-white font-medium ">Class {student.class} — {student.section}</span>
+                                        <span className="text-sm text-[var(--text-primary)] font-semibold">Class {student.class} — {student.section}</span>
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex flex-col gap-1">
-                                            <span className="text-base font-medium text-[#CCFF00] tracking-widest">₹{getTotalPaid(student).toLocaleString()}</span>
-                                            <span className="text-[10px] text-[var(--text-secondary)] font-medium ">Gross Total</span>
+                                            <span className="text-base font-bold text-emerald-600 tracking-wider">₹{getTotalPaid(student).toLocaleString()}</span>
+                                            <span className="text-[10px] text-[var(--text-secondary)] font-medium tracking-wide">Gross Total</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className="text-sm text-white font-mono">{getLastPaymentDate(student)}</span>
+                                        <span className="text-sm text-[var(--text-primary)] font-mono font-semibold">{getLastPaymentDate(student)}</span>
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <button
                                             onClick={() => handleViewHistory(student)}
-                                            className="px-6 py-3 rounded-custom-none bg-transparent border border-[#CCFF00] text-[#CCFF00] text-xs font-medium  hover:bg-[#CCFF00] hover:text-black transition-colors flex items-center gap-2 ml-auto shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]"
+                                            className="px-5 py-2.5 rounded-[12px] bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-primary)] font-semibold hover:bg-[var(--bg-card-hover)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/30 transition-colors flex items-center gap-2 ml-auto shadow-sm text-xs"
                                         >
-                                            <FileText size={16} className="stroke-[3px]" />
+                                            <FileText size={16} className="stroke-[2px]" />
                                             History
                                         </button>
                                     </td>

@@ -1,22 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  /* Stitch-inspired Dark Theme */
-  --bg-main: #0B0B0C;
-  --bg-sidebar: #131315;
-  --bg-card: #151517;
-  --bg-card-hover: #1A1A1D;
-  --border-color: #27272A;
-  --border-highlight: #3F3F46;
+  /* Premium Minimal Dark Mode SaaS Theme */
+  --bg-main: #0B0E14;
+  --bg-sidebar: #121620;
+  --bg-card: #151A24;
+  --bg-card-hover: #1A212D;
+  --border-color: #262E3D;
+  --border-highlight: #3A445A;
   
-  --text-primary: #F4F4F5;
-  --text-secondary: #A1A1AA;
-  --text-muted: #71717A;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
 
-  --accent-primary: #3B82F6; /* Optional, a nice blue if needed, though mostly monochrome */
-  --accent-hover: #2563EB;
+  --accent-primary: #6366F1;
+  --accent-hover: #818CF8;
+  --accent-light: rgba(99, 102, 241, 0.15);
 
-  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family: 'Manrope', system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -58,8 +59,8 @@ input, select, textarea {
 }
 
 ::selection {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: var(--accent-light);
+  color: var(--accent-primary);
 }
 
 body {
@@ -100,24 +101,24 @@ body {
 
 @layer utilities {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 font-medium text-sm cursor-pointer transition-colors duration-200 border rounded-md;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 font-medium text-sm cursor-pointer transition-all duration-200 border rounded-[12px];
   }
 
   .btn-primary {
-    @apply bg-white text-black border-white hover:bg-gray-200;
+    @apply bg-[#4b2bee] text-white border-transparent hover:bg-[#3d23c1] shadow-md shadow-[#4b2bee]/20;
   }
 
   .btn-secondary {
-    @apply bg-[#1C1C1E] text-white border-[#27272A] hover:bg-[#27272A];
+    @apply bg-[var(--bg-main)] text-[var(--text-secondary)] border-[var(--border-color)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] hover:border-[var(--border-highlight)];
   }
 
   .btn-danger {
-    @apply bg-transparent text-rose-500 border-rose-500/50 hover:bg-rose-500/10 hover:border-rose-500;
+    @apply bg-rose-500/10 text-rose-500 border-rose-500/20 hover:bg-rose-500/20 hover:border-rose-500/30;
   }
 
   /* Card base utility */
   .card-base {
-    @apply bg-[#151517] border border-[#27272A] rounded-xl overflow-hidden;
+    @apply bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden;
   }
 }
 

@@ -6,7 +6,7 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
   <div className="card-base p-4 transition-all duration-200 slide-up group hover:border-[var(--text-secondary)]">
     <div className="flex items-start justify-between gap-3 mb-4">
       <div className="flex items-center gap-3 min-w-0 flex-1">
-        <div className="w-11 h-11 rounded-custom-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-[var(--border-color)] flex items-center justify-center font-medium text-base shrink-0 uppercase">
+        <div className="w-11 h-11 rounded-[12px] bg-[var(--accent-light)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 flex items-center justify-center font-bold text-lg shrink-0 uppercase">
           {student.name.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
@@ -15,7 +15,7 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
         </div>
       </div>
       <span
-        className={`inline-flex items-center px-2.5 py-1 text-[10px] font-medium border rounded-custom-md shrink-0 ${status === 'Paid' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : status === 'Overdue' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-amber-500/10 border-amber-500/20 text-amber-400'}`}
+        className={`inline-flex items-center px-2.5 py-1 text-[10px] font-bold border rounded-[12px] shrink-0 ${status === 'Paid' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : status === 'Overdue' ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-amber-50 border-amber-100 text-amber-600'}`}
       >
         {status}
       </span>
@@ -35,7 +35,7 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
     <div className="flex items-center gap-2">
       <button
         onClick={() => onPayFee(student)}
-        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-400 rounded-custom-md transition-colors font-medium text-xs touch-manipulation min-h-[40px]"
+        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 rounded-[12px] transition-colors font-semibold text-xs touch-manipulation min-h-[40px]"
         aria-label="Collect fee"
       >
         <IndianRupee size={16} />
@@ -43,14 +43,14 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
       </button>
       <button
         onClick={() => onEdit(student)}
-        className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-blue-500/10 hover:border-blue-500/30 hover:text-blue-400 rounded-custom-md transition-colors touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center"
+        className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 rounded-[12px] transition-colors touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center"
         aria-label="Edit student"
       >
         <Edit2 size={16} />
       </button>
       <button
         onClick={() => onDelete(student.id)}
-        className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-rose-500/10 hover:border-rose-500/30 hover:text-rose-400 rounded-custom-md transition-colors touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center"
+        className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 rounded-[12px] transition-colors touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center"
         aria-label="Delete student"
       >
         <Trash2 size={16} />

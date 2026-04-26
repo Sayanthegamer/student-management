@@ -71,13 +71,13 @@ const CustomDatePicker = ({ value, onChange, label, required, className = '' }) 
 
     const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, '0'));
 
-    const selectClasses = "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-4 rounded-none text-white font-medium  outline-none transition-colors focus:border-[#CCFF00] text-sm";
+    const selectClasses = "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3.5 rounded-[12px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-sm cursor-pointer appearance-none";
 
     return (
         <div className={className}>
             {label && (
-                <label className="text-[10px] font-medium text-[var(--text-secondary)]  px-1 mb-1.5 block">
-                    {label} {required && <span className="text-[#CCFF00] ml-1">*</span>}
+                <label className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2 block">
+                    {label} {required && <span className="text-rose-500 ml-1">*</span>}
                 </label>
             )}
             <div className="flex gap-2">
