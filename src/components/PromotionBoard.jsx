@@ -162,10 +162,10 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
                                     <thead className="bg-[var(--bg-main)] sticky top-0 z-10 shadow-sm">
                                         <tr>
                                             <th className="px-5 py-4 border-b border-[var(--border-color)] w-12">
-                                                <input 
-                                                    type="checkbox" 
+                                                <input
+                                                    type="checkbox"
                                                     className="w-4 h-4 rounded-[4px] border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/30 cursor-pointer"
-                                                    checked={filteredStudents.length > 0 && selectedStudents.size === filteredStudents.length}
+                                                    checked={filteredStudents.length > 0 && filteredStudents.every(student => selectedStudents.has(student.id))}
                                                     onChange={handleSelectAll}
                                                 />
                                             </th>
