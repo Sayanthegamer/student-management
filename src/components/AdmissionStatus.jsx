@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical } from 'lucide-react';
+import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical, SlidersHorizontal } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
 import AdmissionCard from './AdmissionCard';
 import { statusHexColors } from '../utils/statusColors';
