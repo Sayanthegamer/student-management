@@ -10,6 +10,37 @@ import PaymentCard from './PaymentCard';
  * @param {Object[]} props.students - The array of student objects with fee history.
  * @returns {JSX.Element} The rendered payment history component.
  */
+
+const FilterSelects = ({ classes, sections, filterClass, setFilterClass, filterSection, setFilterSection, isMobile }) => {
+    const baseClass = isMobile
+        ? "bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-2.5 rounded-[12px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer w-full"
+        : "bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 min-w-[160px]";
+
+    return (
+        <>
+            <select
+                value={filterClass}
+                onChange={(e) => setFilterClass(e.target.value)}
+                aria-label="Filter by class"
+                className={baseClass}
+            >
+                <option value="">All Classes</option>
+                {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
+            </select>
+
+            <select
+                value={filterSection}
+                onChange={(e) => setFilterSection(e.target.value)}
+                aria-label="Filter by section"
+                className={baseClass}
+            >
+                <option value="">All Sections</option>
+                {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
+            </select>
+        </>
+    );
+};
+
 const PaymentHistory = ({ students }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -123,25 +154,15 @@ const PaymentHistory = ({ students }) => {
 
                 {/* Desktop Filters */}
                 <div className="hidden md:flex p-4 bg-[var(--bg-card)] border-b border-[var(--border-color)] flex-wrap gap-4">
-                    <select
-                        value={filterClass}
-                        onChange={(e) => setFilterClass(e.target.value)}
-                        aria-label="Filter by class"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 min-w-[160px]"
-                    >
-                        <option value="">All Classes</option>
-                        {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
-                    </select>
-
-                    <select
-                        value={filterSection}
-                        onChange={(e) => setFilterSection(e.target.value)}
-                        aria-label="Filter by section"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 min-w-[160px]"
-                    >
-                        <option value="">All Sections</option>
-                        {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
-                    </select>
+                    <FilterSelects
+                        classes={classes}
+                        sections={sections}
+                        filterClass={filterClass}
+                        setFilterClass={setFilterClass}
+                        filterSection={filterSection}
+                        setFilterSection={setFilterSection}
+                        isMobile={false}
+                    />
 
                     <div className="h-10 w-px bg-[var(--border-color)] mx-2"></div>
 
@@ -170,10 +191,7 @@ const PaymentHistory = ({ students }) => {
                 {/* Mobile Filter & Sort Bar */}
                 <div className="md:hidden flex p-3 bg-[var(--bg-card)] border-b border-[var(--border-color)] gap-2">
                     <button
-                        onClick={() => {
-                            setShowMobileFilters(!showMobileFilters);
-                            if (!showMobileFilters) setShowMobileSort(false);
-                        }}
+                        onClick={() => setShowMobileFilters(!showMobileFilters)}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-[12px] border text-sm font-semibold transition-colors ${showMobileFilters || filterClass || filterSection ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
                         aria-label="Toggle filters"
                         aria-expanded={showMobileFilters}
@@ -183,10 +201,7 @@ const PaymentHistory = ({ students }) => {
                         Filters {(filterClass || filterSection) && <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]"></span>}
                     </button>
                     <button
-                        onClick={() => {
-                            setShowMobileSort(!showMobileSort);
-                            if (!showMobileSort) setShowMobileFilters(false);
-                        }}
+                        onClick={() => setShowMobileSort(!showMobileSort)}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-[12px] border text-sm font-semibold transition-colors ${showMobileSort ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
                         aria-label="Toggle sort"
                         aria-expanded={showMobileSort}
@@ -200,24 +215,15 @@ const PaymentHistory = ({ students }) => {
                 {/* Mobile Filter Modal/Dropdown */}
                 {showMobileFilters && (
                     <div id="mobile-filters-panel" role="region" aria-label="Mobile Filters" className="md:hidden p-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] grid grid-cols-2 gap-3 animate-in slide-in-from-top-2">
-                        <select
-                            value={filterClass}
-                            onChange={(e) => setFilterClass(e.target.value)}
-                            aria-label="Filter by class"
-                            className="bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-2.5 rounded-[12px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer w-full"
-                        >
-                            <option value="">All Classes</option>
-                            {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
-                        </select>
-                        <select
-                            value={filterSection}
-                            onChange={(e) => setFilterSection(e.target.value)}
-                            aria-label="Filter by section"
-                            className="bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-2.5 rounded-[12px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer w-full"
-                        >
-                            <option value="">All Sections</option>
-                            {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
-                        </select>
+                        <FilterSelects
+                            classes={classes}
+                            sections={sections}
+                            filterClass={filterClass}
+                            setFilterClass={setFilterClass}
+                            filterSection={filterSection}
+                            setFilterSection={setFilterSection}
+                            isMobile={true}
+                        />
                     </div>
                 )}
 
