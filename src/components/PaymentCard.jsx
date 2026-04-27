@@ -15,11 +15,14 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
     return student.feeHistory.reduce((sum, p) => sum + (Number(p.amount) || 0) + (Number(p.fine) || 0), 0);
   };
 
-  const getLastPaymentDate = (student) => {
-    if (!student.feeHistory || student.feeHistory.length === 0) return 'N/A';
-    // Optimize: Find max date in O(n) instead of sorting O(n log n)
-    const maxDate = student.feeHistory.reduce((max, p) => p.date > max ? p.date : max, student.feeHistory[0].date);
-    const [year, month, day] = maxDate.split('-');
+  const getLastPayment = (student) => {
+    if (!student.feeHistory || student.feeHistory.length === 0) return null;
+    return student.feeHistory.reduce((latest, p) => p.date > latest.date ? p : latest, student.feeHistory[0]);
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return 'N/A';
+    const [year, month, day] = dateStr.split('-');
     return new Date(year, month - 1, day).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
@@ -54,13 +57,36 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
             <p className="text-emerald-400 font-bold text-sm tracking-wider">₹{getTotalPaid(student).toLocaleString()}</p>
           </div>
         </div>
-        <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
-          <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Last Payment</p>
-          <div className="flex items-center gap-2">
-            <Calendar size={14} className="text-[var(--text-muted)]" />
-            <p className="text-[var(--text-primary)] font-mono text-xs font-semibold">{getLastPaymentDate(student)}</p>
-          </div>
-        </div>
+        {(() => {
+          const lastPayment = getLastPayment(student);
+          if (!lastPayment) {
+             return (
+                 <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
+                   <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Last Payment</p>
+                   <p className="text-[var(--text-secondary)] font-mono text-xs font-semibold">N/A</p>
+                 </div>
+             );
+          }
+          return (
+             <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-3 flex flex-col justify-center">
+                 <div className="flex items-center justify-between mb-1.5">
+                     <p className="text-[10px] text-[var(--text-muted)] font-medium tracking-wide">Last Payment</p>
+                     <div className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+                         <Calendar size={12} />
+                         <span className="font-mono text-[10px]">{formatDate(lastPayment.date)}</span>
+                     </div>
+                 </div>
+                 <div className="flex items-center gap-2">
+                     <p className="text-[var(--text-primary)] font-bold text-sm tracking-wider flex items-center"><IndianRupee size={12} className="stroke-[2.5px] mr-0.5" />{Number(lastPayment.amount || 0).toLocaleString()}</p>
+                     {Number(lastPayment.fine) > 0 && (
+                         <span className="text-[10px] text-rose-400 font-medium bg-rose-500/10 px-1.5 py-0.5 rounded-[4px] border border-rose-500/20">
+                             + ₹{Number(lastPayment.fine).toLocaleString()} fine
+                         </span>
+                     )}
+                 </div>
+             </div>
+          );
+        })()}
       </div>
 
       <button

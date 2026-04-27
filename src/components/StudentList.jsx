@@ -210,14 +210,16 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 <option value="Overdue">Overdue</option>
                             </select>
                         </div>
-                        <div className="col-span-1">
-                            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Fee Month</label>
-                            <div className="h-[38px]">
-                                <CustomMonthPicker
-                                    value={filterMonth}
-                                    onChange={setFilterMonth}
-                                    compact={true}
-                                />
+                        <div className="col-span-2 md:col-span-1 flex items-end gap-2">
+                             <div className="flex-1">
+                                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Fee Month</label>
+                                <div className="h-[38px]">
+                                    <CustomMonthPicker
+                                        value={filterMonth}
+                                        onChange={setFilterMonth}
+                                        compact={true}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="col-span-2 md:col-span-1 flex items-end gap-2">
@@ -235,7 +237,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             </div>
                             <button
                                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                className="p-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-secondary)] hover:text-white transition-all h-[38px] w-[38px] flex items-center justify-center outline-none focus:border-white"
+                                className="p-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-all h-[38px] w-[38px] flex items-center justify-center outline-none focus:border-[var(--accent-primary)]"
                                 aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                             >
                                 {sortOrder === 'asc' ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
