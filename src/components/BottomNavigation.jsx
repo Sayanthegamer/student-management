@@ -47,7 +47,7 @@ const BottomNavigation = () => {
     };
   }, [showMore]);
 
-  const isMoreActive = moreNavItems.some(item => location.pathname.startsWith(item.path));
+  const isMoreActive = moreNavItems.some(item => location.pathname === item.path || location.pathname.startsWith(item.path + '/'));
 
   return (
     <>
@@ -59,17 +59,21 @@ const BottomNavigation = () => {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg-main)]/95 backdrop-blur-md border-t border-[var(--border-color)] pb-[env(safe-area-inset-bottom,0px)]">
         {/* More Menu Popup */}
         <div
+          id="moreMenuPopup"
           ref={menuRef}
+          role="menu"
+          aria-labelledby="moreMenuButton"
           className={`absolute bottom-full right-2 mb-2 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[16px] shadow-lg overflow-hidden transition-all duration-200 origin-bottom-right ${showMore ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-2 pointer-events-none'}`}
         >
           <div className="flex flex-col py-2">
             {moreNavItems.map((item) => {
               const Icon = item.icon;
-              const isActive = location.pathname.startsWith(item.path);
+              const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
               return (
                 <NavLink
                   key={item.path}
                   to={item.path}
+                  role="menuitem"
                   className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive ? 'text-[var(--accent-primary)] bg-[var(--accent-light)]' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--accent-primary)]'}`}
                 >
                   <Icon size={18} className="stroke-[2.5px]" />
@@ -113,6 +117,7 @@ const BottomNavigation = () => {
 
           {/* More Button */}
           <button
+            id="moreMenuButton"
             onClick={(e) => {
                 e.stopPropagation();
                 setShowMore(!showMore);
@@ -121,6 +126,7 @@ const BottomNavigation = () => {
               flex flex-col items-center justify-center gap-1 py-2.5 flex-1 transition-all duration-200 px-0.5 min-h-[56px] relative outline-none
               ${(showMore || isMoreActive) ? 'text-[var(--accent-primary)]' : 'text-[var(--text-secondary)]'}
             `}
+            aria-controls="moreMenuPopup"
             aria-expanded={showMore}
             aria-haspopup="true"
           >

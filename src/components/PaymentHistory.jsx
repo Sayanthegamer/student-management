@@ -170,7 +170,10 @@ const PaymentHistory = ({ students }) => {
                 {/* Mobile Filter & Sort Bar */}
                 <div className="md:hidden flex p-3 bg-[var(--bg-card)] border-b border-[var(--border-color)] gap-2">
                     <button
-                        onClick={() => setShowMobileFilters(!showMobileFilters)}
+                        onClick={() => {
+                            setShowMobileFilters(!showMobileFilters);
+                            if (!showMobileFilters) setShowMobileSort(false);
+                        }}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-[12px] border text-sm font-semibold transition-colors ${showMobileFilters || filterClass || filterSection ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
                         aria-label="Toggle filters"
                         aria-expanded={showMobileFilters}
@@ -180,7 +183,10 @@ const PaymentHistory = ({ students }) => {
                         Filters {(filterClass || filterSection) && <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]"></span>}
                     </button>
                     <button
-                        onClick={() => setShowMobileSort(!showMobileSort)}
+                        onClick={() => {
+                            setShowMobileSort(!showMobileSort);
+                            if (!showMobileSort) setShowMobileFilters(false);
+                        }}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-[12px] border text-sm font-semibold transition-colors ${showMobileSort ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
                         aria-label="Toggle sort"
                         aria-expanded={showMobileSort}
