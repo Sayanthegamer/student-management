@@ -172,6 +172,9 @@ const PaymentHistory = ({ students }) => {
                     <button
                         onClick={() => setShowMobileFilters(!showMobileFilters)}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-[12px] border text-sm font-semibold transition-colors ${showMobileFilters || filterClass || filterSection ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+                        aria-label="Toggle filters"
+                        aria-expanded={showMobileFilters}
+                        aria-controls="mobile-filters-panel"
                     >
                         <SlidersHorizontal size={16} />
                         Filters {(filterClass || filterSection) && <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]"></span>}
@@ -179,6 +182,9 @@ const PaymentHistory = ({ students }) => {
                     <button
                         onClick={() => setShowMobileSort(!showMobileSort)}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-[12px] border text-sm font-semibold transition-colors ${showMobileSort ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+                        aria-label="Toggle sort"
+                        aria-expanded={showMobileSort}
+                        aria-controls="mobile-sort-panel"
                     >
                         <ArrowDownAZ size={16} />
                         Sort
@@ -187,7 +193,7 @@ const PaymentHistory = ({ students }) => {
 
                 {/* Mobile Filter Modal/Dropdown */}
                 {showMobileFilters && (
-                    <div className="md:hidden p-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] grid grid-cols-2 gap-3 animate-in slide-in-from-top-2">
+                    <div id="mobile-filters-panel" role="region" aria-label="Mobile Filters" className="md:hidden p-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] grid grid-cols-2 gap-3 animate-in slide-in-from-top-2">
                         <select
                             value={filterClass}
                             onChange={(e) => setFilterClass(e.target.value)}
@@ -211,7 +217,7 @@ const PaymentHistory = ({ students }) => {
 
                 {/* Mobile Sort Modal/Dropdown */}
                 {showMobileSort && (
-                    <div className="md:hidden p-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] flex gap-3 animate-in slide-in-from-top-2">
+                    <div id="mobile-sort-panel" role="region" aria-label="Mobile Sort" className="md:hidden p-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] flex gap-3 animate-in slide-in-from-top-2">
                          <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}

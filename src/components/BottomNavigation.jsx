@@ -5,7 +5,7 @@ import { LayoutDashboard, Users, IndianRupee, ClipboardCheck, FileText, Settings
 const mainNavItems = [
   { path: '/overview', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/students', label: 'Students', icon: Users },
-  { path: '/payment-history', label: 'Fee', icon: IndianRupee },
+  { path: '/payment-history', label: 'Fee History', icon: IndianRupee },
   { path: '/admission', label: 'Admissions', icon: ClipboardCheck },
 ];
 

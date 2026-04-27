@@ -208,6 +208,9 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                              <button
                                 onClick={() => setShowMobileFilters(!showMobileFilters)}
                                 className={`flex items-center justify-center gap-2 py-2 px-3 rounded-[8px] border text-sm font-semibold transition-colors ${showMobileFilters || filterClass || filterSection || filterFeeStatus || showMonthFilter ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+                                aria-label="Toggle filters"
+                                aria-expanded={showMobileFilters}
+                                aria-controls="mobile-filters-panel"
                             >
                                 <SlidersHorizontal size={16} />
                                 {(filterClass || filterSection || filterFeeStatus || showMonthFilter) && <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]"></span>}
@@ -285,7 +288,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
 
                     {/* Mobile Filter Modal/Dropdown */}
                     {showMobileFilters && (
-                        <div className="md:hidden pt-3 border-t border-[var(--border-color)] grid grid-cols-2 gap-3 animate-in slide-in-from-top-2">
+                        <div id="mobile-filters-panel" role="region" aria-label="Mobile Filters" className="md:hidden pt-3 border-t border-[var(--border-color)] grid grid-cols-2 gap-3 animate-in slide-in-from-top-2">
                              <select
                                 value={filterClass}
                                 onChange={(e) => setFilterClass(e.target.value)}
