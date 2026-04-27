@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Zap, Database, ArrowRight, CloudOff, Layers, Activity, Lock, TrendingUp, Cpu } from 'lucide-react';
+import { ShieldCheck, Zap, Database, ArrowRight, CloudOff, Activity, TrendingUp, Cpu } from 'lucide-react';
 
 /**
  * The redesigned initial landing page component for unauthenticated users.
