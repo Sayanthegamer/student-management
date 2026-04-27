@@ -31,7 +31,7 @@ export const sendErrorTelemetry = (context, error) => {
                 keepalive: true
             }).catch(() => {}); // Swallow errors - telemetry must never break app
         }
-    } catch (e) {
+    } catch {
         // Swallow any telemetry errors to ensure app behavior is never affected
     }
 };
