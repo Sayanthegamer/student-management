@@ -139,6 +139,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
  */
 const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [filterFeeStatus, setFilterFeeStatus] = useState('');
@@ -188,83 +189,163 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
 
             <div className="flex flex-col gap-4 md:gap-6 mb-6">
                 {/* Filters */}
-                <div className="flex gap-3 flex-wrap items-center bg-[var(--bg-card)] p-4 rounded-[12px] border border-[var(--border-color)] shadow-sm">
-                    <div className="relative flex-1 min-w-[200px] sm:max-w-xs">
-                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" aria-hidden="true" />
-                        <input
-                            type="text"
-                            placeholder="Search applicants..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            aria-label="Search applicants"
-                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] pl-9 text-sm font-medium placeholder:text-[var(--text-muted)]"
-                        />
-                    </div>
+                <div className="flex flex-col gap-3 bg-[var(--bg-card)] p-4 rounded-[12px] border border-[var(--border-color)] shadow-sm">
+                    <div className="flex gap-3 flex-wrap items-center">
+                        <div className="relative flex-1 min-w-[200px] sm:max-w-xs">
+                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" aria-hidden="true" />
+                            <input
+                                type="text"
+                                placeholder="Search applicants..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                aria-label="Search applicants"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] pl-9 text-sm font-medium placeholder:text-[var(--text-muted)]"
+                            />
+                        </div>
 
-                    <div className="h-6 w-px bg-[var(--border-color)] mx-1 hidden md:block"></div>
+                        {/* Mobile Filter Toggle */}
+                        <div className="md:hidden flex gap-2">
+                             <button
+                                onClick={() => setShowMobileFilters(!showMobileFilters)}
+                                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-[8px] border text-sm font-semibold transition-colors ${showMobileFilters || filterClass || filterSection || filterFeeStatus || showMonthFilter ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+                            >
+                                <SlidersHorizontal size={16} />
+                                {(filterClass || filterSection || filterFeeStatus || showMonthFilter) && <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]"></span>}
+                            </button>
+                        </div>
 
-                    <select
-                        value={filterClass}
-                        onChange={(e) => setFilterClass(e.target.value)}
-                        aria-label="Filter by class"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
-                    >
-                        <option value="">All Classes</option>
-                        {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
-                    </select>
+                        {/* Desktop Filters Row */}
+                        <div className="hidden md:flex items-center gap-3 flex-wrap flex-1">
+                            <div className="h-6 w-px bg-[var(--border-color)] mx-1"></div>
 
-                    <select
-                        value={filterSection}
-                        onChange={(e) => setFilterSection(e.target.value)}
-                        aria-label="Filter by section"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
-                    >
-                        <option value="">All Sections</option>
-                        {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
-                    </select>
+                            <select
+                                value={filterClass}
+                                onChange={(e) => setFilterClass(e.target.value)}
+                                aria-label="Filter by class"
+                                className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
+                            >
+                                <option value="">All Classes</option>
+                                {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
+                            </select>
 
-                    <select
-                        value={filterFeeStatus}
-                        onChange={(e) => setFilterFeeStatus(e.target.value)}
-                        aria-label="Filter by fee status"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
-                    >
-                        <option value="">All Fees</option>
-                        <option value="Paid">Paid</option>
-                        <option value="Pending">Pending</option>
-                    </select>
+                            <select
+                                value={filterSection}
+                                onChange={(e) => setFilterSection(e.target.value)}
+                                aria-label="Filter by section"
+                                className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
+                            >
+                                <option value="">All Sections</option>
+                                {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
+                            </select>
 
-                    <div className="h-10 w-px bg-[var(--border-color)] mx-2 hidden md:block"></div>
+                            <select
+                                value={filterFeeStatus}
+                                onChange={(e) => setFilterFeeStatus(e.target.value)}
+                                aria-label="Filter by fee status"
+                                className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-auto min-w-[140px] text-sm appearance-none cursor-pointer"
+                            >
+                                <option value="">All Fees</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Pending">Pending</option>
+                            </select>
 
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={() => {
-                                setShowMonthFilter(!showMonthFilter);
-                                if (!showMonthFilter && !filterMonth) {
-                                    const now = new Date();
-                                    const yyyy = now.getFullYear();
-                                    const mm = String(now.getMonth() + 1).padStart(2, '0');
-                                    setFilterMonth(`${yyyy}-${mm}`);
-                                }
-                            }}
-                            className={`p-2.5 rounded-[8px] border transition-colors ${showMonthFilter
-                                ? 'bg-[var(--accent-primary)] border-[var(--accent-primary)] text-white'
-                                : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'}`}
-                            title="Filter by Admission Month"
-                            aria-label="Filter by month"
-                        >
-                            <Filter size={18} className="stroke-[2.5px]" />
-                        </button>
+                            <div className="h-10 w-px bg-[var(--border-color)] mx-2"></div>
 
-                        {showMonthFilter && (
-                            <div className="animate-in fade-in slide-in-from-left-2 duration-200">
-                                <CustomMonthPicker
-                                    value={filterMonth}
-                                    onChange={setFilterMonth}
-                                />
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => {
+                                        setShowMonthFilter(!showMonthFilter);
+                                        if (!showMonthFilter && !filterMonth) {
+                                            const now = new Date();
+                                            const yyyy = now.getFullYear();
+                                            const mm = String(now.getMonth() + 1).padStart(2, '0');
+                                            setFilterMonth(`${yyyy}-${mm}`);
+                                        }
+                                    }}
+                                    className={`p-2.5 rounded-[8px] border transition-colors ${showMonthFilter
+                                        ? 'bg-[var(--accent-primary)] border-[var(--accent-primary)] text-white'
+                                        : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'}`}
+                                    title="Filter by Admission Month"
+                                    aria-label="Filter by month"
+                                >
+                                    <Filter size={18} className="stroke-[2.5px]" />
+                                </button>
+
+                                {showMonthFilter && (
+                                    <div className="animate-in fade-in slide-in-from-left-2 duration-200">
+                                        <CustomMonthPicker
+                                            value={filterMonth}
+                                            onChange={setFilterMonth}
+                                        />
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </div>
                     </div>
+
+                    {/* Mobile Filter Modal/Dropdown */}
+                    {showMobileFilters && (
+                        <div className="md:hidden pt-3 border-t border-[var(--border-color)] grid grid-cols-2 gap-3 animate-in slide-in-from-top-2">
+                             <select
+                                value={filterClass}
+                                onChange={(e) => setFilterClass(e.target.value)}
+                                aria-label="Filter by class"
+                                className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer"
+                            >
+                                <option value="">All Classes</option>
+                                {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
+                            </select>
+                            <select
+                                value={filterSection}
+                                onChange={(e) => setFilterSection(e.target.value)}
+                                aria-label="Filter by section"
+                                className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer"
+                            >
+                                <option value="">All Sections</option>
+                                {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
+                            </select>
+                            <select
+                                value={filterFeeStatus}
+                                onChange={(e) => setFilterFeeStatus(e.target.value)}
+                                aria-label="Filter by fee status"
+                                className="bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer"
+                            >
+                                <option value="">All Fees</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+
+                            <div className="flex items-center gap-2">
+                                 <button
+                                    onClick={() => {
+                                        setShowMonthFilter(!showMonthFilter);
+                                        if (!showMonthFilter && !filterMonth) {
+                                            const now = new Date();
+                                            const yyyy = now.getFullYear();
+                                            const mm = String(now.getMonth() + 1).padStart(2, '0');
+                                            setFilterMonth(`${yyyy}-${mm}`);
+                                        }
+                                    }}
+                                    className={`p-2.5 rounded-[8px] border transition-colors h-[42px] w-[42px] flex items-center justify-center shrink-0 ${showMonthFilter
+                                        ? 'bg-[var(--accent-primary)] border-[var(--accent-primary)] text-white'
+                                        : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)]'}`}
+                                    title="Filter by Admission Month"
+                                    aria-label="Filter by month"
+                                >
+                                    <Filter size={18} className="stroke-[2.5px]" />
+                                </button>
+                                {showMonthFilter && (
+                                    <div className="flex-1 overflow-hidden h-[42px] flex items-center">
+                                        <CustomMonthPicker
+                                            value={filterMonth}
+                                            onChange={setFilterMonth}
+                                            compact={true}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 

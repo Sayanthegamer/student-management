@@ -50,17 +50,27 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
 
       <div className="grid grid-cols-2 gap-2 text-xs mb-4">
         <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
-          <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1">Class</p>
+          <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Class</p>
           <p className="text-[var(--text-primary)] font-bold tracking-wider text-xs">{student.class} - {student.section}</p>
         </div>
-        <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
-          <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1">Student ID</p>
-          <p className="text-[var(--text-primary)] font-mono font-semibold text-[10px]">{student.id.slice(0, 8)}</p>
+        <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5 flex flex-col justify-center">
+            <div className="flex items-center gap-1.5 mb-1 text-[var(--text-muted)]">
+                <Clock size={10} />
+                <p className="text-[10px] font-medium tracking-wide">Admitted</p>
+            </div>
+            <p className="text-[var(--text-primary)] font-mono font-semibold text-[10px]">{student.admissionDate || 'N/A'}</p>
         </div>
         {student.parentContact && (
-          <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
-            <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1">Parent Contact</p>
-            <p className="text-[var(--text-primary)] font-mono font-semibold text-xs">{student.parentContact}</p>
+          <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Parent Contact</p>
+              <p className="text-[var(--text-primary)] font-mono font-semibold text-xs">{student.parentContact}</p>
+            </div>
+            {student.feesStatus && (
+               <span className={`text-[9px] font-bold px-2 py-1 rounded-[8px] border ${student.feesStatus === 'Paid' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
+                    Fee {student.feesStatus}
+               </span>
+            )}
           </div>
         )}
       </div>

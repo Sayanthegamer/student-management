@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, FileText, Filter, IndianRupee, ChevronDown, ChevronUp, User } from 'lucide-react';
+import { Search, FileText, Filter, IndianRupee, ChevronDown, ChevronUp, User, SlidersHorizontal, ArrowDownAZ } from 'lucide-react';
 import PaymentHistoryModal from './PaymentHistoryModal';
 import PaymentCard from './PaymentCard';
 
@@ -17,6 +17,8 @@ const PaymentHistory = ({ students }) => {
     const [filterSection, setFilterSection] = useState('');
     const [sortBy, setSortBy] = useState('name');
     const [sortOrder, setSortOrder] = useState('asc');
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [showMobileSort, setShowMobileSort] = useState(false);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState(null);
 
@@ -118,12 +120,14 @@ const PaymentHistory = ({ students }) => {
                     </div>
                 </div>
 
-                <div className="p-4 bg-[var(--bg-card)] border-b border-[var(--border-color)] grid grid-cols-2 md:flex flex-wrap gap-4">
+
+                {/* Desktop Filters */}
+                <div className="hidden md:flex p-4 bg-[var(--bg-card)] border-b border-[var(--border-color)] flex-wrap gap-4">
                     <select
                         value={filterClass}
                         onChange={(e) => setFilterClass(e.target.value)}
                         aria-label="Filter by class"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 md:min-w-[160px]"
+                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 min-w-[160px]"
                     >
                         <option value="">All Classes</option>
                         {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -133,15 +137,15 @@ const PaymentHistory = ({ students }) => {
                         value={filterSection}
                         onChange={(e) => setFilterSection(e.target.value)}
                         aria-label="Filter by section"
-                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 md:min-w-[160px]"
+                        className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1 min-w-[160px]"
                     >
                         <option value="">All Sections</option>
                         {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
                     </select>
 
-                    <div className="h-10 w-px bg-[var(--border-color)] hidden md:block mx-2"></div>
+                    <div className="h-10 w-px bg-[var(--border-color)] mx-2"></div>
 
-                    <div className="col-span-2 md:col-span-1 flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-1">
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
@@ -162,6 +166,71 @@ const PaymentHistory = ({ students }) => {
                         </button>
                     </div>
                 </div>
+
+                {/* Mobile Filter & Sort Bar */}
+                <div className="md:hidden flex p-3 bg-[var(--bg-card)] border-b border-[var(--border-color)] gap-2">
+                    <button
+                        onClick={() => setShowMobileFilters(!showMobileFilters)}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-[12px] border text-sm font-semibold transition-colors ${showMobileFilters || filterClass || filterSection ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+                    >
+                        <SlidersHorizontal size={16} />
+                        Filters {(filterClass || filterSection) && <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]"></span>}
+                    </button>
+                    <button
+                        onClick={() => setShowMobileSort(!showMobileSort)}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-[12px] border text-sm font-semibold transition-colors ${showMobileSort ? 'bg-[var(--accent-light)] border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--bg-main)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+                    >
+                        <ArrowDownAZ size={16} />
+                        Sort
+                    </button>
+                </div>
+
+                {/* Mobile Filter Modal/Dropdown */}
+                {showMobileFilters && (
+                    <div className="md:hidden p-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] grid grid-cols-2 gap-3 animate-in slide-in-from-top-2">
+                        <select
+                            value={filterClass}
+                            onChange={(e) => setFilterClass(e.target.value)}
+                            aria-label="Filter by class"
+                            className="bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-2.5 rounded-[12px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer w-full"
+                        >
+                            <option value="">All Classes</option>
+                            {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
+                        </select>
+                        <select
+                            value={filterSection}
+                            onChange={(e) => setFilterSection(e.target.value)}
+                            aria-label="Filter by section"
+                            className="bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-2.5 rounded-[12px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer w-full"
+                        >
+                            <option value="">All Sections</option>
+                            {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
+                        </select>
+                    </div>
+                )}
+
+                {/* Mobile Sort Modal/Dropdown */}
+                {showMobileSort && (
+                    <div className="md:hidden p-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] flex gap-3 animate-in slide-in-from-top-2">
+                         <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            aria-label="Sort by"
+                            className="bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-2.5 rounded-[12px] text-sm text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer flex-1"
+                        >
+                            <option value="name">Name</option>
+                            <option value="rollNo">Roll No</option>
+                            <option value="class">Class</option>
+                        </select>
+                        <button
+                            onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                            className="p-2.5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors min-h-[42px] min-w-[42px] flex items-center justify-center cursor-pointer shrink-0"
+                            aria-label={`Set sort order to ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
+                        >
+                            {sortOrder === 'asc' ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
+                        </button>
+                    </div>
+                )}
 
                 {/* Mobile Card View */}
                 <div className="md:hidden pt-4 pb-4 space-y-4">
