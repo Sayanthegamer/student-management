@@ -6,7 +6,10 @@ export const sendErrorTelemetry = (context, error) => {
     // We just safely stringify or serialize what we need for logging out of band.
     const _payload = {
         context,
-        message: error?.message || String(error),
+        message: 'client_error_redacted',
+        errorType: error?.name || typeof error,
+        errorCode: error?.code || null,
+        hasStack: Boolean(error?.stack),
         timestamp: new Date().toISOString()
     };
 

@@ -32,14 +32,17 @@ const ForgotPassword = () => {
                 redirectTo,
             });
 
-            if (error) throw error;
+            if (error) {
+                // Send telemetry for monitoring, but don't expose to client
+                sendErrorTelemetry('ForgotPassword:resetPasswordForEmail', error);
+            }
 
+            // Security: To prevent user enumeration, always show success regardless of outcome
             setStatus('success');
             setMessage(RESET_CONFIRMATION);
         } catch (error) {
             // Security: Do not expose raw internal error messages. Use a generic message.
             // To prevent user enumeration, always pretend it succeeded.
-            console.log("Password reset requested");
             sendErrorTelemetry('ForgotPassword:resetPasswordForEmail', error);
             setStatus('success');
             setMessage(RESET_CONFIRMATION);
