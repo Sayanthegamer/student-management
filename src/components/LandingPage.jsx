@@ -152,7 +152,7 @@ const LandingPage = () => {
 
           {/* Visual Side */}
           <div className="w-full md:w-1/2 rounded-[32px] overflow-hidden aspect-square md:aspect-[4/3] relative border border-[var(--border-highlight)] shadow-2xl shadow-[var(--accent-primary)]/10">
-            <img
+            <img loading="lazy" decoding="async"
               alt="High-tech server room visualization"
               className="w-full h-full object-cover"
               src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80"
@@ -237,9 +237,9 @@ const LandingPage = () => {
               </p>
            </div>
            <div className="flex gap-6 text-sm">
-              <span className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer">Security</span>
-              <span className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer">Infrastructure</span>
-              <span className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer">Docs</span>
+              <a href="#" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded">Security</a>
+              <a href="#" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded">Infrastructure</a>
+              <a href="#" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded">Docs</a>
            </div>
         </div>
       </footer>
