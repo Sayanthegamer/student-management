@@ -71,11 +71,10 @@ const PaymentHistory = ({ students }) => {
 
     const getLastPaymentDate = (student) => {
         if (!student.feeHistory || student.feeHistory.length === 0) return 'N/A';
-        // Optimize: Use reduce to find max date in single pass (O(n) instead of O(n log n) sort)
-        const maxDate = student.feeHistory.reduce((latest, payment) =>
-            payment.date > latest ? payment.date : latest
-        , student.feeHistory[0].date);
-        return new Date(maxDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+        // Optimize: Find max date in O(n) instead of sorting O(n log n)
+        const maxDate = student.feeHistory.reduce((max, p) => p.date > max ? p.date : max, student.feeHistory[0].date);
+        const [year, month, day] = maxDate.split('-');
+        return new Date(year, month - 1, day).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
     };
 
     return (
