@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Zap, Database, ArrowRight, CloudOff, Activity, TrendingUp, Cpu } from 'lucide-react';
+import { ShieldCheck, Zap, Database, ArrowRight, CloudOff, Layers, Activity, Lock, TrendingUp, Cpu } from 'lucide-react';
 
 /**
  * The redesigned initial landing page component for unauthenticated users.
@@ -10,9 +10,18 @@ import { ShieldCheck, Zap, Database, ArrowRight, CloudOff, Activity, TrendingUp,
  */
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handler = (e) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
 
   const handleLearnMoreScroll = () => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const behavior = prefersReducedMotion ? 'auto' : 'smooth';
     document.getElementById('features')?.scrollIntoView({ behavior });
   };
@@ -48,7 +57,7 @@ const LandingPage = () => {
       <main className="flex-1 w-full flex flex-col items-center text-center px-6 pt-20 md:pt-32 pb-16 z-10 relative">
         <div 
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-light)] text-[var(--accent-primary)] text-sm font-semibold mb-8 border border-[var(--accent-primary)]/10 fade-in-up"
-          style={{
+          style={prefersReducedMotion ? {} : {
             backgroundImage: 'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.08) 50%, transparent 100%)',
             backgroundSize: '200% 100%',
             animation: 'fade-in-up-anim 0.4s var(--spring-bounce) both, shimmer-sweep 3s ease-in-out infinite 1s',
@@ -56,14 +65,14 @@ const LandingPage = () => {
         >
           <span 
             className="w-2 h-2 rounded-full bg-[var(--accent-primary)]" 
-            style={{ animation: 'gentle-pulse 2s ease-in-out infinite' }}
+            style={prefersReducedMotion ? {} : { animation: 'gentle-pulse 2s ease-in-out infinite' }}
           />
-          System Status: Optimal
+          Kinetic Vault Architecture
         </div>
         
         <h1 
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-[var(--text-primary)] tracking-tight max-w-4xl mb-6 fade-in-up"
-          style={{ animationDelay: '0.08s' }}
+          style={prefersReducedMotion ? {} : { animationDelay: '0.08s' }}
         >
           Lightning Fast <br className="hidden md:block"/>
           <span className="text-[var(--accent-primary)] relative">
@@ -74,12 +83,12 @@ const LandingPage = () => {
         
         <p 
           className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mb-10 fade-in-up" 
-          style={{ animationDelay: '0.16s' }}
+          style={prefersReducedMotion ? {} : { animationDelay: '0.16s' }}
         >
           Engineered for high-velocity data processing. Experience zero-lag student management with full offline capabilities and dual-layer reliability.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto fade-in-up" style={{ animationDelay: '0.24s' }}>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto fade-in-up" style={prefersReducedMotion ? {} : { animationDelay: '0.24s' }}>
           <button 
             onClick={() => navigate('/login')}
             className="group inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-300 border border-transparent rounded-[12px] bg-[var(--accent-primary)] text-white hover:bg-[var(--accent-hover)] hover:-translate-y-1 shadow-lg shadow-[var(--accent-primary)]/25 hover:shadow-xl hover:shadow-[var(--accent-primary)]/35 w-full sm:w-auto active:scale-[0.97]"
@@ -235,11 +244,6 @@ const LandingPage = () => {
               <p className="text-[var(--text-muted)] text-sm">
                  &copy; {new Date().getFullYear()} Student Manager Pro. Powered by Kinetic Vault Architecture.
               </p>
-           </div>
-           <div className="flex gap-6 text-sm">
-              <a href="/security" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded">Security</a>
-              <a href="/infrastructure" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded">Infrastructure</a>
-              <a href="/docs" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded">Docs</a>
            </div>
         </div>
       </footer>
