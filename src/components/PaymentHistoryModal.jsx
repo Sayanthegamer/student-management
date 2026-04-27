@@ -16,7 +16,8 @@ const PaymentHistoryModal = ({ student, onClose }) => {
     const dialogRef = useRef(null);
     const previousActiveElementRef = useRef(null);
 
-    const sortedHistory = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Optimize: Use string comparison (localeCompare) instead of new Date() instantiation in sort loops
+    const sortedHistory = [...history].sort((a, b) => b.date.localeCompare(a.date));
 
     const handleClose = () => {
         setIsClosing(true);

@@ -17,8 +17,10 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
 
   const getLastPaymentDate = (student) => {
     if (!student.feeHistory || student.feeHistory.length === 0) return 'N/A';
-    const sorted = [...student.feeHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
-    return new Date(sorted[0].date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+    // Optimize: Find max date in O(n) instead of sorting O(n log n)
+    const maxDate = student.feeHistory.reduce((max, p) => p.date > max ? p.date : max, student.feeHistory[0].date);
+    const [year, month, day] = maxDate.split('-');
+    return new Date(year, month - 1, day).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
   return (

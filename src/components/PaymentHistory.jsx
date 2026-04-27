@@ -71,8 +71,22 @@ const PaymentHistory = ({ students }) => {
 
     const getLastPaymentDate = (student) => {
         if (!student.feeHistory || student.feeHistory.length === 0) return 'N/A';
-        const sorted = [...student.feeHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
-        return new Date(sorted[0].date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+
+        // Filter to only valid date entries
+        const validEntries = student.feeHistory.filter(p =>
+            typeof p.date === 'string' && !isNaN(Date.parse(p.date))
+        );
+
+        if (validEntries.length === 0) return 'N/A';
+
+        // Optimize: Find max date in O(n) instead of sorting O(n log n)
+        const maxDate = validEntries.reduce((max, p) => p.date > max ? p.date : max, validEntries[0].date);
+
+        // Safely parse and format the date
+        const parsedDate = new Date(maxDate);
+        if (isNaN(parsedDate.getTime())) return 'N/A';
+
+        return parsedDate.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
     };
 
     return (
