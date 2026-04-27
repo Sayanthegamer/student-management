@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { sendErrorTelemetry } from '../utils/telemetry';
 
 /**
  * Component for handling the "Forgot Password" flow, allowing users to request a password reset email.
@@ -38,7 +39,8 @@ const ForgotPassword = () => {
         } catch (error) {
             // Security: Do not expose raw internal error messages. Use a generic message.
             // To prevent user enumeration, always pretend it succeeded.
-            console.error('Password reset request error:', error);
+            console.log("Password reset requested");
+            sendErrorTelemetry('ForgotPassword:resetPasswordForEmail', error);
             setStatus('success');
             setMessage(RESET_CONFIRMATION);
         } finally {
