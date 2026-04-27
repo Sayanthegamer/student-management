@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { LogIn, UserPlus, AlertCircle, Loader2, GraduationCap, ShieldCheck, Mail, Lock } from 'lucide-react';
+import { sendErrorTelemetry } from '../utils/telemetry';
 
 /**
  * Component for user authentication, handling both login and signup flows.
@@ -36,7 +37,10 @@ export default function Login() {
         }
       }
     } catch (err) {
-      setError(err.message);
+      // Security: Do not expose raw internal error messages. Use a generic message.
+      console.error('Authentication error occurred');
+      sendErrorTelemetry('Login.handleSubmit', err);
+      setError(isLogin ? 'Invalid email or password.' : 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -106,7 +110,7 @@ export default function Login() {
                   id="password"
                   type="password"
                   required
-                  minLength={6}
+                  minLength={isLogin ? undefined : 8}
                   className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-white focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
                   placeholder="••••••••"
                   value={password}
@@ -114,7 +118,7 @@ export default function Login() {
                 />
               </div>
               {!isLogin && (
-                <p className="mt-2 text-[10px] text-[var(--text-muted)] font-mono tracking-wide uppercase">Minimum 6 characters</p>
+                <p className="mt-2 text-[10px] text-[var(--text-muted)] font-mono tracking-wide uppercase">Minimum 8 characters</p>
               )}
             </div>
 

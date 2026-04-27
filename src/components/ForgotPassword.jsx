@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { sendErrorTelemetry } from '../utils/telemetry';
 
 /**
  * Component for handling the "Forgot Password" flow, allowing users to request a password reset email.
@@ -9,6 +10,8 @@ import { Mail, ArrowLeft, Loader2, CheckCircle, AlertCircle } from 'lucide-react
  * @returns {JSX.Element} The rendered forgot password component.
  */
 const ForgotPassword = () => {
+    const RESET_CONFIRMATION = 'If an account exists with this email, a password reset link has been sent.';
+
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(null); // 'success' | 'error' | null
@@ -29,13 +32,20 @@ const ForgotPassword = () => {
                 redirectTo,
             });
 
-            if (error) throw error;
+            if (error) {
+                // Send telemetry for monitoring, but don't expose to client
+                sendErrorTelemetry('ForgotPassword:resetPasswordForEmail', error);
+            }
 
+            // Security: To prevent user enumeration, always show success regardless of outcome
             setStatus('success');
-            setMessage('Check your email for the password reset link.');
+            setMessage(RESET_CONFIRMATION);
         } catch (error) {
-            setStatus('error');
-            setMessage(error.message);
+            // Security: Do not expose raw internal error messages. Use a generic message.
+            // To prevent user enumeration, always pretend it succeeded.
+            sendErrorTelemetry('ForgotPassword:resetPasswordForEmail', error);
+            setStatus('success');
+            setMessage(RESET_CONFIRMATION);
         } finally {
             setLoading(false);
         }
