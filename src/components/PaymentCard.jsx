@@ -17,7 +17,8 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
 
   const getLastPaymentDate = (student) => {
     if (!student.feeHistory || student.feeHistory.length === 0) return 'N/A';
-    const sorted = [...student.feeHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Optimize: Use string comparison (localeCompare) instead of new Date() instantiation in sort loops
+    const sorted = [...student.feeHistory].sort((a, b) => b.date.localeCompare(a.date));
     return new Date(sorted[0].date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
