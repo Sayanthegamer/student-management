@@ -132,7 +132,7 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
     };
 
     return (
-        <div className="max-w-[1600px] mx-auto p-4 md:px-8 md:py-6 h-full flex flex-col">
+        <div className="max-w-[1600px] mx-auto p-4 md:px-8 md:py-6 flex flex-col min-h-full">
             <div className="flex items-center justify-between mb-4 mt-2">
                 <h2 className="text-[var(--text-primary)] text-2xl font-bold tracking-tight flex items-center gap-2">
                     <ArrowRight className="text-[var(--accent-primary)]" size={28} />
