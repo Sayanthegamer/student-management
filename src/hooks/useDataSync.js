@@ -29,10 +29,14 @@ export const useDataSync = () => {
   const [syncError, setSyncError] = useState(null);
   const isSyncingRef = useRef(false);
   const pendingSyncRef = useRef(false);
+  const latestDoFetchRef = useRef(null);
 
   // Reusable fetch from cloud — used by initial load AND forceSync
   const fetchFromCloud = useCallback(async () => {
     const doFetch = async () => {
+        // Update ref to always point to the latest doFetch with current closure
+        latestDoFetchRef.current = doFetch;
+
         if (!user || !supabase) {
           setStudents(getStudents());
           setSyncError(null);
@@ -70,7 +74,7 @@ export const useDataSync = () => {
           isSyncingRef.current = false;
           if (pendingSyncRef.current) {
               pendingSyncRef.current = false;
-              doFetch();
+              latestDoFetchRef.current && latestDoFetchRef.current();
           }
         }
     };
