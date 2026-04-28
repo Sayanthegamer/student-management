@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Search, FileText, AlertTriangle, X } from 'lucide-react';
 import Pagination from './Pagination';
@@ -6,6 +6,7 @@ import CustomDatePicker from './CustomDatePicker';
 import CertificateCard from './CertificateCard';
 import { useToast } from '../context/ToastContext';
 import { logActivity } from '../utils/storage';
+import useDebounce from '../hooks/useDebounce';
 
 /**
  * Component for managing transfer certificates, allowing generation and tracking of TCs.
@@ -20,6 +21,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     const { showToast } = useToast();
     const [view, setView] = useState('active'); // 'active' or 'transferred'
     const [searchTerm, setSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [sortBy, setSortBy] = useState('name'); // name, rollNo
@@ -39,15 +41,21 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     });
 
     // Reset pagination when filters change
-    React.useEffect(() => {
+    useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, filterClass, filterSection, view]);
 
     // Get unique classes and sections for filters
-    const classes = [...new Set(students.map(s => s.class))].sort();
-    const sections = [...new Set(students.map(s => s.section))].sort();
+    const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
+    const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
 
-    const filteredStudents = students
+    const filteredStudents = useMemo(() => {
+        // Calculate retention limit once outside the loop for performance
+        const retentionLimit = new Date();
+        retentionLimit.setMonth(retentionLimit.getMonth() - 3);
+        retentionLimit.setHours(0, 0, 0, 0);
+
+        return students
         .filter(student => {
             // Filter based on View Mode
             if (view === 'active') {
@@ -59,21 +67,36 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
 
                 // 3 Months Retention Policy: Only show students who left in the last 3 months
                 if (student.tcDetails?.dateOfLeaving) {
-                    const leavingDate = new Date(student.tcDetails.dateOfLeaving);
-                    const retentionLimit = new Date();
-                    retentionLimit.setMonth(retentionLimit.getMonth() - 3);
+                    // Strict validation for YYYY-MM-DD
+                    if (!/^\d{4}-\d{2}-\d{2}$/.test(student.tcDetails.dateOfLeaving)) return false;
 
-                    // Reset time part for accurate date comparison
+                    const parts = student.tcDetails.dateOfLeaving.split('-');
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10);
+                    const day = parseInt(parts[2], 10);
+
+                    if (isNaN(year) || isNaN(month) || isNaN(day)) return false;
+
+                    const leavingDate = new Date(year, month - 1, day);
+
+                    // Validate that JS hasn't rolled over the date (e.g. Feb 30 -> Mar 1)
+                    if (leavingDate.getFullYear() !== year ||
+                        leavingDate.getMonth() + 1 !== month ||
+                        leavingDate.getDate() !== day) {
+                        return false;
+                    }
+
                     leavingDate.setHours(0, 0, 0, 0);
-                    retentionLimit.setHours(0, 0, 0, 0);
 
                     if (leavingDate < retentionLimit) return false;
+                } else {
+                    return false; // Filter out if date is missing
                 }
             }
 
-            const matchesSearch = student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                student.rollNo?.includes(searchTerm) ||
-                student.class?.includes(searchTerm);
+            const matchesSearch = student.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+                String(student.rollNo || '').toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+                String(student.class || '').toLowerCase().includes(debouncedSearchTerm.toLowerCase());
             const matchesClass = filterClass ? student.class === filterClass : true;
             const matchesSection = filterSection ? student.section === filterSection : true;
 
@@ -96,6 +119,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
             if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
             return 0;
         });
+    }, [students, view, debouncedSearchTerm, filterClass, filterSection, sortBy, sortOrder]);
 
     // Calculate pagination
     const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);

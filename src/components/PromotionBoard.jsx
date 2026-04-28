@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, ArrowRight, UserCheck, CreditCard, ChevronRight } from 'lucide-react';
 import { CLASS_ORDER, getNextClass, PROMOTION_FEES, CLASS_FEES } from '../utils/constants';
 import { logActivity } from '../utils/storage';
+import useDebounce from '../hooks/useDebounce';
 
 /**
  * @typedef {Object} Student
@@ -32,35 +33,37 @@ import { logActivity } from '../utils/storage';
  */
 const PromotionBoard = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [selectedStudents, setSelectedStudents] = useState(new Set());
     const [promotionFee, setPromotionFee] = useState('');
     
     // Only show Confirmed students
-    const eligibleStudents = students.filter(s => s.admissionStatus === 'Confirmed');
+    const eligibleStudents = useMemo(() => students.filter(s => s.admissionStatus === 'Confirmed'), [students]);
 
     // Get unique classes and sections for filters
-    const classes = [...new Set(eligibleStudents.map(s => s.class))].sort((a, b) => {
+    const classes = useMemo(() => [...new Set(eligibleStudents.map(s => s.class))].sort((a, b) => {
         const idxA = CLASS_ORDER.indexOf(a);
         const idxB = CLASS_ORDER.indexOf(b);
         return (idxA !== -1 && idxB !== -1) ? idxA - idxB : a.localeCompare(b);
-    });
-    const sections = [...new Set(eligibleStudents.map(s => s.section))].sort();
+    }), [eligibleStudents]);
 
-    const filteredStudents = eligibleStudents.filter(student => {
-        const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                              student.rollNo.includes(searchTerm);
+    const sections = useMemo(() => [...new Set(eligibleStudents.map(s => s.section))].sort(), [eligibleStudents]);
+
+    const filteredStudents = useMemo(() => eligibleStudents.filter(student => {
+        const matchesSearch = student.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+                              student.rollNo.includes(debouncedSearchTerm);
         const matchesClass = filterClass ? student.class === filterClass : true;
         const matchesSection = filterSection ? student.section === filterSection : true;
         return matchesSearch && matchesClass && matchesSection;
-    });
+    }), [eligibleStudents, debouncedSearchTerm, filterClass, filterSection]);
 
     const nextClass = filterClass ? getNextClass(filterClass) : null;
     const canPromote = selectedStudents.size > 0 && nextClass;
 
     // Default promotion fee when class changes
-    React.useEffect(() => {
+    useEffect(() => {
         const next = getNextClass(filterClass);
         if (next) {
             setPromotionFee(PROMOTION_FEES[next] || '');
@@ -70,7 +73,7 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
     }, [filterClass]);
 
     // Deselect all when class or section filter changes
-    React.useEffect(() => {
+    useEffect(() => {
         setSelectedStudents(new Set());
     }, [filterClass, filterSection]);
 

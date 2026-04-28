@@ -4,6 +4,7 @@ import FeePaymentModal from './FeePaymentModal';
 import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
 import StudentCard from './StudentCard';
+import useDebounce from '../hooks/useDebounce';
 
 /**
  * Calculates the fee status for a student for a specific month.
@@ -33,7 +34,7 @@ const getFeeStatusForMonth = (student, month) => {
  */
 const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterMonth, setFilterMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
@@ -43,14 +44,6 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [selectedStudentForFee, setSelectedStudentForFee] = useState(null);
     const [showFilters, setShowFilters] = useState(false);
-
-    // Debounce search term
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearchTerm(searchTerm);
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
 
     // Get unique classes and sections for filters
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);

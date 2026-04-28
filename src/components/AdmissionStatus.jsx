@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical, SlidersHorizontal } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
 import AdmissionCard from './AdmissionCard';
 import { statusHexColors } from '../utils/statusColors';
 import { logActivity } from '../utils/storage';
+import useDebounce from '../hooks/useDebounce';
 
 /**
  * A sub-component to display the admission status card within the kanban board.
@@ -139,6 +140,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
  */
 const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
@@ -147,12 +149,12 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [showMonthFilter, setShowMonthFilter] = useState(false);
 
     // Get unique classes and sections
-    const classes = [...new Set(students.map(s => s.class))].sort();
-    const sections = [...new Set(students.map(s => s.section))].sort();
+    const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
+    const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
 
-    const filteredStudents = students.filter(student => {
-        const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.rollNo.includes(searchTerm);
+    const filteredStudents = useMemo(() => students.filter(student => {
+        const matchesSearch = student.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+            student.rollNo.includes(debouncedSearchTerm);
         const matchesClass = filterClass ? student.class === filterClass : true;
         const matchesSection = filterSection ? student.section === filterSection : true;
         const matchesFeeStatus = filterFeeStatus ? student.feesStatus === filterFeeStatus : true;
@@ -163,12 +165,12 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
         }
 
         return matchesSearch && matchesClass && matchesSection && matchesFeeStatus && matchesMonth;
-    });
+    }), [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, showMonthFilter, filterMonth]);
 
-    const confirmed = filteredStudents.filter(s => s.admissionStatus === 'Confirmed');
-    const provisional = filteredStudents.filter(s => s.admissionStatus === 'Provisional');
-    const cancelled = filteredStudents.filter(s => s.admissionStatus === 'Cancelled');
-    const transferred = filteredStudents.filter(s => s.admissionStatus === 'Transferred');
+    const confirmed = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Confirmed'), [filteredStudents]);
+    const provisional = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Provisional'), [filteredStudents]);
+    const cancelled = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Cancelled'), [filteredStudents]);
+    const transferred = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Transferred'), [filteredStudents]);
 
     const handleMoveStudent = (student, newStatus) => {
         if (window.confirm(`Are you sure you want to change status to ${newStatus}?`)) {
