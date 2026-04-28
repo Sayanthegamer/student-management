@@ -67,17 +67,30 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
 
                 // 3 Months Retention Policy: Only show students who left in the last 3 months
                 if (student.tcDetails?.dateOfLeaving) {
+                    // Strict validation for YYYY-MM-DD
+                    if (!/^\d{4}-\d{2}-\d{2}$/.test(student.tcDetails.dateOfLeaving)) return false;
+
                     const parts = student.tcDetails.dateOfLeaving.split('-');
-                    if (parts.length === 3) {
-                        const year = parseInt(parts[0], 10);
-                        const month = parseInt(parts[1], 10);
-                        const day = parseInt(parts[2], 10);
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10);
+                    const day = parseInt(parts[2], 10);
 
-                        const leavingDate = new Date(year, month - 1, day);
-                        leavingDate.setHours(0, 0, 0, 0);
+                    if (isNaN(year) || isNaN(month) || isNaN(day)) return false;
 
-                        if (leavingDate < retentionLimit) return false;
+                    const leavingDate = new Date(year, month - 1, day);
+
+                    // Validate that JS hasn't rolled over the date (e.g. Feb 30 -> Mar 1)
+                    if (leavingDate.getFullYear() !== year ||
+                        leavingDate.getMonth() + 1 !== month ||
+                        leavingDate.getDate() !== day) {
+                        return false;
                     }
+
+                    leavingDate.setHours(0, 0, 0, 0);
+
+                    if (leavingDate < retentionLimit) return false;
+                } else {
+                    return false; // Filter out if date is missing
                 }
             }
 

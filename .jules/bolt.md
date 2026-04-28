@@ -7,3 +7,7 @@
 
 **Learning:** Instantiating `new Date()` inside a large array mapping or `.filter()` loop is computationally expensive. For operations like calculating a constant retention date, it degrades performance.
 **Action:** When filtering or comparing dates against a dynamic limit (e.g., "3 months ago"), always instantiate the limit date `new Date()` *outside* of the loop and pass the reference in, ensuring it only computes once per render.
+
+## 2024-05-18 - [Date Parsing and Validation]
+**Learning:** Parsing `YYYY-MM-DD` strings directly with `new Date(string)` treats them as UTC, leading to timezone shifts when interacting with local dates. Additionally, JS `Date` silently rolls over invalid dates (like `2024-02-30` to `2024-03-01`), bypassing simple validation.
+**Action:** Always strictly validate `YYYY-MM-DD` string format using a regex (`/^\d{4}-\d{2}-\d{2}$/`). Parse the components and construct local dates explicitly via `new Date(year, month - 1, day)`. To ensure the date is valid, check that the resulting `.getFullYear()`, `.getMonth() + 1`, and `.getDate()` strictly match the parsed parts. Invalid dates should be handled defensively (e.g., filtered out).
