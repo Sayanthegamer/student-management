@@ -95,8 +95,8 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
             }
 
             const matchesSearch = student.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-                student.rollNo?.includes(debouncedSearchTerm) ||
-                student.class?.includes(debouncedSearchTerm);
+                String(student.rollNo || '').toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+                String(student.class || '').toLowerCase().includes(debouncedSearchTerm.toLowerCase());
             const matchesClass = filterClass ? student.class === filterClass : true;
             const matchesSection = filterSection ? student.section === filterSection : true;
 
