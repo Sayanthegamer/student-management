@@ -65,6 +65,8 @@ export const useDataSync = () => {
       setTimeout(() => {
         setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
       }, 5000);
+    } finally {
+      isSyncingRef.current = false;
     }
   }, [user]);
 
