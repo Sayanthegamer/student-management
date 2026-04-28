@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent as localUpdateStudent, deleteStudent as localDeleteStudent, addFeePayment as localAddFeePayment } from '../utils/storage';
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
@@ -27,15 +27,19 @@ export const useDataSync = () => {
   const [students, setStudents] = useState(getStudents());
   const [syncStatus, setSyncStatus] = useState('synced'); // 'synced', 'syncing', 'error', 'unsaved'
   const [syncError, setSyncError] = useState(null);
+  const isSyncingRef = useRef(false);
 
   // Reusable fetch from cloud — used by initial load AND forceSync
   const fetchFromCloud = useCallback(async () => {
+    if (isSyncingRef.current) return;
+
     if (!user || !supabase) {
       setStudents(getStudents());
       setSyncStatus('synced');
       return;
     }
 
+    isSyncingRef.current = true;
     setSyncStatus('syncing');
     setSyncError(null);
     try {
