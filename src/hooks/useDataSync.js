@@ -35,6 +35,7 @@ export const useDataSync = () => {
     const doFetch = async () => {
         if (!user || !supabase) {
           setStudents(getStudents());
+          setSyncError(null);
           setSyncStatus('synced');
           return;
         }
