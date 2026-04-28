@@ -28,46 +28,58 @@ export const useDataSync = () => {
   const [syncStatus, setSyncStatus] = useState('synced'); // 'synced', 'syncing', 'error', 'unsaved'
   const [syncError, setSyncError] = useState(null);
   const isSyncingRef = useRef(false);
+  const pendingSyncRef = useRef(false);
 
   // Reusable fetch from cloud — used by initial load AND forceSync
   const fetchFromCloud = useCallback(async () => {
-    if (isSyncingRef.current) return;
+    const doFetch = async () => {
+        if (!user || !supabase) {
+          setStudents(getStudents());
+          setSyncStatus('synced');
+          return;
+        }
 
-    if (!user || !supabase) {
-      setStudents(getStudents());
-      setSyncStatus('synced');
-      return;
+        isSyncingRef.current = true;
+        setSyncStatus('syncing');
+        setSyncError(null);
+        try {
+          const { data: studentsData, error: sError } = await supabase.from('students').select('*');
+          if (sError) throw sError;
+
+          const { data: feesData, error: fError } = await supabase.from('fees').select('*');
+          if (fError) throw fError;
+
+          // "Online Source is Truth" - Always overwrite local with cloud data if connection is successful.
+          const merged = denormalizeStudents(studentsData, feesData);
+          saveStudents(merged);
+          setStudents(merged);
+          setSyncStatus('synced');
+        } catch (err) {
+          console.error("Sync error:", err);
+          setSyncStatus('error');
+          setSyncError({
+            message: "Failed to load data from server. Please check your connection.",
+            details: err
+          });
+
+          setTimeout(() => {
+            setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+          }, 5000);
+        } finally {
+          isSyncingRef.current = false;
+          if (pendingSyncRef.current) {
+              pendingSyncRef.current = false;
+              doFetch();
+          }
+        }
+    };
+
+    if (isSyncingRef.current) {
+        pendingSyncRef.current = true;
+        return;
     }
 
-    isSyncingRef.current = true;
-    setSyncStatus('syncing');
-    setSyncError(null);
-    try {
-      const { data: studentsData, error: sError } = await supabase.from('students').select('*');
-      if (sError) throw sError;
-
-      const { data: feesData, error: fError } = await supabase.from('fees').select('*');
-      if (fError) throw fError;
-
-      // "Online Source is Truth" - Always overwrite local with cloud data if connection is successful.
-      const merged = denormalizeStudents(studentsData, feesData);
-      saveStudents(merged);
-      setStudents(merged);
-      setSyncStatus('synced');
-    } catch (err) {
-      console.error("Sync error:", err);
-      setSyncStatus('error');
-      setSyncError({
-        message: "Failed to load data from server. Please check your connection.",
-        details: err
-      });
-
-      setTimeout(() => {
-        setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
-      }, 5000);
-    } finally {
-      isSyncingRef.current = false;
-    }
+    return doFetch();
   }, [user]);
 
   // Load from Supabase on mount/auth change
