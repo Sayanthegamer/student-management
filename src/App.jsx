@@ -168,7 +168,14 @@ function App() {
                 <div className="flex items-center justify-between w-full">
                   <h1 className="text-3xl font-semibold text-[var(--text-primary)] tracking-tight">Student Manager Pro</h1>
                   <div className="flex items-center gap-3">
-                     <button onClick={forceSync} className="btn btn-secondary">Sync Data</button>
+                     <button
+                        onClick={forceSync}
+                        className={`btn btn-secondary ${syncStatus === 'syncing' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={syncStatus === 'syncing'}
+                        aria-label="Sync data with cloud"
+                     >
+                         Sync Data
+                     </button>
                      <button onClick={handleAddClick} className="btn btn-primary">Add Student</button>
                   </div>
                 </div>
