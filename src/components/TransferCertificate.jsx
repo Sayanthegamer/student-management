@@ -43,7 +43,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     // Reset pagination when filters change
     useEffect(() => {
         setCurrentPage(1);
-    }, [debouncedSearchTerm, filterClass, filterSection, view]);
+    }, [searchTerm, filterClass, filterSection, view]);
 
     // Get unique classes and sections for filters
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
