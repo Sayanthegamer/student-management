@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical, SlidersHorizontal } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
 import AdmissionCard from './AdmissionCard';
 import { statusHexColors } from '../utils/statusColors';
 import { logActivity } from '../utils/storage';
+import useDebounce from '../hooks/useDebounce';
 
 /**
  * A sub-component to display the admission status card within the kanban board.
@@ -139,21 +140,13 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
  */
 const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [filterFeeStatus, setFilterFeeStatus] = useState('');
     const [filterMonth, setFilterMonth] = useState(''); // Empty = All Time
     const [showMonthFilter, setShowMonthFilter] = useState(false);
-
-    // Debounce search term
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearchTerm(searchTerm);
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
 
     // Get unique classes and sections
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);

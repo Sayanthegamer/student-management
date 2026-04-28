@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, ArrowRight, UserCheck, CreditCard, ChevronRight } from 'lucide-react';
 import { CLASS_ORDER, getNextClass, PROMOTION_FEES, CLASS_FEES } from '../utils/constants';
 import { logActivity } from '../utils/storage';
+import useDebounce from '../hooks/useDebounce';
 
 /**
  * @typedef {Object} Student
@@ -32,20 +33,12 @@ import { logActivity } from '../utils/storage';
  */
 const PromotionBoard = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [selectedStudents, setSelectedStudents] = useState(new Set());
     const [promotionFee, setPromotionFee] = useState('');
     
-    // Debounce search term
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearchTerm(searchTerm);
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
-
     // Only show Confirmed students
     const eligibleStudents = useMemo(() => students.filter(s => s.admissionStatus === 'Confirmed'), [students]);
 

@@ -6,6 +6,7 @@ import CustomDatePicker from './CustomDatePicker';
 import CertificateCard from './CertificateCard';
 import { useToast } from '../context/ToastContext';
 import { logActivity } from '../utils/storage';
+import useDebounce from '../hooks/useDebounce';
 
 /**
  * Component for managing transfer certificates, allowing generation and tracking of TCs.
@@ -20,19 +21,11 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     const { showToast } = useToast();
     const [view, setView] = useState('active'); // 'active' or 'transferred'
     const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [sortBy, setSortBy] = useState('name'); // name, rollNo
     const [sortOrder, setSortOrder] = useState('asc'); // asc, desc
-
-    // Debounce search term
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearchTerm(searchTerm);
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
 
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
@@ -74,10 +67,17 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
 
                 // 3 Months Retention Policy: Only show students who left in the last 3 months
                 if (student.tcDetails?.dateOfLeaving) {
-                    const leavingDate = new Date(student.tcDetails.dateOfLeaving);
-                    leavingDate.setHours(0, 0, 0, 0);
+                    const parts = student.tcDetails.dateOfLeaving.split('-');
+                    if (parts.length === 3) {
+                        const year = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10);
+                        const day = parseInt(parts[2], 10);
 
-                    if (leavingDate < retentionLimit) return false;
+                        const leavingDate = new Date(year, month - 1, day);
+                        leavingDate.setHours(0, 0, 0, 0);
+
+                        if (leavingDate < retentionLimit) return false;
+                    }
                 }
             }
 

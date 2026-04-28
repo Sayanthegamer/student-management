@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Search, FileText, Filter, IndianRupee, ChevronDown, ChevronUp, User, SlidersHorizontal, ArrowDownAZ } from 'lucide-react';
 import PaymentHistoryModal from './PaymentHistoryModal';
 import PaymentCard from './PaymentCard';
+import useDebounce from '../hooks/useDebounce';
 
 /**
  * Component that displays the payment history for all students with filtering and sorting.
@@ -43,7 +44,7 @@ const FilterSelects = ({ classes, sections, filterClass, setFilterClass, filterS
 
 const PaymentHistory = ({ students }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [sortBy, setSortBy] = useState('name');
@@ -52,14 +53,6 @@ const PaymentHistory = ({ students }) => {
     const [showMobileSort, setShowMobileSort] = useState(false);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState(null);
-
-    // Debounce search term
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearchTerm(searchTerm);
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
 
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
     const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
