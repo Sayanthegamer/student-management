@@ -51,13 +51,17 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
 
     const sections = useMemo(() => [...new Set(eligibleStudents.map(s => s.section))].sort(), [eligibleStudents]);
 
-    const filteredStudents = useMemo(() => eligibleStudents.filter(student => {
-        const matchesSearch = student.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-                              student.rollNo.includes(debouncedSearchTerm);
-        const matchesClass = filterClass ? student.class === filterClass : true;
-        const matchesSection = filterSection ? student.section === filterSection : true;
-        return matchesSearch && matchesClass && matchesSection;
-    }), [eligibleStudents, debouncedSearchTerm, filterClass, filterSection]);
+    const filteredStudents = useMemo(() => {
+        // Performance: Hoist toLowerCase() outside the loop to avoid redundant string operations
+        const lowerSearchTerm = debouncedSearchTerm.toLowerCase();
+        return eligibleStudents.filter(student => {
+            const matchesSearch = student.name.toLowerCase().includes(lowerSearchTerm) ||
+                                  student.rollNo.includes(debouncedSearchTerm);
+            const matchesClass = filterClass ? student.class === filterClass : true;
+            const matchesSection = filterSection ? student.section === filterSection : true;
+            return matchesSearch && matchesClass && matchesSection;
+        });
+    }, [eligibleStudents, debouncedSearchTerm, filterClass, filterSection]);
 
     const nextClass = filterClass ? getNextClass(filterClass) : null;
     const canPromote = selectedStudents.size > 0 && nextClass;

@@ -49,9 +49,12 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
     const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
 
-    const filteredStudents = useMemo(() => students
+    const filteredStudents = useMemo(() => {
+        // Performance: Hoist toLowerCase() outside the loop to avoid redundant string operations
+        const lowerSearchTerm = debouncedSearchTerm.toLowerCase();
+        return students
         .filter(student => {
-            const matchesSearch = student.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+            const matchesSearch = student.name?.toLowerCase().includes(lowerSearchTerm) ||
                 student.rollNo?.includes(debouncedSearchTerm) ||
                 student.class?.includes(debouncedSearchTerm);
             const matchesClass = filterClass ? student.class === filterClass : true;
@@ -82,7 +85,8 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
             if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
             if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
             return 0;
-        }), [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder]);
+        });
+    }, [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
