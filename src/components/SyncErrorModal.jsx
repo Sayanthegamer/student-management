@@ -29,6 +29,7 @@ const SyncErrorModal = ({ error, students, onDismiss }) => {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
       showToast('Backup downloaded successfully', 'success');
     } catch (err) {
       console.error("Failed to generate backup", err);
