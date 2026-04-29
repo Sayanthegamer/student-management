@@ -55,6 +55,9 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
         retentionLimit.setMonth(retentionLimit.getMonth() - 3);
         retentionLimit.setHours(0, 0, 0, 0);
 
+        // Performance: Hoist toLowerCase() outside the loop to avoid redundant string operations
+        const lowerSearchTerm = debouncedSearchTerm.toLowerCase();
+
         return students
         .filter(student => {
             // Filter based on View Mode
@@ -94,9 +97,9 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                 }
             }
 
-            const matchesSearch = student.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-                String(student.rollNo || '').toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-                String(student.class || '').toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+            const matchesSearch = student.name?.toLowerCase().includes(lowerSearchTerm) ||
+                String(student.rollNo || '').toLowerCase().includes(lowerSearchTerm) ||
+                String(student.class || '').toLowerCase().includes(lowerSearchTerm);
             const matchesClass = filterClass ? student.class === filterClass : true;
             const matchesSection = filterSection ? student.section === filterSection : true;
 

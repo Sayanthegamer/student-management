@@ -152,20 +152,24 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
     const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
 
-    const filteredStudents = useMemo(() => students.filter(student => {
-        const matchesSearch = student.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-            student.rollNo.includes(debouncedSearchTerm);
-        const matchesClass = filterClass ? student.class === filterClass : true;
-        const matchesSection = filterSection ? student.section === filterSection : true;
-        const matchesFeeStatus = filterFeeStatus ? student.feesStatus === filterFeeStatus : true;
+    const filteredStudents = useMemo(() => {
+        // Performance: Hoist toLowerCase() outside the loop to avoid redundant string operations
+        const lowerSearchTerm = debouncedSearchTerm.toLowerCase();
+        return students.filter(student => {
+            const matchesSearch = student.name.toLowerCase().includes(lowerSearchTerm) ||
+                student.rollNo.includes(debouncedSearchTerm);
+            const matchesClass = filterClass ? student.class === filterClass : true;
+            const matchesSection = filterSection ? student.section === filterSection : true;
+            const matchesFeeStatus = filterFeeStatus ? student.feesStatus === filterFeeStatus : true;
 
-        let matchesMonth = true;
-        if (showMonthFilter && filterMonth && student.admissionDate) {
-            matchesMonth = student.admissionDate.startsWith(filterMonth);
-        }
+            let matchesMonth = true;
+            if (showMonthFilter && filterMonth && student.admissionDate) {
+                matchesMonth = student.admissionDate.startsWith(filterMonth);
+            }
 
-        return matchesSearch && matchesClass && matchesSection && matchesFeeStatus && matchesMonth;
-    }), [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, showMonthFilter, filterMonth]);
+            return matchesSearch && matchesClass && matchesSection && matchesFeeStatus && matchesMonth;
+        });
+    }, [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, showMonthFilter, filterMonth]);
 
     const confirmed = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Confirmed'), [filteredStudents]);
     const provisional = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Provisional'), [filteredStudents]);
