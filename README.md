@@ -23,7 +23,7 @@ A web-based student management application designed to help schools track studen
 Student Manager Pro implements an optimistic UI architecture using a dual-layer storage approach:
 
 1. **Local Cache (`sessionStorage`):** Changes are immediately written to browser `sessionStorage` (key: `student_management_session_v1`) to provide instant UI feedback without waiting for network responses. **Note:** This is not a full offline mode; closing the browser tab or clearing the session will discard unsaved local changes if they haven't synced.
-2. **Remote Persistence (Supabase):** The application periodically synchronizes the local cache with a Supabase PostgreSQL database in the background. A UI indicator shows the current sync status.
+2. **Remote Persistence (Supabase):** The application synchronizes the local cache with a Supabase PostgreSQL database following data changes (via CRUD handlers like `addStudent`, `updateStudent`, `deleteStudent`, `addFeePayment`, `importStudents`) and on component mount. A UI indicator shows the current sync status.
 
 ## 🚀 Getting Started
 
