@@ -9,3 +9,9 @@
 **Vulnerability:** Missing strict Content-Security-Policy and standard security headers, increasing risk of XSS and clickjacking.
 **Learning:** Adding CSP globally in `vercel.json` handles server-side enforcement, while a fallback in `index.html` handles static situations. It's important to not use `unsafe-inline` for `script-src` to prevent XSS, and to ensure JSON structure remains valid when modifying config files like `vercel.json`.
 **Prevention:** Enforce security headers consistently across server configuration and HTML. Always validate JSON structure after modification.
+
+## 2024-05-20 - [Memory Leak] Prevent Blob memory leak
+
+**Vulnerability:** Memory leak from unreleased blob URLs
+**Learning:** In a single-page application (SPA), unreleased blob URLs using `URL.createObjectURL(blob)` can cause memory bloat over time.
+**Prevention:** Always call `window.URL.revokeObjectURL(url)` after downloading a file generated with `URL.createObjectURL(blob)`.
