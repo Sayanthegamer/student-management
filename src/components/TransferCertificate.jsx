@@ -299,6 +299,7 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
                                         <button
                                             onClick={() => handleIssueClick(student)}
                                             className="inline-flex items-center gap-2 px-4 py-2 border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-600 hover:text-white font-bold text-xs rounded-[8px] transition-colors"
+                                            aria-label={`Issue transfer certificate for ${student.name}`}
                                         >
                                             Issue TC
                                         </button>

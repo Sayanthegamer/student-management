@@ -314,6 +314,7 @@ const PaymentHistory = ({ students }) => {
                                         <button
                                             onClick={() => handleViewHistory(student)}
                                             className="px-5 py-2.5 rounded-[12px] bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-primary)] font-semibold hover:bg-[var(--bg-card-hover)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/30 transition-colors flex items-center gap-2 ml-auto shadow-sm text-xs"
+                                            aria-label={`View payment history for ${student.name}`}
                                         >
                                             <FileText size={16} className="stroke-[2px]" />
                                             History
