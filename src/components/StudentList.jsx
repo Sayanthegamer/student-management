@@ -328,21 +328,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                 <button
                                                     onClick={() => handlePayFeeClick(student)}
                                                     className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all active:scale-95"
-                                                    title="Collect Fee"
+                                                    title="Collect Fee" aria-label={`Collect fee for ${student.name}`}
                                                 >
                                                     <IndianRupee size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onEdit(student)}
                                                     className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/20 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all active:scale-95"
-                                                    title="Edit Record"
+                                                    title="Edit Record" aria-label={`Edit record for ${student.name}`}
                                                 >
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(student.id)}
                                                     className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-[12px] hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/20 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500/30 transition-all active:scale-95"
-                                                    title="Delete Record"
+                                                    title="Delete Record" aria-label={`Delete record for ${student.name}`}
                                                 >
                                                     <Trash2 size={16} />
                                                 </button>

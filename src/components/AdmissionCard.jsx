@@ -81,7 +81,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
             <button
               onClick={() => onUpdateStatus(student, 'Confirmed')}
               className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-[12px] hover:bg-emerald-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
-              aria-label="Confirm admission"
+              aria-label={`Confirm admission for ${student.name}`}
             >
               <CheckCircle size={16} className="stroke-[2.5px]" />
               <span className="hidden sm:inline">Confirm</span>
@@ -89,7 +89,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
             <button
               onClick={() => onUpdateStatus(student, 'Cancelled')}
               className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-[12px] hover:bg-rose-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
-              aria-label="Cancel admission"
+              aria-label={`Cancel admission for ${student.name}`}
             >
               <XCircle size={16} className="stroke-[2.5px]" />
               <span className="hidden sm:inline">Cancel</span>
@@ -101,7 +101,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
           <button
             onClick={() => onUpdateStatus(student, 'Transferred')}
             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-[12px] hover:bg-purple-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
-            aria-label="Mark as transferred"
+            aria-label={`Mark as transferred for ${student.name}`}
           >
             <UserX size={16} className="stroke-[2.5px]" />
             <span className="hidden sm:inline">Mark Transferred</span>
@@ -112,7 +112,7 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
           <button
             onClick={() => onUpdateStatus(student, 'Provisional')}
             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-[12px] hover:bg-amber-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
-            aria-label="Reset status"
+            aria-label={`Reset status for ${student.name}`}
           >
             <Clock size={16} className="stroke-[2.5px]" />
             <span className="hidden sm:inline">Reset to Provisional</span>

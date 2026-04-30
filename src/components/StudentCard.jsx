@@ -51,7 +51,7 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
       <button
         onClick={() => onPayFee(student)}
         className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-400 rounded-[12px] transition-all duration-200 font-semibold text-xs touch-manipulation min-h-[40px] active:scale-[0.97]"
-        aria-label="Collect fee"
+        aria-label={`Collect fee for ${student.name}`}
       >
         <IndianRupee size={16} />
         <span className="hidden sm:inline">Pay</span>
@@ -59,14 +59,14 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee })
       <button
         onClick={() => onEdit(student)}
         className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-blue-500/10 hover:border-blue-500/20 hover:text-blue-400 rounded-[12px] transition-all duration-200 touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center active:scale-[0.95]"
-        aria-label="Edit student"
+        aria-label={`Edit record for ${student.name}`}
       >
         <Edit2 size={16} />
       </button>
       <button
         onClick={() => onDelete(student.id)}
         className="p-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-rose-500/10 hover:border-rose-500/20 hover:text-rose-400 rounded-[12px] transition-all duration-200 touch-manipulation min-w-[40px] min-h-[40px] flex items-center justify-center active:scale-[0.95]"
-        aria-label="Delete student"
+        aria-label={`Delete record for ${student.name}`}
       >
         <Trash2 size={16} />
       </button>
