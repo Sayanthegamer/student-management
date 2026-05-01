@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Download, Upload, AlertTriangle, CheckCircle, Database, Github, FileJson, FileSpreadsheet } from 'lucide-react';
+import { Download, Upload, AlertTriangle, CheckCircle, Database, Github, FileJson, FileSpreadsheet, Loader2 } from 'lucide-react';
 import { saveStudents } from '../utils/storage';
 import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 
@@ -159,10 +159,16 @@ const DataManagement = ({ students, onImportSuccess }) => {
                             </p>
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="mt-auto w-full py-3.5 md:py-4 px-4 bg-emerald-600 text-white font-bold rounded-[12px] hover:bg-emerald-500 transition-colors active:scale-[0.98] text-center cursor-pointer flex items-center justify-center gap-2 text-sm md:text-base leading-tight min-h-[48px]"
+                                disabled={importStatus === 'loading'}
+                                aria-busy={importStatus === 'loading'}
+                                className="mt-auto w-full py-3.5 md:py-4 px-4 bg-emerald-600 text-white font-bold rounded-[12px] hover:bg-emerald-500 transition-colors active:scale-[0.98] text-center cursor-pointer flex items-center justify-center gap-2 text-sm md:text-base leading-tight min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <Upload size={20} className="stroke-[2.5px]" />
-                                <span>Select File to Restore</span>
+                                {importStatus === 'loading' ? (
+                                    <Loader2 className="animate-spin" size={20} />
+                                ) : (
+                                    <Upload size={20} className="stroke-[2.5px]" />
+                                )}
+                                <span>{importStatus === 'loading' ? 'Processing...' : 'Select File to Restore'}</span>
                             </button>
                             <input
                                 ref={fileInputRef}
