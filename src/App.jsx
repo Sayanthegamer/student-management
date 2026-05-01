@@ -139,7 +139,7 @@ function App() {
               <span className="text-sm">🎓</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-[var(--text-primary)] text-sm tracking-tight">StdMgr</span>
+              <span className="font-bold text-[var(--text-primary)] text-sm tracking-tight">Kinetic Ledger</span>
               <Zap size={10} className="text-[var(--accent-primary)] fill-current" />
             </div>
           </div>

@@ -98,10 +98,22 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         amountRef.current?.focus();
     };
 
+    // Submitting state to prevent duplicate submissions
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         if (error) return;
-
+        if (isSubmitting) return;
+        
+        // Validate amount is numeric and greater than 0
+        const numericAmount = Number(amount);
+        if (isNaN(numericAmount) || numericAmount <= 0) {
+            setError('Please enter a valid amount greater than 0');
+            return;
+        }
+        
+        setIsSubmitting(true);
         setShowSuccess(true);
 
         if (isMultiMonth && endMonth) {
@@ -139,6 +151,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
         setTimeout(() => {
             doClose();
+            setIsSubmitting(false);
         }, 600);
     };
 
@@ -372,19 +385,19 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     <div className="px-5 py-4 bg-[var(--bg-sidebar)] border-t border-[var(--border-subtle)]">
                         <button
                             type="submit"
-                            disabled={!!error}
+                            disabled={!!error || isSubmitting}
                             className={`
                                 w-full flex items-center justify-center gap-2 py-3 rounded-lg font-bold transition-all
-                                ${error 
+                                ${error || isSubmitting
                                     ? 'bg-[var(--bg-elevated)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-color)]' 
                                     : 'btn btn-primary cta-primary'
                                 }
                             `}
                         >
-                            {error ? (
+                            {error || isSubmitting ? (
                                 <>
                                     <AlertCircle size={18} />
-                                    Fix errors to continue
+                                    {error ? 'Fix errors to continue' : 'Processing...'}
                                 </>
                             ) : (
                                 <>

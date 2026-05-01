@@ -460,8 +460,8 @@ button, a, input, select, textarea {
 
 .text-label {
   font-size: 11px;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-weight: 600;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -704,6 +704,10 @@ tbody tr:hover {
 /* ============================================
    DOT GRID
 ============================================ */
+
+.dot-grid {
+  position: relative;
+}
 
 .dot-grid::after {
   content: '';

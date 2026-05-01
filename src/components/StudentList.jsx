@@ -179,7 +179,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         <div className="flex items-center gap-2 shrink-0">
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`p-2 rounded-lg transition-all flex items-center justify-center touch-target ${
+                                className={`p-2 rounded-lg transition-all flex items-center justify-center touch-target relative ${
                                     showFilters || hasActiveFilters
                                         ? 'bg-[var(--accent-light)] text-[var(--accent-primary)]' 
                                         : 'bg-[var(--bg-main)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--border-highlight)]'
@@ -374,6 +374,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                     onClick={() => handlePayFeeClick(student)}
                                                     className="p-1.5 border border-[var(--border-subtle)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-lg hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20 transition-all active:scale-95 touch-target"
                                                     title="Collect Fee"
+                                                    aria-label={`Collect fee for ${student.name}`}
                                                 >
                                                     <IndianRupee size={13} />
                                                 </button>
@@ -381,6 +382,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                     onClick={() => onEdit(student)}
                                                     className="p-1.5 border border-[var(--border-subtle)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-lg hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/20 transition-all active:scale-95 touch-target"
                                                     title="Edit"
+                                                    aria-label={`Edit record for ${student.name}`}
                                                 >
                                                     <Edit2 size={13} />
                                                 </button>
@@ -388,6 +390,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                     onClick={() => onDelete(student.id)}
                                                     className="p-1.5 border border-[var(--border-subtle)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-lg hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/20 transition-all active:scale-95 touch-target"
                                                     title="Delete"
+                                                    aria-label={`Delete record for ${student.name}`}
                                                 >
                                                     <Trash2 size={13} />
                                                 </button>
