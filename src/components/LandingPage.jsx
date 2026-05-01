@@ -91,14 +91,14 @@ const LandingPage = () => {
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto fade-in-up" style={prefersReducedMotion ? {} : { animationDelay: '0.2s' }}>
           <button 
             onClick={() => navigate('/login')}
-            className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-300 border border-transparent rounded-xl bg-[var(--accent-primary)] text-white hover:bg-[var(--accent-hover)] shadow-lg shadow-[var(--accent-primary)]/25 hover:shadow-xl hover:shadow-[var(--accent-primary)]/35 w-full sm:w-auto active:scale-[0.98] cta-primary"
+            className="group btn btn-primary cta-primary w-full sm:w-auto active:scale-[0.98]"
           >
             Launch Vault
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </button>
           <button
             onClick={handleLearnMoreScroll}
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-4 font-semibold text-base cursor-pointer transition-all duration-300 border border-[var(--border-color)] rounded-xl bg-transparent text-[var(--text-primary)] hover:bg-[var(--bg-card)] hover:border-[var(--border-highlight)] w-full sm:w-auto active:scale-[0.98]"
+            className="btn w-full sm:w-auto active:scale-[0.98]"
           >
             View Technical Specs
           </button>
@@ -161,10 +161,10 @@ const LandingPage = () => {
 
           {/* Visual Side */}
           <div className="w-full md:w-1/2 rounded-2xl overflow-hidden aspect-square md:aspect-[4/3] relative border border-[var(--border-color)] shadow-2xl shadow-[var(--accent-primary)]/10">
-            <img loading="lazy" decoding="async"
+            <img loading="eager" decoding="async"
               alt="High-tech server room visualization"
               className="w-full h-full object-cover"
-              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80"
+              src="/hero-image.svg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-transparent to-transparent opacity-70" />
             <div className="absolute inset-0 bg-[var(--accent-primary)]/5 mix-blend-overlay" />

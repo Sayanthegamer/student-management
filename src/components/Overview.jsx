@@ -3,6 +3,38 @@ import React, { useState, useEffect } from 'react';
 import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight, HelpCircle } from 'lucide-react';
 import { getActivities } from '../utils/storage';
 
+// Activity type metadata map for consistent styling and icons
+const activityMeta = {
+  fee: {
+    className: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+    Icon: IndianRupee,
+  },
+  student: {
+    className: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+    Icon: UserPlus,
+  },
+  tc: {
+    className: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
+    Icon: FileText,
+  },
+  admission: {
+    className: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+    Icon: Users,
+  },
+  promotion: {
+    className: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+    Icon: ArrowRight,
+  },
+  system: {
+    className: 'text-[var(--text-secondary)] bg-[var(--bg-main)] border-[var(--border-subtle)]',
+    Icon: Activity,
+  },
+};
+const defaultActivityMeta = {
+  className: 'text-[var(--text-secondary)] bg-[var(--bg-main)] border-[var(--border-subtle)]',
+  Icon: HelpCircle,
+};
+
 /**
  * A sub-component to display a statistics card with spotlight effect.
  */
@@ -36,25 +68,16 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) 
 /**
  * Activity item component with staggered entrance.
  */
-const ActivityItem = ({ activity, index }) => (
+const ActivityItem = ({ activity, index }) => {
+  const meta = activityMeta[activity.type] || defaultActivityMeta;
+  
+  return (
     <div 
         className="flex items-start gap-4 p-5 hover:bg-[var(--bg-card-hover)] transition-colors group relative"
         style={{ animation: `fade-in-up-anim 0.3s var(--spring-bounce) both`, animationDelay: `${300 + index * 50}ms` }}
     >
-        <div className={`p-2.5 shrink-0 rounded-xl border transition-transform duration-200 group-hover:scale-105 ${activity.type === 'fee' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' :
-            activity.type === 'student' ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :
-                activity.type === 'tc' ? 'text-rose-400 bg-rose-500/10 border-rose-500/20' :
-                    activity.type === 'admission' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
-                        activity.type === 'promotion' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
-                            'text-[var(--text-secondary)] bg-[var(--bg-main)] border-[var(--border-subtle)]'
-            }`}>
-            {activity.type === 'fee' && <IndianRupee size={18} />}
-            {activity.type === 'student' && <UserPlus size={18} />}
-            {activity.type === 'tc' && <FileText size={18} />}
-            {activity.type === 'admission' && <Users size={18} />}
-            {activity.type === 'promotion' && <ArrowRight size={18} />}
-            {activity.type === 'system' && <Activity size={18} />}
-            {!['fee', 'student', 'tc', 'admission', 'promotion', 'system'].includes(activity.type) && <HelpCircle size={18} />}
+        <div className={`p-2.5 shrink-0 rounded-xl border transition-transform duration-200 group-hover:scale-105 ${meta.className}`}>
+            <meta.Icon size={18} />
         </div>
         <div className="flex-1 min-w-0 py-0.5">
             <p className="text-[var(--text-primary)] font-medium text-sm m-0 leading-snug">{activity.description}</p>
@@ -70,7 +93,8 @@ const ActivityItem = ({ activity, index }) => (
             </div>
         </div>
     </div>
-);
+  );
+};
 
 /**
  * Component that displays an overview dashboard with key metrics and recent activities.
@@ -188,7 +212,7 @@ const Overview = ({ students, onAddStudent }) => {
                     </span>
                 </div>
 
-                <div className="bg-[var(--bg-card)]">
+                <div className="bg-[var(--bg-card)]" role="log" aria-live="polite" aria-relevant="additions">
                     {activities.length > 0 ? (
                         <div className="divide-y divide-[var(--border-subtle)]">
                             {activities.map((activity, idx) => (
