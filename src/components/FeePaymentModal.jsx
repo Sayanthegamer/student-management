@@ -1,23 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Save, Calendar, IndianRupee, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { X, IndianRupee, AlertCircle, CheckCircle2, Zap } from 'lucide-react';
 import CustomDatePicker from './CustomDatePicker';
 import CustomMonthPicker from './CustomMonthPicker';
 import { logActivity } from '../utils/storage';
 import { calculateFine } from '../utils/constants';
 
 /**
- * A modal component for recording a fee payment for a student.
- *
- * @param {Object} props - The component props.
- * @param {Object} props.student - The student object making the payment.
- * @param {Function} props.onClose - Callback function to close the modal.
- * @param {Function} props.onSave - Callback function to save the payment.
- * @returns {JSX.Element} The rendered fee payment modal component.
+ * High-Frequency Fee Payment Modal - Kinetic Ledger Design
+ * Optimized for keyboard-fast entry and one-handed operation
+ * Two-column layout with quick amount buttons and instant feedback
  */
 const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
-    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
+    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7));
     const [isMultiMonth, setIsMultiMonth] = useState(false);
     const [endMonth, setEndMonth] = useState(new Date().toISOString().slice(0, 7));
     const [amount, setAmount] = useState(student.feesAmount || '');
@@ -25,9 +21,24 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [remarks, setRemarks] = useState('');
     const [error, setError] = useState('');
     const [totalPayable, setTotalPayable] = useState(0);
-
+    const [isClosing, setIsClosing] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    
+    // Focus management refs
+    const amountRef = useRef(null);
+    
     const isTransferred = student.admissionStatus === 'Transferred';
 
+    // Close handler
+    const doClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            onClose();
+            setIsClosing(false);
+        }, 200);
+    };
+
+    // Fine calculation
     useEffect(() => {
         if (!paymentDate || !selectedMonth) return;
 
@@ -65,22 +76,35 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
     }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount]);
 
-    const [isClosing, setIsClosing] = useState(false);
+    // Escape key handler - inline to avoid dependency issues
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                doClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onClose]);
 
-    const handleClose = () => {
-        setIsClosing(true);
-        setTimeout(() => {
-            onClose();
-            setIsClosing(false);
-        }, 200);
+    const handleQuickAmount = (preset) => {
+        if (preset === 'full') {
+            setAmount(student.feesAmount || 0);
+        } else if (preset === 'monthly') {
+            setAmount(Math.round((student.feesAmount || 0) / 12));
+        } else if (preset === 'custom' && student.feesAmount) {
+            setAmount(student.feesAmount);
+        }
+        amountRef.current?.focus();
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (error) return;
 
+        setShowSuccess(true);
+
         if (isMultiMonth && endMonth) {
-            // Batch all month payments into a single array
             const payments = [];
             let current = new Date(selectedMonth + '-01');
             const end = new Date(endMonth + '-01');
@@ -100,9 +124,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 current.setMonth(current.getMonth() + 1);
             }
 
-            // Single batched call instead of loop
             onSave(student.id, payments);
-            logActivity('fee', `Collected fees from ${student.name} (${selectedMonth} to ${endMonth})`);
+            logActivity('fee', `Batch fee collection from ${student.name} (${selectedMonth} to ${endMonth})`);
         } else {
             onSave(student.id, {
                 date: paymentDate,
@@ -111,165 +134,267 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 fine: Number(fine),
                 remarks: remarks
             });
-            logActivity('fee', `Collected fee ₹${amount} from ${student.name} (${selectedMonth})`);
+            logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);
         }
 
-        handleClose();
+        setTimeout(() => {
+            doClose();
+        }, 600);
     };
 
     return createPortal(
         <div 
-            className={`fixed inset-0 bg-slate-900/80 z-50 overflow-y-auto flex items-start md:items-center p-3 md:p-4 modal-backdrop backdrop-blur-sm ${isClosing ? 'closing' : ''}`}
+            className={`fixed inset-0 z-50 overflow-y-auto flex items-start md:items-center p-3 md:p-6 modal-backdrop backdrop-blur-md ${isClosing ? 'closing' : ''}`}
+            style={{ backgroundColor: 'rgba(2, 2, 3, 0.85)' }}
             onClick={(e) => {
-                if (e.target === e.currentTarget) handleClose();
+                if (e.target === e.currentTarget) doClose();
             }}
         >
-            <div className={`bg-[var(--bg-main)] rounded-[16px] shadow-lg w-full max-w-lg mx-auto relative my-4 md:my-auto flex flex-col overflow-hidden border border-[var(--border-color)] ${isClosing ? 'scale-out' : 'scale-in'}`}>
-
-                <div className="bg-[var(--bg-card)] px-6 py-4 md:py-6 text-[var(--text-primary)] relative border-b border-[var(--border-color)]">
-                    <div className="relative z-10">
-                        <h3 className="m-0 text-xl md:text-2xl font-bold tracking-tight flex items-center gap-3">
-                            <IndianRupee size={28} className="text-[var(--accent-primary)] stroke-[2.5px]" />
-                            Record Fee Payment
-                        </h3>
-                        <p className="text-[var(--text-secondary)] mt-2 text-sm">
-                            Academic Fee Collection: <span className="text-[var(--text-primary)] font-bold">{student.name}</span>
-                        </p>
-                    </div>
-                    <button
-                        onClick={handleClose}
-                        className="absolute top-4 right-4 md:top-6 md:right-6 text-[var(--text-secondary)] border border-[var(--border-color)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] p-2 rounded-[12px] transition-colors z-20 flex items-center justify-center"
-                    >
-                        <X size={20} className="stroke-[2.5px]" />
-                    </button>
-                </div>
-
-                {isTransferred && (
-                    <div className="mx-6 mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-[12px] flex items-start gap-3">
-                        <AlertCircle size={20} className="text-amber-400 shrink-0 mt-0.5 stroke-[2.5px]" />
-                        <div className="flex-1 min-w-0">
-                            <p className="text-amber-400 font-bold text-sm">Transferred Student</p>
-                            <p className="text-amber-400/70 text-xs mt-1">
-                                This student has been issued a Transfer Certificate. Please verify if this payment is appropriate.
-                            </p>
+            <div 
+                className={`
+                    relative w-full max-w-2xl mx-auto my-4 md:my-auto flex flex-col overflow-hidden
+                    bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl
+                    ${isClosing ? 'scale-95 opacity-0' : 'scale-in'}
+                    transition-all duration-300
+                `}
+            >
+                {/* Success overlay */}
+                {showSuccess && (
+                    <div className="absolute inset-0 bg-emerald-500/10 z-50 flex items-center justify-center kinetic-scale rounded-xl">
+                        <div className="text-center">
+                            <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                                <CheckCircle2 size={32} className="text-emerald-400" />
+                            </div>
+                            <p className="text-emerald-400 font-bold text-lg">Payment Recorded</p>
+                            <p className="text-emerald-400/60 text-sm mt-1 font-mono">₹{totalPayable.toLocaleString()}</p>
                         </div>
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="flex flex-col">
-                    <div className="p-4 md:p-8 flex flex-col gap-6 md:gap-8">
-                        <CustomDatePicker
-                            label="Collection Date"
-                            value={paymentDate}
-                            onChange={setPaymentDate}
-                            required
-                        />
+                {/* Header */}
+                <div className="px-6 py-5 text-[var(--text-primary)] relative bg-[var(--bg-sidebar)] border-b border-[var(--border-subtle)]">
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                            {/* Indigo icon badge */}
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-muted)] flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/20 relative">
+                                <div className="absolute inset-0 rounded-xl bg-[var(--accent-primary)] blur-lg opacity-30" />
+                                <IndianRupee size={20} className="text-white relative z-10" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold tracking-tight flex items-center gap-2">
+                                    Record Payment
+                                    <Zap size={14} className="text-[var(--accent-primary)] fill-current" />
+                                </h3>
+                                <p className="text-[var(--text-secondary)] text-xs mt-0.5 font-mono">
+                                    {student.name} • {student.class}-{student.section}
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={doClose}
+                            className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] rounded-lg transition-colors"
+                            aria-label="Close"
+                        >
+                            <X size={18} />
+                        </button>
+                    </div>
+                </div>
 
-                        <div className="space-y-4 bg-[var(--bg-card)] p-5 rounded-[12px] border border-[var(--border-color)]">
-                            <div className="flex justify-between items-center">
-                                <label className="text-sm font-semibold text-[var(--text-secondary)] px-1">Duration</label>
-                                <button
-                                    type="button"
-                                    onClick={() => setIsMultiMonth(!isMultiMonth)}
-                                    className={`text-xs font-bold px-3 py-1.5 rounded-[8px] transition-colors border ${isMultiMonth ? 'bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20' : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] bg-transparent'}`}
-                                >
-                                    {isMultiMonth ? 'Multi-Month Mode' : 'Switch to Multi-Month'}
-                                </button>
+                {/* Transferred warning */}
+                {isTransferred && (
+                    <div className="mx-6 mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center gap-3">
+                        <AlertCircle size={16} className="text-amber-400 shrink-0" />
+                        <div className="flex-1">
+                            <p className="text-amber-400 font-bold text-xs">Transferred Student</p>
+                            <p className="text-amber-400/70 text-[10px] mt-0.5">Verify if payment is appropriate</p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Two-column form */}
+                <form onSubmit={handleSubmit} className="flex flex-col">
+                    <div className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {/* Left column - Date & Month */}
+                        <div className="space-y-4">
+                            {/* Collection Date */}
+                            <div>
+                                <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                    Collection Date
+                                </label>
+                                <CustomDatePicker
+                                    value={paymentDate}
+                                    onChange={setPaymentDate}
+                                    required
+                                />
                             </div>
 
-                            <div className="flex items-center gap-2">
-                                <CustomMonthPicker
-                                    value={selectedMonth}
-                                    onChange={setSelectedMonth}
-                                    required
-                                    compact={isMultiMonth}
-                                    className="flex-1"
-                                />
-                                {isMultiMonth && (
-                                    <>
-                                        <span className="text-[var(--accent-primary)] font-bold">→</span>
+                            {/* Duration */}
+                            <div className="bg-[var(--bg-main)] p-4 rounded-lg border border-[var(--border-subtle)] space-y-3">
+                                <div className="flex justify-between items-center">
+                                    <label className="text-xs font-semibold text-[var(--text-secondary)]">Duration</label>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsMultiMonth(!isMultiMonth)}
+                                        className={`text-[10px] font-bold px-3 py-1.5 rounded-lg transition-colors border ${
+                                            isMultiMonth 
+                                                ? 'bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20' 
+                                                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
+                                        }`}
+                                    >
+                                        {isMultiMonth ? 'Multi' : 'Single'}
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <div className="flex-1">
                                         <CustomMonthPicker
-                                            value={endMonth}
-                                            onChange={setEndMonth}
+                                            value={selectedMonth}
+                                            onChange={setSelectedMonth}
                                             required
-                                            compact={true}
-                                            className="flex-1"
+                                            compact={isMultiMonth}
                                         />
-                                    </>
+                                    </div>
+                                    {isMultiMonth && (
+                                        <>
+                                            <span className="text-[var(--accent-primary)] font-bold">→</span>
+                                            <div className="flex-1">
+                                                <CustomMonthPicker
+                                                    value={endMonth}
+                                                    onChange={setEndMonth}
+                                                    required
+                                                    compact={true}
+                                                />
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                                
+                                {error && (
+                                    <div className="flex items-center gap-2 text-rose-400 text-[10px] font-medium bg-rose-500/10 p-2 rounded-lg border border-rose-500/20">
+                                        <AlertCircle size={12} />
+                                        {error}
+                                    </div>
                                 )}
                             </div>
-                            {error && (
-                                <div className="flex items-center gap-2 mt-2 text-rose-400 text-xs font-medium bg-rose-500/10 p-3 rounded-[8px] border border-rose-500/20">
-                                    <AlertCircle size={14} className="stroke-[2.5px]" />
-                                    {error}
-                                </div>
-                            )}
+
+                            {/* Remarks */}
+                            <div>
+                                <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                    Payment Remarks
+                                </label>
+                                <input
+                                    type="text"
+                                    value={remarks}
+                                    onChange={(e) => setRemarks(e.target.value)}
+                                    className="input-premium w-full py-2.5"
+                                    placeholder="UPI / Cash / Card"
+                                />
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-[var(--text-secondary)] px-1">Base Amount (₹)</label>
+                        {/* Right column - Amount & Total */}
+                        <div className="space-y-4">
+                            {/* Amount */}
+                            <div>
+                                <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                    Base Amount (₹)
+                                </label>
                                 <div className="relative">
-                                    <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] stroke-[2.5px]" />
+                                    <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
                                     <input
+                                        ref={amountRef}
                                         type="number"
                                         value={amount}
                                         onChange={(e) => setAmount(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors text-sm"
+                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
                                         required
                                     />
                                 </div>
+                                
+                                {/* Quick amount buttons */}
+                                <div className="flex gap-2 mt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleQuickAmount('full')}
+                                        className="flex-1 text-[10px] font-semibold py-1.5 px-3 rounded-lg bg-[var(--accent-light)] text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-colors border border-[var(--accent-primary)]/20"
+                                    >
+                                        Full
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleQuickAmount('monthly')}
+                                        className="flex-1 text-[10px] font-semibold py-1.5 px-3 rounded-lg bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors border border-[var(--border-color)]"
+                                    >
+                                        Monthly
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleQuickAmount('custom')}
+                                        className="flex-1 text-[10px] font-semibold py-1.5 px-3 rounded-lg bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors border border-[var(--border-color)]"
+                                    >
+                                        Reset
+                                    </button>
+                                </div>
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-[var(--text-secondary)] px-1">Late Fine (₹)</label>
+
+                            {/* Fine */}
+                            <div>
+                                <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                    Late Fine (₹)
+                                </label>
                                 <div className="relative">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold">₹</div>
                                     <input
                                         type="number"
                                         value={fine}
                                         readOnly
-                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-muted)] font-bold outline-none text-sm pointer-events-none"
+                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg text-[var(--text-muted)] font-bold pointer-events-none"
                                     />
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="flex flex-col gap-1.5">
-                            <label className="text-sm font-semibold text-[var(--text-secondary)] px-1">Payment Remarks</label>
-                            <input
-                                type="text"
-                                value={remarks}
-                                onChange={(e) => setRemarks(e.target.value)}
-                                className="w-full px-4 py-3 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-primary)] font-semibold focus:border-[var(--accent-primary)] outline-none transition-colors text-sm placeholder:text-[var(--text-muted)]"
-                                placeholder="E.g. UPI ID or Cash"
-                            />
-                        </div>
-
-                        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-5 text-[var(--text-primary)] flex justify-between items-center mt-2">
-                            <div>
-                                <p className="text-sm font-bold text-[var(--text-secondary)]">Total Collection</p>
-                                <p className="text-xs text-[var(--text-muted)] mt-0.5">Automated settlement</p>
-                            </div>
-                            <div className="text-right">
-                                <span className="text-3xl font-bold text-emerald-400 tracking-tight">
-                                    ₹{totalPayable.toLocaleString()}
-                                </span>
+                            {/* Total display */}
+                            <div className="bg-gradient-to-br from-[var(--accent-subtle)] to-[var(--accent-light)] border border-[var(--accent-primary)]/20 rounded-lg p-4 text-center relative overflow-hidden">
+                                {/* Subtle glow effect */}
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-16 bg-[var(--accent-primary)] blur-3xl opacity-10" />
+                                
+                                <div className="relative">
+                                    <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1">Total Collection</p>
+                                    <span className="text-3xl font-bold text-[var(--accent-primary)] tracking-tight">
+                                        ₹{totalPayable.toLocaleString()}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-4 md:p-6 bg-transparent border-t border-[var(--border-color)]">
+                    {/* Submit button */}
+                    <div className="px-5 py-4 bg-[var(--bg-sidebar)] border-t border-[var(--border-subtle)]">
                         <button
                             type="submit"
                             disabled={!!error}
-                            className={`w-full bg-[var(--accent-primary)] border border-[var(--accent-primary)] hover:bg-[var(--accent-hover)] text-white font-bold py-3.5 md:py-4 rounded-[12px] transition-all flex items-center justify-center gap-2 min-h-[48px] shadow-sm ${error ? 'opacity-50 cursor-not-allowed' : 'active:scale-[0.98]'}`}
+                            className={`
+                                w-full flex items-center justify-center gap-2 py-3 rounded-lg font-bold transition-all
+                                ${error 
+                                    ? 'bg-[var(--bg-elevated)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-color)]' 
+                                    : 'btn btn-primary cta-primary'
+                                }
+                            `}
                         >
-                            <CheckCircle2 size={20} className="stroke-[2.5px]" />
-                            <span className="md:hidden">Pay</span>
-                            <span className="hidden md:inline">Complete Transaction</span>
+                            {error ? (
+                                <>
+                                    <AlertCircle size={18} />
+                                    Fix errors to continue
+                                </>
+                            ) : (
+                                <>
+                                    <CheckCircle2 size={18} />
+                                    <span className="hidden sm:inline">Complete Transaction</span>
+                                    <span className="sm:hidden">Pay</span>
+                                </>
+                            )}
                         </button>
                     </div>
-
                 </form>
             </div>
         </div>,
