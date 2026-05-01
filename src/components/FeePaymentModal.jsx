@@ -20,10 +20,9 @@ const getLocalDateString = () => {
 /**
  * Helper to get local month string in YYYY-MM format
  */
-const getLocalMonthString = () => {
-    const d = new Date();
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
+const getLocalMonthString = (date = new Date()) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     return `${year}-${month}`;
 };
 
@@ -110,7 +109,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             monthsCount = 0;
 
             while (current <= end) {
-                const monthStr = current.toISOString().slice(0, 7);
+                const monthStr = getLocalMonthString(current);
                 calculatedFine += calculateFine(monthStr, paymentDate);
                 current.setMonth(current.getMonth() + 1);
                 monthsCount++;
@@ -174,7 +173,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             const end = new Date(endMonth + '-01');
 
             while (current <= end) {
-                const monthStr = current.toISOString().slice(0, 7);
+                const monthStr = getLocalMonthString(current);
                 const monthFine = calculateFine(monthStr, paymentDate);
 
                 payments.push({
@@ -188,7 +187,13 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 current.setMonth(current.getMonth() + 1);
             }
 
-            onSave(student.id, payments);
+            onSave(student.id, payments).then(() => {
+                setShowSuccess(false);
+                doClose();
+                if (mountedRef.current) {
+                    setIsSubmitting(false);
+                }
+            });
             logActivity('fee', `Batch fee collection from ${student.name} (${selectedMonth} to ${endMonth})`);
         } else {
             onSave(student.id, {
@@ -197,17 +202,20 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 amount: Number(amount),
                 fine: Number(fine),
                 remarks: remarks
+            }).then(() => {
+                setShowSuccess(false);
+                doClose();
+                if (mountedRef.current) {
+                    setIsSubmitting(false);
+                }
             });
             logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);
         }
 
-        // Use tracked timeout to prevent state update after unmount
-        submitTimeoutRef.current = setTimeout(() => {
-            doClose();
-            if (mountedRef.current) {
-                setIsSubmitting(false);
-            }
-        }, 600);
+        // Keep success overlay visible while waiting for onSave promise
+        // The onSave promise will trigger close once resolved
+        setShowSuccess(true);
+        setIsSubmitting(true);
     };
 
     return createPortal(

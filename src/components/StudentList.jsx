@@ -110,8 +110,8 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
         setShowPaymentModal(true);
     }, []);
 
-    const handlePaymentSave = useCallback((studentId, paymentDetails) => {
-        onPayFee(studentId, paymentDetails);
+    const handlePaymentSave = useCallback(async (studentId, paymentDetails) => {
+        await onPayFee(studentId, paymentDetails);
         setShowPaymentModal(false);
         setSelectedStudentForFee(null);
     }, [onPayFee]);
