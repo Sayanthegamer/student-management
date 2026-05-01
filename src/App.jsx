@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import BottomNavigation from './components/BottomNavigation';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -41,7 +41,7 @@ function App() {
   const { showToast } = useToast();
   const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents, dismissError, forceSync } = useDataSync();
   const [editingStudent, setEditingStudent] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null); // student id to confirm delete
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const showMobileAdd = location.pathname === '/students';
@@ -113,17 +113,20 @@ function App() {
   // Handle unauthenticated routes explicitly
   if (!user) {
     return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/" element={
-           <Suspense fallback={<SkeletonLoader />}>
-               <LandingPage />
-           </Suspense>
-        } />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <>
+        <div className="noise-overlay" aria-hidden="true" />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/" element={
+            <Suspense fallback={<SkeletonLoader />}>
+                <LandingPage />
+            </Suspense>
+          } />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </>
     );
   }
 
@@ -131,16 +134,22 @@ function App() {
     <ErrorBoundary>
       <SyncErrorModal error={syncError} students={students} onDismiss={dismissError} />
       <div className="app-container flex h-[100dvh] overflow-hidden bg-[var(--bg-main)] text-[var(--text-primary)] font-sans">
-        {/* Mobile Header - Simplified */}
-        <div className="md:hidden fixed top-0 left-0 right-0 bg-[var(--bg-sidebar)] border-b border-[var(--border-color)] z-30 flex items-center px-4 justify-between pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))]">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-[var(--text-primary)] text-base">StdMgr</span>
+        {/* Noise Overlay */}
+        <div className="noise-overlay" aria-hidden="true" />
+
+        {/* Mobile Header */}
+        <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))] bg-[var(--bg-sidebar)] border-b border-[var(--border-subtle)]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-primary)] to-indigo-600 flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/20 -rotate-3">
+              <span className="text-sm">🎓</span>
+            </div>
+            <span className="font-bold text-[var(--text-primary)] text-base tracking-tight">StdMgr</span>
           </div>
           <div className="flex items-center gap-2">
             {showMobileAdd && (
               <button
                 onClick={handleAddClick}
-                className="p-1.5 border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-custom-md transition-colors touch-manipulation"
+                className="p-2 border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-lg transition-colors touch-manipulation active:scale-95"
                 aria-label="Add student"
               >
                 <Plus size={18} className="stroke-[2px]" />
@@ -151,37 +160,63 @@ function App() {
         </div>
 
         {/* Sidebar - Desktop Only */}
-        <div className="hidden md:block md:relative md:w-[260px] md:z-0 flex-shrink-0 border-r border-[var(--border-color)] bg-[var(--bg-sidebar)]">
+        <div className="hidden md:block md:relative md:w-[240px] md:z-0 flex-shrink-0 bg-[var(--bg-sidebar)]">
           <Sidebar onClose={() => { }} syncStatus={syncStatus} onSync={forceSync} />
         </div>
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto relative pt-[calc(3.5rem+env(safe-area-inset-top,0px))] md:pt-0 w-full pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-0 bg-[var(--bg-main)]">
 
-          {/* Global Project Header mimicking the screenshots */}
-          <div className="hidden md:block w-full border-b border-[var(--border-color)] bg-[var(--bg-main)]">
-            <div className="max-w-6xl mx-auto px-8 pt-10 pb-6 flex items-start gap-6">
-              <div className="w-24 h-24 rounded-custom-2xl bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 flex items-center justify-center shrink-0 shadow-sm">
-                <span className="text-4xl">🎓</span>
-              </div>
-              <div className="flex flex-col flex-1">
-                <div className="flex items-center justify-between w-full">
-                  <h1 className="text-3xl font-semibold text-[var(--text-primary)] tracking-tight">Student Manager Pro</h1>
-                  <div className="flex items-center gap-3">
-                     <button
-                        onClick={forceSync}
-                        className={`btn btn-secondary ${syncStatus === 'syncing' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={syncStatus === 'syncing'}
-                        aria-label="Sync data with cloud"
-                     >
-                         Sync Data
-                     </button>
-                     <button onClick={handleAddClick} className="btn btn-primary">Add Student</button>
+          {/* Global Project Header - Editorial Style */}
+          <div className="hidden md:block relative w-full border-b border-[var(--border-subtle)] overflow-hidden">
+            {/* Subtle gradient accent */}
+            <div className="absolute top-0 left-0 w-96 h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)]/30 to-transparent" />
+            
+            <div className="max-w-6xl mx-auto px-8 pt-12 pb-8">
+              {/* Asymmetrical layout with overlapping elements */}
+              <div className="flex items-start justify-between gap-8">
+                {/* Left side - Logo and title stack */}
+                <div className="relative">
+                  <div className="absolute -left-4 -top-2 w-20 h-20 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center shadow-lg transform -rotate-6 translate-y-1 opacity-60">
+                    <span className="text-3xl">🎓</span>
+                  </div>
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--accent-primary)] to-indigo-600 flex items-center justify-center shadow-xl shadow-[var(--accent-primary)]/20 -ml-2">
+                    <span className="text-2xl">🎓</span>
                   </div>
                 </div>
-                <p className="text-[var(--text-secondary)] mt-2 text-sm max-w-2xl leading-relaxed">
-                  The complete system for managing student records, fee payments, and admissions.
-                </p>
+                
+                {/* Right side - Content aligned differently */}
+                <div className="flex-1 pt-4">
+                  <div className="flex items-baseline justify-between mb-3">
+                    <h1 className="text-4xl font-bold text-[var(--text-primary)] tracking-tighter leading-[0.9]">
+                      Student Manager Pro
+                    </h1>
+                    <div className="hidden lg:flex items-center gap-2 text-[var(--text-muted)] text-xs font-mono">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span>System Online</span>
+                    </div>
+                  </div>
+                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed max-w-xl">
+                    The complete system for managing student records, fee payments, and admissions.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Action buttons - Aligned to bottom right */}
+              <div className="flex items-center gap-3 mt-6 justify-end">
+                <button
+                  onClick={forceSync}
+                  className={`btn btn-secondary text-xs ${syncStatus === 'syncing' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={syncStatus === 'syncing'}
+                  aria-label="Sync data with cloud"
+                >
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  Sync Data
+                </button>
+                <button onClick={handleAddClick} className="btn btn-primary cta-primary text-sm">
+                  <Plus size={16} />
+                  <span>Add Student</span>
+                </button>
               </div>
             </div>
           </div>
@@ -227,27 +262,27 @@ function App() {
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
           <div
-            className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 scale-in shadow-2xl rounded-custom-xl"
+            className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 scale-in shadow-2xl rounded-2xl"
             onClick={e => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-confirm-title"
             aria-describedby="delete-confirm-desc"
           >
-            <h3 id="delete-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] mb-2">Delete Student?</h3>
-            <p id="delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
+            <h3 id="delete-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] mb-2 tracking-tight">Delete Student?</h3>
+            <p id="delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6 leading-relaxed">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="px-4 py-2 text-sm font-medium border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-custom-md transition-colors"
+                className="px-4 py-2 text-sm font-medium border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] rounded-lg transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 text-sm font-medium bg-rose-500 text-white hover:bg-rose-600 rounded-custom-md transition-colors"
+                className="px-4 py-2 text-sm font-medium bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 rounded-lg transition-colors"
               >
                 Delete
               </button>
