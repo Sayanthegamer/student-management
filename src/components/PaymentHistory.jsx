@@ -50,6 +50,11 @@ const PaymentHistory = ({ students }) => {
     const [filterSection, setFilterSection] = useState('');
     const [sortBy, setSortBy] = useState('name');
     const [sortOrder, setSortOrder] = useState('asc');
+
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [showMobileSort, setShowMobileSort] = useState(false);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
@@ -345,15 +350,17 @@ const PaymentHistory = ({ students }) => {
                 )}
 
                 {/* Pagination Controls */}
-                <div className="px-6 py-4 bg-[var(--bg-card)] border-t border-[var(--border-color)]">
-                    <Pagination
-                        currentPage={safeCurrentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={filteredStudents.length}
-                        itemsPerPage={itemsPerPage}
-                    />
-                </div>
+                {totalPages > 1 && (
+                    <div className="px-6 py-4 bg-[var(--bg-card)] border-t border-[var(--border-color)]">
+                        <Pagination
+                            currentPage={safeCurrentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                            totalItems={filteredStudents.length}
+                            itemsPerPage={itemsPerPage}
+                        />
+                    </div>
+                )}
             </div>
 
             {showHistoryModal && selectedStudent && (
