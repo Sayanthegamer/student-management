@@ -40,7 +40,7 @@ export default function Login() {
       // Security: Do not expose raw internal error messages. Use a generic message.
       console.error('Authentication error occurred');
       sendErrorTelemetry('Login.handleSubmit', err);
-      if (isLogin && err.message === 'Email not confirmed') {
+      if (isLogin && (err.message === 'Email not confirmed' || err.code === 'email_not_confirmed' || err.name === 'EmailNotConfirmed')) {
         setError('Please confirm your email address before logging in.');
       } else {
         setError(isLogin ? 'Invalid email or password.' : 'Registration failed. Please try again.');
