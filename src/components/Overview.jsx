@@ -40,13 +40,14 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) 
  * @returns {JSX.Element} The rendered overview component.
  */
 const Overview = ({ students, onAddStudent }) => {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+
     // ⚡ Bolt: Memoize derived statistics to prevent expensive O(N) recalculations
     // every 5 seconds when the activities state is updated by the polling interval.
     const { totalStudents, feesCollected, pendingFeesCount } = React.useMemo(() => {
         const activeStudents = students.filter(s => s.admissionStatus !== 'Transferred');
         const total = activeStudents.length;
 
-        const currentMonth = new Date().toISOString().slice(0, 7);
         const collected = students.reduce((acc, student) => {
             // Calculate based on PAYMENT DATE (Cash Flow), not the fee month
             const paidThisMonth = student.feeHistory?.filter(p => p.date && p.date.startsWith(currentMonth));
@@ -60,7 +61,7 @@ const Overview = ({ students, onAddStudent }) => {
         }).length;
 
         return { totalStudents: total, feesCollected: collected, pendingFeesCount: pending };
-    }, [students]);
+    }, [students, currentMonth]);
 
     const [activities, setActivities] = useState(() => getActivities());
 
