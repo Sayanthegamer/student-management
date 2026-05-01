@@ -3,6 +3,7 @@ import { Search, FileText, Filter, IndianRupee, ChevronDown, ChevronUp, User, Sl
 import PaymentHistoryModal from './PaymentHistoryModal';
 import PaymentCard from './PaymentCard';
 import useDebounce from '../hooks/useDebounce';
+import Pagination from './Pagination';
 
 /**
  * Component that displays the payment history for all students with filtering and sorting.
@@ -49,6 +50,11 @@ const PaymentHistory = ({ students }) => {
     const [filterSection, setFilterSection] = useState('');
     const [sortBy, setSortBy] = useState('name');
     const [sortOrder, setSortOrder] = useState('asc');
+
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [showMobileSort, setShowMobileSort] = useState(false);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
@@ -88,6 +94,14 @@ const PaymentHistory = ({ students }) => {
             return 0;
         });
     }, [students, debouncedSearchTerm, filterClass, filterSection, sortBy, sortOrder]);
+
+    const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+    const safeCurrentPage = Math.max(1, Math.min(currentPage, Math.max(1, totalPages)));
+
+    const currentStudents = filteredStudents.slice(
+        (safeCurrentPage - 1) * itemsPerPage,
+        safeCurrentPage * itemsPerPage
+    );
 
     const handleViewHistory = (student) => {
         setSelectedStudent(student);
@@ -249,8 +263,8 @@ const PaymentHistory = ({ students }) => {
 
                 {/* Mobile Card View */}
                 <div className="md:hidden pt-4 pb-4 space-y-4">
-                    {filteredStudents.length > 0 ? (
-                        filteredStudents.map((student) => (
+                    {currentStudents.length > 0 ? (
+                        currentStudents.map((student) => (
                             <PaymentCard
                                 key={student.id}
                                 student={student}
@@ -280,7 +294,7 @@ const PaymentHistory = ({ students }) => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/10">
-                            {filteredStudents.map(student => (
+                            {currentStudents.map(student => (
                                 <tr key={student.id} className="hover:bg-[var(--bg-card-hover)] transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-4">
@@ -326,12 +340,25 @@ const PaymentHistory = ({ students }) => {
                     </table>
                 </div>
                 
-                {filteredStudents.length === 0 && (
+                {currentStudents.length === 0 && (
                     <div className="py-24 text-center hidden md:block">
                         <div className="w-20 h-20 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-xl flex items-center justify-center mx-auto mb-6">
                             <Search size={40} className="text-[var(--text-muted)]" />
                         </div>
                         <p className="text-[var(--text-secondary)] font-medium text-sm">No records matching search</p>
+                    </div>
+                )}
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="px-6 py-4 bg-[var(--bg-card)] border-t border-[var(--border-color)]">
+                        <Pagination
+                            currentPage={safeCurrentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                            totalItems={filteredStudents.length}
+                            itemsPerPage={itemsPerPage}
+                        />
                     </div>
                 )}
             </div>
