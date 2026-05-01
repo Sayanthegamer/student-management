@@ -27,9 +27,6 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[var(--bg-main)] selection:bg-[var(--accent-light)] selection:text-[var(--accent-primary)] relative overflow-hidden flex flex-col gradient-mesh dot-grid">
 
-      {/* Noise Overlay */}
-      <div className="noise-overlay" aria-hidden="true" />
-
       {/* Header - Asymmetrical and editorial */}
       <header className="w-full flex justify-between items-center px-6 py-5 md:px-12 z-20 relative">
         <div className="flex items-center gap-3">

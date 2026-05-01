@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight } from 'lucide-react';
+import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight, HelpCircle } from 'lucide-react';
 import { getActivities } from '../utils/storage';
 
 /**
@@ -54,6 +54,7 @@ const ActivityItem = ({ activity, index }) => (
             {activity.type === 'admission' && <Users size={18} />}
             {activity.type === 'promotion' && <ArrowRight size={18} />}
             {activity.type === 'system' && <Activity size={18} />}
+            {!['fee', 'student', 'tc', 'admission', 'promotion', 'system'].includes(activity.type) && <HelpCircle size={18} />}
         </div>
         <div className="flex-1 min-w-0 py-0.5">
             <p className="text-[var(--text-primary)] font-medium text-sm m-0 leading-snug">{activity.description}</p>
