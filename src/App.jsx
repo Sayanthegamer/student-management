@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { Plus, Menu, Zap, ChevronRight } from 'lucide-react';
+import { Plus, Menu, Zap } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import BottomNavigation from './components/BottomNavigation';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -196,12 +196,17 @@ function App() {
                     <span 
                       className="w-1.5 h-1.5 rounded-full"
                       style={{
-                        background: syncStatus === 'synced' ? 'var(--success)' : syncStatus === 'syncing' ? 'var(--color-warning)' : 'var(--color-negative)',
-                        boxShadow: syncStatus === 'synced' ? `0 0 8px var(--success)` : 'none'
+                        background: syncStatus === 'synced' ? 'var(--success)' : 
+                                   syncStatus === 'syncing' ? 'var(--color-warning)' :
+                                   syncStatus === 'unsaved' ? '#F59E0B' : 'var(--color-negative)',
+                        boxShadow: syncStatus === 'synced' ? `0 0 8px var(--success)` : 
+                                   syncStatus === 'unsaved' ? '0 0 8px #F59E0B' : 'none'
                       }}
                     />
                     <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
-                      {syncStatus === 'synced' ? 'Synced' : syncStatus === 'syncing' ? 'Syncing' : 'Offline'}
+                      {syncStatus === 'synced' ? 'Synced' : 
+                       syncStatus === 'syncing' ? 'Syncing' :
+                       syncStatus === 'unsaved' ? 'Unsaved' : 'Offline'}
                     </span>
                   </div>
 

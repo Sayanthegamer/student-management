@@ -24,17 +24,35 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [isClosing, setIsClosing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     
-    // Focus management refs
+    // Refs for focus management
     const amountRef = useRef(null);
+    
+    // Refs for timer cleanup to prevent setState after unmount
+    const mountedRef = useRef(true);
+    const closeTimeoutRef = useRef(null);
+    const submitTimeoutRef = useRef(null);
     
     const isTransferred = student.admissionStatus === 'Transferred';
 
-    // Close handler
+    // Cleanup timers on unmount
+    useEffect(() => {
+        mountedRef.current = true;
+        return () => {
+            mountedRef.current = false;
+            if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+            if (submitTimeoutRef.current) clearTimeout(submitTimeoutRef.current);
+        };
+    }, []);
+
+    // Close handler with timer tracking
     const doClose = () => {
+        if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
         setIsClosing(true);
-        setTimeout(() => {
-            onClose();
-            setIsClosing(false);
+        closeTimeoutRef.current = setTimeout(() => {
+            if (mountedRef.current) {
+                onClose();
+                setIsClosing(false);
+            }
         }, 200);
     };
 
@@ -149,9 +167,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);
         }
 
-        setTimeout(() => {
+        // Use tracked timeout to prevent state update after unmount
+        submitTimeoutRef.current = setTimeout(() => {
             doClose();
-            setIsSubmitting(false);
+            if (mountedRef.current) {
+                setIsSubmitting(false);
+            }
         }, 600);
     };
 
