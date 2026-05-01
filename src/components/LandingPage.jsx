@@ -161,7 +161,7 @@ const LandingPage = () => {
 
           {/* Visual Side */}
           <div className="w-full md:w-1/2 rounded-2xl overflow-hidden aspect-square md:aspect-[4/3] relative border border-[var(--border-color)] shadow-2xl shadow-[var(--accent-primary)]/10">
-            <img loading="eager" decoding="async"
+            <img loading="lazy" decoding="async"
               alt="High-tech server room visualization"
               className="w-full h-full object-cover"
               src="/hero-image.svg"

@@ -70,6 +70,13 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) 
  */
 const ActivityItem = ({ activity, index }) => {
   const meta = activityMeta[activity.type] || defaultActivityMeta;
+  const ts = new Date(activity.timestamp);
+  const timeString = isNaN(ts.getTime()) ? '—' : ts.toLocaleString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: 'numeric',
+    month: 'short'
+  });
   
   return (
     <div 
@@ -83,12 +90,7 @@ const ActivityItem = ({ activity, index }) => {
             <p className="text-[var(--text-primary)] font-medium text-sm m-0 leading-snug">{activity.description}</p>
             <div className="flex items-center gap-3 mt-1.5">
                 <p className="text-[var(--text-muted)] text-xs flex items-center gap-1.5 font-mono">
-                    {new Date(activity.timestamp).toLocaleString(undefined, {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        day: 'numeric',
-                        month: 'short'
-                    })}
+                    {timeString}
                 </p>
             </div>
         </div>
