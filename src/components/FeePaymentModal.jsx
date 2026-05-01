@@ -55,13 +55,26 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     
     const isTransferred = student.admissionStatus === 'Transferred';
 
-    // Cleanup timers on unmount
+    // Cleanup timers on unmount and manage focus
     useEffect(() => {
         mountedRef.current = true;
+
+        // Save the previously focused element before we move focus
+        const previouslyFocusedElement = document.activeElement;
+
+        // Move focus into the dialog for accessibility
+        amountRef.current?.focus();
+        amountRef.current?.select();
+
         return () => {
             mountedRef.current = false;
             if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
             if (submitTimeoutRef.current) clearTimeout(submitTimeoutRef.current);
+
+            // Restore focus to the previously focused element if it still exists
+            if (previouslyFocusedElement && typeof previouslyFocusedElement.focus === 'function') {
+                previouslyFocusedElement.focus();
+            }
         };
     }, []);
 
