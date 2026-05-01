@@ -7,15 +7,36 @@ import { logActivity } from '../utils/storage';
 import { calculateFine } from '../utils/constants';
 
 /**
+ * Helper to get local date string in YYYY-MM-DD format
+ */
+const getLocalDateString = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+/**
+ * Helper to get local month string in YYYY-MM format
+ */
+const getLocalMonthString = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+};
+
+/**
  * High-Frequency Fee Payment Modal - Kinetic Ledger Design
  * Optimized for keyboard-fast entry and one-handed operation
  * Two-column layout with quick amount buttons and instant feedback
  */
 const FeePaymentModal = ({ student, onClose, onSave }) => {
-    const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
-    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7));
+    const [paymentDate, setPaymentDate] = useState(getLocalDateString);
+    const [selectedMonth, setSelectedMonth] = useState(getLocalMonthString);
     const [isMultiMonth, setIsMultiMonth] = useState(false);
-    const [endMonth, setEndMonth] = useState(new Date().toISOString().slice(0, 7));
+    const [endMonth, setEndMonth] = useState(getLocalMonthString);
     const [amount, setAmount] = useState(student.feesAmount || '');
     const [fine, setFine] = useState(0);
     const [remarks, setRemarks] = useState('');
@@ -178,6 +199,10 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
     return createPortal(
         <div 
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="fee-payment-title"
+            aria-describedby="fee-payment-desc"
             className={`fixed inset-0 z-50 overflow-y-auto flex items-start md:items-center p-3 md:p-6 modal-backdrop backdrop-blur-md ${isClosing ? 'closing' : ''}`}
             style={{ backgroundColor: 'rgba(2, 2, 3, 0.85)' }}
             onClick={(e) => {
@@ -215,11 +240,11 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                 <IndianRupee size={20} className="text-white relative z-10" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold tracking-tight flex items-center gap-2">
+                                <h3 id="fee-payment-title" className="text-lg font-bold tracking-tight flex items-center gap-2">
                                     Record Payment
                                     <Zap size={14} className="text-[var(--accent-primary)] fill-current" />
                                 </h3>
-                                <p className="text-[var(--text-secondary)] text-xs mt-0.5 font-mono">
+                                <p id="fee-payment-desc" className="text-[var(--text-secondary)] text-xs mt-0.5 font-mono">
                                     {student.name} • {student.class}-{student.section}
                                 </p>
                             </div>
