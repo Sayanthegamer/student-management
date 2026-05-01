@@ -8,5 +8,6 @@
 **Action:** Always interpolate unique identifiers (like `student.name`) into the `aria-label` for action buttons inside `.map()` loops to meet WCAG 2.1 SC 2.4.4 (Link Purpose In Context) and ensure users know exactly what item they are modifying.
 
 ## 2024-05-18 - [Loading States for Async Buttons]
+
 **Learning:** For asynchronous operations, it is critical to add a loading state to UI buttons that disable them and display an `aria-busy="true"` attribute alongside a visual spinner (e.g., `<Loader2 />`). This prevents multiple submissions and provides feedback to the screen reader.
 **Action:** Always add `disabled` and `aria-busy` states to buttons performing asynchronous actions, accompanied by visual cues.
