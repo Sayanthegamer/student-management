@@ -52,6 +52,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                             <button
                                 key={pageNum}
                                 onClick={() => onPageChange(pageNum)}
+                                aria-label={`Page ${pageNum}`}
+                                aria-current={currentPage === pageNum ? 'page' : undefined}
                                 className={`w-11 h-11 sm:w-10 sm:h-10 text-xs sm:text-sm font-bold transition-colors border rounded-[12px] shrink-0 flex items-center justify-center ${currentPage === pageNum
                                         ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
                                         : 'bg-[var(--bg-main)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
