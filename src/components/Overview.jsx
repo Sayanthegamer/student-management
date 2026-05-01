@@ -40,22 +40,27 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) 
  * @returns {JSX.Element} The rendered overview component.
  */
 const Overview = ({ students, onAddStudent }) => {
-    // Calculate stats
-    const activeStudents = students.filter(s => s.admissionStatus !== 'Transferred');
-    const totalStudents = activeStudents.length;
+    // ⚡ Bolt: Memoize derived statistics to prevent expensive O(N) recalculations
+    // every 5 seconds when the activities state is updated by the polling interval.
+    const { totalStudents, feesCollected, pendingFeesCount } = React.useMemo(() => {
+        const activeStudents = students.filter(s => s.admissionStatus !== 'Transferred');
+        const total = activeStudents.length;
 
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const feesCollected = students.reduce((total, student) => {
-        // Calculate based on PAYMENT DATE (Cash Flow), not the fee month
-        const paidThisMonth = student.feeHistory?.filter(p => p.date && p.date.startsWith(currentMonth));
-        const totalForStudent = paidThisMonth ? paidThisMonth.reduce((sum, p) => sum + (parseFloat(p.amount) || 0) + (parseFloat(p.fine) || 0), 0) : 0;
-        return total + totalForStudent;
-    }, 0);
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        const collected = students.reduce((acc, student) => {
+            // Calculate based on PAYMENT DATE (Cash Flow), not the fee month
+            const paidThisMonth = student.feeHistory?.filter(p => p.date && p.date.startsWith(currentMonth));
+            const totalForStudent = paidThisMonth ? paidThisMonth.reduce((sum, p) => sum + (parseFloat(p.amount) || 0) + (parseFloat(p.fine) || 0), 0) : 0;
+            return acc + totalForStudent;
+        }, 0);
 
-    const pendingFeesCount = activeStudents.filter(student => {
-        const paidThisMonth = student.feeHistory?.find(p => p.month === currentMonth);
-        return !paidThisMonth;
-    }).length;
+        const pending = activeStudents.filter(student => {
+            const paidThisMonth = student.feeHistory?.find(p => p.month === currentMonth);
+            return !paidThisMonth;
+        }).length;
+
+        return { totalStudents: total, feesCollected: collected, pendingFeesCount: pending };
+    }, [students]);
 
     const [activities, setActivities] = useState(() => getActivities());
 
