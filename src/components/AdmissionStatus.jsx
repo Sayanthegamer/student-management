@@ -148,6 +148,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [filterFeeStatus, setFilterFeeStatus] = useState('');
     const [filterMonth, setFilterMonth] = useState(''); // Empty = All Time
     const [showMonthFilter, setShowMonthFilter] = useState(false);
+    const dialogRef = useRef(null);
 
     // Get unique classes and sections
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
@@ -200,6 +201,52 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
         }
         setPendingAction(null);
     };
+
+    // Focus trap for modal dialog
+    useEffect(() => {
+        if (!pendingAction || !dialogRef.current) return;
+
+        const dialog = dialogRef.current;
+
+        // Find all focusable elements within the dialog
+        const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const focusableElements = dialog.querySelectorAll(focusableSelector);
+        const focusableArray = Array.from(focusableElements);
+
+        if (focusableArray.length === 0) return;
+
+        const firstElement = focusableArray[0];
+        const lastElement = focusableArray[focusableArray.length - 1];
+
+        // Set initial focus to the first button (Cancel button)
+        firstElement.focus();
+
+        // Handle Tab and Shift+Tab to trap focus
+        const handleKeyDown = (e) => {
+            if (e.key !== 'Tab') return;
+
+            if (e.shiftKey) {
+                // Shift+Tab: if on first element, wrap to last
+                if (document.activeElement === firstElement) {
+                    e.preventDefault();
+                    lastElement.focus();
+                }
+            } else {
+                // Tab: if on last element, wrap to first
+                if (document.activeElement === lastElement) {
+                    e.preventDefault();
+                    firstElement.focus();
+                }
+            }
+        };
+
+        dialog.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup on unmount or when pendingAction becomes null
+        return () => {
+            dialog.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [pendingAction]);
 
     return (
         <div className="max-w-[1600px] mx-auto p-4 md:px-8 md:py-6 flex flex-col min-h-full">
@@ -439,6 +486,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                 }}
               >
                 <div
+                  ref={dialogRef}
                   className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6 max-w-sm w-full shadow-2xl"
                   onClick={e => e.stopPropagation()}
                   role="dialog"
@@ -451,7 +499,6 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                       onClick={() => setPendingAction(null)}
                       className="flex-1 py-2.5 text-sm font-semibold border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg hover:border-[var(--border-highlight)] transition-colors"
                       aria-label="Cancel"
-                      autoFocus
                     >
                       Cancel
                     </button>
