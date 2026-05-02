@@ -803,3 +803,41 @@ tbody tr:hover {
   60% { transform: scale(1.05); }
   100% { transform: scale(1); opacity: 1; }
 }
+
+
+/* ============================================
+   LIGHT MODE DYNAMIC PATTERN
+============================================ */
+.light-pattern-overlay {
+  display: none;
+}
+
+[data-theme='light'] .light-pattern-overlay {
+  display: block;
+  position: fixed;
+  inset: -10%;
+  width: 120%;
+  height: 120%;
+  background-image: url('/pattern-light.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.2; /* Subtle visibility */
+  z-index: 0;
+  pointer-events: none;
+  animation: bg-pan-slow 60s ease-in-out infinite alternate;
+}
+
+@keyframes bg-pan-slow {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.05) translate(-1%, 1%); }
+  100% { transform: scale(1) translate(1%, -1%); }
+}
+
+[data-theme='light'] .app-container {
+  background-color: var(--bg-main) !important;
+}
+
+[data-theme='light'] main {
+  background-color: transparent !important;
+}
