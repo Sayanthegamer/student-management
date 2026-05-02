@@ -3,36 +3,36 @@
 :root {
   /* ================================================
      THE KINETIC LEDGER — Design System Foundation
-     Deep Ink-Dark + Electric Indigo
+     Soft Zinc + Slate Theme
   ================================================ */
   
-  /* Foundation Layer - Deep Ink Palette */
-  --bg-main: #0F1115;
-  --bg-sidebar: #13151A;
-  --bg-card: #181A20;
-  --bg-card-hover: #1E2128;
-  --bg-elevated: #232730;
-  --bg-input: #13151A;
+  /* Foundation Layer - Zinc Palette */
+  --bg-main: #09090b;
+  --bg-sidebar: #09090b;
+  --bg-card: #18181b;
+  --bg-card-hover: #27272a;
+  --bg-elevated: #27272a;
+  --bg-input: #18181b;
   
   /* Borders - Ultra-subtle for depth */
-  --border-color: #262933;
-  --border-highlight: #353945;
-  --border-subtle: #1E2128;
-  --border-focus: #6366F1;
+  --border-color: #27272a;
+  --border-highlight: #3f3f46;
+  --border-subtle: #27272a;
+  --border-focus: #e4e4e7;
   
   /* Text - High contrast ink */
-  --text-primary: #F3F4F6;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
-  --text-inverse: #0F1115;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-inverse: #09090b;
   
-  /* Brand - Electric Indigo */
-  --accent-primary: #6366F1;
-  --accent-hover: #818CF8;
-  --accent-muted: #4F46E5;
-  --accent-light: rgba(99, 102, 241, 0.12);
-  --accent-glow: rgba(99, 102, 241, 0.35);
-  --accent-subtle: rgba(99, 102, 241, 0.06);
+  /* Brand - Zinc Accent */
+  --accent-primary: #f4f4f5;
+  --accent-hover: #e4e4e7;
+  --accent-muted: #d4d4d8;
+  --accent-light: rgba(244, 244, 245, 0.12);
+  --accent-glow: rgba(244, 244, 245, 0.15);
+  --accent-subtle: rgba(244, 244, 245, 0.06);
   
   /* Semantic Colors */
   --success: #22C55E;
@@ -46,7 +46,7 @@
   /* Overlays & Surfaces */
   --hover-overlay: rgba(255, 255, 255, 0.04);
   --active-overlay: rgba(255, 255, 255, 0.08);
-  --backdrop: rgba(15, 17, 21, 0.75);
+  --backdrop: rgba(9, 9, 11, 0.8);
   
   /* Status Tokens - Vivid for visibility */
   --color-status-confirmed: #22C55E;
