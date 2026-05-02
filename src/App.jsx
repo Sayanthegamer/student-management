@@ -114,6 +114,7 @@ function App() {
           <ThemeToggle compact />
         </div>
         <div className="noise-overlay" aria-hidden="true" />
+        <div className="light-pattern-overlay" aria-hidden="true" />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -135,6 +136,7 @@ function App() {
       <div className="app-container flex h-[100dvh] overflow-hidden bg-[var(--bg-main)] text-[var(--text-primary)] font-sans">
         {/* Noise Overlay */}
         <div className="noise-overlay" aria-hidden="true" />
+        <div className="light-pattern-overlay" aria-hidden="true" />
 
         {/* Mobile Header - Kinetic Ledger style */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))] bg-[var(--bg-sidebar)] border-b border-[var(--border-subtle)]">

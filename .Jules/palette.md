@@ -11,3 +11,6 @@
 
 **Learning:** For asynchronous operations, it is critical to add a loading state to UI buttons that disable them and display an `aria-busy="true"` attribute alongside a visual spinner (e.g., `<Loader2 />`). This prevents multiple submissions and provides feedback to the screen reader.
 **Action:** Always add `disabled` and `aria-busy` states to buttons performing asynchronous actions, accompanied by visual cues.
+
+- **Global Background Patterns**: When adding a global background image or pattern (e.g., for light mode) using CSS, do not override core UI background variables like `--bg-main` to `transparent`, as this will inadvertently remove backgrounds from modular components (like inputs, modals, and tables). Instead, use a fixed overlay `div` with `pointer-events-none` and `z-index: 0` placed inside the main application container. This correctly separates the global background from the solid base color, allowing UI layers to remain intact.
+- **Dynamic Backgrounds**: For large SVG or PNG geometric patterns, subtle CSS animations (like `transform: scale() translate()`) combined with low opacity (e.g., `0.2`) create dynamic, non-distracting kinetic movement without degrading CPU performance or affecting content legibility.
