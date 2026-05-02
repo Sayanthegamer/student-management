@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 import React, { useState, useEffect } from 'react';
 import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight, HelpCircle, Zap, TrendingUp } from 'lucide-react';
 import { getActivities } from '../utils/storage';
@@ -47,7 +47,7 @@ const defaultActivityMeta = {
  */
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
     <div 
-        className="card-base spotlight-card p-5 flex flex-col gap-3 group hover:bg-[var(--bg-card-hover)] relative overflow-hidden"
+        className="card-base p-5 border border-[var(--border-subtle)] rounded-xl flex flex-col gap-3 group hover:bg-[var(--bg-card-hover)] relative overflow-hidden"
         style={{ animation: `kinetic-enter 0.5s var(--kinetic-curve) both`, animationDelay: `${index * 100}ms` }}
     >
         {/* Kinetic gradient on hover */}

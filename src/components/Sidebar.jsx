@@ -30,10 +30,10 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
             {/* Profile / Project Header */}
             <div className="flex items-center gap-3 px-3 py-3.5 cursor-pointer rounded-xl transition-all duration-200 hover:bg-[var(--bg-card-hover)] group relative mb-1">
                 {/* Avatar with electric glow */}
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-muted)] flex items-center justify-center shrink-0 shadow-lg shadow-[var(--accent-primary)]/20 relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-muted)] flex items-center justify-center shrink-0 shadow-sm shadow-black/40 border border-[var(--border-strong)] relative">
                     {/* Subtle glow behind avatar */}
                     <div className="absolute inset-0 rounded-xl bg-[var(--accent-primary)] blur-md opacity-30" />
-                    <span className="text-sm font-bold text-white relative z-10">{user?.email?.[0]?.toUpperCase() || 'A'}</span>
+                    <span className="text-sm font-bold text-[var(--text-primary)] relative z-10">{user?.email?.[0]?.toUpperCase() || 'A'}</span>
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -81,10 +81,10 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                             to={item.path}
                             onClick={onClose}
                             className={({ isActive }) => `
-                                flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative overflow-hidden
+                                flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 group relative overflow-hidden
                                 ${isActive
-                                    ? 'bg-[var(--accent-subtle)] text-[var(--text-primary)]'
-                                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)]'
+                                    ? 'bg-transparent text-[var(--text-primary)] border border-[var(--border-subtle)] shadow-sm'
+                                    : 'text-[var(--text-secondary)] hover:bg-[var(--hover-overlay)] border border-transparent hover:text-[var(--text-primary)]'
                                 }
                             `}
                         >
@@ -92,13 +92,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                 <>
                                     {/* Electric Indigo active indicator */}
                                     {isActive && (
-                                        <span 
-                                            className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-full"
-                                            style={{
-                                                background: 'linear-gradient(180deg, var(--accent-primary) 0%, var(--accent-muted) 100%)',
-                                                boxShadow: '0 0 16px var(--accent-glow), 0 0 4px var(--accent-primary)'
-                                            }}
-                                        />
+                                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[var(--accent-primary)] rounded-r-full opacity-100 transition-all duration-300" />
                                     )}
                                     
                                     {/* Icon container */}
@@ -106,7 +100,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                         className={`
                                             p-2 rounded-lg transition-all duration-200 relative
                                             ${isActive 
-                                                ? 'bg-[var(--accent-primary)]/15' 
+                                                ? 'bg-transparent'
                                                 : 'bg-[var(--bg-card)]'
                                             }
                                         `}
@@ -124,10 +118,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                         {item.label}
                                     </span>
                                     
-                                    {/* Hover shimmer */}
-                                    {isActive && (
-                                        <div className="absolute inset-0 shimmer-sweep opacity-30 pointer-events-none" />
-                                    )}
+
                                 </>
                             )}
                         </NavLink>

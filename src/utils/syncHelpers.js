@@ -50,15 +50,15 @@ export const normalizeStudent = (student) => {
   // Extract ONLY storage/sync fields, ignore calculated fields
   const {
     feeHistory,
-    // eslint-disable-next-line no-unused-vars
+
     feesAmount,      // ✗ Calculated by getClassFeeAmount() - not stored
-    // eslint-disable-next-line no-unused-vars
+
     feesStatus,      // ✗ Calculated by calculateFeesStatus() - not stored
-    // eslint-disable-next-line no-unused-vars
+
     fine,            // ✗ Calculated per-payment in fee history - not stored
-    // eslint-disable-next-line no-unused-vars
+
     tcDetails,       // ✓ Store as JSON string (packed separately below)
-    // eslint-disable-next-line no-unused-vars
+
     ...rest          // ✓ All other fields (intentionally spread and ignored)
   } = student;
 
