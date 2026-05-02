@@ -3,36 +3,38 @@
 :root {
   /* ================================================
      THE KINETIC LEDGER — Design System Foundation
-     Deep Ink-Dark + Electric Indigo
+     Soft Zinc + Slate Theme
   ================================================ */
   
-  /* Foundation Layer - Deep Ink Palette */
-  --bg-main: #020203;
-  --bg-sidebar: #050507;
-  --bg-card: #09090B;
-  --bg-card-hover: #0E0E11;
-  --bg-elevated: #131316;
-  --bg-input: #0A0A0D;
+  /* Foundation Layer - Zinc Palette */
+  --bg-main: #09090b;
+  --bg-sidebar: #09090b;
+  --bg-card: #18181b;
+  --bg-card-rgb: 24, 24, 27;
+  --bg-card-hover: #27272a;
+  --bg-elevated: #27272a;
+  --bg-input: #18181b;
   
   /* Borders - Ultra-subtle for depth */
-  --border-color: #16161A;
-  --border-highlight: #222228;
-  --border-subtle: #0F0F12;
-  --border-focus: #5865F2;
+  --border-color: #27272a;
+  --border-highlight: #3f3f46;
+  --border-subtle: #27272a;
+  --border-focus: #e4e4e7;
   
   /* Text - High contrast ink */
-  --text-primary: #FAFAFA;
-  --text-secondary: #A8A8B3;
-  --text-muted: #52525E;
-  --text-inverse: #020203;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-inverse: #09090b;
   
-  /* Brand - Electric Indigo */
-  --accent-primary: #5865F2;
-  --accent-hover: #6B75F5;
-  --accent-muted: #4752C4;
-  --accent-light: rgba(88, 101, 242, 0.12);
-  --accent-glow: rgba(88, 101, 242, 0.35);
-  --accent-subtle: rgba(88, 101, 242, 0.06);
+  /* Brand - Zinc Accent */
+  --accent-primary: #f4f4f5;
+  --accent-primary-rgb: 244, 244, 245;
+  --accent-hover: #e4e4e7;
+  --accent-muted: #d4d4d8;
+  --accent-light: rgba(244, 244, 245, 0.12);
+  --accent-glow: rgba(244, 244, 245, 0.15);
+  --accent-subtle: rgba(244, 244, 245, 0.06);
   
   /* Semantic Colors */
   --success: #22C55E;
@@ -46,7 +48,7 @@
   /* Overlays & Surfaces */
   --hover-overlay: rgba(255, 255, 255, 0.04);
   --active-overlay: rgba(255, 255, 255, 0.08);
-  --backdrop: rgba(2, 2, 3, 0.85);
+  --backdrop: rgba(9, 9, 11, 0.8);
   
   /* Status Tokens - Vivid for visibility */
   --color-status-confirmed: #22C55E;
@@ -223,7 +225,7 @@ input, select, textarea {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(88, 101, 242, 0.1) 50%,
+    rgba(var(--accent-primary-rgb), 0.1) 50%,
     transparent 100%
   );
   background-size: 200% 100%;
@@ -275,7 +277,7 @@ input, select, textarea {
 }
 
 .glass-card {
-  background: rgba(9, 9, 11, 0.6);
+  background: rgba(var(--bg-card-rgb), 0.6);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid var(--border-subtle);
@@ -298,18 +300,20 @@ input, select, textarea {
 
 .btn-primary {
   background: var(--accent-primary);
-  color: #ffffff;
+  color: var(--text-inverse);
   border-color: var(--accent-primary);
-  box-shadow: 0 4px 12px -2px rgba(88, 101, 242, 0.25);
+  box-shadow: 0 4px 12px -2px rgba(var(--accent-primary-rgb), 0.25);
 }
 
 .btn-primary:hover {
   background: var(--accent-hover);
-  box-shadow: 0 8px 20px -4px rgba(88, 101, 242, 0.4);
+  color: var(--text-inverse);
+  box-shadow: 0 8px 20px -4px rgba(var(--accent-primary-rgb), 0.4);
   transform: translateY(-1px);
 }
 
 .btn-primary:active {
+  color: var(--text-inverse);
   transform: scale(0.98);
 }
 
@@ -339,16 +343,16 @@ input, select, textarea {
 .cta-primary {
   background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-muted) 100%);
   box-shadow: 
-    0 4px 16px -2px rgba(88, 101, 242, 0.3),
-    0 0 0 0 rgba(88, 101, 242, 0);
+    0 4px 16px -2px rgba(var(--accent-primary-rgb), 0.3),
+    0 0 0 0 rgba(var(--accent-primary-rgb), 0);
   transition: all var(--duration-fast) var(--kinetic-curve);
 }
 
 .cta-primary:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 8px 24px -4px rgba(88, 101, 242, 0.4),
-    0 0 20px 0 rgba(88, 101, 242, 0.2);
+    0 8px 24px -4px rgba(var(--accent-primary-rgb), 0.4),
+    0 0 20px 0 rgba(var(--accent-primary-rgb), 0.2);
 }
 
 /* Input premium */
@@ -403,7 +407,7 @@ button, a, input, select, textarea {
     rgba(255, 255, 255, 0.08) 0%,
     transparent 40%,
     transparent 60%,
-    rgba(88, 101, 242, 0.08) 100%
+    rgba(var(--accent-primary-rgb), 0.08) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -419,12 +423,12 @@ button, a, input, select, textarea {
 
 /* Glow accent */
 .glow-accent {
-  box-shadow: 0 0 0 0 rgba(88, 101, 242, 0);
+  box-shadow: 0 0 0 0 rgba(var(--accent-primary-rgb), 0);
   transition: all var(--duration-normal) var(--kinetic-curve);
 }
 
 .glow-accent:hover {
-  box-shadow: 0 0 32px -4px rgba(88, 101, 242, 0.2);
+  box-shadow: 0 0 32px -4px rgba(var(--accent-primary-rgb), 0.2);
 }
 
 /* ============================================
@@ -551,7 +555,7 @@ button, a, input, select, textarea {
   width: 200%;
   height: 200%;
   background: 
-    radial-gradient(ellipse at 20% 50%, rgba(88, 101, 242, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 50%, rgba(var(--accent-primary-rgb), 0.05) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 80%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
   animation: mesh-drift 20s ease-in-out infinite;

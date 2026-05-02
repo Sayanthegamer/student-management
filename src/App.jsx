@@ -135,7 +135,7 @@ function App() {
         {/* Mobile Header - Kinetic Ledger style */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))] bg-[var(--bg-sidebar)] border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-muted)] flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/20">
+            <div className="w-8 h-8 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-strong)] flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/20">
               <span className="text-sm">🎓</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -168,23 +168,23 @@ function App() {
           {/* Global Header - Compact Editorial */}
           <div className="hidden md:block relative w-full border-b border-[var(--border-subtle)] overflow-hidden">
             {/* Subtle gradient accent */}
-            <div className="absolute top-0 left-0 w-96 h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)]/40 to-transparent" />
             
-            <div className="max-w-6xl mx-auto px-8 pt-8 pb-6">
+
+            <div className="w-full px-8 py-5">
               {/* Compact asymmetrical layout */}
               <div className="flex items-center justify-between gap-6">
                 {/* Left - Brand mark */}
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-muted)] flex items-center justify-center shadow-xl shadow-[var(--accent-primary)]/20 relative">
-                    <div className="absolute inset-0 rounded-xl bg-[var(--accent-primary)] blur-lg opacity-30" />
+                  <div className="w-14 h-14 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-strong)] flex items-center justify-center shadow-xl shadow-[var(--accent-primary)]/20 relative">
+
                     <span className="text-2xl relative">🎓</span>
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold text-[var(--text-primary)] tracking-tighter leading-[1]">
+                    <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">
                       Kinetic Ledger
                     </h1>
                     <p className="text-[var(--text-muted)] text-xs font-mono mt-1">
-                      Lightning-fast record management
+                      Record Management
                     </p>
                   </div>
                 </div>
@@ -199,8 +199,7 @@ function App() {
                         background: syncStatus === 'synced' ? 'var(--success)' : 
                                    syncStatus === 'syncing' ? 'var(--color-warning)' :
                                    syncStatus === 'unsaved' ? '#F59E0B' : 'var(--color-negative)',
-                        boxShadow: syncStatus === 'synced' ? `0 0 8px var(--success)` : 
-                                   syncStatus === 'unsaved' ? '0 0 8px #F59E0B' : 'none'
+                        boxShadow: 'none'
                       }}
                     />
                     <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider">

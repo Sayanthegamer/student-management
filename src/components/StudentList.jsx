@@ -324,10 +324,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-[var(--bg-main)] border-b border-[var(--border-subtle)]">
-                                <th className="px-4 py-3 text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">Student</th>
-                                <th className="px-4 py-3 text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">Details</th>
-                                <th className="px-4 py-3 text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest text-center">Status</th>
-                                <th className="px-4 py-3 text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest text-right">Actions</th>
+                                <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">Student</th>
+                                <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">Details</th>
+                                <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider text-center">Status</th>
+                                <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[var(--border-subtle)] bg-[var(--bg-card)]">
@@ -343,7 +343,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
                                                 <div 
-                                                    className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 flex items-center justify-center font-bold text-sm shrink-0 transition-shadow group-hover:shadow-lg group-hover:shadow-[var(--accent-primary)]/20"
+                                                    className="w-8 h-8 rounded-full bg-[var(--bg-elevated)] border border-[var(--border-color)] text-[var(--text-primary)] flex items-center justify-center font-medium text-xs shrink-0"
                                                 >
                                                     {student.name.charAt(0)}
                                                 </div>
@@ -387,7 +387,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                             <div className="flex gap-1.5 justify-end opacity-50 group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => handlePayFeeClick(student)}
-                                                    className="p-1.5 border border-[var(--border-subtle)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-lg hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20 transition-all active:scale-95 touch-target"
+                                                    className="p-1.5 border border-transparent bg-transparent text-[var(--text-muted)] rounded-md hover:bg-[var(--hover-overlay)] hover:text-[var(--text-primary)] hover:border-[var(--border-subtle)] transition-all touch-target"
                                                     title="Collect Fee"
                                                     aria-label={`Collect fee for ${student.name}`}
                                                 >
@@ -395,7 +395,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                 </button>
                                                 <button
                                                     onClick={() => onEdit(student)}
-                                                    className="p-1.5 border border-[var(--border-subtle)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-lg hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/20 transition-all active:scale-95 touch-target"
+                                                    className="p-1.5 border border-transparent bg-transparent text-[var(--text-muted)] rounded-md hover:bg-[var(--hover-overlay)] hover:text-[var(--text-primary)] hover:border-[var(--border-subtle)] transition-all touch-target"
                                                     title="Edit"
                                                     aria-label={`Edit record for ${student.name}`}
                                                 >
@@ -403,7 +403,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(student.id)}
-                                                    className="p-1.5 border border-[var(--border-subtle)] bg-[var(--bg-main)] text-[var(--text-secondary)] rounded-lg hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/20 transition-all active:scale-95 touch-target"
+                                                    className="p-1.5 border border-transparent bg-transparent text-[var(--text-muted)] rounded-md hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/20 transition-all touch-target"
                                                     title="Delete"
                                                     aria-label={`Delete record for ${student.name}`}
                                                 >
