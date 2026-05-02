@@ -365,7 +365,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                         {/* Status */}
                                         <td className="px-4 py-3 text-center">
                                             <span
-                                                className={`inline-flex items-center px-2.5 py-1 text-[10px] font-bold rounded-lg ${
+                                                className={`inline-flex items-center px-2.5 py-1 text-[10px] font-bold rounded-[5px] ${
                                                     status === 'Paid'
                                                         ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' :
                                                         status === 'Overdue'

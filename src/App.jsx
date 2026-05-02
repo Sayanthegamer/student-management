@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { Plus, Menu, Zap } from 'lucide-react';
+import { Plus, Menu, Zap, GraduationCap } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import BottomNavigation from './components/BottomNavigation';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -136,7 +136,7 @@ function App() {
         <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))] bg-[var(--bg-sidebar)] border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-strong)] flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/20">
-              <span className="text-sm">🎓</span>
+              <GraduationCap size={16} className="text-[var(--accent-primary)]" />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="font-bold text-[var(--text-primary)] text-sm tracking-tight">Kinetic Ledger</span>
@@ -177,7 +177,7 @@ function App() {
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-strong)] flex items-center justify-center shadow-xl shadow-[var(--accent-primary)]/20 relative">
 
-                    <span className="text-2xl relative">🎓</span>
+                    <GraduationCap size={16} className="text-[var(--accent-primary)]" />
                   </div>
                   <div>
                     <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">

@@ -21,7 +21,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm"
+                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-sm"
                 required={required}
                 disabled={disabled}
             >
@@ -35,7 +35,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className={`w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-white text-sm placeholder:text-[var(--text-muted)] ${readOnly ? 'opacity-60 pointer-events-none' : ''}`}
+                className={`w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-sm placeholder:text-[var(--text-muted)] ${readOnly ? 'opacity-60 pointer-events-none' : ''}`}
                 placeholder={placeholder}
                 required={required}
                 disabled={disabled}

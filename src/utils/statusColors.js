@@ -7,10 +7,10 @@
 
 // Tailwind utility classes for status badge styling (theme-aware via CSS vars)
 export const statusStyles = {
-  Provisional: 'bg-[var(--color-status-provisional)]/10 text-[var(--color-status-provisional)] border-[var(--color-status-provisional)]/20',
-  Confirmed: 'bg-[var(--color-status-confirmed)]/10 text-[var(--color-status-confirmed)] border-[var(--color-status-confirmed)]/20',
-  Cancelled: 'bg-[var(--color-status-cancelled)]/10 text-[var(--color-status-cancelled)] border-[var(--color-status-cancelled)]/20',
-  Transferred: 'bg-[var(--color-status-transferred)]/10 text-[var(--color-status-transferred)] border-[var(--color-status-transferred)]/20',
+  Provisional: 'bg-amber-500/10 text-amber-400 border-amber-500/20 rounded-md',
+  Confirmed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 rounded-md',
+  Cancelled: 'bg-rose-500/10 text-rose-400 border-rose-500/20 rounded-md',
+  Transferred: 'bg-violet-500/10 text-violet-400 border-violet-500/20 rounded-md',
 };
 
 // Color values for progress bars, border-top accents, and icon tinting

@@ -33,7 +33,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-muted)] flex items-center justify-center shrink-0 shadow-sm shadow-black/40 border border-[var(--border-strong)] relative">
                     {/* Subtle glow behind avatar */}
                     <div className="absolute inset-0 rounded-xl bg-[var(--accent-primary)] blur-md opacity-30" />
-                    <span className="text-sm font-bold text-[var(--text-primary)] relative z-10">{user?.email?.[0]?.toUpperCase() || 'A'}</span>
+                    <GraduationCap size={16} className="text-white relative z-10" />
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                                         className={`
                                             p-2 rounded-lg transition-all duration-200 relative
                                             ${isActive 
-                                                ? 'bg-transparent'
+                                                ? 'bg-[var(--accent-primary)]/10'
                                                 : 'bg-[var(--bg-card)]'
                                             }
                                         `}
@@ -128,7 +128,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
 
             {/* Sync Status Footer */}
             <div className="mt-auto pt-3">
-                <div className="px-3 py-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] relative overflow-hidden">
+                <div className="px-3 py-4 rounded-lg bg-[var(--bg-card)] border border-[var(--border-subtle)] relative overflow-hidden">
                     {/* Subtle top accent */}
                     <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)]/30 to-transparent" />
                     <SyncIndicator status={syncStatus} onSync={onSync} />

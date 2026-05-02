@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical, SlidersHorizontal } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
 import AdmissionCard from './AdmissionCard';
@@ -140,6 +140,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
  */
 const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [pendingAction, setPendingAction] = useState(null);
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [filterClass, setFilterClass] = useState('');
@@ -147,6 +148,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [filterFeeStatus, setFilterFeeStatus] = useState('');
     const [filterMonth, setFilterMonth] = useState(''); // Empty = All Time
     const [showMonthFilter, setShowMonthFilter] = useState(false);
+    const dialogRef = useRef(null);
 
     // Get unique classes and sections
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
@@ -177,17 +179,74 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const transferred = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Transferred'), [filteredStudents]);
 
     const handleMoveStudent = (student, newStatus) => {
-        if (window.confirm(`Are you sure you want to change status to ${newStatus}?`)) {
-            logActivity('admission', `Changed admission status for ${student.name} to ${newStatus}`);
+        setPendingAction({
+            type: 'move',
+            studentId: student.id,
+            newStatus,
+            label: `Move ${student.name} to ${newStatus}?`
+        });
+    };
+
+    const confirmPendingAction = () => {
+        if (!pendingAction || pendingAction.type !== 'move') return;
+        const student = students.find(s => s.id === pendingAction.studentId);
+        if (student) {
+            logActivity('admission', `Changed admission status for ${student.name} to ${pendingAction.newStatus}`);
             onUpdateStudent({
                 ...student,
-                admissionStatus: newStatus,
-                // Add status change metadata (Issue 4 fix)
+                admissionStatus: pendingAction.newStatus,
                 lastStatusChangeDate: new Date().toISOString().slice(0, 10),
                 lastStatusChangedBy: user?.email || user?.id || 'system'
             });
         }
+        setPendingAction(null);
     };
+
+    // Focus trap for modal dialog
+    useEffect(() => {
+        if (!pendingAction || !dialogRef.current) return;
+
+        const dialog = dialogRef.current;
+
+        // Find all focusable elements within the dialog
+        const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const focusableElements = dialog.querySelectorAll(focusableSelector);
+        const focusableArray = Array.from(focusableElements);
+
+        if (focusableArray.length === 0) return;
+
+        const firstElement = focusableArray[0];
+        const lastElement = focusableArray[focusableArray.length - 1];
+
+        // Set initial focus to the first button (Cancel button)
+        firstElement.focus();
+
+        // Handle Tab and Shift+Tab to trap focus
+        const handleKeyDown = (e) => {
+            if (e.key !== 'Tab') return;
+
+            if (e.shiftKey) {
+                // Shift+Tab: if on first element, wrap to last
+                if (document.activeElement === firstElement) {
+                    e.preventDefault();
+                    lastElement.focus();
+                }
+            } else {
+                // Tab: if on last element, wrap to first
+                if (document.activeElement === lastElement) {
+                    e.preventDefault();
+                    firstElement.focus();
+                }
+            }
+        };
+
+        dialog.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup on unmount or when pendingAction becomes null
+        return () => {
+            dialog.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [pendingAction]);
 
     return (
         <div className="max-w-[1600px] mx-auto p-4 md:px-8 md:py-6 flex flex-col min-h-full">
@@ -417,6 +476,43 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     onMove={handleMoveStudent}
                 />
             </div>
+
+            {pendingAction && (
+              <div
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                onClick={() => setPendingAction(null)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Escape') setPendingAction(null);
+                }}
+              >
+                <div
+                  ref={dialogRef}
+                  className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6 max-w-sm w-full shadow-2xl"
+                  onClick={e => e.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="confirm-title"
+                >
+                  <p id="confirm-title" className="text-[var(--text-primary)] font-semibold text-sm mb-5">{pendingAction.label}</p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setPendingAction(null)}
+                      className="flex-1 py-2.5 text-sm font-semibold border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg hover:border-[var(--border-highlight)] transition-colors"
+                      aria-label="Cancel"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmPendingAction}
+                      className="flex-1 py-2.5 text-sm font-semibold bg-[var(--accent-primary)] text-white rounded-lg hover:bg-[var(--accent-hover)] transition-colors"
+                      aria-label="Confirm"
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
         </div>
     );
 };

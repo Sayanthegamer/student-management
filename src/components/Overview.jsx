@@ -46,7 +46,7 @@ const defaultActivityMeta = {
  * Kinetic Stat Card - Choreographed entrance with spotlight effect
  */
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
-    <div 
+    <div
         className="card-base p-5 border border-[var(--border-subtle)] rounded-xl flex flex-col gap-3 group hover:bg-[var(--bg-card-hover)] relative overflow-hidden"
         style={{ animation: `kinetic-enter 0.5s var(--kinetic-curve) both`, animationDelay: `${index * 100}ms` }}
     >
@@ -54,7 +54,7 @@ const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) 
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/[0.03] to-transparent rounded-full blur-2xl" />
         </div>
-        
+
         <div className="flex justify-between items-start gap-3 relative z-10">
             <div className="min-w-0 flex-1">
                 <p className="m-0 text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">{title}</p>
