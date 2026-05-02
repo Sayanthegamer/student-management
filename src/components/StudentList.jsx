@@ -9,11 +9,12 @@ import useDebounce from '../hooks/useDebounce';
 /**
  * Calculates the fee status for a student for a specific month.
  */
-const getFeeStatusForMonth = (student, month) => {
+// ⚡ Bolt Performance Optimization: Accept hoisted currentMonth to avoid O(N) Date object creations in loops
+const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
     const isPaid = student.feeHistory?.some(p => p.month === month);
     if (isPaid) return 'Paid';
 
-    const currentMonth = new Date().toISOString().slice(0, 7);
+    const currentMonth = hoistedCurrentMonth || new Date().toISOString().slice(0, 7);
     return month < currentMonth ? 'Overdue' : 'Pending';
 };
 
@@ -22,9 +23,12 @@ const getFeeStatusForMonth = (student, month) => {
  * High-density data table with instant feedback and keyboard-friendly interactions
  */
 const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
+    // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
+    const currentMonth = useMemo(() => new Date().toISOString().slice(0, 7), []);
+
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
-    const [filterMonth, setFilterMonth] = useState(new Date().toISOString().slice(0, 7));
+    const [filterMonth, setFilterMonth] = useState(currentMonth);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [filterFeeStatus, setFilterFeeStatus] = useState('');
@@ -83,7 +87,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
 
             let matchesFeeStatus = true;
             if (filterFeeStatus) {
-                const status = getFeeStatusForMonth(student, filterMonth);
+                const status = getFeeStatusForMonth(student, filterMonth, currentMonth);
                 matchesFeeStatus = status === filterFeeStatus;
             }
 
@@ -304,7 +308,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <StudentCard
                                 key={student.id}
                                 student={student}
-                                status={getFeeStatusForMonth(student, filterMonth)}
+                                status={getFeeStatusForMonth(student, filterMonth, currentMonth)}
                                 onEdit={onEdit}
                                 onDelete={onDelete}
                                 onPayFee={handlePayFeeClick}
@@ -332,7 +336,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                         </thead>
                         <tbody className="divide-y divide-[var(--border-subtle)] bg-[var(--bg-card)]">
                             {currentStudents.map((student, idx) => {
-                                const status = getFeeStatusForMonth(student, filterMonth);
+                                const status = getFeeStatusForMonth(student, filterMonth, currentMonth);
                                 return (
                                     <tr 
                                         key={student.id} 
