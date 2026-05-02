@@ -78,8 +78,9 @@ const ResetPassword = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-xs font-medium text-[var(--text-primary)] mb-3">NEW PASSWORD</label>
+                        <label htmlFor="new-password" className="block text-xs font-medium text-[var(--text-primary)] mb-3">NEW PASSWORD</label>
                         <input
+                            id="new-password"
                             type="password"
                             required
                             minLength={8}

@@ -8,6 +8,7 @@ const ThemeToggle = ({ compact = false }) => {
 
   return (
     <button
+      type="button"
       onClick={toggleTheme}
       className={`inline-flex items-center justify-center gap-2 border border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-custom-md transition-colors ${
         compact ? 'h-9 w-9' : 'px-3 py-2 text-xs font-medium'
