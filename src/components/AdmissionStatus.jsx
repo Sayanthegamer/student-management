@@ -179,12 +179,23 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
 
     const handleMoveStudent = (student, newStatus) => {
         setPendingAction({
+            studentId: student.id,
+            studentName: student.name,
+            newStatus: newStatus,
             label: `Move ${student.name} to ${newStatus}?`,
             onConfirm: () => {
-                logActivity('admission', `Changed admission status for ${student.name} to ${newStatus}`);
+                // Find the latest student object from props instead of using captured closure
+                const latestStudent = students.find(s => s.id === pendingAction.studentId);
+                if (!latestStudent) {
+                    console.error(`Student with id ${pendingAction.studentId} not found`);
+                    setPendingAction(null);
+                    return;
+                }
+
+                logActivity('admission', `Changed admission status for ${latestStudent.name} to ${pendingAction.newStatus}`);
                 onUpdateStudent({
-                    ...student,
-                    admissionStatus: newStatus,
+                    ...latestStudent,
+                    admissionStatus: pendingAction.newStatus,
                     // Add status change metadata (Issue 4 fix)
                     lastStatusChangeDate: new Date().toISOString().slice(0, 10),
                     lastStatusChangedBy: user?.email || user?.id || 'system'
