@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { CheckCircle, Clock, XCircle, FileText, Filter, Search, MoreVertical, SlidersHorizontal } from 'lucide-react';
 import CustomMonthPicker from './CustomMonthPicker';
 import AdmissionCard from './AdmissionCard';
@@ -427,22 +427,31 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
               <div
                 className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
                 onClick={() => setPendingAction(null)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Escape') setPendingAction(null);
+                }}
               >
                 <div
                   className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6 max-w-sm w-full shadow-2xl"
                   onClick={e => e.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="confirm-title"
                 >
-                  <p className="text-[var(--text-primary)] font-semibold text-sm mb-5">{pendingAction.label}</p>
+                  <p id="confirm-title" className="text-[var(--text-primary)] font-semibold text-sm mb-5">{pendingAction.label}</p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setPendingAction(null)}
                       className="flex-1 py-2.5 text-sm font-semibold border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg hover:border-[var(--border-highlight)] transition-colors"
+                      aria-label="Cancel"
+                      autoFocus
                     >
                       Cancel
                     </button>
                     <button
                       onClick={pendingAction.onConfirm}
                       className="flex-1 py-2.5 text-sm font-semibold bg-[var(--accent-primary)] text-white rounded-lg hover:bg-[var(--accent-hover)] transition-colors"
+                      aria-label="Confirm"
                     >
                       Confirm
                     </button>

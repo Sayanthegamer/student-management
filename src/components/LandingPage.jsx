@@ -6,6 +6,7 @@ import {
   Users,
   CheckCircle2,
   ArrowRight,
+  GraduationCap,
 } from "lucide-react";
 
 const LandingPage = () => {

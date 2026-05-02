@@ -177,7 +177,7 @@ function App() {
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-strong)] flex items-center justify-center shadow-xl shadow-[var(--accent-primary)]/20 relative">
 
-                    <span className="text-2xl relative">🎓</span>
+                    <GraduationCap size={16} className="text-[var(--accent-primary)]" />
                   </div>
                   <div>
                     <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">
