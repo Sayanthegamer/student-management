@@ -179,30 +179,26 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
 
     const handleMoveStudent = (student, newStatus) => {
         setPendingAction({
+            type: 'move',
             studentId: student.id,
-            studentName: student.name,
-            newStatus: newStatus,
-            label: `Move ${student.name} to ${newStatus}?`,
-            onConfirm: () => {
-                // Find the latest student object from props instead of using captured closure
-                const latestStudent = students.find(s => s.id === pendingAction.studentId);
-                if (!latestStudent) {
-                    console.error(`Student with id ${pendingAction.studentId} not found`);
-                    setPendingAction(null);
-                    return;
-                }
-
-                logActivity('admission', `Changed admission status for ${latestStudent.name} to ${pendingAction.newStatus}`);
-                onUpdateStudent({
-                    ...latestStudent,
-                    admissionStatus: pendingAction.newStatus,
-                    // Add status change metadata (Issue 4 fix)
-                    lastStatusChangeDate: new Date().toISOString().slice(0, 10),
-                    lastStatusChangedBy: user?.email || user?.id || 'system'
-                });
-                setPendingAction(null);
-            }
+            newStatus,
+            label: `Move ${student.name} to ${newStatus}?`
         });
+    };
+
+    const confirmPendingAction = () => {
+        if (!pendingAction || pendingAction.type !== 'move') return;
+        const student = students.find(s => s.id === pendingAction.studentId);
+        if (student) {
+            logActivity('admission', `Changed admission status for ${student.name} to ${pendingAction.newStatus}`);
+            onUpdateStudent({
+                ...student,
+                admissionStatus: pendingAction.newStatus,
+                lastStatusChangeDate: new Date().toISOString().slice(0, 10),
+                lastStatusChangedBy: user?.email || user?.id || 'system'
+            });
+        }
+        setPendingAction(null);
     };
 
     return (
@@ -460,7 +456,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                       Cancel
                     </button>
                     <button
-                      onClick={pendingAction.onConfirm}
+                      onClick={confirmPendingAction}
                       className="flex-1 py-2.5 text-sm font-semibold bg-[var(--accent-primary)] text-white rounded-lg hover:bg-[var(--accent-hover)] transition-colors"
                       aria-label="Confirm"
                     >
