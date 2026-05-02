@@ -41,7 +41,14 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
             // Don't operate shortcuts when payment modal is open
             if (showPaymentModal) return;
 
-            // Ignore events from editable elements
+            // Handle Escape key first - should work even in editable elements
+            if (e.key === 'Escape' && showFilters) {
+                e.preventDefault();
+                setShowFilters(false);
+                return;
+            }
+
+            // Ignore events from editable elements for remaining shortcuts
             const target = e.target;
             const isEditableTarget =
                 target.tagName === 'INPUT' ||
@@ -52,10 +59,6 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 if (isEditableTarget) return;
                 e.preventDefault();
                 searchRef.current?.focus();
-            }
-            if (e.key === 'Escape' && showFilters) {
-                if (isEditableTarget) return;
-                setShowFilters(false);
             }
         };
 
