@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { Plus, Menu } from 'lucide-react';
+import { Plus, Menu, Zap } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import BottomNavigation from './components/BottomNavigation';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -28,13 +28,8 @@ const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
 const Walkthrough = lazy(() => import('./components/Walkthrough'));
 
 /**
- * Root application component that provides the authenticated app layout, routing, and student-management handlers.
- *
- * Renders authentication-aware routes (login and public landing for unauthenticated users; full app layout for authenticated users),
- * global UI chrome (sidebar, headers, bottom navigation), sync/error handling, and routes for student workflows (listing, add/edit, payments,
- * admissions, promotions, transfer certificates, and data import).
- *
- * @returns {JSX.Element} The React element tree for the application UI, including routing, layout, sync guards, and modals. 
+ * Root application component - Kinetic Ledger Shell
+ * Refined layout with compact editorial header for maximum data space
  */
 function App() {
   const { user, loading } = useAuth();
@@ -82,7 +77,7 @@ function App() {
   }, [updateStudent]);
 
   const handlePayFee = useCallback((studentId, paymentDetails) => {
-    addFeePayment(studentId, paymentDetails);
+    return addFeePayment(studentId, paymentDetails);
   }, [addFeePayment]);
 
   const handleCancel = useCallback(() => {
@@ -137,19 +132,22 @@ function App() {
         {/* Noise Overlay */}
         <div className="noise-overlay" aria-hidden="true" />
 
-        {/* Mobile Header */}
+        {/* Mobile Header - Kinetic Ledger style */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,0px)] h-[calc(3.5rem+env(safe-area-inset-top,0px))] bg-[var(--bg-sidebar)] border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-primary)] to-indigo-600 flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/20 -rotate-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-muted)] flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/20">
               <span className="text-sm">🎓</span>
             </div>
-            <span className="font-bold text-[var(--text-primary)] text-base tracking-tight">StdMgr</span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold text-[var(--text-primary)] text-sm tracking-tight">Kinetic Ledger</span>
+              <Zap size={10} className="text-[var(--accent-primary)] fill-current" />
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {showMobileAdd && (
               <button
                 onClick={handleAddClick}
-                className="p-2 border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] rounded-lg transition-colors touch-manipulation active:scale-95"
+                className="p-2 border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-card)] rounded-lg transition-colors touch-target active:scale-95"
                 aria-label="Add student"
               >
                 <Plus size={18} className="stroke-[2px]" />
@@ -160,63 +158,72 @@ function App() {
         </div>
 
         {/* Sidebar - Desktop Only */}
-        <div className="hidden md:block md:relative md:w-[240px] md:z-0 flex-shrink-0 bg-[var(--bg-sidebar)]">
+        <div className="hidden md:block md:relative md:w-[220px] md:z-0 flex-shrink-0 bg-[var(--bg-sidebar)]">
           <Sidebar onClose={() => { }} syncStatus={syncStatus} onSync={forceSync} />
         </div>
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto relative pt-[calc(3.5rem+env(safe-area-inset-top,0px))] md:pt-0 w-full pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-0 bg-[var(--bg-main)]">
 
-          {/* Global Project Header - Editorial Style */}
+          {/* Global Header - Compact Editorial */}
           <div className="hidden md:block relative w-full border-b border-[var(--border-subtle)] overflow-hidden">
             {/* Subtle gradient accent */}
-            <div className="absolute top-0 left-0 w-96 h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)]/30 to-transparent" />
+            <div className="absolute top-0 left-0 w-96 h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)]/40 to-transparent" />
             
-            <div className="max-w-6xl mx-auto px-8 pt-12 pb-8">
-              {/* Asymmetrical layout with overlapping elements */}
-              <div className="flex items-start justify-between gap-8">
-                {/* Left side - Logo and title stack */}
-                <div className="relative">
-                  <div className="absolute -left-4 -top-2 w-20 h-20 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center shadow-lg transform -rotate-6 translate-y-1 opacity-60">
-                    <span className="text-3xl">🎓</span>
+            <div className="max-w-6xl mx-auto px-8 pt-8 pb-6">
+              {/* Compact asymmetrical layout */}
+              <div className="flex items-center justify-between gap-6">
+                {/* Left - Brand mark */}
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-muted)] flex items-center justify-center shadow-xl shadow-[var(--accent-primary)]/20 relative">
+                    <div className="absolute inset-0 rounded-xl bg-[var(--accent-primary)] blur-lg opacity-30" />
+                    <span className="text-2xl relative">🎓</span>
                   </div>
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--accent-primary)] to-indigo-600 flex items-center justify-center shadow-xl shadow-[var(--accent-primary)]/20 -ml-2">
-                    <span className="text-2xl">🎓</span>
+                  <div>
+                    <h1 className="text-3xl font-bold text-[var(--text-primary)] tracking-tighter leading-[1]">
+                      Kinetic Ledger
+                    </h1>
+                    <p className="text-[var(--text-muted)] text-xs font-mono mt-1">
+                      Lightning-fast record management
+                    </p>
                   </div>
                 </div>
                 
-                {/* Right side - Content aligned differently */}
-                <div className="flex-1 pt-4">
-                  <div className="flex items-baseline justify-between mb-3">
-                    <h1 className="text-4xl font-bold text-[var(--text-primary)] tracking-tighter leading-[0.9]">
-                      Student Manager Pro
-                    </h1>
-                    <div className="hidden lg:flex items-center gap-2 text-[var(--text-muted)] text-xs font-mono">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      <span>System Online</span>
-                    </div>
+                {/* Right - System status & actions */}
+                <div className="flex items-center gap-4">
+                  {/* System status pill */}
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)]">
+                    <span 
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{
+                        background: syncStatus === 'synced' ? 'var(--success)' : 
+                                   syncStatus === 'syncing' ? 'var(--color-warning)' :
+                                   syncStatus === 'unsaved' ? '#F59E0B' : 'var(--color-negative)',
+                        boxShadow: syncStatus === 'synced' ? `0 0 8px var(--success)` : 
+                                   syncStatus === 'unsaved' ? '0 0 8px #F59E0B' : 'none'
+                      }}
+                    />
+                    <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
+                      {syncStatus === 'synced' ? 'Synced' : 
+                       syncStatus === 'syncing' ? 'Syncing' :
+                       syncStatus === 'unsaved' ? 'Unsaved' : 'Offline'}
+                    </span>
                   </div>
-                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed max-w-xl">
-                    The complete system for managing student records, fee payments, and admissions.
-                  </p>
+
+                  {/* Quick actions */}
+                  <button
+                    onClick={forceSync}
+                    className="btn btn-secondary text-xs py-2 px-3"
+                    disabled={syncStatus === 'syncing'}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Sync
+                  </button>
+                  <button onClick={handleAddClick} className="btn btn-primary cta-primary text-sm py-2">
+                    <Plus size={16} />
+                    <span>Add Record</span>
+                  </button>
                 </div>
-              </div>
-              
-              {/* Action buttons - Aligned to bottom right */}
-              <div className="flex items-center gap-3 mt-6 justify-end">
-                <button
-                  onClick={forceSync}
-                  className={`btn btn-secondary text-xs ${syncStatus === 'syncing' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  disabled={syncStatus === 'syncing'}
-                  aria-label="Sync data with cloud"
-                >
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  Sync Data
-                </button>
-                <button onClick={handleAddClick} className="btn btn-primary cta-primary text-sm">
-                  <Plus size={16} />
-                  <span>Add Student</span>
-                </button>
               </div>
             </div>
           </div>
@@ -262,27 +269,27 @@ function App() {
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
+        <div className="fixed inset-0 bg-[var(--bg-main)]/80 backdrop-blur-md z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
           <div
-            className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 scale-in shadow-2xl rounded-2xl"
+            className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 kinetic-scale shadow-2xl rounded-xl"
             onClick={e => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-confirm-title"
             aria-describedby="delete-confirm-desc"
           >
-            <h3 id="delete-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] mb-2 tracking-tight">Delete Student?</h3>
-            <p id="delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6 leading-relaxed">This action cannot be undone. The student record and all associated data will be permanently removed.</p>
+            <h3 id="delete-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] mb-2 tracking-tight">Delete Record?</h3>
+            <p id="delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6 leading-relaxed">This action cannot be undone. All associated data will be permanently removed.</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="px-4 py-2 text-sm font-medium border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] rounded-lg transition-colors"
+                className="btn btn-secondary text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 text-sm font-medium bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 rounded-lg transition-colors"
+                className="btn btn-danger text-sm"
               >
                 Delete
               </button>
