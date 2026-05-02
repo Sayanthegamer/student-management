@@ -8,5 +8,6 @@
 **Action:** Identify derived states that depend on large prop arrays, and use `React.useMemo` to cache them when state variables updated by polling routines do not affect the derived computations.
 
 ## 2024-05-18 - Hoist Invariant Date Instantiation
+
 **Learning:** Instantiating `new Date().toISOString().slice(0, 7)` inside loops (like `Array.prototype.filter` or `Array.prototype.map`) that process large datasets (e.g. 2000 items) is extremely slow due to repeated parsing and string processing (creating significant overhead, e.g., 425ms vs 5ms execution times in benchmarks).
 **Action:** When filtering or mapping data where an unchanging derived property like the current date/time is needed, calculate that value once before the loop (using `useMemo` in React components, or as a simple hoisted variable) and pass it into the loop/callback explicitly.

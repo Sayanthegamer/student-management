@@ -24,7 +24,7 @@ const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
  */
 const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
-    const currentMonth = useMemo(() => new Date().toISOString().slice(0, 7), []);
+    const currentMonth = new Date().toISOString().slice(0, 7);
 
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
@@ -109,7 +109,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
             if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
             return 0;
         });
-    }, [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder]);
+    }, [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder, currentMonth]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
