@@ -46,41 +46,30 @@ const defaultActivityMeta = {
  * Kinetic Stat Card - Choreographed entrance with spotlight effect
  */
 const StatCard = ({ title, value, icon: Icon, colorClass, subtext, index = 0 }) => (
-    <div 
-        className="card-base p-5 border border-[var(--border-subtle)] rounded-xl flex flex-col gap-3 group hover:bg-[var(--bg-card-hover)] relative overflow-hidden"
-        style={{ animation: `kinetic-enter 0.5s var(--kinetic-curve) both`, animationDelay: `${index * 100}ms` }}
-    >
-        {/* Kinetic gradient on hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/[0.03] to-transparent rounded-full blur-2xl" />
-        </div>
-        
-        <div className="flex justify-between items-start gap-3 relative z-10">
-            <div className="min-w-0 flex-1">
-                <p className="m-0 text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">{title}</p>
-                <h3 className="mt-2 text-3xl md:text-4xl text-[var(--text-primary)] font-bold tracking-tighter tabular-nums">{value}</h3>
-            </div>
-            {/* Icon with glow effect on hover */}
-            <div className={`relative p-2.5 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${colorClass}`}>
-                {colorClass.includes('emerald') && (
-                    <div className="absolute inset-0 bg-emerald-500/20 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                )}
-                {colorClass.includes('blue') && (
-                    <div className="absolute inset-0 bg-blue-500/20 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                )}
-                {colorClass.includes('amber') && (
-                    <div className="absolute inset-0 bg-amber-500/20 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                )}
-                <Icon size={18} className="stroke-[2px] relative z-10" />
-            </div>
-        </div>
-        {subtext && (
-            <div className="flex items-center gap-2 pt-3 border-t border-[var(--border-subtle)] mt-1 relative z-10">
-                <Zap size={10} className="text-[var(--accent-primary)] fill-current" />
-                <p className="m-0 text-xs text-[var(--text-secondary)] font-medium">{subtext}</p>
-            </div>
-        )}
+  <div
+    className="relative overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card)] p-5 group"
+    style={{ animation: `kinetic-enter 0.3s var(--kinetic-curve) both`, animationDelay: `${index * 80}ms` }}
+  >
+    {/* Subtle tinted top border accent */}
+    <div className={`absolute top-0 left-0 right-0 h-[2px] ${
+      colorClass.includes('emerald') ? 'bg-emerald-500' :
+      colorClass.includes('amber') ? 'bg-amber-500' :
+      colorClass.includes('blue') ? 'bg-[var(--accent-primary)]' : 'bg-[var(--accent-primary)]'
+    } opacity-60`} />
+
+    <div className="flex items-start justify-between mb-3">
+      <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">{title}</p>
+      <div className={`p-1.5 rounded-lg ${colorClass}`}>
+        <Icon size={14} className="stroke-[2px]" />
+      </div>
     </div>
+
+    <h3 className="text-3xl font-bold text-[var(--text-primary)] tracking-tighter tabular-nums mb-2">{value}</h3>
+
+    {subtext && (
+      <p className="text-[11px] text-[var(--text-muted)] font-medium">{subtext}</p>
+    )}
+  </div>
 );
 
 /**
