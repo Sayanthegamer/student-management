@@ -2,6 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+
+/**
+ * Walkthrough Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const Walkthrough = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
@@ -321,7 +327,7 @@ const Walkthrough = () => {
                     left: spotlightStyle.left,
                     width: spotlightStyle.width,
                     height: spotlightStyle.height,
-                    boxShadow: '0 0 0 9999px rgba(5, 5, 5, 0.85)',
+                    boxShadow: '0 0 0 9999px var(--overlay-strong)',
                     opacity: spotlightStyle.opacity === 0 && !step.target ? 0 : 1 // Hide spotlight ring if no target
                 }}
             />
@@ -348,19 +354,19 @@ const Walkthrough = () => {
                             Step {currentStep + 1}/{steps.length}
                         </span>
                     </div>
-                    <button onClick={() => handleClose(true)} aria-label="Close walkthrough" className="text-[var(--text-secondary)] hover:text-white transition-colors">
+                    <button onClick={() => handleClose(true)} aria-label="Close walkthrough" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
                         <X size={24} className="stroke-[3px]" />
                     </button>
                 </div>
 
-                <h3 id={`walkthrough-title-${currentStep}`} className="text-xl font-medium text-white mb-3 ">{step.title}</h3>
-                <p id={`walkthrough-desc-${currentStep}`} className="text-white/70 mb-8 leading-relaxed font-mono text-xs ">{step.description}</p>
+                <h3 id={`walkthrough-title-${currentStep}`} className="text-xl font-medium text-[var(--text-primary)] mb-3 ">{step.title}</h3>
+                <p id={`walkthrough-desc-${currentStep}`} className="text-[var(--text-secondary)] mb-8 leading-relaxed font-mono text-xs ">{step.description}</p>
 
                 <div className="flex flex-wrap items-center justify-between gap-4">
                     <button
                         onClick={handlePrev}
                         disabled={currentStep === 0}
-                        className={`flex items-center gap-2 text-[10px] font-bold transition-colors ${currentStep === 0 ? 'text-white/20 cursor-not-allowed' : 'text-[var(--text-secondary)] hover:text-[var(--accent-primary)]'}`}
+                        className={`flex items-center gap-2 text-[10px] font-bold transition-colors ${currentStep === 0 ? 'text-[var(--text-muted)]/40 cursor-not-allowed' : 'text-[var(--text-secondary)] hover:text-[var(--accent-primary)]'}`}
                     >
                         <ChevronLeft size={16} className="stroke-[3px]" /> Previous
                     </button>
@@ -370,7 +376,7 @@ const Walkthrough = () => {
                         {steps.map((_, idx) => (
                             <div
                                 key={idx}
-                                className={`w-2 h-2 rounded-full transition-all ${idx === currentStep ? 'bg-[var(--accent-primary)] scale-125' : 'bg-white/20'}`}
+                                className={`w-2 h-2 rounded-full transition-all ${idx === currentStep ? 'bg-[var(--accent-primary)] scale-125' : 'bg-[var(--text-muted)]/30'}`}
                             />
                         ))}
                     </div>

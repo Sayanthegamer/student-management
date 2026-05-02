@@ -1,5 +1,17 @@
+
+/**
+ * STORAGE_KEY Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const STORAGE_KEY = 'student_management_session_v1';
 
+
+/**
+ * getStudents
+ * 
+ * Utility function or helper.
+ */
 export const getStudents = () => {
   try {
     const data = sessionStorage.getItem(STORAGE_KEY);
@@ -12,6 +24,12 @@ export const getStudents = () => {
   }
 };
 
+
+/**
+ * saveStudents
+ * 
+ * Utility function or helper.
+ */
 export const saveStudents = (students) => {
   try {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(students));
@@ -20,6 +38,12 @@ export const saveStudents = (students) => {
   }
 };
 
+
+/**
+ * addStudent
+ * 
+ * Utility function or helper.
+ */
 export const addStudent = (student) => {
   const students = getStudents();
   const newStudent = {
@@ -32,6 +56,12 @@ export const addStudent = (student) => {
   return updatedStudents;
 };
 
+
+/**
+ * updateStudent
+ * 
+ * Utility function or helper.
+ */
 export const updateStudent = (updatedStudent) => {
   const students = getStudents();
   const updatedStudents = students.map(s =>
@@ -41,6 +71,12 @@ export const updateStudent = (updatedStudent) => {
   return updatedStudents;
 };
 
+
+/**
+ * deleteStudent
+ * 
+ * Utility function or helper.
+ */
 export const deleteStudent = (id) => {
   const students = getStudents();
   const updatedStudents = students.filter(s => s.id !== id);
@@ -48,6 +84,12 @@ export const deleteStudent = (id) => {
   return updatedStudents;
 };
 
+
+/**
+ * addFeePayment
+ * 
+ * Utility function or helper.
+ */
 export const addFeePayment = (studentId, paymentDetails) => {
   const students = getStudents();
   const updatedStudents = students.map(student => {
@@ -74,8 +116,20 @@ export const addFeePayment = (studentId, paymentDetails) => {
 
 // --- Activity Logging System ---
 
+
+/**
+ * ACTIVITIES_KEY Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const ACTIVITIES_KEY = 'student_management_activities_session_v1';
 
+
+/**
+ * getActivities
+ * 
+ * Utility function or helper.
+ */
 export const getActivities = () => {
   try {
     const data = sessionStorage.getItem(ACTIVITIES_KEY);
@@ -86,6 +140,12 @@ export const getActivities = () => {
   }
 };
 
+
+/**
+ * logActivity
+ * 
+ * Utility function or helper.
+ */
 export const logActivity = (type, description) => {
   try {
     const activities = getActivities();

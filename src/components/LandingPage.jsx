@@ -2,6 +2,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, Zap, Database, ArrowRight } from 'lucide-react';
 
+
+/**
+ * LandingPage Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const LandingPage = () => {
   const navigate = useNavigate();
 

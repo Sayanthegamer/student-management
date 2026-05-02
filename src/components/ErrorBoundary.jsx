@@ -1,6 +1,12 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
+
+/**
+ * ErrorBoundary Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);

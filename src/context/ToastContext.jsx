@@ -1,8 +1,20 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { CheckCircle2, XCircle, AlertCircle, X, Info } from 'lucide-react';
 
+
+/**
+ * ToastContext Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const ToastContext = createContext(null);
 
+
+/**
+ * toastIcons
+ * 
+ * Utility function or helper.
+ */
 const toastIcons = {
   success: CheckCircle2,
   error: XCircle,
@@ -10,6 +22,12 @@ const toastIcons = {
   info: Info,
 };
 
+
+/**
+ * toastStyles
+ * 
+ * Utility function or helper.
+ */
 const toastStyles = {
   success: {
     border: 'border-[var(--success)]/30',
@@ -45,6 +63,12 @@ const toastStyles = {
   },
 };
 
+
+/**
+ * ToastContainer Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 function ToastContainer({ toasts, onDismiss }) {
   return (
     <div
@@ -66,6 +90,12 @@ function ToastContainer({ toasts, onDismiss }) {
   );
 }
 
+
+/**
+ * ToastItem Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 function ToastItem({ toast, onDismiss }) {
   const { message, type, id, duration, exiting } = toast;
   const styles = toastStyles[type] || toastStyles.info;
@@ -140,6 +170,12 @@ function ToastItem({ toast, onDismiss }) {
   );
 }
 
+
+/**
+ * ToastProvider Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const toastIdRef = useRef(0);
@@ -222,6 +258,12 @@ export function ToastProvider({ children }) {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
+
+/**
+ * useToast
+ * 
+ * Utility function or helper.
+ */
 export function useToast() {
   const context = useContext(ToastContext);
   if (!context) {

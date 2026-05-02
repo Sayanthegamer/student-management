@@ -1,6 +1,12 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+
+/**
+ * Pagination Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPerPage }) => {
     if (totalPages <= 1) return null;
 

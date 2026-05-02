@@ -1,6 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
+
+/**
+ * supabaseUrl
+ * 
+ * Utility function or helper.
+ */
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+
+/**
+ * supabaseAnonKey
+ * 
+ * Utility function or helper.
+ */
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
@@ -16,4 +28,10 @@ try {
     client = null;
 }
 
+
+/**
+ * supabase
+ * 
+ * Utility function or helper.
+ */
 export const supabase = client;

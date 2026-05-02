@@ -13,6 +13,12 @@ const getFeeStatusForMonth = (student, month) => {
     return month < currentMonth ? 'Overdue' : 'Pending';
 };
 
+
+/**
+ * StudentList Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -162,7 +168,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <select
                                 value={filterClass}
                                 onChange={(e) => setFilterClass(e.target.value)}
-                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
                             >
                                 <option value="">All Classes</option>
                                 {classes.map(c => <option key={c} value={c}>Class {c}</option>)}
@@ -173,7 +179,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <select
                                 value={filterSection}
                                 onChange={(e) => setFilterSection(e.target.value)}
-                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
                             >
                                 <option value="">All Sections</option>
                                 {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
@@ -184,7 +190,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             <select
                                 value={filterFeeStatus}
                                 onChange={(e) => setFilterFeeStatus(e.target.value)}
-                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
                             >
                                 <option value="">All Statuses</option>
                                 <option value="Paid">Paid</option>
@@ -208,7 +214,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-white"
+                                    className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
                                 >
                                     <option value="name">Name</option>
                                     <option value="rollNo">Roll No</option>
@@ -217,7 +223,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                             </div>
                             <button
                                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                className="p-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-secondary)] hover:text-white transition-all h-[38px] w-[38px] flex items-center justify-center outline-none focus:border-white"
+                                className="p-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all h-[38px] w-[38px] flex items-center justify-center outline-none focus:border-[var(--accent-primary)]"
                                 aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                             >
                                 {sortOrder === 'asc' ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
@@ -241,7 +247,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                     ) : (
                         <div className="py-16 text-center border border-[var(--border-color)] bg-[var(--bg-main)]">
                             <div className="bg-[var(--bg-card)] border border-[var(--border-color)] w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                <Search size={24} className="text-white/30" />
+                                <Search size={24} className="text-[var(--text-muted)]/50" />
                             </div>
                             <p className="text-[var(--text-primary)] font-bold text-base ">No results found</p>
                             <p className="text-[var(--text-secondary)] font-mono text-xs mt-2 uppercase">Try adjusting your filters or search term</p>

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
+
+/**
+ * CustomDatePicker Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const CustomDatePicker = ({ value, onChange, label, required, className = '' }) => {
 
     const parse = (v) => {

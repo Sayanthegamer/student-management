@@ -3,6 +3,12 @@ import { Search, Filter, ArrowRight, UserCheck, CreditCard, ChevronRight } from 
 import { CLASS_ORDER, getNextClass, PROMOTION_FEES, CLASS_FEES } from '../utils/constants';
 import { logActivity } from '../utils/storage';
 
+
+/**
+ * PromotionBoard Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const PromotionBoard = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterClass, setFilterClass] = useState('');

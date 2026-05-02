@@ -2,6 +2,12 @@ import React from 'react';
 import { Edit2, IndianRupee, Trash2 } from 'lucide-react';
 
 
+
+/**
+ * StudentCard Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee }) => (
   <div className="card-base p-4 transition-all duration-300 group hover:border-[var(--border-highlight)] hover:-translate-y-0.5 glow-accent">
     <div className="flex items-start justify-between gap-3 mb-4">

@@ -2,6 +2,12 @@
 
 import { CLASS_FEES, calculateFine } from './constants';
 
+
+/**
+ * safeJSONParse
+ * 
+ * Utility function or helper.
+ */
 const safeJSONParse = (str) => {
   try {
     return JSON.parse(str);
@@ -40,6 +46,12 @@ export const getClassFeeAmount = (className) => {
   return CLASS_FEES[className] || '';
 };
 
+
+/**
+ * normalizeStudent
+ * 
+ * Utility function or helper.
+ */
 export const normalizeStudent = (student) => {
   // Extract ONLY storage/sync fields, ignore calculated fields
   const {
@@ -138,6 +150,12 @@ export const normalizeStudent = (student) => {
   return { student: cleanedStudent, fees };
 };
 
+
+/**
+ * denormalizeStudents
+ * 
+ * Utility function or helper.
+ */
 export const denormalizeStudents = (studentsData, feesData) => {
   if (!studentsData) return [];
 

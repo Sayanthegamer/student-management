@@ -1,6 +1,12 @@
 import React from 'react';
 import { FileText, Download, Calendar, School, Award } from 'lucide-react';
 
+
+/**
+ * CertificateCard Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const CertificateCard = React.memo(({ student, onGenerateTC }) => {
   const hasTC = student.tcDetails && student.tcDetails.issueDate;
   const tcDate = hasTC ? new Date(student.tcDetails.issueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : null;

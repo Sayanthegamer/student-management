@@ -26,6 +26,8 @@
   --destructive-foreground: #FFF1F2;
 
   --hover-overlay: rgba(255, 255, 255, 0.05);
+  --overlay-strong: rgba(5, 5, 5, 0.85);
+  --dot-grid-color: rgba(255, 255, 255, 0.03);
 
   /* Status tokens */
   --color-status-confirmed: #10b981;
@@ -41,6 +43,27 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --spring-duration: 0.5s;
   --spring-duration-fast: 0.3s;
+}
+
+[data-theme='light'] {
+  --bg-main: #F4F6FB;
+  --bg-sidebar: #EEF2F8;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F3F6FC;
+  --border-color: #D6DEEA;
+  --border-highlight: #BCC8DA;
+
+  --text-primary: #141B2D;
+  --text-secondary: #4C5A74;
+  --text-muted: #75829B;
+
+  --accent-primary: #4F46E5;
+  --accent-hover: #4338CA;
+  --accent-light: rgba(79, 70, 229, 0.12);
+
+  --hover-overlay: rgba(20, 27, 45, 0.04);
+  --overlay-strong: rgba(12, 18, 34, 0.45);
+  --dot-grid-color: rgba(20, 27, 45, 0.07);
 }
 
 * {
@@ -380,7 +403,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-image: radial-gradient(circle, var(--dot-grid-color) 1px, transparent 1px);
   background-size: 24px 24px;
   pointer-events: none;
   z-index: 1;

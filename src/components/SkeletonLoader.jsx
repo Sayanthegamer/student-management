@@ -1,5 +1,11 @@
 import React from 'react';
 
+
+/**
+ * SkeletonLoader Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const SkeletonLoader = () => {
   return (
     <div className="app-container flex h-[100dvh] overflow-hidden bg-[var(--bg-main)]">

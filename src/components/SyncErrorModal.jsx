@@ -3,6 +3,12 @@ import { Download, AlertTriangle, X } from 'lucide-react';
 import { convertToCSV } from '../utils/csvHelpers';
 import { useToast } from '../context/ToastContext';
 
+
+/**
+ * SyncErrorModal Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const SyncErrorModal = ({ error, students, onDismiss }) => {
   const { showToast } = useToast();
 

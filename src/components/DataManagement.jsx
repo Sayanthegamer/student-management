@@ -3,6 +3,12 @@ import { Download, Upload, AlertTriangle, CheckCircle, Database, Github, FileJso
 import { saveStudents } from '../utils/storage';
 import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 
+
+/**
+ * DataManagement Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const DataManagement = ({ students, onImportSuccess }) => {
     const [importStatus, setImportStatus] = useState(null); // 'success', 'error', 'loading'
     const [message, setMessage] = useState('');

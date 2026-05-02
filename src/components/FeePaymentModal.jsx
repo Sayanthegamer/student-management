@@ -6,6 +6,12 @@ import CustomMonthPicker from './CustomMonthPicker';
 import { logActivity } from '../utils/storage';
 import { calculateFine } from '../utils/constants';
 
+
+/**
+ * FeePaymentModal Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
     const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM

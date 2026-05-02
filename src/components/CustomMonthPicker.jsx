@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
+
+/**
+ * CustomMonthPicker Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const CustomMonthPicker = ({ value, onChange, label, required, className = '', compact = false }) => {
     // 1. Initialize State
 

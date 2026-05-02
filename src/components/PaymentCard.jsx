@@ -1,6 +1,12 @@
 import React from 'react';
 import { IndianRupee, FileText, Calendar, User } from 'lucide-react';
 
+
+/**
+ * PaymentCard Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const PaymentCard = React.memo(({ student, onViewHistory }) => {
   const getTotalPaid = (student) => {
     if (!student.feeHistory) return 0;

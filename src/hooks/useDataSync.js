@@ -4,6 +4,12 @@ import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
 import { useAuth } from '../context/AuthContext';
 
+
+/**
+ * useDataSync Hook
+ * 
+ * Custom React hook for managing state/logic.
+ */
 export const useDataSync = () => {
   const { user } = useAuth();
   const [students, setStudents] = useState(getStudents());

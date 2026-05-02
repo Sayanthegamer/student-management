@@ -6,6 +6,12 @@ import AdmissionCard from './AdmissionCard';
 import { statusHexColors } from '../utils/statusColors';
 import { logActivity } from '../utils/storage';
 
+
+/**
+ * StatusCard Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const StatusCard = ({ student, color, onMove }) => {
     const [showActions, setShowActions] = useState(false);
 
@@ -78,6 +84,12 @@ const StatusCard = ({ student, color, onMove }) => {
     );
 };
 
+
+/**
+ * StatusColumn Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove }) => {
     const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
 
@@ -119,6 +131,12 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
     );
 };
 
+
+/**
+ * AdmissionStatus Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterClass, setFilterClass] = useState('');

@@ -3,6 +3,12 @@ import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { LogIn, UserPlus, AlertCircle, Loader2, GraduationCap, ShieldCheck, Mail, Lock } from 'lucide-react';
 
+
+/**
+ * Login Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function Login() {
   const { signIn, signUp } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
@@ -45,7 +51,7 @@ export default function Login() {
           <div className="w-16 h-16 rounded-[20px] bg-[var(--accent-primary)] border border-[var(--accent-primary)] flex items-center justify-center mb-4 transition-transform hover:scale-105 duration-300 shadow-lg shadow-[var(--accent-primary)]/25">
             <GraduationCap size={32} className="text-white" />
           </div>
-          <h1 className="text-3xl font-medium text-white tracking-widest uppercase">STD::MGR</h1>
+          <h1 className="text-3xl font-medium text-[var(--text-primary)] tracking-widest uppercase">STD::MGR</h1>
           <p className="text-[var(--accent-primary)] font-mono mt-2 text-sm">ACCESS PORTAL ///</p>
         </div>
 
@@ -54,7 +60,7 @@ export default function Login() {
           style={{ animationDelay: '0.1s' }}
         >
           <div className="mb-8 border-b border-[var(--border-color)] pb-6">
-            <h2 className="text-2xl font-medium text-white uppercase tracking-tight">
+            <h2 className="text-2xl font-medium text-[var(--text-primary)] uppercase tracking-tight">
               {isLogin ? 'Initialize Session' : 'Register Administrator'}
             </h2>
             <p className="text-sm text-[var(--text-secondary)] mt-2 font-mono">
@@ -85,7 +91,7 @@ export default function Login() {
                   id="email"
                   type="email"
                   required
-                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-white focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
+                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
                   placeholder="admin@institution.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -102,7 +108,7 @@ export default function Login() {
                   type="password"
                   required
                   minLength={6}
-                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-white focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
+                  className="w-full pl-12 pr-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]/30 transition-all outline-none text-sm font-medium"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -138,7 +144,7 @@ export default function Login() {
 
           <div className="mt-8 flex flex-col items-center gap-6">
             {isLogin && (
-              <Link to="/forgot-password" className="text-sm border-b border-transparent text-[var(--text-secondary)] hover:text-white hover:border-white/30 font-bold uppercase tracking-wide transition-all">
+              <Link to="/forgot-password" className="text-sm border-b border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-highlight)] font-bold uppercase tracking-wide transition-all">
                   Forgot password?
               </Link>
             )}
@@ -149,12 +155,12 @@ export default function Login() {
                 setError('');
                 setMessage('');
               }}
-              className="text-sm font-bold text-[var(--text-secondary)] hover:text-white transition-all uppercase tracking-wide"
+              className="text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all uppercase tracking-wide"
             >
               {isLogin ? (
-                <span>New? <span className="text-[var(--accent-primary)] hover:text-white border-b border-[var(--accent-primary)]/30">Create Account</span></span>
+                <span>New? <span className="text-[var(--accent-primary)] hover:text-[var(--text-primary)] border-b border-[var(--accent-primary)]/30">Create Account</span></span>
               ) : (
-                <span>Registered? <span className="text-[var(--accent-primary)] hover:text-white border-b border-[var(--accent-primary)]/30">Log In</span></span>
+                <span>Registered? <span className="text-[var(--accent-primary)] hover:text-[var(--text-primary)] border-b border-[var(--accent-primary)]/30">Log In</span></span>
               )}
             </button>
           </div>

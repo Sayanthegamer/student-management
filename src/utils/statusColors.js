@@ -6,6 +6,12 @@
  */
 
 // Tailwind utility classes for status badge styling (theme-aware via CSS vars)
+
+/**
+ * statusStyles
+ * 
+ * Utility function or helper.
+ */
 export const statusStyles = {
   Provisional: 'bg-[var(--color-status-provisional)]/10 text-[var(--color-status-provisional)] border-[var(--color-status-provisional)]/20',
   Confirmed: 'bg-[var(--color-status-confirmed)]/10 text-[var(--color-status-confirmed)] border-[var(--color-status-confirmed)]/20',
@@ -16,6 +22,12 @@ export const statusStyles = {
 // Color values for progress bars, border-top accents, and icon tinting
 // in contexts where inline `style` objects are needed (e.g. StatusColumn).
 // Falls back to literal hex if CSS var is unavailable.
+
+/**
+ * statusHexColors
+ * 
+ * Utility function or helper.
+ */
 export const statusHexColors = {
   Confirmed: 'var(--color-status-confirmed, #10b981)',
   Provisional: 'var(--color-status-provisional, #f59e0b)',

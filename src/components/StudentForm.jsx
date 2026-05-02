@@ -4,6 +4,12 @@ import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
 import { CLASS_FEES, ADMISSION_FEES } from '../utils/constants';
 
+
+/**
+ * InputField Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange, disabled = false, readOnly = false }) => (
     <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-[var(--text-secondary)] px-1 flex items-center gap-2">
@@ -39,6 +45,12 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
     </div>
 );
 
+
+/**
+ * StudentForm Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const isNewStudent = !initialData;
 

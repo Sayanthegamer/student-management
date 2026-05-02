@@ -4,7 +4,14 @@ import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOu
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import SyncIndicator from './SyncIndicator';
+import ThemeToggle from './ThemeToggle';
 
+
+/**
+ * Sidebar Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const Sidebar = ({ onClose, syncStatus, onSync }) => {
     const { signOut, user } = useAuth();
     const { showToast } = useToast();
@@ -102,6 +109,9 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
             </div>
 
             <div className="mt-auto pt-4 border-t border-[var(--border-color)] flex flex-col gap-4">
+                <div className="px-2">
+                    <ThemeToggle />
+                </div>
                 <div className="px-2">
                     <SyncIndicator status={syncStatus} onSync={onSync} />
                 </div>

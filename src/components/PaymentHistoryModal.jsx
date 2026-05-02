@@ -2,6 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, IndianRupee, FileText } from 'lucide-react';
 
+
+/**
+ * PaymentHistoryModal Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const PaymentHistoryModal = ({ student, onClose }) => {
     const history = student.feeHistory || [];
     const [isClosing, setIsClosing] = useState(false);

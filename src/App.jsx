@@ -13,6 +13,7 @@ import { useDataSync } from './hooks/useDataSync';
 import SyncIndicator from './components/SyncIndicator';
 import SyncErrorModal from './components/SyncErrorModal';
 import SkeletonLoader from './components/SkeletonLoader';
+import ThemeToggle from './components/ThemeToggle';
 
 const LandingPage = lazy(() => import('./components/LandingPage'));
 
@@ -113,17 +114,22 @@ function App() {
   // Handle unauthenticated routes explicitly
   if (!user) {
     return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/" element={
-           <Suspense fallback={<SkeletonLoader />}>
-               <LandingPage />
-           </Suspense>
-        } />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <>
+        <div className="fixed top-4 right-4 z-50">
+          <ThemeToggle compact />
+        </div>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/" element={
+            <Suspense fallback={<SkeletonLoader />}>
+              <LandingPage />
+            </Suspense>
+          } />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </>
     );
   }
 
@@ -137,6 +143,7 @@ function App() {
             <span className="font-semibold text-[var(--text-primary)] text-base">StdMgr</span>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle compact />
             {showMobileAdd && (
               <button
                 onClick={handleAddClick}
@@ -168,8 +175,9 @@ function App() {
                 <div className="flex items-center justify-between w-full">
                   <h1 className="text-3xl font-semibold text-[var(--text-primary)] tracking-tight">Student Manager Pro</h1>
                   <div className="flex items-center gap-3">
-                     <button onClick={forceSync} className="btn btn-secondary">Sync Data</button>
-                     <button onClick={handleAddClick} className="btn btn-primary">Add Student</button>
+                    <ThemeToggle />
+                    <button onClick={forceSync} className="btn btn-secondary">Sync Data</button>
+                    <button onClick={handleAddClick} className="btn btn-primary">Add Student</button>
                   </div>
                 </div>
                 <p className="text-[var(--text-secondary)] mt-2 text-sm max-w-2xl leading-relaxed">

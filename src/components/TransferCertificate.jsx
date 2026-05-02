@@ -7,6 +7,12 @@ import CertificateCard from './CertificateCard';
 import { useToast } from '../context/ToastContext';
 import { logActivity } from '../utils/storage';
 
+
+/**
+ * TransferCertificate Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     const { showToast } = useToast();
     const [view, setView] = useState('active'); // 'active' or 'transferred'
@@ -343,6 +349,12 @@ const TransferCertificate = ({ students, onUpdateStudent, user }) => {
     );
 };
 
+
+/**
+ * IssueTCModal Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const IssueTCModal = ({ student, tcDetails, setTcDetails, onConfirm, onCancel }) => {
     const [isClosing, setIsClosing] = useState(false);
     const dialogRef = React.useRef(null);

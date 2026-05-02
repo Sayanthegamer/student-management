@@ -1,11 +1,29 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { supabase } from '../lib/supabase';
 
+
+/**
+ * AuthContext Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const AuthContext = createContext({});
 
 // eslint-disable-next-line react-refresh/only-export-components
+
+/**
+ * useAuth
+ * 
+ * Utility function or helper.
+ */
 export const useAuth = () => useContext(AuthContext);
 
+
+/**
+ * AuthProvider Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

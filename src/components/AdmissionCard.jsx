@@ -9,6 +9,12 @@ const statusIcons = {
   Transferred: UserX,
 };
 
+
+/**
+ * AdmissionCard Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
   const status = student.admissionStatus || 'Provisional';
   const StatusIcon = statusIcons[status] || Clock;

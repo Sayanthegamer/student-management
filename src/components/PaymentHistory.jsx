@@ -3,6 +3,12 @@ import { Search, FileText, Filter, IndianRupee, ChevronDown, ChevronUp, User } f
 import PaymentHistoryModal from './PaymentHistoryModal';
 import PaymentCard from './PaymentCard';
 
+
+/**
+ * PaymentHistory Component
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 const PaymentHistory = ({ students }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
