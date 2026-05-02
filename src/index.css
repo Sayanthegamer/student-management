@@ -59,7 +59,7 @@
   --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
   
   /* Kinetic Motion — The signature curve */
-  --kinetic-curve: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --kinetic-curve: ease-out;
   --kinetic-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
   --kinetic-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   
