@@ -4,12 +4,18 @@ const THEME_STORAGE_KEY = 'stdmgr-theme';
 const ThemeContext = createContext(null);
 
 const getInitialTheme = () => {
-  const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-  if (storedTheme === 'light' || storedTheme === 'dark') {
-    return storedTheme;
+  try {
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (storedTheme === 'light' || storedTheme === 'dark') {
+      return storedTheme;
+    }
+  } catch (error) {
+    // localStorage access failed (e.g., restricted environment)
   }
 
-  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  const prefersLight = typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-color-scheme: light)').matches
+    : false;
   return prefersLight ? 'light' : 'dark';
 };
 
@@ -22,7 +28,11 @@ export const ThemeProvider = ({ children }) => {
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch (error) {
+      // localStorage write failed (e.g., restricted environment)
+    }
   }, [theme]);
 
   const toggleTheme = () => {
