@@ -77,7 +77,7 @@ function App() {
   }, [updateStudent]);
 
   const handlePayFee = useCallback((studentId, paymentDetails) => {
-    addFeePayment(studentId, paymentDetails);
+    return addFeePayment(studentId, paymentDetails);
   }, [addFeePayment]);
 
   const handleCancel = useCallback(() => {

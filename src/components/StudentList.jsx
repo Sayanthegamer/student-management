@@ -38,18 +38,30 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     // Keyboard shortcut handler
     useEffect(() => {
         const handleKeyDown = (e) => {
+            // Don't operate shortcuts when payment modal is open
+            if (showPaymentModal) return;
+
+            // Ignore events from editable elements
+            const target = e.target;
+            const isEditableTarget =
+                target.tagName === 'INPUT' ||
+                target.tagName === 'TEXTAREA' ||
+                target.isContentEditable;
+
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                if (isEditableTarget) return;
                 e.preventDefault();
                 searchRef.current?.focus();
             }
             if (e.key === 'Escape' && showFilters) {
+                if (isEditableTarget) return;
                 setShowFilters(false);
             }
         };
-        
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [showFilters]);
+    }, [showFilters, showPaymentModal]);
 
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
     const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
