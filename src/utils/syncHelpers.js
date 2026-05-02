@@ -14,9 +14,11 @@ const safeJSONParse = (str) => {
  * Calculate fee status based on fee history and month
  * @param {Object} student - The student object with feeHistory
  * @param {string} month - The month to check (YYYY-MM format)
+ * @param {string} [currentMonthOverride] - Optional pre-calculated current month (YYYY-MM format) to optimize loop performance
  * @returns {string} - 'Paid', 'Pending', or 'Overdue'
  */
-export const calculateFeesStatus = (student, month) => {
+// ⚡ Bolt Performance Optimization: Accept currentMonthOverride to avoid O(N) Date object creations in loops
+export const calculateFeesStatus = (student, month, currentMonthOverride) => {
   if (!student.feeHistory || !Array.isArray(student.feeHistory)) {
     return 'Pending';
   }
@@ -24,7 +26,7 @@ export const calculateFeesStatus = (student, month) => {
   const isPaid = student.feeHistory.some(p => p.month === month);
   if (isPaid) return 'Paid';
 
-  const currentMonth = new Date().toISOString().slice(0, 7);
+  const currentMonth = currentMonthOverride || new Date().toISOString().slice(0, 7);
   return month < currentMonth ? 'Overdue' : 'Pending';
 };
 
@@ -191,7 +193,8 @@ export const denormalizeStudents = (studentsData, feesData) => {
     const feesAmount = getClassFeeAmount(s.class);
 
     // Calculate fees status based on fee history
-    const feesStatus = calculateFeesStatus({ feeHistory }, currentMonth);
+    // ⚡ Bolt Performance Optimization: Pass pre-computed currentMonth to avoid O(N) Date object creations
+    const feesStatus = calculateFeesStatus({ feeHistory }, currentMonth, currentMonth);
 
     return {
       // Map snake_case DB columns back to UI camelCase
