@@ -59,7 +59,7 @@ const SyncIndicator = ({ status, onSync }) => {
           disabled={status === 'syncing' || status === 'synced'}
           className={`p-1.5 rounded-md border transition-all ${status === 'syncing' || status === 'synced'
               ? 'border-[var(--border-color)] bg-transparent text-[var(--border-color)] cursor-not-allowed'
-              : 'border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-card-hover)] active:scale-95'
+              : 'border-[var(--border-color)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] active:scale-95'
             }`}
           title={status === 'synced' ? "Data is up to date" : "Sync data with cloud"}
           aria-label="Synchronize data"

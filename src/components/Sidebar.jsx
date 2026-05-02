@@ -4,6 +4,7 @@ import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOu
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import SyncIndicator from './SyncIndicator';
+import ThemeToggle from './ThemeToggle';
 
 /**
  * The Kinetic Ledger Sidebar Navigation
@@ -131,6 +132,9 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
                 <div className="px-3 py-4 rounded-lg bg-[var(--bg-card)] border border-[var(--border-subtle)] relative overflow-hidden">
                     {/* Subtle top accent */}
                     <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)]/30 to-transparent" />
+                    <div className="mb-3">
+                        <ThemeToggle />
+                    </div>
                     <SyncIndicator status={syncStatus} onSync={onSync} />
                 </div>
             </div>

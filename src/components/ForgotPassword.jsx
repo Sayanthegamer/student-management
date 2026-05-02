@@ -54,16 +54,16 @@ const ForgotPassword = () => {
     return (
         <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[var(--accent-primary)] selection:text-white">
             <div className="max-w-md w-full bg-[var(--bg-card)] p-8 md:p-10 border border-[var(--border-color)]">
-                <Link to="/" className="inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] hover:text-white font-bold uppercase tracking-wider mb-8 transition-colors">
+                <Link to="/" className="inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] hover:text-[var(--text-primary)] font-bold uppercase tracking-wider mb-8 transition-colors">
                     <ArrowLeft size={16} />
                     Back to Login
                 </Link>
 
-                <div className="text-center mb-8 border-b border-white/10 pb-6">
+                <div className="text-center mb-8 border-b border-[var(--border-color)] pb-6">
                     <div className="w-12 h-12 border border-[var(--accent-primary)] bg-[var(--accent-primary)] flex items-center justify-center mx-auto mb-6">
                         <Mail className="text-white" size={24} />
                     </div>
-                    <h1 className="text-2xl font-medium text-white uppercase tracking-tight mb-2">
+                    <h1 className="text-2xl font-medium text-[var(--text-primary)] uppercase tracking-tight mb-2">
                         Reset Password
                     </h1>
                     <p className="text-[var(--text-secondary)] text-sm font-mono">
@@ -80,11 +80,11 @@ const ForgotPassword = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-xs font-medium text-white  mb-3">Email Address</label>
+                        <label className="block text-xs font-medium text-[var(--text-primary)] mb-3">Email Address</label>
                         <input
                             type="email"
                             required
-                            className="w-full px-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-white focus:border-[var(--accent-primary)] transition-colors outline-none text-sm font-medium"
+                            className="w-full px-4 py-4 bg-[var(--bg-main)] border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[var(--accent-primary)] transition-colors outline-none text-sm font-medium"
                             placeholder="ADMIN@INSTITUTION.EDU"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}

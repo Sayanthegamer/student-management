@@ -13,6 +13,7 @@ import { useDataSync } from './hooks/useDataSync';
 import SyncIndicator from './components/SyncIndicator';
 import SyncErrorModal from './components/SyncErrorModal';
 import SkeletonLoader from './components/SkeletonLoader';
+import ThemeToggle from './components/ThemeToggle';
 
 const LandingPage = lazy(() => import('./components/LandingPage'));
 
@@ -109,6 +110,9 @@ function App() {
   if (!user) {
     return (
       <>
+        <div className="fixed top-4 right-4 z-50">
+          <ThemeToggle compact />
+        </div>
         <div className="noise-overlay" aria-hidden="true" />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -144,6 +148,7 @@ function App() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle compact />
             {showMobileAdd && (
               <button
                 onClick={handleAddClick}
@@ -218,6 +223,7 @@ function App() {
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Sync
                   </button>
+                  <ThemeToggle />
                   <button onClick={handleAddClick} className="btn btn-primary cta-primary text-sm py-2">
                     <Plus size={16} />
                     <span>Add Record</span>

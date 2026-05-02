@@ -49,6 +49,9 @@
   --hover-overlay: rgba(255, 255, 255, 0.04);
   --active-overlay: rgba(255, 255, 255, 0.08);
   --backdrop: rgba(9, 9, 11, 0.8);
+  --overlay-strong: rgba(5, 5, 5, 0.85);
+  --dot-grid-color: rgba(255, 255, 255, 0.015);
+  --glass-panel-bg: rgba(9, 9, 11, 0.8);
   
   /* Status Tokens - Vivid for visibility */
   --color-status-confirmed: #22C55E;
@@ -70,6 +73,41 @@
   --duration-fast: 0.25s;
   --duration-normal: 0.4s;
   --duration-slow: 0.6s;
+}
+
+[data-theme='light'] {
+  --bg-main: #f5f7fb;
+  --bg-sidebar: #f2f5fa;
+  --bg-card: #ffffff;
+  --bg-card-rgb: 255, 255, 255;
+  --bg-card-hover: #f4f7fd;
+  --bg-elevated: #edf2f9;
+  --bg-input: #ffffff;
+
+  --border-color: #d7dfeb;
+  --border-highlight: #bdc8d9;
+  --border-subtle: #e3e9f2;
+  --border-focus: #4F6BF4;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --text-inverse: #f8fafc;
+
+  --accent-primary: #4F6BF4;
+  --accent-primary-rgb: 79, 107, 244;
+  --accent-hover: #3D57E8;
+  --accent-muted: #7388f6;
+  --accent-light: rgba(79, 107, 244, 0.12);
+  --accent-glow: rgba(79, 107, 244, 0.25);
+  --accent-subtle: rgba(79, 107, 244, 0.08);
+
+  --hover-overlay: rgba(15, 23, 42, 0.04);
+  --active-overlay: rgba(15, 23, 42, 0.08);
+  --backdrop: rgba(15, 23, 42, 0.45);
+  --overlay-strong: rgba(15, 23, 42, 0.45);
+  --dot-grid-color: rgba(17, 24, 39, 0.06);
+  --glass-panel-bg: rgba(255, 255, 255, 0.75);
 }
 
 /* ============================================
@@ -266,7 +304,7 @@ input, select, textarea {
 
 /* Glass panel - Subtle depth */
 .glass-panel {
-  background: rgba(9, 9, 11, 0.8);
+  background: var(--glass-panel-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--border-subtle);
@@ -713,7 +751,7 @@ tbody tr:hover {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-image: radial-gradient(circle, var(--dot-grid-color) 1px, transparent 1px);
   background-size: 32px 32px;
   pointer-events: none;
   z-index: 1;
