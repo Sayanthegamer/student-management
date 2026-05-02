@@ -21,7 +21,7 @@ const LandingPage = () => {
       <header className="w-full flex justify-between items-center px-6 py-6 md:px-10 z-20 relative border-b border-[var(--border-subtle)]">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-center shadow-sm">
-            <span className="text-xl">🎓</span>
+            <GraduationCap size={18} className="text-[var(--accent-primary)]" />
           </div>
           <span className="font-bold text-[var(--text-primary)] text-lg tracking-tight">
             Student Manager Pro
@@ -56,7 +56,7 @@ const LandingPage = () => {
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <button
               onClick={() => navigate("/login")}
-              className="group btn btn-primary px-8 py-3.5 text-base"
+              className="group btn btn-primary text-white px-8 py-3.5 text-base"
             >
               Start Managing Free
               <ArrowRight
@@ -134,17 +134,17 @@ const LandingPage = () => {
           </h2>
           <div className="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 text-[var(--text-secondary)]">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="text-emerald-500 w-5 h-5" />
+              <CheckCircle2 className="text-[var(--accent-primary)] w-5 h-5" />
               <span className="font-medium text-sm">No Setup Fees</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="text-emerald-500 w-5 h-5" />
+              <CheckCircle2 className="text-[var(--accent-primary)] w-5 h-5" />
               <span className="font-medium text-sm">
                 Zero Maintenance Required
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="text-emerald-500 w-5 h-5" />
+              <CheckCircle2 className="text-[var(--accent-primary)] w-5 h-5" />
               <span className="font-medium text-sm">Secure Cloud Backup</span>
             </div>
           </div>
@@ -155,7 +155,7 @@ const LandingPage = () => {
       <footer className="w-full py-8 border-t border-[var(--border-subtle)] bg-[var(--bg-card)] mt-auto z-10">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm">🎓</span>
+            <GraduationCap size={18} className="text-[var(--accent-primary)]" />
             <span className="font-semibold text-[var(--text-primary)] text-sm">
               Student Manager Pro
             </span>

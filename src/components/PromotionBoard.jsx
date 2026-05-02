@@ -37,6 +37,7 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
     const [selectedStudents, setSelectedStudents] = useState(new Set());
+    const [pendingAction, setPendingAction] = useState(null);
     const [promotionFee, setPromotionFee] = useState('');
     
     // Only show Confirmed students
@@ -103,7 +104,9 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
         if (!canPromote) return;
         
         const feeAmount = Math.max(0, Number(promotionFee) || 0);
-        if (window.confirm(`Promote ${selectedStudents.size} student(s) to ${nextClass} with a promotion fee of ₹${feeAmount}?`)) {
+        setPendingAction({
+            label: `Promote ${selectedStudents.size} student(s) to ${nextClass} with a promotion fee of ₹${feeAmount}?`,
+            onConfirm: () => {
             const dateStr = new Date().toISOString().split('T')[0];
             const studentById = new Map(students.map(s => [s.id, s]));
 
@@ -135,7 +138,9 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
 
             logActivity('promotion', `Bulk promoted ${selectedStudents.size} students to ${nextClass}`);
             setSelectedStudents(new Set());
-        }
+                setPendingAction(null);
+            }
+        });
     };
 
     return (

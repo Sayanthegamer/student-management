@@ -140,6 +140,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
  */
 const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [pendingAction, setPendingAction] = useState(null);
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [filterClass, setFilterClass] = useState('');
@@ -177,16 +178,20 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const transferred = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Transferred'), [filteredStudents]);
 
     const handleMoveStudent = (student, newStatus) => {
-        if (window.confirm(`Are you sure you want to change status to ${newStatus}?`)) {
-            logActivity('admission', `Changed admission status for ${student.name} to ${newStatus}`);
-            onUpdateStudent({
-                ...student,
-                admissionStatus: newStatus,
-                // Add status change metadata (Issue 4 fix)
-                lastStatusChangeDate: new Date().toISOString().slice(0, 10),
-                lastStatusChangedBy: user?.email || user?.id || 'system'
-            });
-        }
+        setPendingAction({
+            label: `Move ${student.name} to ${newStatus}?`,
+            onConfirm: () => {
+                logActivity('admission', `Changed admission status for ${student.name} to ${newStatus}`);
+                onUpdateStudent({
+                    ...student,
+                    admissionStatus: newStatus,
+                    // Add status change metadata (Issue 4 fix)
+                    lastStatusChangeDate: new Date().toISOString().slice(0, 10),
+                    lastStatusChangedBy: user?.email || user?.id || 'system'
+                });
+                setPendingAction(null);
+            }
+        });
     };
 
     return (
@@ -417,6 +422,34 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     onMove={handleMoveStudent}
                 />
             </div>
+
+            {pendingAction && (
+              <div
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                onClick={() => setPendingAction(null)}
+              >
+                <div
+                  className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6 max-w-sm w-full shadow-2xl"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <p className="text-[var(--text-primary)] font-semibold text-sm mb-5">{pendingAction.label}</p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setPendingAction(null)}
+                      className="flex-1 py-2.5 text-sm font-semibold border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg hover:border-[var(--border-highlight)] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={pendingAction.onConfirm}
+                      className="flex-1 py-2.5 text-sm font-semibold bg-[var(--accent-primary)] text-white rounded-lg hover:bg-[var(--accent-hover)] transition-colors"
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
         </div>
     );
 };

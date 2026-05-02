@@ -1,4 +1,0 @@
-## Learnings - UX and UI Improvements
-*   When executing a full design system overhaul (e.g., updating `--accent-primary` variables in `src/index.css`), it is crucial to systematically comb through all CSS files to identify cascading changes, such as modifying text colors on buttons (like `.btn-primary` requiring a white `#ffffff` text update against a dark blue background to maintain contrast and readability).
-*   Avoid generic browser APIs like `window.confirm()` as they present poor accessibility, break context, and provide a subpar user experience. Use inline, styled modal states managed with React `useState` hooks to prompt users effectively with clear cancel/confirm actions.
-*   Improving CSS animation performance can be as simple as avoiding computationally expensive operations, such as `filter: blur(x)`, during regular element mounting transitions (e.g., `@keyframes kinetic-enter`), significantly enhancing the fluid feeling of an interface.
