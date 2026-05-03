@@ -118,6 +118,7 @@ const BottomNavigation = () => {
 
           {/* More Button */}
           <button
+            type="button"
             onClick={(e) => {
                 e.stopPropagation();
                 setShowMore(!showMore);
@@ -128,7 +129,7 @@ const BottomNavigation = () => {
             `}
             aria-label="Toggle more options"
             aria-expanded={showMore}
-            aria-haspopup="true"
+            aria-haspopup="menu"
             aria-controls="moreMenuPopup"
           >
             {/* Pill dot indicator */}
