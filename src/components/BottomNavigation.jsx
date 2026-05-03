@@ -116,6 +116,7 @@ const BottomNavigation = () => {
 
           {/* More Button */}
           <button
+            type="button"
             onClick={(e) => {
                 e.stopPropagation();
                 setShowMore(!showMore);
@@ -125,7 +126,7 @@ const BottomNavigation = () => {
               ${(showMore || isMoreActive) ? 'text-[var(--accent-primary)]' : 'text-[var(--text-secondary)]'}
             `}
             aria-expanded={showMore}
-            aria-haspopup="true"
+            aria-haspopup="menu"
             aria-controls="moreMenuPopup"
           >
             {/* Pill dot indicator */}
