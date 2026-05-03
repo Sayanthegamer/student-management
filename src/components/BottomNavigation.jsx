@@ -73,7 +73,6 @@ const BottomNavigation = () => {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  aria-label={item.label}
                   className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive ? 'text-[var(--accent-primary)] bg-[var(--accent-light)]' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--accent-primary)]'}`}
                 >
                   <Icon size={18} className="stroke-[2.5px]" />
@@ -91,7 +90,6 @@ const BottomNavigation = () => {
               <NavLink
                 key={item.path}
                 to={item.path}
-                aria-label={item.label}
                 className={({ isActive }) => `
                   flex flex-col items-center justify-center gap-1 py-2.5 flex-1 transition-all duration-200 px-0.5 min-h-[56px] relative
                   ${isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-secondary)] active:text-[var(--accent-primary)]'}
@@ -127,7 +125,6 @@ const BottomNavigation = () => {
               flex flex-col items-center justify-center gap-1 py-2.5 flex-1 transition-all duration-200 px-0.5 min-h-[56px] relative focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--accent-primary)] outline-none rounded-[12px]
               ${(showMore || isMoreActive) ? 'text-[var(--accent-primary)]' : 'text-[var(--text-secondary)]'}
             `}
-            aria-label="Toggle more options"
             aria-expanded={showMore}
             aria-haspopup="menu"
             aria-controls="moreMenuPopup"
