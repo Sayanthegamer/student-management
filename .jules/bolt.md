@@ -11,3 +11,7 @@
 
 **Learning:** Instantiating `new Date().toISOString().slice(0, 7)` inside loops (like `Array.prototype.filter` or `Array.prototype.map`) that process large datasets (e.g. 2000 items) is extremely slow due to repeated parsing and string processing (creating significant overhead, e.g., 425ms vs 5ms execution times in benchmarks).
 **Action:** When filtering or mapping data where an unchanging derived property like the current date/time is needed, calculate that value once before the loop (using `useMemo` in React components, or as a simple hoisted variable) and pass it into the loop/callback explicitly.
+
+## $(date +%Y-%m-%d) - Array Reductions & Sorting in Modals
+**Learning:** React components containing frequently toggled internal states (e.g., `isClosing` timeouts for animations) can trigger expensive recalculations if data transformations like O(N log N) sorting and O(N) inline `.reduce()` operations aren't memoized.
+**Action:** When mapping over data arrays inside modal or dialog components, hoist and wrap derived lists and cumulative totals in `useMemo` hooks, keeping the dependency array scoped strictly to the incoming prop (e.g., `history`). Use variables to replace redundant inline calculations to prevent unexpected runtime reference errors.

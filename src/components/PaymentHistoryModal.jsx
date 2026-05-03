@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, IndianRupee, FileText } from 'lucide-react';
 
@@ -16,8 +16,15 @@ const PaymentHistoryModal = ({ student, onClose }) => {
     const dialogRef = useRef(null);
     const previousActiveElementRef = useRef(null);
 
-    // Optimize: Use string comparison (localeCompare) instead of new Date() instantiation in sort loops
-    const sortedHistory = [...history].sort((a, b) => b.date.localeCompare(a.date));
+    // ⚡ Bolt Optimization: Memoize the sorted history to prevent O(N log N) sorting on every render
+    const sortedHistory = useMemo(() => {
+        return [...history].sort((a, b) => b.date.localeCompare(a.date));
+    }, [history]);
+
+    // ⚡ Bolt Optimization: Memoize the total calculation to prevent O(N) reduction on every render
+    const totalPaid = useMemo(() => {
+        return history.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0);
+    }, [history]);
 
     const handleClose = () => {
         setIsClosing(true);
@@ -183,7 +190,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                     <tr>
                                         <td colSpan="5" className="px-5 py-5 text-right text-[10px] uppercase font-bold tracking-wider text-[var(--text-secondary)]">Cumulative Settlement:</td>
                                         <td className="px-5 py-5 text-right text-lg font-bold text-[var(--color-positive)]">
-                                            ₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}
+                                            ₹{totalPaid.toLocaleString()}
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -233,7 +240,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                 <div className="bg-[var(--bg-main)] p-5 text-[var(--text-primary)] border-t border-[var(--border-color)]">
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-bold text-[var(--text-secondary)]">Grand Total Paid</span>
-                                        <span className="text-xl font-bold text-[var(--color-positive)]">₹{sortedHistory.reduce((sum, p) => sum + Number(p.amount) + Number(p.fine || 0), 0).toLocaleString()}</span>
+                                        <span className="text-xl font-bold text-[var(--color-positive)]">₹{totalPaid.toLocaleString()}</span>
                                     </div>
                                 </div>
                             </div>
