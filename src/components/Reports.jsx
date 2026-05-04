@@ -184,6 +184,7 @@ const Reports = ({ students }) => {
                                     type="date"
                                     value={customStartDate}
                                     onChange={(e) => setCustomStartDate(e.target.value)}
+                                    max={customEndDate || new Date().toISOString().slice(0, 10)}
                                     className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] w-full"
                                 />
                             </div>
@@ -196,6 +197,7 @@ const Reports = ({ students }) => {
                                     type="date"
                                     value={customEndDate}
                                     onChange={(e) => setCustomEndDate(e.target.value)}
+                                    min={customStartDate}
                                     className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] w-full"
                                 />
                             </div>
