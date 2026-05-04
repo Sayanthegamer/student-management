@@ -147,10 +147,11 @@ const Reports = ({ students }) => {
                 {/* Filters */}
                 <div className="bg-[var(--bg-card)] rounded-[16px] p-4 border border-[var(--border-color)] flex flex-col md:flex-row gap-4">
                     <div className="flex-1">
-                        <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+                        <label htmlFor="timeframe-select" className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
                             Timeframe
                         </label>
                         <select
+                            id="timeframe-select"
                             value={timeframe}
                             onChange={(e) => setTimeframe(e.target.value)}
                             className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] appearance-none cursor-pointer w-full"
@@ -165,10 +166,11 @@ const Reports = ({ students }) => {
                     {timeframe === 'custom' && (
                         <>
                             <div className="flex-1">
-                                <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+                                <label htmlFor="from-date-input" className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
                                     From Date
                                 </label>
                                 <input
+                                    id="from-date-input"
                                     type="date"
                                     value={customStartDate}
                                     onChange={(e) => setCustomStartDate(e.target.value)}
@@ -176,10 +178,11 @@ const Reports = ({ students }) => {
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+                                <label htmlFor="to-date-input" className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
                                     To Date
                                 </label>
                                 <input
+                                    id="to-date-input"
                                     type="date"
                                     value={customEndDate}
                                     onChange={(e) => setCustomEndDate(e.target.value)}
@@ -190,12 +193,13 @@ const Reports = ({ students }) => {
                     )}
 
                     <div className="flex-1">
-                        <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+                        <label htmlFor="search-input" className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
                             Search
                         </label>
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={18} />
                             <input
+                                id="search-input"
                                 type="text"
                                 placeholder="Name, Roll, Particulars..."
                                 value={searchTerm}
