@@ -108,8 +108,13 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 [name]: value,
                 ...(value === 'NEW' && ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
                 ...(value === 'OLD' ? { admissionFee: '', concessionAmount: '' } : {}),
-                annualChargesBreakdown: {...annual},
-                subsidiaryChargesBreakdown: {...subsidiary}
+                // Preserve existing breakdowns if they have data, otherwise initialize with defaults
+                annualChargesBreakdown: (prev.annualChargesBreakdown && Object.keys(prev.annualChargesBreakdown).length > 0) 
+                    ? prev.annualChargesBreakdown 
+                    : annual,
+                subsidiaryChargesBreakdown: (prev.subsidiaryChargesBreakdown && Object.keys(prev.subsidiaryChargesBreakdown).length > 0)
+                    ? prev.subsidiaryChargesBreakdown 
+                    : subsidiary
             }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
