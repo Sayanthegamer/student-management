@@ -140,16 +140,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [onClose]);
 
-    const handleQuickAmount = (preset) => {
-        if (preset === 'full') {
-            setAmount(student.feesAmount || 0);
-        } else if (preset === 'monthly') {
-            setAmount(Math.round((student.feesAmount || 0) / 12));
-        } else if (preset === 'custom' && student.feesAmount) {
-            setAmount(student.feesAmount);
-        }
-        amountRef.current?.focus();
-    };
+
 
     // Submitting state to prevent duplicate submissions
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -423,30 +414,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                     />
                                 </div>
                                 
-                                {/* Quick amount buttons */}
-                                <div className="flex gap-2 mt-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => handleQuickAmount('full')}
-                                        className="flex-1 text-[10px] font-semibold py-1.5 px-3 rounded-lg bg-[var(--accent-light)] text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-colors border border-[var(--accent-primary)]/20"
-                                    >
-                                        Full
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleQuickAmount('monthly')}
-                                        className="flex-1 text-[10px] font-semibold py-1.5 px-3 rounded-lg bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors border border-[var(--border-color)]"
-                                    >
-                                        Monthly
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleQuickAmount('custom')}
-                                        className="flex-1 text-[10px] font-semibold py-1.5 px-3 rounded-lg bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors border border-[var(--border-color)]"
-                                    >
-                                        Reset
-                                    </button>
-                                </div>
+
                             </div>
 
                             {/* Transport Fee */}
