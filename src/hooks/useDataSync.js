@@ -133,15 +133,16 @@ export const useDataSync = () => {
     
     const totalInitialFee = netAdmission + annualTotal + subsidiaryTotal;
 
-    if (totalInitialFee > 0 && studentData.enrollmentType === 'NEW') {
+    if (totalInitialFee > 0) {
+      const isNew = studentData.enrollmentType === 'NEW';
       const admissionPayment = {
         id: crypto.randomUUID(),
         date: studentData.admissionDate || new Date().toISOString().split('T')[0],
-        month: '', // Admission fees are not tied to a specific month
+        month: '', // Admission/Initial fees are not tied to a specific month
         amount: totalInitialFee,
         fine: 0,
         type: 'Admission',
-        remarks: 'New Registration Checkout' + (concession > 0 ? ` (Concession: ₹${concession})` : ''),
+        remarks: (isNew ? 'New Registration Checkout' : 'Annual Re-enrollment Checkout') + (concession > 0 ? ` (Concession: ₹${concession})` : ''),
         itemized_breakdown: {
             admission: netAdmission,
             concession: concession,
@@ -150,23 +151,8 @@ export const useDataSync = () => {
         }
       };
       newStudent.feeHistory = [admissionPayment, ...(newStudent.feeHistory || [])];
-    } else if (netAdmission > 0) {
-      // Fallback for OLD students or if only admission fee is set
-      const admissionPayment = {
-        id: crypto.randomUUID(),
-        date: studentData.admissionDate || new Date().toISOString().split('T')[0],
-        month: '',
-        amount: netAdmission,
-        fine: 0,
-        type: 'Admission',
-        remarks: concession > 0 ? `Admission fee (Concession: ₹${concession})` : 'Admission fee',
-        itemized_breakdown: {
-            admission: netAdmission,
-            concession: concession
-        }
-      };
-      newStudent.feeHistory = [admissionPayment, ...(newStudent.feeHistory || [])];
     }
+
 
     // 1. Local Update (Optimistic)
     const updatedList = localAddStudent(newStudent);
