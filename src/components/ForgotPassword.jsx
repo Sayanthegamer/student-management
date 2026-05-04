@@ -41,7 +41,6 @@ const ForgotPassword = () => {
             // Security: Do not expose raw internal error messages. Use a generic message.
             // To prevent user enumeration, always pretend it succeeded.
             sendErrorTelemetry('ForgotPassword:resetPasswordForEmail', error);
-            setStatus('success');
             setMessage(RESET_CONFIRMATION);
         } finally {
             setLoading(false);
