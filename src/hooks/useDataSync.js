@@ -261,6 +261,23 @@ export const useDataSync = () => {
     // paymentDetails can be object or array
     const payments = Array.isArray(paymentDetails) ? paymentDetails : [paymentDetails];
 
+    // Atomic guard: check existing stored payments for month overlap
+    const student = students.find(s => s.id === studentId);
+    if (student) {
+        const existingMonths = (student.feeHistory || [])
+            .filter(p => p.month)
+            .map(p => p.month);
+            
+        const newMonths = payments
+            .filter(p => p.month)
+            .map(p => p.month);
+            
+        const duplicates = newMonths.filter(m => existingMonths.includes(m));
+        if (duplicates.length > 0) {
+            return Promise.reject(new Error(`Fee already recorded for: ${duplicates.join(', ')}`));
+        }
+    }
+
     // Assign IDs locally
     const paymentsWithIds = payments.map(p => ({ ...p, id: crypto.randomUUID(), student_id: studentId }));
 

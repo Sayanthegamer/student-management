@@ -163,32 +163,6 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             setError('Please enter a valid amount greater than 0');
             return;
         }
-
-        // Guard: check for duplicate month payments already in student's history
-        const existingMonths = (student.feeHistory || [])
-            .filter(p => p.month) // skip admission fees (no month)
-            .map(p => p.month);
-
-        if (isMultiMonth && endMonth) {
-            // Build list of months in the selected range
-            let current = new Date(selectedMonth + '-01');
-            const end = new Date(endMonth + '-01');
-            const duplicates = [];
-            while (current <= end) {
-                const monthStr = getLocalMonthString(current);
-                if (existingMonths.includes(monthStr)) duplicates.push(monthStr);
-                current.setMonth(current.getMonth() + 1);
-            }
-            if (duplicates.length > 0) {
-                setError(`Fee already recorded for: ${duplicates.join(', ')}`);
-                return;
-            }
-        } else {
-            if (existingMonths.includes(selectedMonth)) {
-                setError(`Fee already recorded for ${selectedMonth}`);
-                return;
-            }
-        }
         
         setIsSubmitting(true);
         setShowSuccess(true);
@@ -219,6 +193,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 if (mountedRef.current) {
                     setIsSubmitting(false);
                 }
+            }).catch(err => {
+                setError(err.message || 'Failed to save fee');
+                setShowSuccess(false);
+                if (mountedRef.current) {
+                    setIsSubmitting(false);
+                }
             });
             logActivity('fee', `Batch fee collection from ${student.name} (${selectedMonth} to ${endMonth})`);
         } else {
@@ -231,6 +211,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             }).then(() => {
                 setShowSuccess(false);
                 doClose();
+                if (mountedRef.current) {
+                    setIsSubmitting(false);
+                }
+            }).catch(err => {
+                setError(err.message || 'Failed to save fee');
+                setShowSuccess(false);
                 if (mountedRef.current) {
                     setIsSubmitting(false);
                 }
