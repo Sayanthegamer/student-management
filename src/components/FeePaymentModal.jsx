@@ -29,7 +29,7 @@ const getLocalMonthString = (date = new Date()) => {
 /**
  * High-Frequency Fee Payment Modal - Kinetic Ledger Design
  * Optimized for keyboard-fast entry and one-handed operation
- * Two-column layout with quick amount buttons and instant feedback
+ * Compact layout with instant feedback
  */
 const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [paymentDate, setPaymentDate] = useState(getLocalDateString);
