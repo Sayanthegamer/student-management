@@ -119,13 +119,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     }, [debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth]);
 
     const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
-    // Clamp current page to prevent out-of-bounds edge case when filtering reduces total pages
-    if (currentPage > totalPages && totalPages > 0) {
-        setCurrentPage(totalPages);
-    }
+    const safeCurrentPage = Math.min(Math.max(1, currentPage), Math.max(1, totalPages));
     const currentStudents = filteredStudents.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
+        (safeCurrentPage - 1) * itemsPerPage,
+        safeCurrentPage * itemsPerPage
     );
 
     const handlePayFeeClick = useCallback((student) => {

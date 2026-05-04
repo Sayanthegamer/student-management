@@ -108,8 +108,20 @@ export const useDataSync = () => {
 
     if (syncChannel) {
       syncChannel.addEventListener('message', handleSyncMessage);
-      return () => syncChannel.removeEventListener('message', handleSyncMessage);
     }
+
+    return () => {
+      if (syncChannel) {
+        syncChannel.removeEventListener('message', handleSyncMessage);
+      }
+      if (fetchAbortControllerRef.current) {
+        fetchAbortControllerRef.current.abort();
+        fetchAbortControllerRef.current = null;
+      }
+      latestDoFetchRef.current = null;
+      isSyncingRef.current = false;
+      pendingSyncRef.current = false;
+    };
   }, [fetchFromCloud]);
 
   const addStudent = useCallback(async (studentData) => {
