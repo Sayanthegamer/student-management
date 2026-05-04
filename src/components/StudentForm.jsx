@@ -11,7 +11,7 @@ import { PhoneCall } from 'lucide-react';
  * @param {Object} props - The component props.
  * @returns {JSX.Element} The rendered input field component.
  */
-const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange, disabled = false, readOnly = false }) => (
+const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange, disabled = false, readOnly = false, min }) => (
     <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-[var(--text-secondary)] px-1 flex items-center gap-2">
             {Icon && <Icon size={14} />}
@@ -41,6 +41,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 required={required}
                 disabled={disabled}
                 readOnly={readOnly}
+                min={min}
             />
         )}
     </div>
@@ -80,7 +81,14 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         subsidiaryChargesBreakdown: {},
     };
 
-    const [formData, setFormData] = useState({ ...defaults, ...(initialData || {}) });
+    const getInitialState = () => {
+        let data = { ...defaults, ...(initialData || {}) };
+        if (initialData && 'feesAmount' in initialData && !initialData.tuitionFee) {
+            data.tuitionFee = String(initialData.feesAmount);
+        }
+        return data;
+    };
+    const [formData, setFormData] = useState(getInitialState());
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -118,6 +126,10 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     ? prev.subsidiaryChargesBreakdown 
                     : subsidiary
             }));
+        } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'fine'].includes(name)) {
+            const parsedValue = Number(value);
+            const clampedValue = isNaN(parsedValue) ? 0 : Math.max(0, parsedValue);
+            setFormData(prev => ({ ...prev, [name]: clampedValue }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
@@ -275,6 +287,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     placeholder="500" 
                                     value={formData.tuitionFee}
                                     onChange={handleChange}
+                                    min={0}
                                 />
                                 <InputField
                                     label="SmartBoard (₹)"
@@ -283,6 +296,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     placeholder="0"
                                     value={formData.smartBoardFee}
                                     onChange={handleChange}
+                                    min={0}
                                 />
                                 <InputField
                                     label="Computer (₹)"
@@ -291,6 +305,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     placeholder="0"
                                     value={formData.computerFee}
                                     onChange={handleChange}
+                                    min={0}
                                 />
 
                                 <div className="col-span-2 sm:col-span-3 flex justify-end">
@@ -311,6 +326,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     placeholder="0" 
                                     value={formData.fine}
                                     onChange={handleChange}
+                                    min={0}
                                 />
 
                             <InputField 
