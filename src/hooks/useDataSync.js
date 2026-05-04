@@ -33,6 +33,7 @@ export const useDataSync = () => {
   const pendingSyncRef = useRef(false);
   const latestDoFetchRef = useRef(null);
   const fetchAbortControllerRef = useRef(null);
+  const pendingTimeoutsRef = useRef([]);
 
   // Reusable fetch from cloud — used by initial load AND forceSync
   const fetchFromCloud = useCallback(async () => {
@@ -76,9 +77,10 @@ export const useDataSync = () => {
             details: err
           });
 
-          setTimeout(() => {
+          const timeoutId = setTimeout(() => {
             setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
           }, 5000);
+          pendingTimeoutsRef.current.push(timeoutId);
         } finally {
           isSyncingRef.current = false;
           if (pendingSyncRef.current) {
@@ -121,6 +123,9 @@ export const useDataSync = () => {
       latestDoFetchRef.current = null;
       isSyncingRef.current = false;
       pendingSyncRef.current = false;
+      // Clear all pending timeouts to prevent state updates after unmount
+      pendingTimeoutsRef.current.forEach(timeoutId => clearTimeout(timeoutId));
+      pendingTimeoutsRef.current = [];
     };
   }, [fetchFromCloud]);
 
@@ -217,9 +222,10 @@ export const useDataSync = () => {
             details: err
         });
 
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        pendingTimeoutsRef.current.push(timeoutId);
     }
   }, [user]);
 
@@ -270,9 +276,10 @@ export const useDataSync = () => {
             details: err
         });
 
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        pendingTimeoutsRef.current.push(timeoutId);
     }
   }, [user]);
 
@@ -311,9 +318,10 @@ export const useDataSync = () => {
             details: err
         });
 
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        pendingTimeoutsRef.current.push(timeoutId);
     }
   }, [user]);
 
@@ -357,9 +365,10 @@ export const useDataSync = () => {
                 details: err
             });
 
-            setTimeout(() => {
+            const timeoutId = setTimeout(() => {
               setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
             }, 5000);
+            pendingTimeoutsRef.current.push(timeoutId);
 
             return Promise.reject(new Error(userMessage));
         }
@@ -457,9 +466,10 @@ export const useDataSync = () => {
             details: err
         });
 
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        pendingTimeoutsRef.current.push(timeoutId);
     }
   }, [user]);
 
