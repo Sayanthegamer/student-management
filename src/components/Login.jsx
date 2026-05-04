@@ -43,7 +43,7 @@ export default function Login() {
       if (isLogin && (err.message === 'Email not confirmed' || err.code === 'email_not_confirmed' || err.name === 'EmailNotConfirmed')) {
         setError('Please confirm your email address before logging in.');
       } else {
-        setError(isLogin ? 'Invalid email or password.' : 'Registration failed. Please try again.');
+        setError(isLogin ? 'Invalid email or password.' : (err.message || 'Registration failed. Please try again.'));
       }
     } finally {
       setLoading(false);
