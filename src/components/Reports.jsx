@@ -32,11 +32,11 @@ const Reports = ({ students }) => {
                         id: fee.id,
                         date: safeDate,
                         studentId: student.id,
-                        studentName: student.name,
-                        rollNumber: student.rollNo || 'N/A',
-                        studentClass: student.class,
-                        section: student.section || 'N/A',
-                        particulars: fee.remarks || 'Fee Payment',
+                        studentName: String(student.name || ''),
+                        rollNumber: String(student.rollNo || 'N/A'),
+                        studentClass: String(student.class || ''),
+                        section: String(student.section || 'N/A'),
+                        particulars: String(fee.remarks || 'Fee Payment'),
                         amount: parseFloat(fee.amount) || 0
                     });
                 });
@@ -84,14 +84,22 @@ const Reports = ({ students }) => {
     const handleExport = () => {
         if (filteredTransactions.length === 0) return;
 
+        const sanitizeCell = (value) => {
+            const strVal = String(value || '');
+            if (/^[=+\-@]/.test(strVal)) {
+                return "'" + strVal;
+            }
+            return strVal;
+        };
+
         const dataToExport = filteredTransactions.map(t => ({
-            'Date': t.date.slice(0, 10),
-            'Student Name': t.studentName,
-            'Roll No': t.rollNumber,
-            'Class': t.studentClass,
-            'Section': t.section,
-            'Particulars': t.particulars,
-            'Amount': t.amount
+            'Date': sanitizeCell(t.date.slice(0, 10)),
+            'Student Name': sanitizeCell(t.studentName),
+            'Roll No': sanitizeCell(t.rollNumber),
+            'Class': sanitizeCell(t.studentClass),
+            'Section': sanitizeCell(t.section),
+            'Particulars': sanitizeCell(t.particulars),
+            'Amount': t.amount // Numbers don't need CSV injection sanitation
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -184,7 +192,6 @@ const Reports = ({ students }) => {
                                     type="date"
                                     value={customStartDate}
                                     onChange={(e) => setCustomStartDate(e.target.value)}
-                                    max={customEndDate || new Date().toISOString().slice(0, 10)}
                                     className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] w-full"
                                 />
                             </div>
@@ -197,7 +204,6 @@ const Reports = ({ students }) => {
                                     type="date"
                                     value={customEndDate}
                                     onChange={(e) => setCustomEndDate(e.target.value)}
-                                    min={customStartDate}
                                     className="bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3 rounded-[12px] text-[var(--text-primary)] font-medium outline-none focus:border-[var(--accent-primary)] w-full"
                                 />
                             </div>
@@ -299,6 +305,8 @@ const Reports = ({ students }) => {
                             currentPage={currentPage}
                             totalPages={totalPages}
                             onPageChange={setCurrentPage}
+                            totalItems={filteredTransactions.length}
+                            itemsPerPage={itemsPerPage}
                         />
                     </div>
                 )}
