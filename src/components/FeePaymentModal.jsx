@@ -190,6 +190,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             onSave(student.id, payments).then(() => {
                 setShowSuccess(false);
                 doClose();
+                logActivity('fee', `Batch fee collection from ${student.name} (${selectedMonth} to ${endMonth})`);
                 if (mountedRef.current) {
                     setIsSubmitting(false);
                 }
@@ -200,7 +201,6 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     setError(err.message || 'Failed to save fee. Please try again.');
                 }
             });
-            logActivity('fee', `Batch fee collection from ${student.name} (${selectedMonth} to ${endMonth})`);
         } else {
             onSave(student.id, {
                 date: paymentDate,
@@ -211,6 +211,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             }).then(() => {
                 setShowSuccess(false);
                 doClose();
+                logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);
                 if (mountedRef.current) {
                     setIsSubmitting(false);
                 }
@@ -221,7 +222,6 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     setError(err.message || 'Failed to save fee. Please try again.');
                 }
             });
-            logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);
         }
 
         // Keep success overlay visible while waiting for onSave promise

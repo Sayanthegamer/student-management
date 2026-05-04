@@ -256,72 +256,56 @@ export const useDataSync = () => {
     // paymentDetails can be object or array
     const payments = Array.isArray(paymentDetails) ? paymentDetails : [paymentDetails];
 
-    // Atomic guard: check existing stored payments for month overlap
-    const student = students.find(s => s.id === studentId);
-    if (student) {
-        const existingMonths = (student.feeHistory || [])
-            .filter(p => p.month)
-            .map(p => p.month);
-            
-        const newMonths = payments
-            .filter(p => p.month)
-            .map(p => p.month);
-            
-        // Find internal duplicates in the new batch
-        const internalDuplicates = newMonths.filter((item, index) => newMonths.indexOf(item) !== index);
-        
-        // Find duplicates against existing history
-        const historyDuplicates = newMonths.filter(m => existingMonths.includes(m));
-        
-        // Combine and deduplicate
-        const duplicates = [...new Set([...internalDuplicates, ...historyDuplicates])];
-        if (duplicates.length > 0) {
-            return Promise.reject(new Error(`Fee already recorded for: ${duplicates.join(', ')}`));
-        }
-    }
-
     // Assign IDs locally
     const paymentsWithIds = payments.map(p => ({ ...p, id: crypto.randomUUID(), student_id: studentId }));
 
-    // 1. Local Update
+    if (user && supabase) {
+        setSyncStatus('syncing');
+        try {
+            const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds });
+            const { error } = await supabase.from('fees').insert(fees);
+            
+            if (error) {
+                // Catch unique constraint violations (code 23505) or duplicate key
+                if (error.code === '23505' || error.message?.toLowerCase().includes('duplicate') || error.message?.toLowerCase().includes('unique')) {
+                    return Promise.reject(new Error("Fee already recorded for one or more selected months."));
+                }
+                throw error;
+            }
+            setSyncStatus('synced');
+        } catch (err) {
+            console.error("Cloud fee error", err);
+            setSyncStatus('error');
+
+            let userMessage = err.message || "Failed to save fee payment to server.";
+            if (err.message?.includes('permission')) {
+              userMessage = "You don't have permission to perform this action.";
+            } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+              userMessage = "Network error. Please check your connection.";
+            }
+
+            setSyncError({
+                message: userMessage,
+                details: err
+            });
+
+            setTimeout(() => {
+              setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+            }, 5000);
+            
+            return Promise.reject(new Error(userMessage));
+        }
+    }
+
+    // 1. Local Update (Only reaches here if Cloud Update succeeds, or offline)
     const updatedList = localAddFeePayment(studentId, paymentsWithIds);
     setStudents(updatedList);
-    setSyncStatus('unsaved');
-
+    
     if (!user || !supabase) {
-      console.warn("Supabase not configured - changes saved locally only");
-      return;
+        setSyncStatus('unsaved');
+        console.warn("Supabase not configured - changes saved locally only");
     }
-
-    // 2. Cloud Update
-    setSyncStatus('syncing');
-    try {
-        const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds });
-
-        const { error } = await supabase.from('fees').insert(fees);
-        if (error) throw error;
-        setSyncStatus('synced');
-    } catch (err) {
-        console.error("Cloud fee error", err);
-        setSyncStatus('error');
-
-        let userMessage = "Failed to save fee payment to server.";
-        if (err.message?.includes('permission')) {
-          userMessage = "You don't have permission to perform this action.";
-        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
-          userMessage = "Network error. Please check your connection.";
-        }
-
-        setSyncError({
-            message: userMessage,
-            details: err
-        });
-
-        setTimeout(() => {
-          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
-        }, 5000);
-    }
-  }, [user, students]);
+  }, [user, supabase, students]);
 
   const importStudents = useCallback(async (newStudents) => {
     // 1. Local Update (Full Replace)
