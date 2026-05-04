@@ -59,6 +59,18 @@
   --color-status-cancelled: #F43F5E;
   --color-status-transferred: #A855F7;
   
+  /* Tailwind Color Overrides for Dynamic Theming */
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400: #fb7185;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
+  
   /* Typography */
   --font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
@@ -108,6 +120,31 @@
   --overlay-strong: rgba(15, 23, 42, 0.45);
   --dot-grid-color: rgba(17, 24, 39, 0.06);
   --glass-panel-bg: rgba(255, 255, 255, 0.75);
+
+  /* Tailwind Color Overrides for Light Mode */
+  --emerald-400: #059669; /* Darker text */
+  --emerald-500: #10b981; 
+  --rose-400: #e11d48; /* Darker text */
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+  --blue-400: #2563eb; /* Darker text */
+  --blue-500: #3b82f6;
+  --purple-400: #9333ea; /* Darker text */
+  --purple-500: #a855f7;
+}
+
+@theme {
+  --color-emerald-400: var(--emerald-400);
+  --color-emerald-500: var(--emerald-500);
+  --color-rose-400: var(--rose-400);
+  --color-rose-500: var(--rose-500);
+  --color-rose-600: var(--rose-600);
+  --color-rose-700: var(--rose-700);
+  --color-blue-400: var(--blue-400);
+  --color-blue-500: var(--blue-500);
+  --color-purple-400: var(--purple-400);
+  --color-purple-500: var(--purple-500);
 }
 
 /* ============================================
