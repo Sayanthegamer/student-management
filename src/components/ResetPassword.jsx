@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Loader2, AlertCircle } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
+import { sendErrorTelemetry } from '../utils/telemetry';
 
 /**
  * Component for handling the "Reset Password" flow, where users enter their new password
@@ -28,6 +29,9 @@ const ResetPassword = () => {
                 // If no session, the magic link might be invalid or expired
                 navigate('/login');
             }
+        }).catch((err) => {
+            sendErrorTelemetry('ResetPassword:getSession', err);
+            navigate('/login');
         });
     }, [navigate]);
 
@@ -47,7 +51,7 @@ const ResetPassword = () => {
             navigate('/');
         } catch (err) {
             // Security: Do not expose raw internal error messages. Use a generic message.
-            console.error('Password reset error:', err);
+            sendErrorTelemetry('ResetPassword:updateUser', err);
             setError('Failed to update password. Please try again or request a new link.');
         } finally {
             setLoading(false);

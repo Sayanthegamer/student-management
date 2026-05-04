@@ -14,13 +14,11 @@ const ForgotPassword = () => {
 
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState(null); // 'success' | 'error' | null
     const [message, setMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setStatus(null);
         setMessage('');
 
         try {
@@ -38,7 +36,6 @@ const ForgotPassword = () => {
             }
 
             // Security: To prevent user enumeration, always show success regardless of outcome
-            setStatus('success');
             setMessage(RESET_CONFIRMATION);
         } catch (error) {
             // Security: Do not expose raw internal error messages. Use a generic message.
@@ -72,8 +69,8 @@ const ForgotPassword = () => {
                 </div>
 
                 {message && (
-                    <div className={`mb-6 p-4 flex items-start gap-3 border ${status === 'error' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' : 'bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20'}`}>
-                        {status === 'error' ? <AlertCircle size={20} className="shrink-0 mt-0.5" /> : <CheckCircle size={20} className="shrink-0 mt-0.5" />}
+                    <div className="mb-6 p-4 flex items-start gap-3 border bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20">
+                        <CheckCircle size={20} className="shrink-0 mt-0.5" />
                         <span className="text-sm font-bold tracking-wide uppercase">{message}</span>
                     </div>
                 )}
