@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight, HelpCircle, Zap, TrendingUp } from 'lucide-react';
+import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight, HelpCircle, Zap, TrendingUp, Download, PieChart } from 'lucide-react';
 import { getActivities } from '../utils/storage';
 
 // Activity type metadata map for consistent styling and icons
@@ -158,7 +158,105 @@ const Overview = ({ students, onAddStudent }) => {
         return { totalStudents: total, feesCollected: collected, pendingFeesCount: pending };
     }, [students, currentMonth]);
 
+    const itemizedSummary = React.useMemo(() => {
+        let tuition = 0;
+        let transport = 0;
+        let admission = 0;
+        let annual = 0;
+        let subsidiary = 0;
+
+        students.forEach(student => {
+            const paidThisMonth = student.feeHistory?.filter(p => p.date && p.date.startsWith(currentMonth));
+            if (paidThisMonth) {
+                paidThisMonth.forEach(fee => {
+                    // Fallback to total amount as tuition if no breakdown
+                    const breakdown = fee.itemized_breakdown || { tuition: fee.type === 'Fee' ? fee.amount : 0, admission: fee.type === 'Admission' ? fee.amount : 0 };
+                    tuition += Number(breakdown.tuition || 0);
+                    transport += Number(breakdown.transport || 0);
+                    admission += Number(breakdown.admission || 0);
+                    
+                    const annualBreakdown = breakdown.annual || {};
+                    annual += Object.values(annualBreakdown).reduce((sum, val) => sum + (Number(val)||0), 0);
+                    
+                    const subBreakdown = breakdown.subsidiary || {};
+                    subsidiary += Object.values(subBreakdown).reduce((sum, val) => sum + (Number(val)||0), 0);
+                });
+            }
+        });
+
+        return { tuition, transport, admission, annual, subsidiary };
+    }, [students, currentMonth]);
+
     const [activities, setActivities] = useState(() => getActivities());
+
+    const exportFinancialReport = () => {
+        const allFees = [];
+        students.forEach(student => {
+            if (student.feeHistory) {
+                student.feeHistory.forEach(fee => {
+                    const breakdown = fee.itemized_breakdown || { tuition: fee.type === 'Fee' ? fee.amount : 0, admission: fee.type === 'Admission' ? fee.amount : 0 };
+                    const annualBreakdown = breakdown.annual || {};
+                    const subsidiaryBreakdown = breakdown.subsidiary || {};
+
+                    allFees.push({
+                        studentName: student.name,
+                        class: student.class,
+                        section: student.section,
+                        date: fee.date,
+                        month: fee.month || '-',
+                        type: fee.type || 'Fee',
+                        amount: fee.amount,
+                        fine: fee.fine || 0,
+                        remarks: fee.remarks || '-',
+                        tuition: breakdown.tuition || 0,
+                        transport: breakdown.transport || 0,
+                        admission: breakdown.admission || 0,
+                        concession: breakdown.concession || 0,
+                        annual: Object.values(annualBreakdown).reduce((sum, val) => sum + (Number(val)||0), 0),
+                        subsidiary: Object.values(subsidiaryBreakdown).reduce((sum, val) => sum + (Number(val)||0), 0)
+                    });
+                });
+            }
+        });
+
+        if (allFees.length === 0) {
+            alert("No fee data available to export.");
+            return;
+        }
+
+        const headers = [
+            "Student Name", "Class", "Section", "Date", "Month", "Type", "Remarks",
+            "Total Amount", "Fine", "Tuition", "Transport", "Admission", "Concession", "Annual Charges", "Subsidiary Charges"
+        ];
+
+        const rows = allFees.map(f => [
+            `"${f.studentName}"`,
+            `"${f.class}"`,
+            `"${f.section}"`,
+            `"${f.date}"`,
+            `"${f.month}"`,
+            `"${f.type}"`,
+            `"${f.remarks.replace(/"/g, '""')}"`,
+            f.amount,
+            f.fine,
+            f.tuition,
+            f.transport,
+            f.admission,
+            f.concession,
+            f.annual,
+            f.subsidiary
+        ]);
+
+        const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `financial_report_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -195,14 +293,23 @@ const Overview = ({ students, onAddStudent }) => {
     return (
         <div className="p-4 md:px-8 md:py-5 max-w-6xl mx-auto kinetic-enter">
             {/* Section header - compact */}
-            <div className="flex items-center justify-between mb-5 mt-1">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 mt-1 gap-4">
                 <div className="flex items-center gap-4">
                     <div className="h-6 w-px bg-gradient-to-b from-[var(--accent-primary)]/60 via-[var(--border-color)] to-transparent hidden sm:block" />
                     <h2 className="text-[var(--text-primary)] text-lg font-bold tracking-tight">Dashboard</h2>
                 </div>
-                <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-mono">
-                    <Clock size={11} />
-                    <span>{new Date().toLocaleDateString('default', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-mono">
+                        <Clock size={11} />
+                        <span>{new Date().toLocaleDateString('default', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                    </div>
+                    <button 
+                        onClick={exportFinancialReport}
+                        className="btn bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-colors py-1.5 px-3 text-xs flex items-center gap-2 rounded-lg"
+                    >
+                        <Download size={14} />
+                        Export CSV
+                    </button>
                 </div>
             </div>
 
@@ -232,6 +339,34 @@ const Overview = ({ students, onAddStudent }) => {
                     subtext="Awaiting payment"
                     index={2}
                 />
+            </div>
+
+            {/* Itemized Breakdown */}
+            <div className="flex items-center gap-4 mb-4">
+                <div className="h-5 w-px bg-gradient-to-b from-indigo-500/50 via-[var(--border-color)] to-transparent" />
+                <h2 className="text-[var(--text-primary)] text-base font-bold tracking-tight">Financial Breakdown (This Month)</h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8 stagger-choreograph">
+                <div className="card-base p-4 border border-[var(--border-subtle)] rounded-xl flex flex-col gap-1">
+                    <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">Tuition</p>
+                    <p className="text-lg text-[var(--text-primary)] font-bold tabular-nums">₹{itemizedSummary.tuition.toLocaleString()}</p>
+                </div>
+                <div className="card-base p-4 border border-[var(--border-subtle)] rounded-xl flex flex-col gap-1">
+                    <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">Transport</p>
+                    <p className="text-lg text-[var(--text-primary)] font-bold tabular-nums">₹{itemizedSummary.transport.toLocaleString()}</p>
+                </div>
+                <div className="card-base p-4 border border-[var(--border-subtle)] rounded-xl flex flex-col gap-1">
+                    <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">Admission</p>
+                    <p className="text-lg text-[var(--text-primary)] font-bold tabular-nums">₹{itemizedSummary.admission.toLocaleString()}</p>
+                </div>
+                <div className="card-base p-4 border border-[var(--border-subtle)] rounded-xl flex flex-col gap-1">
+                    <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">Annual Chg.</p>
+                    <p className="text-lg text-[var(--text-primary)] font-bold tabular-nums">₹{itemizedSummary.annual.toLocaleString()}</p>
+                </div>
+                <div className="card-base p-4 border border-[var(--border-subtle)] rounded-xl flex flex-col gap-1">
+                    <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">Subsidiary</p>
+                    <p className="text-lg text-[var(--text-primary)] font-bold tabular-nums">₹{itemizedSummary.subsidiary.toLocaleString()}</p>
+                </div>
             </div>
 
             {/* Activity Section */}

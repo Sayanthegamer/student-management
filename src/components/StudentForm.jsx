@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Save, X, User, GraduationCap, IndianRupee, Calendar, CheckCircle2, Ticket } from 'lucide-react';
 import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
-import { CLASS_FEES, ADMISSION_FEES } from '../utils/constants';
+import { CLASS_FEES, ADMISSION_FEES, ANNUAL_CHARGES, SUBSIDIARY_CHARGES, ANNUAL_CHARGE_CATEGORIES, SUBSIDIARY_CATEGORIES } from '../utils/constants';
+import { PhoneCall } from 'lucide-react';
 
 /**
  * A sub-component for rendering form input fields consistently.
@@ -70,6 +71,11 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         admissionStatus: 'Confirmed',
         admissionFee: '',
         concessionAmount: '',
+        dob: new Date().toISOString().split('T')[0],
+        enrollmentType: 'OLD',
+        phone: '',
+        annualChargesBreakdown: {},
+        subsidiaryChargesBreakdown: {},
     });
 
     const handleChange = (e) => {
@@ -78,12 +84,15 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         if (name === 'class') {
             const fee = CLASS_FEES[value] ?? '';
             const admFee = ADMISSION_FEES[value] ?? formData.admissionFee ?? '';
+            const annual = ANNUAL_CHARGES[value] || {};
+            const subsidiary = SUBSIDIARY_CHARGES[value] || {};
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
                 feesAmount: fee,
                 // Only auto-fill admission fee if there's a configured value AND we're creating new student
-                ...(isNewStudent && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {})
+                ...(isNewStudent && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {}),
+                ...(isNewStudent ? { annualChargesBreakdown: {...annual}, subsidiaryChargesBreakdown: {...subsidiary} } : {})
             }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
@@ -155,12 +164,31 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             />
 
                             <InputField 
-                                label="Guardian Name" 
+                                label="Father's Name" 
                                 name="guardianName" 
                                 placeholder="Rajesh Kumar" 
                                 value={formData.guardianName}
                                 onChange={handleChange}
                             />
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="flex flex-col gap-1.5 h-[62px]">
+                                    <CustomDatePicker
+                                        label="Date of Birth"
+                                        value={formData.dob}
+                                        onChange={(val) => handleChange({ target: { name: 'dob', value: val } })}
+                                        required
+                                    />
+                                </div>
+                                <InputField 
+                                    label="Contact Number" 
+                                    name="phone" 
+                                    placeholder="9876543210" 
+                                    required={true} 
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <InputField 
@@ -196,9 +224,23 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
                         {/* Fee Details Group */}
                         <div className="space-y-5">
-                            <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-color)] mb-4">
-                                <IndianRupee size={18} className="text-[var(--accent-primary)]" />
-                                <h3 className="font-medium text-[var(--text-primary)] text-base">Fee Details</h3>
+                            <div className="flex items-center justify-between pb-3 border-b border-[var(--border-color)] mb-4">
+                                <div className="flex items-center gap-3">
+                                    <IndianRupee size={18} className="text-[var(--accent-primary)]" />
+                                    <h3 className="font-medium text-[var(--text-primary)] text-base">Fee Details</h3>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-medium text-[var(--text-secondary)]">Student Type:</span>
+                                    <select
+                                        name="enrollmentType"
+                                        value={formData.enrollmentType}
+                                        onChange={handleChange}
+                                        className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-md px-2 py-1 text-xs text-[var(--text-primary)] outline-none"
+                                    >
+                                        <option value="OLD">Old</option>
+                                        <option value="NEW">New</option>
+                                    </select>
+                                </div>
                             </div>
 
                             {/* Monthly Fee Section */}
@@ -325,6 +367,74 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             </div>
                         </div>
                     </div>
+
+                    {formData.enrollmentType === 'NEW' && (
+                        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-5 md:p-6 space-y-5 mt-6">
+                            <h3 className="font-medium text-[var(--text-primary)] text-base mb-4 border-b border-[var(--border-color)] pb-3">Itemized Annual & Subsidiary Charges</h3>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 className="text-sm font-semibold text-[var(--text-secondary)] mb-3">Annual Charges</h4>
+                                    <div className="space-y-3">
+                                        {ANNUAL_CHARGE_CATEGORIES.map(cat => (
+                                            <div key={cat} className="flex items-center justify-between">
+                                                <label className="text-xs text-[var(--text-primary)]">{cat}</label>
+                                                <div className="relative w-32">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs">₹</span>
+                                                    <input 
+                                                        type="number" 
+                                                        value={formData.annualChargesBreakdown?.[cat] || ''}
+                                                        onChange={(e) => {
+                                                            const val = e.target.value;
+                                                            setFormData(prev => ({
+                                                                ...prev,
+                                                                annualChargesBreakdown: {
+                                                                    ...prev.annualChargesBreakdown,
+                                                                    [cat]: val ? Number(val) : 0
+                                                                }
+                                                            }));
+                                                        }}
+                                                        className="w-full pl-8 pr-2 py-1.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md text-[var(--text-primary)] text-xs outline-none"
+                                                        placeholder="0"
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 className="text-sm font-semibold text-[var(--text-secondary)] mb-3">Subsidiary Items</h4>
+                                    <div className="space-y-3">
+                                        {SUBSIDIARY_CATEGORIES.map(cat => (
+                                            <div key={cat} className="flex items-center justify-between">
+                                                <label className="text-xs text-[var(--text-primary)]">{cat}</label>
+                                                <div className="relative w-32">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs">₹</span>
+                                                    <input 
+                                                        type="number" 
+                                                        value={formData.subsidiaryChargesBreakdown?.[cat] || ''}
+                                                        onChange={(e) => {
+                                                            const val = e.target.value;
+                                                            setFormData(prev => ({
+                                                                ...prev,
+                                                                subsidiaryChargesBreakdown: {
+                                                                    ...prev.subsidiaryChargesBreakdown,
+                                                                    [cat]: val ? Number(val) : 0
+                                                                }
+                                                            }));
+                                                        }}
+                                                        className="w-full pl-8 pr-2 py-1.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-md text-[var(--text-primary)] text-xs outline-none"
+                                                        placeholder="0"
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="flex flex-col sm:flex-row gap-3 pt-6 mt-2 border-t border-[var(--border-color)]">
                         <button

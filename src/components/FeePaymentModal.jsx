@@ -37,6 +37,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [isMultiMonth, setIsMultiMonth] = useState(false);
     const [endMonth, setEndMonth] = useState(getLocalMonthString);
     const [amount, setAmount] = useState(student.feesAmount || '');
+    const [transportFee, setTransportFee] = useState('');
     const [fine, setFine] = useState(0);
     const [remarks, setRemarks] = useState('');
     const [error, setError] = useState('');
@@ -122,7 +123,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         setFine(calculatedFine);
 
         const baseAmount = Number(amount) || 0;
-        const total = (baseAmount * monthsCount) + calculatedFine;
+        const transFee = Number(transportFee) || 0;
+        const total = ((baseAmount + transFee) * monthsCount) + calculatedFine;
         setTotalPayable(total);
 
     }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount]);
@@ -179,9 +181,13 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 payments.push({
                     date: paymentDate,
                     month: monthStr,
-                    amount: Number(amount),
+                    amount: Number(amount) + Number(transportFee || 0),
                     fine: monthFine,
-                    remarks: remarks
+                    remarks: remarks,
+                    itemized_breakdown: {
+                        tuition: Number(amount),
+                        transport: Number(transportFee || 0)
+                    }
                 });
 
                 current.setMonth(current.getMonth() + 1);
@@ -205,9 +211,13 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             onSave(student.id, {
                 date: paymentDate,
                 month: selectedMonth,
-                amount: Number(amount),
+                amount: Number(amount) + Number(transportFee || 0),
                 fine: Number(fine),
-                remarks: remarks
+                remarks: remarks,
+                itemized_breakdown: {
+                    tuition: Number(amount),
+                    transport: Number(transportFee || 0)
+                }
             }).then(() => {
                 setShowSuccess(false);
                 doClose();
@@ -426,6 +436,23 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                     >
                                         Reset
                                     </button>
+                                </div>
+                            </div>
+
+                            {/* Transport Fee */}
+                            <div>
+                                <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                    Transport Fee (₹)
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold">₹</div>
+                                    <input
+                                        type="number"
+                                        value={transportFee}
+                                        onChange={(e) => setTransportFee(e.target.value)}
+                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                        placeholder="0"
+                                    />
                                 </div>
                             </div>
 

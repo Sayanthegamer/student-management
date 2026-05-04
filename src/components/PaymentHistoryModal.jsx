@@ -175,6 +175,15 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                             </td>
                                             <td className="px-5 py-5 text-[var(--text-primary)] font-mono font-semibold text-right text-sm">
                                                 ₹{Number(payment.amount).toLocaleString()}
+                                                {payment.itemized_breakdown && Object.keys(payment.itemized_breakdown).length > 0 && (
+                                                    <div className="text-[10px] text-[var(--text-muted)] font-sans font-normal mt-1 flex flex-col items-end gap-0.5 opacity-80">
+                                                        {Number(payment.itemized_breakdown.tuition) > 0 && <span>Tuition: ₹{payment.itemized_breakdown.tuition}</span>}
+                                                        {Number(payment.itemized_breakdown.transport) > 0 && <span>Transport: ₹{payment.itemized_breakdown.transport}</span>}
+                                                        {Number(payment.itemized_breakdown.admission) > 0 && <span>Admission: ₹{payment.itemized_breakdown.admission}</span>}
+                                                        {payment.itemized_breakdown.annual && Object.keys(payment.itemized_breakdown.annual).length > 0 && <span>Annual: ₹{Object.values(payment.itemized_breakdown.annual).reduce((a,b)=>a+Number(b),0)}</span>}
+                                                        {payment.itemized_breakdown.subsidiary && Object.keys(payment.itemized_breakdown.subsidiary).length > 0 && <span>Subsidiary: ₹{Object.values(payment.itemized_breakdown.subsidiary).reduce((a,b)=>a+Number(b),0)}</span>}
+                                                    </div>
+                                                )}
                                             </td>
                                             <td className="px-5 py-5 text-[var(--color-negative)] text-right font-mono font-bold text-sm">
                                                 {payment.fine > 0 ? `₹${payment.fine}` : '—'}
@@ -227,6 +236,15 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                 <p className="text-base font-bold text-[var(--color-positive)]">
                                                     ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                                 </p>
+                                                {payment.itemized_breakdown && Object.keys(payment.itemized_breakdown).length > 0 && (
+                                                    <div className="text-[10px] text-[var(--text-muted)] font-sans font-normal mt-1 flex flex-col items-end gap-0.5 opacity-80">
+                                                        {Number(payment.itemized_breakdown.tuition) > 0 && <span>Tuition: ₹{payment.itemized_breakdown.tuition}</span>}
+                                                        {Number(payment.itemized_breakdown.transport) > 0 && <span>Transport: ₹{payment.itemized_breakdown.transport}</span>}
+                                                        {Number(payment.itemized_breakdown.admission) > 0 && <span>Admission: ₹{payment.itemized_breakdown.admission}</span>}
+                                                        {payment.itemized_breakdown.annual && Object.keys(payment.itemized_breakdown.annual).length > 0 && <span>Annual: ₹{Object.values(payment.itemized_breakdown.annual).reduce((a,b)=>a+Number(b),0)}</span>}
+                                                        {payment.itemized_breakdown.subsidiary && Object.keys(payment.itemized_breakdown.subsidiary).length > 0 && <span>Subsidiary: ₹{Object.values(payment.itemized_breakdown.subsidiary).reduce((a,b)=>a+Number(b),0)}</span>}
+                                                    </div>
+                                                )}
                                                 {payment.fine > 0 && (
                                                     <p className="text-xs text-[var(--color-negative)] font-medium mt-1 bg-rose-500/10 px-2 py-0.5 rounded-[6px] inline-block">
                                                         Incl. ₹{payment.fine} fine

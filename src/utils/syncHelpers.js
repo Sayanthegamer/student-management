@@ -76,7 +76,8 @@ export const normalizeStudent = (student) => {
     description: JSON.stringify({
       remarks: fee.remarks,
       fine: fee.fine
-    })
+    }),
+    itemized_breakdown: fee.itemized_breakdown || {}
   }));
 
   // 2. Prepare Student (Strict Allow-list & Mapping)
@@ -117,7 +118,8 @@ export const normalizeStudent = (student) => {
     // Optional fields: Use undefined if missing so key is excluded from JSON
     // This prevents wiping existing data with NULLs during upsert
     guardian_name: student.guardianName || undefined,
-    age: (student.age ? parseInt(student.age) : undefined),
+    dob: student.dob || undefined,
+    enrollment_type: student.enrollmentType || undefined,
     address: student.address || undefined,
     phone: student.phone || undefined,
     email: student.email || undefined,
@@ -169,7 +171,8 @@ export const denormalizeStudents = (studentsData, feesData) => {
       month: fee.month || extraDetails.month || '', // Admission fees may have no month
       type: fee.type || 'Fee', // Preserve fee type (Admission/Fee)
       remarks: extraDetails.remarks || '', // ← Explicitly extract
-      fine: extraDetails.fine || 0         // ← Explicitly extract (default 0)
+      fine: extraDetails.fine || 0,         // ← Explicitly extract (default 0)
+      itemized_breakdown: typeof fee.itemized_breakdown === 'string' ? safeJSONParse(fee.itemized_breakdown) : (fee.itemized_breakdown || {})
     });
     return acc;
   }, {});
@@ -207,7 +210,8 @@ export const denormalizeStudents = (studentsData, feesData) => {
       admissionStatus: s.status,
 
       guardianName: s.guardian_name,
-      age: s.age,
+      dob: s.dob,
+      enrollmentType: s.enrollment_type || 'OLD',
       address: s.address,
       phone: s.phone,
       email: s.email,
