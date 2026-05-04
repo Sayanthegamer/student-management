@@ -25,7 +25,7 @@ const LandingPage = () => {
             <GraduationCap size={18} className="text-[var(--accent-primary)]" />
           </div>
           <span className="font-bold text-[var(--text-primary)] text-lg tracking-tight">
-            Student Manager Pro
+            Kinetic Ledger
           </span>
         </div>
         <button
@@ -158,11 +158,11 @@ const LandingPage = () => {
           <div className="flex items-center gap-2">
             <GraduationCap size={18} className="text-[var(--accent-primary)]" />
             <span className="font-semibold text-[var(--text-primary)] text-sm">
-              Student Manager Pro
+              Kinetic Ledger
             </span>
           </div>
           <p className="text-[var(--text-muted)] text-xs">
-            &copy; {new Date().getFullYear()} Student Manager Pro. All rights
+            &copy; {new Date().getFullYear()} Kinetic Ledger. All rights
             reserved.
           </p>
         </div>
