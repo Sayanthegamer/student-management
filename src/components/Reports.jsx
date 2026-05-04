@@ -23,7 +23,7 @@ const Reports = ({ students }) => {
                         date: fee.date,
                         studentId: student.id,
                         studentName: student.name,
-                        rollNumber: student.rollNumber || 'N/A',
+                        rollNumber: student.rollNo || 'N/A',
                         studentClass: student.class,
                         section: student.section || 'N/A',
                         particulars: fee.remarks || 'Fee Payment',
@@ -39,25 +39,20 @@ const Reports = ({ students }) => {
     const filteredTransactions = useMemo(() => {
         let filtered = allTransactions;
 
-        // Apply time filter
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        // Apply time filter using string comparisons to avoid timezone shifts
+        const nowStr = new Date().toISOString();
+        const todayStr = nowStr.slice(0, 10);
+        const currentMonthStr = nowStr.slice(0, 7);
+        const currentYearStr = nowStr.slice(0, 4);
 
         if (timeframe === 'today') {
-            filtered = filtered.filter(t => {
-                const d = new Date(t.date);
-                d.setHours(0, 0, 0, 0);
-                return d.getTime() === today.getTime();
-            });
+            filtered = filtered.filter(t => t.date.slice(0, 10) === todayStr);
         } else if (timeframe === 'month') {
-            const currentMonth = today.toISOString().slice(0, 7);
-            filtered = filtered.filter(t => t.date.slice(0, 7) === currentMonth);
+            filtered = filtered.filter(t => t.date.slice(0, 7) === currentMonthStr);
         } else if (timeframe === 'year') {
-            const currentYear = today.getFullYear().toString();
-            filtered = filtered.filter(t => t.date.startsWith(currentYear));
+            filtered = filtered.filter(t => t.date.startsWith(currentYearStr));
         } else if (timeframe === 'custom' && customStartDate && customEndDate) {
             filtered = filtered.filter(t => {
-                // Ensure format YYYY-MM-DD
                 const tDate = t.date.slice(0, 10);
                 return tDate >= customStartDate && tDate <= customEndDate;
             });
@@ -80,7 +75,7 @@ const Reports = ({ students }) => {
         if (filteredTransactions.length === 0) return;
 
         const dataToExport = filteredTransactions.map(t => ({
-            'Date': new Date(t.date).toLocaleDateString(),
+            'Date': t.date.slice(0, 10),
             'Student Name': t.studentName,
             'Roll No': t.rollNumber,
             'Class': t.studentClass,
@@ -110,8 +105,15 @@ const Reports = ({ students }) => {
     };
 
     // Pagination logic
+
     const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+
+    React.useEffect(() => {
+        setCurrentPage(prev => Math.min(prev, Math.max(1, totalPages)));
+    }, [filteredTransactions.length, itemsPerPage, totalPages]);
+
     const paginatedData = useMemo(() => {
+
         const start = (currentPage - 1) * itemsPerPage;
         return filteredTransactions.slice(start, start + itemsPerPage);
     }, [filteredTransactions, currentPage]);
@@ -246,10 +248,10 @@ const Reports = ({ students }) => {
                                     <tr key={t.id} className="hover:bg-[var(--bg-main)] transition-colors">
                                         <td className="p-4 whitespace-nowrap">
                                             <div className="text-sm font-medium text-[var(--text-primary)]">
-                                                {new Date(t.date).toLocaleDateString()}
+                                                {t.date.slice(0, 10)}
                                             </div>
                                             <div className="text-xs text-[var(--text-secondary)] mt-0.5">
-                                                {new Date(t.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {t.date.length > 10 ? t.date.slice(11, 16) : ''}
                                             </div>
                                         </td>
                                         <td className="p-4">

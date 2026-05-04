@@ -27,6 +27,7 @@ const DataManagement = lazy(() => import('./components/DataManagement'));
 const TransferCertificate = lazy(() => import('./components/TransferCertificate'));
 const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
 const Walkthrough = lazy(() => import('./components/Walkthrough'));
+const Reports = lazy(() => import('./components/Reports'));
 
 /**
  * Wrapper that resolves a student by :id URL param for the edit route.
@@ -39,7 +40,6 @@ function EditStudentRoute({ students, onSave, onCancel }) {
   if (!student) {
     return <Navigate to="/students" replace />;
   }
-const Reports = lazy(() => import('./components/Reports'));
 
   return (
     <StudentForm
