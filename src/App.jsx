@@ -27,6 +27,7 @@ const DataManagement = lazy(() => import('./components/DataManagement'));
 const TransferCertificate = lazy(() => import('./components/TransferCertificate'));
 const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
 const Walkthrough = lazy(() => import('./components/Walkthrough'));
+const Reports = lazy(() => import('./components/Reports'));
 
 /**
  * Wrapper that resolves a student by :id URL param for the edit route.
@@ -281,6 +282,7 @@ function App() {
               <Route path="/promotions" element={<PromotionBoard students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/data" element={<DataManagement students={students} onImportSuccess={handleImportSuccess} />} />
+              <Route path="/reports" element={<Reports students={students} />} />
             </Routes>
           </Suspense>
         </main>
