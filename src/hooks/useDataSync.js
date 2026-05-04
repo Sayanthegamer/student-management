@@ -32,10 +32,16 @@ export const useDataSync = () => {
   const isSyncingRef = useRef(false);
   const pendingSyncRef = useRef(false);
   const latestDoFetchRef = useRef(null);
+  const fetchAbortControllerRef = useRef(null);
 
   // Reusable fetch from cloud — used by initial load AND forceSync
   const fetchFromCloud = useCallback(async () => {
     const doFetch = async () => {
+        if (fetchAbortControllerRef.current) {
+            fetchAbortControllerRef.current.abort();
+        }
+        fetchAbortControllerRef.current = new AbortController();
+        const signal = fetchAbortControllerRef.current.signal;
         // Update ref to always point to the latest doFetch with current closure
         latestDoFetchRef.current = doFetch;
 
@@ -50,10 +56,10 @@ export const useDataSync = () => {
         setSyncStatus('syncing');
         setSyncError(null);
         try {
-          const { data: studentsData, error: sError } = await supabase.from('students').select('*');
+          const { data: studentsData, error: sError } = await supabase.from('students').select('*').abortSignal(signal);
           if (sError) throw sError;
 
-          const { data: feesData, error: fError } = await supabase.from('fees').select('*');
+          const { data: feesData, error: fError } = await supabase.from('fees').select('*').abortSignal(signal);
           if (fError) throw fError;
 
           // "Online Source is Truth" - Always overwrite local with cloud data if connection is successful.
@@ -62,6 +68,7 @@ export const useDataSync = () => {
           setStudents(merged);
           setSyncStatus('synced');
         } catch (err) {
+          if (err.name === 'AbortError') return;
           console.error("Sync error:", err);
           setSyncStatus('error');
           setSyncError({
@@ -300,7 +307,9 @@ export const useDataSync = () => {
 
   const addFeePayment = useCallback(async (studentId, paymentDetails) => {
     // paymentDetails can be object or array
+    if (!paymentDetails) return Promise.reject(new Error('Invalid payment details'));
     const payments = Array.isArray(paymentDetails) ? paymentDetails : [paymentDetails];
+    if (payments.length === 0) return Promise.reject(new Error('No payments provided'));
 
     // Assign IDs locally
     const paymentsWithIds = payments.map(p => ({ ...p, id: crypto.randomUUID(), student_id: studentId }));

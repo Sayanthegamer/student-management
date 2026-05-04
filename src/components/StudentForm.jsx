@@ -122,8 +122,10 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     };
 
     // Calculate net admission fee (clamped to prevent negatives or concession > gross)
-    const grossAdmissionFee = Math.max(0, Number(formData.admissionFee) || 0);
-    const concessionAmount = Math.max(0, Math.min(Number(formData.concessionAmount) || 0, grossAdmissionFee));
+    const rawAdmission = Number(formData.admissionFee);
+    const grossAdmissionFee = Math.max(0, isNaN(rawAdmission) ? 0 : rawAdmission);
+    const rawConcession = Number(formData.concessionAmount);
+    const concessionAmount = Math.max(0, Math.min(isNaN(rawConcession) ? 0 : rawConcession, grossAdmissionFee));
     const netAdmissionFee = grossAdmissionFee - concessionAmount;
     const hasConcession = concessionAmount > 0;
 

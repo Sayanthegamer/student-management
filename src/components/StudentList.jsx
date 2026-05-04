@@ -119,6 +119,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     }, [debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth]);
 
     const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+    // Clamp current page to prevent out-of-bounds edge case when filtering reduces total pages
+    if (currentPage > totalPages && totalPages > 0) {
+        setCurrentPage(totalPages);
+    }
     const currentStudents = filteredStudents.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
