@@ -132,6 +132,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
+      syncChannel.postMessage('sync_required');
       return;
     }
 
@@ -182,6 +183,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
+      syncChannel.postMessage('sync_required');
       return;
     }
 
@@ -234,6 +236,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
+      syncChannel.postMessage('sync_required');
       return;
     }
 
@@ -345,6 +348,7 @@ export const useDataSync = () => {
     if (!user || !supabase) {
         setSyncStatus('unsaved');
         console.warn("Supabase not configured - changes saved locally only");
+        syncChannel.postMessage('sync_required');
     }
   }, [user, supabase, students]);
 
@@ -356,6 +360,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
+      syncChannel.postMessage('sync_required');
       return;
     }
 
