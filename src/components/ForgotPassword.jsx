@@ -53,7 +53,7 @@ const ForgotPassword = () => {
 
     return (
         <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[var(--accent-primary)] selection:text-white">
-            <div className="max-w-md w-full bg-[var(--bg-card)] p-8 md:p-10 border border-[var(--border-color)]">
+            <div className="max-w-md w-full bg-[var(--bg-card)] p-8 md:p-10 border border-[var(--border-color)] rounded-xl">
                 <Link to="/" className="inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] hover:text-[var(--text-primary)] font-bold uppercase tracking-wider mb-8 transition-colors">
                     <ArrowLeft size={16} />
                     Back to Login
