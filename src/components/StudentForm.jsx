@@ -58,7 +58,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
 const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const isNewStudent = !initialData;
 
-    const [formData, setFormData] = useState(initialData || {
+    const defaults = {
         name: '',
         class: '',
         section: '',
@@ -71,12 +71,14 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         admissionStatus: 'Confirmed',
         admissionFee: '',
         concessionAmount: '',
-        dob: new Date().toISOString().split('T')[0],
+        dob: '',
         enrollmentType: 'OLD',
         phone: '',
         annualChargesBreakdown: {},
         subsidiaryChargesBreakdown: {},
-    });
+    };
+
+    const [formData, setFormData] = useState({ ...defaults, ...(initialData || {}) });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -402,7 +404,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                                                 ...prev,
                                                                 annualChargesBreakdown: {
                                                                     ...prev.annualChargesBreakdown,
-                                                                    [cat]: val ? Number(val) : 0
+                                                                    [cat]: val ? Math.max(0, Number(val)) : 0
                                                                 }
                                                             }));
                                                         }}
@@ -432,7 +434,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                                                 ...prev,
                                                                 subsidiaryChargesBreakdown: {
                                                                     ...prev.subsidiaryChargesBreakdown,
-                                                                    [cat]: val ? Number(val) : 0
+                                                                    [cat]: val ? Math.max(0, Number(val)) : 0
                                                                 }
                                                             }));
                                                         }}

@@ -228,11 +228,10 @@ const Overview = ({ students, onAddStudent }) => {
             "Student Name", "Class", "Section", "Date", "Month", "Type", "Remarks",
             "Total Amount", "Fine", "Tuition", "Transport", "Admission", "Concession", "Annual Charges", "Subsidiary Charges"
         ];
-
         const sanitizeCSVField = (val) => {
             if (val == null) return '""';
             let str = String(val);
-            if (/^[=+\-@]/.test(str)) {
+            if (/^\s*[=+\-@]/.test(str)) {
                 str = "'" + str;
             }
             str = str.replace(/"/g, '""');
@@ -261,11 +260,12 @@ const Overview = ({ students, onAddStudent }) => {
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", `financial_report_${new Date().toISOString().split('T')[0]}.csv`);
+        link.href = url;
+        link.setAttribute("download", `financial_report_${currentMonth}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 100);
     };
 
     useEffect(() => {

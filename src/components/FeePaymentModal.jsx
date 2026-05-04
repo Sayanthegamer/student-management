@@ -161,12 +161,16 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         
         // Validate amount is numeric and greater than 0
         const numericAmount = Number(amount);
-        if (isNaN(numericAmount) || numericAmount <= 0) {
+        if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
             setError('Please enter a valid amount greater than 0');
             return;
         }
 
         const numericTransportFee = Number(transportFee) || 0;
+        if (!Number.isFinite(numericTransportFee)) {
+            setError('Transport fee must be a valid finite number');
+            return;
+        }
         if (numericTransportFee < 0) {
             setError('Transport fee cannot be negative');
             return;
@@ -187,12 +191,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 payments.push({
                     date: paymentDate,
                     month: monthStr,
-                    amount: Number(amount) + Number(transportFee || 0),
+                    amount: numericAmount + numericTransportFee,
                     fine: monthFine,
                     remarks: remarks,
                     itemized_breakdown: {
-                        tuition: Number(amount),
-                        transport: Number(transportFee || 0)
+                        tuition: numericAmount,
+                        transport: numericTransportFee
                     }
                 });
 
@@ -217,12 +221,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             onSave(student.id, {
                 date: paymentDate,
                 month: selectedMonth,
-                amount: Number(amount) + Number(transportFee || 0),
+                amount: numericAmount + numericTransportFee,
                 fine: Number(fine),
                 remarks: remarks,
                 itemized_breakdown: {
-                    tuition: Number(amount),
-                    transport: Number(transportFee || 0)
+                    tuition: numericAmount,
+                    transport: numericTransportFee
                 }
             }).then(() => {
                 setShowSuccess(false);
