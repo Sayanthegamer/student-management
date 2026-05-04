@@ -107,6 +107,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 ...prev,
                 [name]: value,
                 ...(value === 'NEW' && ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
+                ...(value === 'OLD' ? { admissionFee: '', concessionAmount: '' } : {}),
                 annualChargesBreakdown: {...annual},
                 subsidiaryChargesBreakdown: {...subsidiary}
             }));
