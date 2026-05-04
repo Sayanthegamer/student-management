@@ -38,9 +38,13 @@ export const useDataSync = () => {
 
   const guardedSetSyncStatus = useCallback((status) => {
     if (isMountedRef.current) {
-        setSyncStatus(status);
+        if (typeof status === 'function') {
+            setSyncStatus(status);
+        } else {
+            setSyncStatus(status);
+        }
     }
-  }, [setSyncStatus, isMountedRef]);
+  }, []);
 
   const guardedSetSyncError = useCallback((error) => {
     if (isMountedRef.current) setSyncError(error);

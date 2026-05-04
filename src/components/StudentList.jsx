@@ -131,15 +131,9 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     }, []);
 
     const handlePaymentSave = useCallback(async (studentId, paymentDetails) => {
-        try {
-            await onPayFee(studentId, paymentDetails);
-            setShowPaymentModal(false);
-            setSelectedStudentForFee(null);
-        } catch (error) {
-            // Error is already handled by useDataSync (syncError state)
-            // Just keep modal open so user can see the error and retry
-            console.error('Payment failed:', error.message);
-        }
+        await onPayFee(studentId, paymentDetails);
+        setShowPaymentModal(false);
+        setSelectedStudentForFee(null);
     }, [onPayFee]);
 
     const handleClearFilters = useCallback(() => {
@@ -450,7 +444,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 {/* Compact Pagination */}
                 <div className="px-4 py-3 bg-[var(--bg-card)] border-t border-[var(--border-subtle)]">
                     <Pagination
-                        currentPage={currentPage}
+                        currentPage={safeCurrentPage}
                         totalPages={totalPages}
                         onPageChange={setCurrentPage}
                         totalItems={filteredStudents.length}
