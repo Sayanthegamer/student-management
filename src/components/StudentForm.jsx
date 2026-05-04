@@ -85,7 +85,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
         if (name === 'class') {
             const fee = CLASS_FEES[value] ?? '';
-            const admFee = ADMISSION_FEES[value] ?? formData.admissionFee ?? '';
+            const admFee = ADMISSION_FEES[value] ?? '';
             const annual = ANNUAL_CHARGES[value] || {};
             const subsidiary = SUBSIDIARY_CHARGES[value] || {};
             setFormData(prev => ({
@@ -100,7 +100,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
             }));
         } else if (name === 'enrollmentType' && formData.class) {
             const feeClass = formData.class;
-            const admFee = ADMISSION_FEES[feeClass] ?? formData.admissionFee ?? '';
+            const admFee = ADMISSION_FEES[feeClass] ?? '';
             const annual = ANNUAL_CHARGES[feeClass] || {};
             const subsidiary = SUBSIDIARY_CHARGES[feeClass] || {};
             setFormData(prev => ({
