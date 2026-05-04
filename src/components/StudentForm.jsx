@@ -194,11 +194,12 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                         required
                                     />
                                 </div>
-                                <InputField 
-                                    label="Contact Number" 
-                                    name="phone" 
-                                    placeholder="9876543210" 
-                                    required={true} 
+                                <InputField
+                                    label="Contact Number"
+                                    name="phone"
+                                    type="tel"
+                                    placeholder="9876543210"
+                                    required={true}
                                     value={formData.phone}
                                     onChange={handleChange}
                                 />
