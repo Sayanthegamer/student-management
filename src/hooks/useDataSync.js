@@ -264,7 +264,7 @@ export const useDataSync = () => {
         try {
             const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds });
             const { error } = await supabase.from('fees').insert(fees);
-            
+
             if (error) {
                 // Catch unique constraint violations (code 23505) or duplicate key
                 if (error.code === '23505' || error.message?.toLowerCase().includes('duplicate') || error.message?.toLowerCase().includes('unique')) {
@@ -292,15 +292,41 @@ export const useDataSync = () => {
             setTimeout(() => {
               setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
             }, 5000);
-            
+
             return Promise.reject(new Error(userMessage));
         }
     }
 
     // 1. Local Update (Only reaches here if Cloud Update succeeds, or offline)
+    // Check for duplicate months before local save (offline/local-only path)
+    if (!user || !supabase) {
+        // Normalize and extract the fee months being added
+        const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds });
+        const newMonths = fees.map(f => f.month).filter(Boolean); // Filter out empty months (e.g., Admission fees)
+
+        // Get existing months for this student
+        const existingStudent = students.find(s => s.id === studentId);
+        const existingMonths = existingStudent?.feeHistory
+            ?.map(f => f.month)
+            .filter(Boolean) || [];
+
+        // Check for duplicates
+        const duplicates = newMonths.filter(month => existingMonths.includes(month));
+
+        if (duplicates.length > 0) {
+            setSyncStatus('error');
+            const errorMessage = "Fee already recorded for one or more selected months.";
+            setSyncError({
+                message: errorMessage,
+                details: new Error(errorMessage)
+            });
+            return Promise.reject(new Error(errorMessage));
+        }
+    }
+
     const updatedList = localAddFeePayment(studentId, paymentsWithIds);
     setStudents(updatedList);
-    
+
     if (!user || !supabase) {
         setSyncStatus('unsaved');
         console.warn("Supabase not configured - changes saved locally only");
