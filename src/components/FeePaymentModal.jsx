@@ -194,10 +194,10 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     setIsSubmitting(false);
                 }
             }).catch(err => {
-                setError(err.message || 'Failed to save fee');
-                setShowSuccess(false);
                 if (mountedRef.current) {
+                    setShowSuccess(false);
                     setIsSubmitting(false);
+                    setError(err.message || 'Failed to save fee. Please try again.');
                 }
             });
             logActivity('fee', `Batch fee collection from ${student.name} (${selectedMonth} to ${endMonth})`);
@@ -215,10 +215,10 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     setIsSubmitting(false);
                 }
             }).catch(err => {
-                setError(err.message || 'Failed to save fee');
-                setShowSuccess(false);
                 if (mountedRef.current) {
+                    setShowSuccess(false);
                     setIsSubmitting(false);
+                    setError(err.message || 'Failed to save fee. Please try again.');
                 }
             });
             logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);
