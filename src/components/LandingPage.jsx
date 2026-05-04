@@ -59,7 +59,7 @@ const LandingPage = () => {
               onClick={() => navigate("/login")}
               className="group btn btn-primary text-white px-8 py-3.5 text-base"
             >
-              Start Managing Free
+              Administrator Login
               <ArrowRight
                 size={18}
                 className="transition-transform group-hover:translate-x-1"
