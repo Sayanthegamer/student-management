@@ -25,6 +25,11 @@ export const ThemeProvider = ({ children }) => {
   useLayoutEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.style.colorScheme = theme;
+    // Sync mobile browser chrome color with theme
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', theme === 'dark' ? '#09090b' : '#f5f7fb');
+    }
   }, [theme]);
 
   useEffect(() => {

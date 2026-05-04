@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Loader2, AlertCircle } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
+import { sendErrorTelemetry } from '../utils/telemetry';
 
 /**
  * Component for handling the "Reset Password" flow, where users enter their new password
@@ -28,6 +29,9 @@ const ResetPassword = () => {
                 // If no session, the magic link might be invalid or expired
                 navigate('/login');
             }
+        }).catch((err) => {
+            sendErrorTelemetry('ResetPassword:getSession', err);
+            navigate('/login');
         });
     }, [navigate]);
 
@@ -47,7 +51,7 @@ const ResetPassword = () => {
             navigate('/');
         } catch (err) {
             // Security: Do not expose raw internal error messages. Use a generic message.
-            console.error('Password reset error:', err);
+            sendErrorTelemetry('ResetPassword:updateUser', err);
             setError('Failed to update password. Please try again or request a new link.');
         } finally {
             setLoading(false);
@@ -56,7 +60,7 @@ const ResetPassword = () => {
 
     return (
         <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[var(--accent-primary)] selection:text-white">
-            <div className="max-w-md w-full bg-[var(--bg-card)] p-8 md:p-10 border border-[var(--border-color)]">
+            <div className="max-w-md w-full bg-[var(--bg-card)] p-8 md:p-10 border border-[var(--border-color)] rounded-xl">
                 <div className="text-center mb-8 border-b border-[var(--border-color)] pb-6">
                     <div className="w-12 h-12 border border-[var(--accent-primary)] bg-[var(--accent-primary)] flex items-center justify-center mx-auto mb-6">
                         <Lock className="text-white" size={24} />

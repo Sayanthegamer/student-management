@@ -14,13 +14,11 @@ const ForgotPassword = () => {
 
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState(null); // 'success' | 'error' | null
     const [message, setMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setStatus(null);
         setMessage('');
 
         try {
@@ -38,13 +36,11 @@ const ForgotPassword = () => {
             }
 
             // Security: To prevent user enumeration, always show success regardless of outcome
-            setStatus('success');
             setMessage(RESET_CONFIRMATION);
         } catch (error) {
             // Security: Do not expose raw internal error messages. Use a generic message.
             // To prevent user enumeration, always pretend it succeeded.
             sendErrorTelemetry('ForgotPassword:resetPasswordForEmail', error);
-            setStatus('success');
             setMessage(RESET_CONFIRMATION);
         } finally {
             setLoading(false);
@@ -53,7 +49,7 @@ const ForgotPassword = () => {
 
     return (
         <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center p-4 selection:bg-[var(--accent-primary)] selection:text-white">
-            <div className="max-w-md w-full bg-[var(--bg-card)] p-8 md:p-10 border border-[var(--border-color)]">
+            <div className="max-w-md w-full bg-[var(--bg-card)] p-8 md:p-10 border border-[var(--border-color)] rounded-xl">
                 <Link to="/" className="inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] hover:text-[var(--text-primary)] font-bold uppercase tracking-wider mb-8 transition-colors">
                     <ArrowLeft size={16} />
                     Back to Login
@@ -72,8 +68,8 @@ const ForgotPassword = () => {
                 </div>
 
                 {message && (
-                    <div className={`mb-6 p-4 flex items-start gap-3 border ${status === 'error' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' : 'bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20'}`}>
-                        {status === 'error' ? <AlertCircle size={20} className="shrink-0 mt-0.5" /> : <CheckCircle size={20} className="shrink-0 mt-0.5" />}
+                    <div className="mb-6 p-4 flex items-start gap-3 border bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20 rounded-[12px] fade-in-up">
+                        <CheckCircle size={20} className="shrink-0 mt-0.5" />
                         <span className="text-sm font-bold tracking-wide uppercase">{message}</span>
                     </div>
                 )}

@@ -3,6 +3,7 @@ import { Search, Filter, ArrowRight, UserCheck, CreditCard, ChevronRight } from 
 import { CLASS_ORDER, getNextClass, PROMOTION_FEES, CLASS_FEES } from '../utils/constants';
 import { logActivity } from '../utils/storage';
 import useDebounce from '../hooks/useDebounce';
+import { useToast } from '../context/ToastContext';
 
 /**
  * @typedef {Object} Student
@@ -32,6 +33,7 @@ import useDebounce from '../hooks/useDebounce';
  * @returns {JSX.Element} The rendered promotion board component.
  */
 const PromotionBoard = ({ students, onUpdateStudent, user }) => {
+    const { showToast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
@@ -137,6 +139,7 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
             });
 
             logActivity('promotion', `Bulk promoted ${selectedStudents.size} students to ${nextClass}`);
+            showToast(`${selectedStudents.size} student(s) promoted to ${nextClass}`, 'success');
             setSelectedStudents(new Set());
                 setPendingAction(null);
             }
