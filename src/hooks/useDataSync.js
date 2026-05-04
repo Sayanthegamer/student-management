@@ -272,7 +272,14 @@ export const useDataSync = () => {
             .filter(p => p.month)
             .map(p => p.month);
             
-        const duplicates = newMonths.filter(m => existingMonths.includes(m));
+        // Find internal duplicates in the new batch
+        const internalDuplicates = newMonths.filter((item, index) => newMonths.indexOf(item) !== index);
+        
+        // Find duplicates against existing history
+        const historyDuplicates = newMonths.filter(m => existingMonths.includes(m));
+        
+        // Combine and deduplicate
+        const duplicates = [...new Set([...internalDuplicates, ...historyDuplicates])];
         if (duplicates.length > 0) {
             return Promise.reject(new Error(`Fee already recorded for: ${duplicates.join(', ')}`));
         }
@@ -319,7 +326,7 @@ export const useDataSync = () => {
           setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
     }
-  }, [user]);
+  }, [user, students]);
 
   const importStudents = useCallback(async (newStudents) => {
     // 1. Local Update (Full Replace)
