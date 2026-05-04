@@ -68,7 +68,7 @@ const ForgotPassword = () => {
                 </div>
 
                 {message && (
-                    <div className="mb-6 p-4 flex items-start gap-3 border bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20">
+                    <div className="mb-6 p-4 flex items-start gap-3 border bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20 rounded-[12px] fade-in-up">
                         <CheckCircle size={20} className="shrink-0 mt-0.5" />
                         <span className="text-sm font-bold tracking-wide uppercase">{message}</span>
                     </div>
