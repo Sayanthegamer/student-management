@@ -92,9 +92,9 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 ...prev,
                 [name]: value,
                 feesAmount: fee,
-                // Only auto-fill admission fee if there's a configured value AND we're creating new student
-                ...(isNewStudent && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {}),
-                ...(isNewStudent ? { annualChargesBreakdown: {...annual}, subsidiaryChargesBreakdown: {...subsidiary} } : {})
+                // Only auto-fill admission fee if there's a configured value AND student is NEW enrollment
+                ...(prev.enrollmentType === 'NEW' && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {}),
+                ...(prev.enrollmentType === 'NEW' ? { annualChargesBreakdown: {...annual}, subsidiaryChargesBreakdown: {...subsidiary} } : {})
             }));
         } else if (name === 'enrollmentType' && value === 'NEW' && formData.class) {
             const feeClass = formData.class;

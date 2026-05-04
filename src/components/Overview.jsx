@@ -169,8 +169,11 @@ const Overview = ({ students, onAddStudent }) => {
             const paidThisMonth = student.feeHistory?.filter(p => p.date && p.date.startsWith(currentMonth));
             if (paidThisMonth) {
                 paidThisMonth.forEach(fee => {
-                    // Fallback to total amount as tuition if no breakdown
-                    const breakdown = fee.itemized_breakdown || { tuition: fee.type === 'Fee' ? fee.amount : 0, admission: fee.type === 'Admission' ? fee.amount : 0 };
+                    const isAdmission = fee.type === 'Admission';
+                    const breakdown = fee.itemized_breakdown || { 
+                        tuition: isAdmission ? 0 : fee.amount, 
+                        admission: isAdmission ? fee.amount : 0 
+                    };
                     tuition += Number(breakdown.tuition || 0);
                     transport += Number(breakdown.transport || 0);
                     admission += Number(breakdown.admission || 0);
@@ -194,7 +197,11 @@ const Overview = ({ students, onAddStudent }) => {
         students.forEach(student => {
             if (student.feeHistory) {
                 student.feeHistory.forEach(fee => {
-                    const breakdown = fee.itemized_breakdown || { tuition: fee.type === 'Fee' ? fee.amount : 0, admission: fee.type === 'Admission' ? fee.amount : 0 };
+                    const isAdmission = fee.type === 'Admission';
+                    const breakdown = fee.itemized_breakdown || { 
+                        tuition: isAdmission ? 0 : fee.amount, 
+                        admission: isAdmission ? fee.amount : 0 
+                    };
                     const annualBreakdown = breakdown.annual || {};
                     const subsidiaryBreakdown = breakdown.subsidiary || {};
 
