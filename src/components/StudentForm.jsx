@@ -94,9 +94,11 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 feesAmount: fee,
                 // Only auto-fill admission fee if there's a configured value AND student is NEW enrollment
                 ...(prev.enrollmentType === 'NEW' && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {}),
-                ...(prev.enrollmentType === 'NEW' ? { annualChargesBreakdown: {...annual}, subsidiaryChargesBreakdown: {...subsidiary} } : {})
+                // Itemized charges apply to both enrollment types during onboarding/admission
+                annualChargesBreakdown: {...annual},
+                subsidiaryChargesBreakdown: {...subsidiary}
             }));
-        } else if (name === 'enrollmentType' && value === 'NEW' && formData.class) {
+        } else if (name === 'enrollmentType' && formData.class) {
             const feeClass = formData.class;
             const admFee = ADMISSION_FEES[feeClass] ?? formData.admissionFee ?? '';
             const annual = ANNUAL_CHARGES[feeClass] || {};
@@ -104,7 +106,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
-                ...(ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
+                ...(value === 'NEW' && ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
                 annualChargesBreakdown: {...annual},
                 subsidiaryChargesBreakdown: {...subsidiary}
             }));
@@ -383,8 +385,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                         </div>
                     </div>
 
-                    {formData.enrollmentType === 'NEW' && (
-                        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-5 md:p-6 space-y-5 mt-6">
+                    {/* Itemized Annual & Subsidiary Charges - Shown for both New and Old students during onboarding */}
+                    <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-5 md:p-6 space-y-5 mt-6">
                             <h3 className="font-medium text-[var(--text-primary)] text-base mb-4 border-b border-[var(--border-color)] pb-3">Itemized Annual & Subsidiary Charges</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -449,7 +451,6 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 </div>
                             </div>
                         </div>
-                    )}
 
                     <div className="flex flex-col sm:flex-row gap-3 pt-6 mt-2 border-t border-[var(--border-color)]">
                         <button
