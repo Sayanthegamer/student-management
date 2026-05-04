@@ -238,8 +238,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             <InputField 
                                 label="Roll Number" 
                                 name="rollNo"
-                                    placeholder="01"
-                                    required={true}
+                                placeholder="01"
+                                required={true}
                                 value={formData.rollNo}
                                 onChange={handleChange}
                             />
