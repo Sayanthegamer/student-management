@@ -276,11 +276,14 @@ const Overview = ({ students, onAddStudent }) => {
     };
 
     useEffect(() => {
-        const interval = setInterval(() => {
+        let interval;
+        const updateActivities = () => {
             setActivities(getActivities());
-        }, 5000);
+            interval = setTimeout(updateActivities, 5000);
+        };
+        updateActivities();
 
-        return () => clearInterval(interval);
+        return () => clearTimeout(interval);
     }, [students]);
 
     if (students.length === 0) {

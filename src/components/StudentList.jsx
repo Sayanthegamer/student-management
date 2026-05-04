@@ -119,9 +119,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     }, [debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth]);
 
     const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+    const safeCurrentPage = Math.min(Math.max(1, currentPage), Math.max(1, totalPages));
     const currentStudents = filteredStudents.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
+        (safeCurrentPage - 1) * itemsPerPage,
+        safeCurrentPage * itemsPerPage
     );
 
     const handlePayFeeClick = useCallback((student) => {
@@ -443,7 +444,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 {/* Compact Pagination */}
                 <div className="px-4 py-3 bg-[var(--bg-card)] border-t border-[var(--border-subtle)]">
                     <Pagination
-                        currentPage={currentPage}
+                        currentPage={safeCurrentPage}
                         totalPages={totalPages}
                         onPageChange={setCurrentPage}
                         totalItems={filteredStudents.length}
