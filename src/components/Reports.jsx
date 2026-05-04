@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Calendar, FileSpreadsheet, Download, Search } from 'lucide-react';
-import * as XLSX from 'xlsx';
+import XLSX from 'xlsx-js-style';
 import useDebounce from '../hooks/useDebounce';
 import Pagination from './Pagination';
 
@@ -92,29 +92,107 @@ const Reports = ({ students }) => {
             return strVal;
         };
 
-        const dataToExport = filteredTransactions.map(t => ({
-            'Date': sanitizeCell(t.date.slice(0, 10)),
-            'Student Name': sanitizeCell(t.studentName),
-            'Roll No': sanitizeCell(t.rollNumber),
-            'Class': sanitizeCell(t.studentClass),
-            'Section': sanitizeCell(t.section),
-            'Particulars': sanitizeCell(t.particulars),
-            'Amount': t.amount // Numbers don't need CSV injection sanitation
-        }));
+        const titleRow = [`Transactions Report - ${new Date().toISOString().slice(0, 10)}`];
+        const headerRow = ['Date', 'Student Name', 'Roll No', 'Class', 'Section', 'Particulars', 'Amount'];
 
-        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-
-        // Auto-size columns
-        const wscols = [
-            { wch: 12 }, // Date
-            { wch: 25 }, // Name
-            { wch: 10 }, // Roll No
-            { wch: 10 }, // Class
-            { wch: 10 }, // Section
-            { wch: 30 }, // Particulars
-            { wch: 15 }  // Amount
+        // Setup rows for aoa_to_sheet
+        const rows = [
+            titleRow,
+            [], // Empty row for spacing
+            headerRow,
+            ...filteredTransactions.map(t => [
+                sanitizeCell(t.date.slice(0, 10)),
+                sanitizeCell(t.studentName),
+                sanitizeCell(t.rollNumber),
+                sanitizeCell(t.studentClass),
+                sanitizeCell(t.section),
+                sanitizeCell(t.particulars),
+                t.amount
+            ])
         ];
-        worksheet['!cols'] = wscols;
+
+        const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+        // Merge cells for the title
+        worksheet['!merges'] = [
+            { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }
+        ];
+
+        // Column widths
+        worksheet['!cols'] = [
+            { wch: 15 }, // Date
+            { wch: 30 }, // Name
+            { wch: 12 }, // Roll No
+            { wch: 12 }, // Class
+            { wch: 12 }, // Section
+            { wch: 35 }, // Particulars
+            { wch: 20 }  // Amount
+        ];
+
+        // Apply Styles
+
+        // 1. Title Style
+        if (worksheet['A1']) {
+            worksheet['A1'].s = {
+                font: { name: "Arial", sz: 16, bold: true, color: { rgb: "333333" } },
+                alignment: { horizontal: "center", vertical: "center" }
+            };
+        }
+
+        // Helper for borders
+        const borderStyle = {
+            top: { style: "thin", color: { rgb: "DDDDDD" } },
+            bottom: { style: "thin", color: { rgb: "DDDDDD" } },
+            left: { style: "thin", color: { rgb: "DDDDDD" } },
+            right: { style: "thin", color: { rgb: "DDDDDD" } }
+        };
+
+        // 2. Header Style
+        const headerStyle = {
+            font: { name: "Arial", sz: 11, bold: true, color: { rgb: "FFFFFF" } },
+            fill: { fgColor: { rgb: "4F46E5" } }, // Indigo-600
+            alignment: { horizontal: "center", vertical: "center" },
+            border: borderStyle
+        };
+
+        // Iterate through all cells to apply styles
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+
+        for (let R = 2; R <= range.e.r; ++R) { // Start from row index 2 (which is the header row)
+            for (let C = 0; C <= range.e.c; ++C) {
+                const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+                if (!worksheet[cellRef]) continue;
+
+                if (R === 2) {
+                    // It's a header
+                    worksheet[cellRef].s = headerStyle;
+                } else {
+                    // Data rows
+
+                    // Alternating background color
+                    const isEvenRow = R % 2 === 0;
+                    const rowStyle = {
+                        font: { name: "Arial", sz: 10, color: { rgb: "333333" } },
+                        fill: { fgColor: { rgb: isEvenRow ? "F9FAFB" : "FFFFFF" } }, // Gray-50 / White
+                        alignment: { vertical: "center" },
+                        border: borderStyle
+                    };
+
+                    // Format Amount column as currency
+                    if (C === 6) { // Amount is the 7th column (index 6)
+                        rowStyle.numFmt = '"₹"#,##0.00';
+                        rowStyle.alignment.horizontal = "right";
+                    }
+
+                    // Format Date
+                    if (C === 0) {
+                        rowStyle.alignment.horizontal = "center";
+                    }
+
+                    worksheet[cellRef].s = rowStyle;
+                }
+            }
+        }
 
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Transactions');
