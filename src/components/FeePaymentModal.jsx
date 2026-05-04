@@ -36,8 +36,9 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [selectedMonth, setSelectedMonth] = useState(getLocalMonthString);
     const [isMultiMonth, setIsMultiMonth] = useState(false);
     const [endMonth, setEndMonth] = useState(getLocalMonthString);
-    const [amount, setAmount] = useState(student.feesAmount || '');
-    const [transportFee, setTransportFee] = useState('');
+    const [tuitionFee, setTuitionFee] = useState(student.tuitionFee || student.feesAmount || '');
+    const [smartBoardFee, setSmartBoardFee] = useState(student.smartBoardFee || '');
+    const [computerFee, setComputerFee] = useState(student.computerFee || '');
     const [fine, setFine] = useState(0);
     const [remarks, setRemarks] = useState('');
     const [error, setError] = useState('');
@@ -122,12 +123,13 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         setError('');
         setFine(calculatedFine);
 
-        const baseAmount = Number(amount) || 0;
-        const transFee = Number(transportFee) || 0;
-        const total = ((baseAmount + transFee) * monthsCount) + calculatedFine;
+        const tFee = Number(tuitionFee) || 0;
+        const sbFee = Number(smartBoardFee) || 0;
+        const cFee = Number(computerFee) || 0;
+        const total = ((tFee + sbFee + cFee) * monthsCount) + calculatedFine;
         setTotalPayable(total);
 
-    }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount, transportFee]);
+    }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, tuitionFee, smartBoardFee, computerFee]);
 
     // Escape key handler - inline to avoid dependency issues
     useEffect(() => {
@@ -151,9 +153,14 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         if (isSubmitting) return;
         
         // Validate amount is numeric and greater than 0
-        const numericAmount = Number(amount);
-        if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-            setError('Please enter a valid amount greater than 0');
+        const numericTuitionFee = Number(tuitionFee) || 0;
+        const numericSmartBoardFee = Number(smartBoardFee) || 0;
+        const numericComputerFee = Number(computerFee) || 0;
+
+        const totalFees = numericTuitionFee + numericSmartBoardFee + numericComputerFee;
+
+        if (!Number.isFinite(totalFees) || totalFees <= 0) {
+            setError('Please enter a valid total fee amount greater than 0');
             return;
         }
 
@@ -182,12 +189,13 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 payments.push({
                     date: paymentDate,
                     month: monthStr,
-                    amount: numericAmount + numericTransportFee,
+                    amount: numericTuitionFee + numericSmartBoardFee + numericComputerFee,
                     fine: monthFine,
                     remarks: remarks,
                     itemized_breakdown: {
-                        tuition: numericAmount,
-                        transport: numericTransportFee
+                        tuition: numericTuitionFee,
+                        smartBoard: numericSmartBoardFee,
+                        computer: numericComputerFee
                     }
                 });
 
@@ -212,17 +220,18 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             onSave(student.id, {
                 date: paymentDate,
                 month: selectedMonth,
-                amount: numericAmount + numericTransportFee,
+                amount: numericTuitionFee + numericSmartBoardFee + numericComputerFee,
                 fine: Number(fine),
                 remarks: remarks,
                 itemized_breakdown: {
-                    tuition: numericAmount,
-                    transport: numericTransportFee
+                    tuition: numericTuitionFee,
+                    smartBoard: numericSmartBoardFee,
+                    computer: numericComputerFee
                 }
             }).then(() => {
                 setShowSuccess(false);
                 doClose();
-                logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);
+                logActivity('fee', `Fee ₹${numericTuitionFee + numericSmartBoardFee + numericComputerFee} from ${student.name} (${selectedMonth})`);
                 if (mountedRef.current) {
                     setIsSubmitting(false);
                 }

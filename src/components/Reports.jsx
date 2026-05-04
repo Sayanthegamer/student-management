@@ -37,7 +37,9 @@ const Reports = ({ students }) => {
                         studentClass: String(student.class || ''),
                         section: String(student.section || 'N/A'),
                         particulars: String(fee.remarks || 'Fee Payment'),
-                        amount: parseFloat(fee.amount) || 0
+                        amount: parseFloat(fee.amount) || 0,
+                        fine: fee.fine || 0,
+                        itemized: fee.itemized_breakdown || {}
                     });
                 });
             }
@@ -93,40 +95,70 @@ const Reports = ({ students }) => {
         };
 
         const titleRow = [`Transactions Report - ${new Date().toISOString().slice(0, 10)}`];
-        const headerRow = ['Date', 'Student Name', 'Roll No', 'Class', 'Section', 'Particulars', 'Amount'];
+        const headerRow = ['Date', 'Student Name', 'Roll No', 'Class', 'Section', 'Particulars', 'Tuition Fee', 'SmartBoard Fee', 'Computer Fee', 'Admission Fee', 'Annual Charges', 'Subsidiary Charges', 'Fine', 'Total Amount'];
 
         // Setup rows for aoa_to_sheet
         const rows = [
             titleRow,
             [], // Empty row for spacing
             headerRow,
-            ...filteredTransactions.map(t => [
-                sanitizeCell(t.date.slice(0, 10)),
-                sanitizeCell(t.studentName),
-                sanitizeCell(t.rollNumber),
-                sanitizeCell(t.studentClass),
-                sanitizeCell(t.section),
-                sanitizeCell(t.particulars),
-                t.amount
-            ])
+            ...filteredTransactions.map(t => {
+                const itemized = t.itemized || {};
+
+                // Calculate Annual total
+                let annualTotal = 0;
+                if (itemized.annual) {
+                    annualTotal = Object.values(itemized.annual).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                }
+
+                // Calculate Subsidiary total
+                let subsidiaryTotal = 0;
+                if (itemized.subsidiary) {
+                    subsidiaryTotal = Object.values(itemized.subsidiary).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                }
+
+                return [
+                    sanitizeCell(t.date.slice(0, 10)),
+                    sanitizeCell(t.studentName),
+                    sanitizeCell(t.rollNumber),
+                    sanitizeCell(t.studentClass),
+                    sanitizeCell(t.section),
+                    sanitizeCell(t.particulars),
+                    itemized.tuition || 0,
+                    itemized.smartBoard || 0,
+                    itemized.computer || 0,
+                    itemized.admission || 0,
+                    annualTotal,
+                    subsidiaryTotal,
+                    t.fine || 0,
+                    t.amount + (t.fine || 0)
+                ];
+            })
         ];
 
         const worksheet = XLSX.utils.aoa_to_sheet(rows);
 
         // Merge cells for the title
         worksheet['!merges'] = [
-            { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }
+            { s: { r: 0, c: 0 }, e: { r: 0, c: 13 } }
         ];
 
         // Column widths
         worksheet['!cols'] = [
             { wch: 15 }, // Date
             { wch: 30 }, // Name
-            { wch: 12 }, // Roll No
-            { wch: 12 }, // Class
-            { wch: 12 }, // Section
-            { wch: 35 }, // Particulars
-            { wch: 20 }  // Amount
+            { wch: 10 }, // Roll No
+            { wch: 10 }, // Class
+            { wch: 10 }, // Section
+            { wch: 25 }, // Particulars
+            { wch: 12 }, // Tuition
+            { wch: 15 }, // SmartBoard
+            { wch: 15 }, // Computer
+            { wch: 15 }, // Admission
+            { wch: 15 }, // Annual
+            { wch: 15 }, // Subsidiary
+            { wch: 10 }, // Fine
+            { wch: 15 }  // Total Amount
         ];
 
         // Apply Styles
@@ -179,7 +211,7 @@ const Reports = ({ students }) => {
                     };
 
                     // Format Amount column as currency
-                    if (C === 6) { // Amount is the 7th column (index 6)
+                    if (C >= 6 && C <= 13) { // Amount columns
                         rowStyle.numFmt = '"₹"#,##0.00';
                         rowStyle.alignment.horizontal = "right";
                     }

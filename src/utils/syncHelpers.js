@@ -226,6 +226,9 @@ export const denormalizeStudents = (studentsData, feesData) => {
 
       // Admission fee & concession
       admissionFee: s.admission_fee || 0,
+      tuitionFee: s.tuition_fee || feesAmount, // Default to computed if not explicitly set
+      smartBoardFee: s.smart_board_fee || '',
+      computerFee: s.computer_fee || '',
       concessionAmount: s.concession_amount || 0,
 
       // Calculated fields - recalculated from data, not stored (Issue 2 fix)
