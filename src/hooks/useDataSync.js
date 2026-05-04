@@ -113,16 +113,57 @@ export const useDataSync = () => {
     const grossAdmission = Math.max(0, Number(studentData.admissionFee) || 0);
     const concession = Math.max(0, Number(studentData.concessionAmount) || 0);
     const netAdmission = Math.max(0, grossAdmission - concession);
+    
+    // Calculate total from new itemized structures
+    const sanitizeBreakdown = (breakdownObj) => {
+        const sanitized = {};
+        for (const [key, val] of Object.entries(breakdownObj || {})) {
+            let parsed = Number(val);
+            if (!isFinite(parsed) || parsed < 0) parsed = 0;
+            sanitized[key] = parsed;
+        }
+        return sanitized;
+    };
 
-    if (netAdmission > 0) {
+    const sanitizedAnnual = sanitizeBreakdown(studentData.annualChargesBreakdown);
+    const sanitizedSubsidiary = sanitizeBreakdown(studentData.subsidiaryChargesBreakdown);
+
+    const annualTotal = Object.values(sanitizedAnnual).reduce((acc, curr) => acc + curr, 0);
+    const subsidiaryTotal = Object.values(sanitizedSubsidiary).reduce((acc, curr) => acc + curr, 0);
+    
+    const totalInitialFee = netAdmission + annualTotal + subsidiaryTotal;
+
+    if (totalInitialFee > 0 && studentData.enrollmentType === 'NEW') {
       const admissionPayment = {
         id: crypto.randomUUID(),
         date: studentData.admissionDate || new Date().toISOString().split('T')[0],
         month: '', // Admission fees are not tied to a specific month
+        amount: totalInitialFee,
+        fine: 0,
+        type: 'Admission',
+        remarks: 'New Registration Checkout' + (concession > 0 ? ` (Concession: ₹${concession})` : ''),
+        itemized_breakdown: {
+            admission: netAdmission,
+            concession: concession,
+            annual: sanitizedAnnual,
+            subsidiary: sanitizedSubsidiary
+        }
+      };
+      newStudent.feeHistory = [admissionPayment, ...(newStudent.feeHistory || [])];
+    } else if (netAdmission > 0) {
+      // Fallback for OLD students or if only admission fee is set
+      const admissionPayment = {
+        id: crypto.randomUUID(),
+        date: studentData.admissionDate || new Date().toISOString().split('T')[0],
+        month: '',
         amount: netAdmission,
         fine: 0,
         type: 'Admission',
         remarks: concession > 0 ? `Admission fee (Concession: ₹${concession})` : 'Admission fee',
+        itemized_breakdown: {
+            admission: netAdmission,
+            concession: concession
+        }
       };
       newStudent.feeHistory = [admissionPayment, ...(newStudent.feeHistory || [])];
     }

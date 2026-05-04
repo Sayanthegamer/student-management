@@ -45,6 +45,46 @@ export const PROMOTION_FEES = {
 };
 
 /**
+ * Standard categories for annual charges.
+ */
+export const ANNUAL_CHARGE_CATEGORIES = [
+  'Christmas Festival',
+  'Magazine Fee',
+  'Development',
+  'Building',
+  'ID Card',
+  'Sports',
+  'Electricity',
+  'Library',
+  'Exam Fee'
+];
+
+/**
+ * Standard categories for subsidiary items.
+ */
+export const SUBSIDIARY_CATEGORIES = [
+  'Khata',
+  'Tie',
+  'Belt',
+  'T-shirt/Dress'
+];
+
+/**
+ * Annual charges mapped by class. Defaults to 0 if not specified.
+ */
+export const ANNUAL_CHARGES = {
+  // 'Play School': { 'Sports': 100, 'ID Card': 50 },
+  // '1': { 'Building': 500, 'Exam Fee': 200 }
+};
+
+/**
+ * Subsidiary charges mapped by class. Defaults to 0 if not specified.
+ */
+export const SUBSIDIARY_CHARGES = {
+  // 'Play School': { 'Tie': 50, 'Belt': 50 },
+};
+
+/**
  * Standard ordered progression of classes.
  * Used for automatic next-class calculation during student promotion.
  * @type {string[]}
