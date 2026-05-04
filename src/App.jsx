@@ -1,5 +1,5 @@
 import React, { useState, Suspense, lazy, useCallback } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { Plus, Menu, Zap, GraduationCap } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import BottomNavigation from './components/BottomNavigation';
@@ -29,6 +29,27 @@ const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
 const Walkthrough = lazy(() => import('./components/Walkthrough'));
 
 /**
+ * Wrapper that resolves a student by :id URL param for the edit route.
+ * If the student isn't found (stale URL / deleted), redirects to the list.
+ */
+function EditStudentRoute({ students, onSave, onCancel }) {
+  const { id } = useParams();
+  const student = students.find(s => s.id === id);
+
+  if (!student) {
+    return <Navigate to="/students" replace />;
+  }
+
+  return (
+    <StudentForm
+      onSave={(data) => onSave(data, student.id)}
+      onCancel={onCancel}
+      initialData={student}
+    />
+  );
+}
+
+/**
  * Root application component - Kinetic Ledger Shell
  * Refined layout with compact editorial header for maximum data space
  */
@@ -36,7 +57,6 @@ function App() {
   const { user, loading } = useAuth();
   const { showToast } = useToast();
   const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents, dismissError, forceSync } = useDataSync();
-  const [editingStudent, setEditingStudent] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,13 +64,11 @@ function App() {
 
   // Student Management Handlers
   const handleAddClick = useCallback(() => {
-    setEditingStudent(null);
     navigate('/students/new');
   }, [navigate]);
 
   const handleEditClick = useCallback((student) => {
-    setEditingStudent(student);
-    navigate('/students/edit');
+    navigate(`/students/edit/${student.id}`);
   }, [navigate]);
 
   const handleDeleteClick = useCallback((id) => {
@@ -64,14 +82,14 @@ function App() {
     }
   }, [deleteConfirm, deleteStudent]);
 
-  const handleSave = useCallback((studentData) => {
-    if (editingStudent) {
-      updateStudent({ ...studentData, id: editingStudent.id });
+  const handleSave = useCallback((studentData, existingId) => {
+    if (existingId) {
+      updateStudent({ ...studentData, id: existingId });
     } else {
       addStudent(studentData);
     }
     navigate('/students');
-  }, [editingStudent, updateStudent, addStudent, navigate]);
+  }, [updateStudent, addStudent, navigate]);
 
   const handleUpdateStudent = useCallback((updatedStudent) => {
     updateStudent(updatedStudent);
@@ -82,7 +100,6 @@ function App() {
   }, [addFeePayment]);
 
   const handleCancel = useCallback(() => {
-    setEditingStudent(null);
     navigate('/students');
   }, [navigate]);
 
@@ -256,12 +273,8 @@ function App() {
                   initialData={null}
                 />
               } />
-              <Route path="/students/edit" element={
-                <StudentForm
-                  onSave={handleSave}
-                  onCancel={handleCancel}
-                  initialData={editingStudent}
-                />
+              <Route path="/students/edit/:id" element={
+                <EditStudentRoute students={students} onSave={handleSave} onCancel={handleCancel} />
               } />
               <Route path="/payment-history" element={<PaymentHistory students={students} />} />
               <Route path="/admission" element={<AdmissionStatus students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
