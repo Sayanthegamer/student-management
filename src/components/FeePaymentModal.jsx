@@ -127,7 +127,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         const total = ((baseAmount + transFee) * monthsCount) + calculatedFine;
         setTotalPayable(total);
 
-    }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount]);
+    }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount, transportFee]);
 
     // Escape key handler - inline to avoid dependency issues
     useEffect(() => {
@@ -163,6 +163,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         const numericAmount = Number(amount);
         if (isNaN(numericAmount) || numericAmount <= 0) {
             setError('Please enter a valid amount greater than 0');
+            return;
+        }
+
+        const numericTransportFee = Number(transportFee) || 0;
+        if (numericTransportFee < 0) {
+            setError('Transport fee cannot be negative');
             return;
         }
         
@@ -448,8 +454,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold">₹</div>
                                     <input
                                         type="number"
+                                        min="0"
                                         value={transportFee}
-                                        onChange={(e) => setTransportFee(e.target.value)}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            setTransportFee(val === '' ? '' : Math.max(0, Number(val)));
+                                        }}
                                         className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
                                         placeholder="0"
                                     />

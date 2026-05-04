@@ -115,8 +115,21 @@ export const useDataSync = () => {
     const netAdmission = Math.max(0, grossAdmission - concession);
     
     // Calculate total from new itemized structures
-    const annualTotal = Object.values(studentData.annualChargesBreakdown || {}).reduce((acc, curr) => acc + (Number(curr) || 0), 0);
-    const subsidiaryTotal = Object.values(studentData.subsidiaryChargesBreakdown || {}).reduce((acc, curr) => acc + (Number(curr) || 0), 0);
+    const sanitizeBreakdown = (breakdownObj) => {
+        const sanitized = {};
+        for (const [key, val] of Object.entries(breakdownObj || {})) {
+            let parsed = Number(val);
+            if (!isFinite(parsed) || parsed < 0) parsed = 0;
+            sanitized[key] = parsed;
+        }
+        return sanitized;
+    };
+
+    const sanitizedAnnual = sanitizeBreakdown(studentData.annualChargesBreakdown);
+    const sanitizedSubsidiary = sanitizeBreakdown(studentData.subsidiaryChargesBreakdown);
+
+    const annualTotal = Object.values(sanitizedAnnual).reduce((acc, curr) => acc + curr, 0);
+    const subsidiaryTotal = Object.values(sanitizedSubsidiary).reduce((acc, curr) => acc + curr, 0);
     
     const totalInitialFee = netAdmission + annualTotal + subsidiaryTotal;
 
@@ -132,8 +145,8 @@ export const useDataSync = () => {
         itemized_breakdown: {
             admission: netAdmission,
             concession: concession,
-            annual: studentData.annualChargesBreakdown || {},
-            subsidiary: studentData.subsidiaryChargesBreakdown || {}
+            annual: sanitizedAnnual,
+            subsidiary: sanitizedSubsidiary
         }
       };
       newStudent.feeHistory = [admissionPayment, ...(newStudent.feeHistory || [])];

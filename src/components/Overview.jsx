@@ -229,25 +229,35 @@ const Overview = ({ students, onAddStudent }) => {
             "Total Amount", "Fine", "Tuition", "Transport", "Admission", "Concession", "Annual Charges", "Subsidiary Charges"
         ];
 
+        const sanitizeCSVField = (val) => {
+            if (val == null) return '""';
+            let str = String(val);
+            if (/^[=+\-@]/.test(str)) {
+                str = "'" + str;
+            }
+            str = str.replace(/"/g, '""');
+            return `"${str}"`;
+        };
+
         const rows = allFees.map(f => [
-            `"${f.studentName}"`,
-            `"${f.class}"`,
-            `"${f.section}"`,
-            `"${f.date}"`,
-            `"${f.month}"`,
-            `"${f.type}"`,
-            `"${f.remarks.replace(/"/g, '""')}"`,
-            f.amount,
-            f.fine,
-            f.tuition,
-            f.transport,
-            f.admission,
-            f.concession,
-            f.annual,
-            f.subsidiary
+            sanitizeCSVField(f.studentName),
+            sanitizeCSVField(f.class),
+            sanitizeCSVField(f.section),
+            sanitizeCSVField(f.date),
+            sanitizeCSVField(f.month),
+            sanitizeCSVField(f.type),
+            sanitizeCSVField(f.remarks),
+            sanitizeCSVField(f.amount),
+            sanitizeCSVField(f.fine),
+            sanitizeCSVField(f.tuition),
+            sanitizeCSVField(f.transport),
+            sanitizeCSVField(f.admission),
+            sanitizeCSVField(f.concession),
+            sanitizeCSVField(f.annual),
+            sanitizeCSVField(f.subsidiary)
         ]);
 
-        const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+        const csvContent = [headers.map(sanitizeCSVField).join(","), ...rows.map(r => r.join(","))].join("\n");
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");

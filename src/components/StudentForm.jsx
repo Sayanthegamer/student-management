@@ -94,6 +94,18 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 ...(isNewStudent && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {}),
                 ...(isNewStudent ? { annualChargesBreakdown: {...annual}, subsidiaryChargesBreakdown: {...subsidiary} } : {})
             }));
+        } else if (name === 'enrollmentType' && value === 'NEW' && formData.class) {
+            const feeClass = formData.class;
+            const admFee = ADMISSION_FEES[feeClass] ?? formData.admissionFee ?? '';
+            const annual = ANNUAL_CHARGES[feeClass] || {};
+            const subsidiary = SUBSIDIARY_CHARGES[feeClass] || {};
+            setFormData(prev => ({
+                ...prev,
+                [name]: value,
+                ...(ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
+                annualChargesBreakdown: {...annual},
+                subsidiaryChargesBreakdown: {...subsidiary}
+            }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
