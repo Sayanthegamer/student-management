@@ -131,9 +131,15 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     }, []);
 
     const handlePaymentSave = useCallback(async (studentId, paymentDetails) => {
-        await onPayFee(studentId, paymentDetails);
-        setShowPaymentModal(false);
-        setSelectedStudentForFee(null);
+        try {
+            await onPayFee(studentId, paymentDetails);
+            setShowPaymentModal(false);
+            setSelectedStudentForFee(null);
+        } catch (error) {
+            // Error is already handled by useDataSync (syncError state)
+            // Just keep modal open so user can see the error and retry
+            console.error('Payment failed:', error.message);
+        }
     }, [onPayFee]);
 
     const handleClearFilters = useCallback(() => {

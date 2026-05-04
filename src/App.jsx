@@ -96,8 +96,14 @@ function App() {
     updateStudent(updatedStudent);
   }, [updateStudent]);
 
-  const handlePayFee = useCallback((studentId, paymentDetails) => {
-    return addFeePayment(studentId, paymentDetails);
+  const handlePayFee = useCallback(async (studentId, paymentDetails) => {
+    try {
+        await addFeePayment(studentId, paymentDetails);
+    } catch (error) {
+        // Propagate error to caller (StudentList) while ensuring it's handled
+        console.error('Fee payment error:', error.message);
+        throw error;
+    }
   }, [addFeePayment]);
 
   const handleCancel = useCallback(() => {
