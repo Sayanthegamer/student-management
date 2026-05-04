@@ -18,9 +18,19 @@ const Reports = ({ students }) => {
         students.forEach(student => {
             if (student.feeHistory && Array.isArray(student.feeHistory)) {
                 student.feeHistory.forEach(fee => {
+                    let safeDate = '';
+                    if (fee.date) {
+                        const parsedDate = new Date(fee.date);
+                        if (!isNaN(parsedDate.getTime())) {
+                            safeDate = parsedDate.toISOString();
+                        } else {
+                            safeDate = String(fee.date); // fallback to raw string if valid string but not date
+                        }
+                    }
+
                     transactions.push({
                         id: fee.id,
-                        date: fee.date,
+                        date: safeDate,
                         studentId: student.id,
                         studentName: student.name,
                         rollNumber: student.rollNo || 'N/A',
