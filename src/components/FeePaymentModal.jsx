@@ -193,6 +193,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 if (mountedRef.current) {
                     setIsSubmitting(false);
                 }
+            }).catch(() => {
+                if (mountedRef.current) {
+                    setShowSuccess(false);
+                    setIsSubmitting(false);
+                    setError('Payment saved locally but failed to sync. Please try syncing later.');
+                }
             });
             logActivity('fee', `Batch fee collection from ${student.name} (${selectedMonth} to ${endMonth})`);
         } else {
@@ -207,6 +213,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 doClose();
                 if (mountedRef.current) {
                     setIsSubmitting(false);
+                }
+            }).catch(() => {
+                if (mountedRef.current) {
+                    setShowSuccess(false);
+                    setIsSubmitting(false);
+                    setError('Payment saved locally but failed to sync. Please try syncing later.');
                 }
             });
             logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);

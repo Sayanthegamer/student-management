@@ -182,14 +182,9 @@ export const useDataSync = () => {
         if (error) throw error;
 
         if (fees.length > 0) {
-          // Only delete fees if there are new ones to insert
-          const { error: delError } = await supabase.from('fees').delete().eq('student_id', studentData.id);
-          if (delError) {
-            console.error('Fee deletion warning:', delError);
-            // Don't throw - fees might already be new format or partially deleted
-          }
-
-          const { error: fError } = await supabase.from('fees').insert(fees);
+          // Use upsert instead of delete-then-insert to avoid race conditions
+          // where concurrent fee payments could be wiped between delete and insert.
+          const { error: fError } = await supabase.from('fees').upsert(fees);
           if (fError) throw fError;
         }
 
