@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Calendar, FileSpreadsheet, Download, Search } from 'lucide-react';
-import XLSX from 'xlsx-js-style';
+import * as XLSX from 'xlsx';
 import useDebounce from '../hooks/useDebounce';
 import Pagination from './Pagination';
 
@@ -92,7 +92,11 @@ const Reports = ({ students }) => {
             return strVal;
         };
 
-        const titleRow = [`Transactions Report - ${new Date().toISOString().slice(0, 10)}`];
+        // Generate local date string in YYYY-MM-DD format
+        const now = new Date();
+        const localDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+        const titleRow = [`Transactions Report - ${localDate}`];
         const headerRow = ['Date', 'Student Name', 'Roll No', 'Class', 'Section', 'Particulars', 'Amount'];
 
         // Setup rows for aoa_to_sheet
@@ -197,7 +201,7 @@ const Reports = ({ students }) => {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Transactions');
 
-        XLSX.writeFile(workbook, `Transactions_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
+        XLSX.writeFile(workbook, `Transactions_Report_${localDate}.xlsx`);
     };
 
     // Pagination logic
