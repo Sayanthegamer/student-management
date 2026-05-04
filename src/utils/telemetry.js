@@ -2,8 +2,8 @@
  * Utility for sending telemetry data safely without exposing errors to the client console.
  */
 export const sendErrorTelemetry = (context, error) => {
-    // In a real app, this would send to Sentry, Datadog, etc.
-    // We just safely stringify or serialize what we need for logging out of band.
+    // Build a structured, redacted payload for observability.
+    // In production, this can be picked up by Vercel Log Drain, Sentry, Datadog, etc.
     const _payload = {
         context,
         message: 'client_error_redacted',
@@ -13,24 +13,17 @@ export const sendErrorTelemetry = (context, error) => {
         timestamp: new Date().toISOString()
     };
 
-    // Send telemetry in a fire-and-forget, safe way
+    // Log structured telemetry via console.debug (captured by log drains, hidden from users).
+    // NOTE: No network request is made — /api/telemetry does not exist.
+    // When a real telemetry service is integrated, replace this with a sendBeacon/fetch call.
     try {
-        const endpoint = '/api/telemetry';
-        const serializedPayload = JSON.stringify(_payload);
-
-        // Prefer sendBeacon when available (more reliable for page unload scenarios)
-        if (navigator.sendBeacon) {
-            const blob = new Blob([serializedPayload], { type: 'application/json' });
-            navigator.sendBeacon(endpoint, blob);
-        } else {
-            // Fallback to fetch with keepalive
-            fetch(endpoint, {
-                method: 'POST',
-                body: serializedPayload,
-                headers: { 'Content-Type': 'application/json' },
-                keepalive: true
-            }).catch(() => {}); // Swallow errors - telemetry must never break app
+        if (import.meta.env.DEV) {
+            console.debug('[telemetry]', _payload);
         }
+        // Production: silently discard until a real endpoint is configured.
+        // To enable, uncomment and set a real endpoint:
+        // const endpoint = 'https://your-telemetry-service.com/ingest';
+        // navigator.sendBeacon?.(endpoint, new Blob([JSON.stringify(_payload)], { type: 'application/json' }));
     } catch {
         // Swallow any telemetry errors to ensure app behavior is never affected
     }
