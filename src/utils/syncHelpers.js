@@ -132,6 +132,9 @@ export const normalizeStudent = (student) => {
     // Admission fee & concession
     admission_fee: student.admissionFee != null ? Number(student.admissionFee) : undefined,
     concession_amount: student.concessionAmount != null ? Number(student.concessionAmount) : undefined,
+    tuition_fee: student.tuitionFee != null ? Number(student.tuitionFee) : undefined,
+    smart_board_fee: student.smartBoardFee != null ? Number(student.smartBoardFee) : undefined,
+    computer_fee: student.computerFee != null ? Number(student.computerFee) : undefined,
   };
 
   // Only include tc_details if it's present in the student object
