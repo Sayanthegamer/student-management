@@ -33,7 +33,37 @@ export const useDataSync = () => {
   const pendingSyncRef = useRef(false);
   const latestDoFetchRef = useRef(null);
   const fetchAbortControllerRef = useRef(null);
+  const isMountedRef = useRef(true);
   const pendingTimeoutsRef = useRef([]);
+
+  const guardedSetSyncStatus = useCallback((status) => {
+    if (isMountedRef.current) {
+        if (typeof status === 'function') {
+            setSyncStatus(status);
+        } else {
+            setSyncStatus(status);
+        }
+    }
+  }, []);
+
+  const guardedSetSyncError = useCallback((error) => {
+    if (isMountedRef.current) setSyncError(error);
+  }, []);
+
+  const guardedSetStudents = useCallback((students) => {
+      if(isMountedRef.current) setStudents(students);
+  }, []);
+
+  const scheduleTimeout = useCallback((callback, delay) => {
+      const id = setTimeout(() => {
+          if (isMountedRef.current) {
+              callback();
+          }
+          pendingTimeoutsRef.current = pendingTimeoutsRef.current.filter(t => t !== id);
+      }, delay);
+      pendingTimeoutsRef.current.push(id);
+      return id;
+  }, []);
 
   // Reusable fetch from cloud — used by initial load AND forceSync
   const fetchFromCloud = useCallback(async () => {
@@ -47,15 +77,15 @@ export const useDataSync = () => {
         latestDoFetchRef.current = doFetch;
 
         if (!user || !supabase) {
-          setStudents(getStudents());
-          setSyncError(null);
-          setSyncStatus('synced');
+          guardedSetStudents(getStudents());
+          guardedSetSyncError(null);
+          guardedSetSyncStatus('synced');
           return;
         }
 
         isSyncingRef.current = true;
-        setSyncStatus('syncing');
-        setSyncError(null);
+        guardedSetSyncStatus('syncing');
+        guardedSetSyncError(null);
         try {
           const { data: studentsData, error: sError } = await supabase.from('students').select('*').abortSignal(signal);
           if (sError) throw sError;
@@ -66,21 +96,20 @@ export const useDataSync = () => {
           // "Online Source is Truth" - Always overwrite local with cloud data if connection is successful.
           const merged = denormalizeStudents(studentsData, feesData);
           saveStudents(merged);
-          setStudents(merged);
-          setSyncStatus('synced');
+          guardedSetStudents(merged);
+          guardedSetSyncStatus('synced');
         } catch (err) {
           if (err.name === 'AbortError') return;
           console.error("Sync error:", err);
-          setSyncStatus('error');
-          setSyncError({
+          guardedSetSyncStatus('error');
+          guardedSetSyncError({
             message: "Failed to load data from server. Please check your connection.",
             details: err
           });
 
-          const timeoutId = setTimeout(() => {
-            setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
-          }, 5000);
-          pendingTimeoutsRef.current.push(timeoutId);
+          scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
         } finally {
           isSyncingRef.current = false;
           if (pendingSyncRef.current) {
@@ -123,8 +152,8 @@ export const useDataSync = () => {
       latestDoFetchRef.current = null;
       isSyncingRef.current = false;
       pendingSyncRef.current = false;
-      // Clear all pending timeouts to prevent state updates after unmount
-      pendingTimeoutsRef.current.forEach(timeoutId => clearTimeout(timeoutId));
+      isMountedRef.current = false;
+      pendingTimeoutsRef.current.forEach(clearTimeout);
       pendingTimeoutsRef.current = [];
     };
   }, [fetchFromCloud]);
@@ -180,8 +209,8 @@ export const useDataSync = () => {
 
     // 1. Local Update (Optimistic)
     const updatedList = localAddStudent(newStudent);
-    setStudents(updatedList);
-    setSyncStatus('unsaved');
+    guardedSetStudents(updatedList);
+    guardedSetSyncStatus('unsaved');
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
@@ -190,7 +219,7 @@ export const useDataSync = () => {
     }
 
     // 2. Cloud Update
-    setSyncStatus('syncing');
+    guardedSetSyncStatus('syncing');
     try {
         const { student, fees } = normalizeStudent(newStudent);
 
@@ -202,11 +231,11 @@ export const useDataSync = () => {
              if (fError) throw fError;
         }
 
-        setSyncStatus('synced');
+        guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud save error", err);
-        setSyncStatus('error');
+        guardedSetSyncStatus('error');
 
         let userMessage = "Failed to save data to server.";
         if (err.message?.includes('duplicate')) {
@@ -217,23 +246,22 @@ export const useDataSync = () => {
           userMessage = "Network error. Please check your connection.";
         }
 
-        setSyncError({
+        guardedSetSyncError({
             message: userMessage,
             details: err
         });
 
-        const timeoutId = setTimeout(() => {
-          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
-        pendingTimeoutsRef.current.push(timeoutId);
     }
   }, [user]);
 
   const updateStudent = useCallback(async (studentData) => {
     // 1. Local Update
     const updatedList = localUpdateStudent(studentData);
-    setStudents(updatedList);
-    setSyncStatus('unsaved');
+    guardedSetStudents(updatedList);
+    guardedSetSyncStatus('unsaved');
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
@@ -242,7 +270,7 @@ export const useDataSync = () => {
     }
 
     // 2. Cloud Update
-    setSyncStatus('syncing');
+    guardedSetSyncStatus('syncing');
     try {
         const { student, fees } = normalizeStudent(studentData);
 
@@ -256,11 +284,11 @@ export const useDataSync = () => {
           if (fError) throw fError;
         }
 
-        setSyncStatus('synced');
+        guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud update error", err);
-        setSyncStatus('error');
+        guardedSetSyncStatus('error');
 
         let userMessage = "Failed to update student on server.";
         if (err.message?.includes('duplicate')) {
@@ -271,23 +299,22 @@ export const useDataSync = () => {
           userMessage = "Network error. Please check your connection.";
         }
 
-        setSyncError({
+        guardedSetSyncError({
             message: userMessage,
             details: err
         });
 
-        const timeoutId = setTimeout(() => {
-          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
-        pendingTimeoutsRef.current.push(timeoutId);
     }
   }, [user]);
 
   const deleteStudent = useCallback(async (id) => {
     // 1. Local Update
     const updatedList = localDeleteStudent(id);
-    setStudents(updatedList);
-    setSyncStatus('unsaved');
+    guardedSetStudents(updatedList);
+    guardedSetSyncStatus('unsaved');
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
@@ -296,15 +323,15 @@ export const useDataSync = () => {
     }
 
     // 2. Cloud Update
-    setSyncStatus('syncing');
+    guardedSetSyncStatus('syncing');
     try {
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
-        setSyncStatus('synced');
+        guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud delete error", err);
-        setSyncStatus('error');
+        guardedSetSyncStatus('error');
 
         let userMessage = "Failed to delete student from server.";
         if (err.message?.includes('permission')) {
@@ -313,15 +340,14 @@ export const useDataSync = () => {
           userMessage = "Network error. Please check your connection.";
         }
 
-        setSyncError({
+        guardedSetSyncError({
             message: userMessage,
             details: err
         });
 
-        const timeoutId = setTimeout(() => {
-          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
-        pendingTimeoutsRef.current.push(timeoutId);
     }
   }, [user]);
 
@@ -335,7 +361,7 @@ export const useDataSync = () => {
     const paymentsWithIds = payments.map(p => ({ ...p, id: crypto.randomUUID(), student_id: studentId }));
 
     if (user && supabase) {
-        setSyncStatus('syncing');
+        guardedSetSyncStatus('syncing');
         try {
             const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds });
             const { error } = await supabase.from('fees').insert(fees);
@@ -347,11 +373,11 @@ export const useDataSync = () => {
                 }
                 throw error;
             }
-            setSyncStatus('synced');
+            guardedSetSyncStatus('synced');
             syncChannel?.postMessage('sync_required');
         } catch (err) {
             console.error("Cloud fee error", err);
-            setSyncStatus('error');
+            guardedSetSyncStatus('error');
 
             let userMessage = err.message || "Failed to save fee payment to server.";
             if (err.message?.includes('permission')) {
@@ -360,15 +386,14 @@ export const useDataSync = () => {
               userMessage = "Network error. Please check your connection.";
             }
 
-            setSyncError({
+            guardedSetSyncError({
                 message: userMessage,
                 details: err
             });
 
-            const timeoutId = setTimeout(() => {
-              setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
-            }, 5000);
-            pendingTimeoutsRef.current.push(timeoutId);
+            scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
 
             return Promise.reject(new Error(userMessage));
         }
@@ -391,9 +416,9 @@ export const useDataSync = () => {
         const duplicates = newMonths.filter(month => existingMonths.includes(month));
 
         if (duplicates.length > 0) {
-            setSyncStatus('error');
+            guardedSetSyncStatus('error');
             const errorMessage = "Fee already recorded for one or more selected months.";
-            setSyncError({
+            guardedSetSyncError({
                 message: errorMessage,
                 details: new Error(errorMessage)
             });
@@ -402,10 +427,10 @@ export const useDataSync = () => {
     }
 
     const updatedList = localAddFeePayment(studentId, paymentsWithIds);
-    setStudents(updatedList);
+    guardedSetStudents(updatedList);
 
     if (!user || !supabase) {
-        setSyncStatus('unsaved');
+        guardedSetSyncStatus('unsaved');
         console.warn("Supabase not configured - changes saved locally only");
         syncChannel?.postMessage('sync_required');
     }
@@ -414,8 +439,8 @@ export const useDataSync = () => {
   const importStudents = useCallback(async (newStudents) => {
     // 1. Local Update (Full Replace)
     saveStudents(newStudents);
-    setStudents(newStudents);
-    setSyncStatus('unsaved');
+    guardedSetStudents(newStudents);
+    guardedSetSyncStatus('unsaved');
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
@@ -424,7 +449,7 @@ export const useDataSync = () => {
     }
 
     // 2. Cloud Update (Batch)
-    setSyncStatus('syncing');
+    guardedSetSyncStatus('syncing');
     try {
         const allStudentsDB = [];
         const allFeesDB = [];
@@ -448,11 +473,11 @@ export const useDataSync = () => {
              if (fError) throw fError;
         }
 
-        setSyncStatus('synced');
+        guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud import error", err);
-        setSyncStatus('error');
+        guardedSetSyncStatus('error');
 
         let userMessage = "Failed to import data to server.";
         if (err.message?.includes('permission')) {
@@ -461,20 +486,19 @@ export const useDataSync = () => {
           userMessage = "Network error. Please check your connection.";
         }
 
-        setSyncError({
+        guardedSetSyncError({
             message: userMessage,
             details: err
         });
 
-        const timeoutId = setTimeout(() => {
-          setSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
-        pendingTimeoutsRef.current.push(timeoutId);
     }
   }, [user]);
 
   const dismissError = useCallback(() => {
-    setSyncError(null);
+    guardedSetSyncError(null);
   }, []);
 
   return {
