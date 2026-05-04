@@ -321,6 +321,46 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Promotion Confirmation Modal */}
+            {pendingAction && (
+                <div
+                    className="fixed inset-0 bg-[var(--bg-main)]/80 backdrop-blur-md z-50 flex items-center justify-center p-4 modal-backdrop"
+                    onClick={() => setPendingAction(null)}
+                >
+                    <div
+                        className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 kinetic-scale shadow-2xl rounded-xl"
+                        onClick={e => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="promote-confirm-title"
+                        aria-describedby="promote-confirm-desc"
+                    >
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
+                                <ArrowRight className="text-amber-500" size={20} />
+                            </div>
+                            <h3 id="promote-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] tracking-tight">Confirm Promotion</h3>
+                        </div>
+                        <p id="promote-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6 leading-relaxed">{pendingAction.label}</p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setPendingAction(null)}
+                                className="btn btn-secondary text-sm"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={pendingAction.onConfirm}
+                                className="btn btn-primary text-sm"
+                            >
+                                <UserCheck size={16} />
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
