@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee, LogOut, ArrowUpRight, Zap } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, GraduationCap, Database, FileOutput, IndianRupee, LogOut, ArrowUpRight, Zap, FileSpreadsheet } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import SyncIndicator from './SyncIndicator';
@@ -19,6 +19,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
         { path: '/payment-history', label: 'Fee History', icon: IndianRupee },
         { path: '/admission', label: 'Admissions', icon: ClipboardCheck },
         { path: '/promotions', label: 'Promotions', icon: ArrowUpRight },
+        { path: '/reports', label: 'Reports', icon: FileSpreadsheet },
         { path: '/tc', label: 'Certificates', icon: FileOutput },
         { path: '/data', label: 'Settings', icon: Database },
     ];

@@ -39,6 +39,7 @@ function EditStudentRoute({ students, onSave, onCancel }) {
   if (!student) {
     return <Navigate to="/students" replace />;
   }
+const Reports = lazy(() => import('./components/Reports'));
 
   return (
     <StudentForm
@@ -281,6 +282,7 @@ function App() {
               <Route path="/promotions" element={<PromotionBoard students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/data" element={<DataManagement students={students} onImportSuccess={handleImportSuccess} />} />
+              <Route path="/reports" element={<Reports students={students} />} />
             </Routes>
           </Suspense>
         </main>
