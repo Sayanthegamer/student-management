@@ -4,7 +4,7 @@ import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
 import { useAuth } from '../context/AuthContext';
 
-const syncChannel = new BroadcastChannel('stdmgr_sync_channel');
+const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('stdmgr_sync_channel') : null;
 
 /**
  * Custom hook for managing student data synchronization with Supabase and local storage.
@@ -99,8 +99,10 @@ export const useDataSync = () => {
       }
     };
 
-    syncChannel.addEventListener('message', handleSyncMessage);
-    return () => syncChannel.removeEventListener('message', handleSyncMessage);
+    if (syncChannel) {
+      syncChannel.addEventListener('message', handleSyncMessage);
+      return () => syncChannel.removeEventListener('message', handleSyncMessage);
+    }
   }, [fetchFromCloud]);
 
   const addStudent = useCallback(async (studentData) => {
@@ -132,7 +134,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel.postMessage('sync_required');
+      syncChannel?.postMessage('sync_required');
       return;
     }
 
@@ -150,7 +152,7 @@ export const useDataSync = () => {
         }
 
         setSyncStatus('synced');
-        syncChannel.postMessage('sync_required');
+        syncChannel?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud save error", err);
         setSyncStatus('error');
@@ -183,7 +185,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel.postMessage('sync_required');
+      syncChannel?.postMessage('sync_required');
       return;
     }
 
@@ -203,7 +205,7 @@ export const useDataSync = () => {
         }
 
         setSyncStatus('synced');
-        syncChannel.postMessage('sync_required');
+        syncChannel?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud update error", err);
         setSyncStatus('error');
@@ -236,7 +238,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel.postMessage('sync_required');
+      syncChannel?.postMessage('sync_required');
       return;
     }
 
@@ -246,7 +248,7 @@ export const useDataSync = () => {
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
         setSyncStatus('synced');
-        syncChannel.postMessage('sync_required');
+        syncChannel?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud delete error", err);
         setSyncStatus('error');
@@ -290,7 +292,7 @@ export const useDataSync = () => {
                 throw error;
             }
             setSyncStatus('synced');
-            syncChannel.postMessage('sync_required');
+            syncChannel?.postMessage('sync_required');
         } catch (err) {
             console.error("Cloud fee error", err);
             setSyncStatus('error');
@@ -348,7 +350,7 @@ export const useDataSync = () => {
     if (!user || !supabase) {
         setSyncStatus('unsaved');
         console.warn("Supabase not configured - changes saved locally only");
-        syncChannel.postMessage('sync_required');
+        syncChannel?.postMessage('sync_required');
     }
   }, [user, supabase, students]);
 
@@ -360,7 +362,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel.postMessage('sync_required');
+      syncChannel?.postMessage('sync_required');
       return;
     }
 
@@ -390,7 +392,7 @@ export const useDataSync = () => {
         }
 
         setSyncStatus('synced');
-        syncChannel.postMessage('sync_required');
+        syncChannel?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud import error", err);
         setSyncStatus('error');
