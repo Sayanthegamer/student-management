@@ -101,15 +101,7 @@ const Walkthrough = () => {
                 navigate('/admission');
             }
         },
-        {
-            title: "Transfer Certificate",
-            description: "Issue TCs to active students and view the history of transferred students.",
-            target: "a[href='/tc']",
-            position: 'right',
-            action: () => {
-                navigate('/tc');
-            }
-        },
+
         {
             title: "Data Management",
             description: "Export your data to CSV for backup or import existing records.",

@@ -38,7 +38,7 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
             <p className="text-[var(--text-secondary)] font-mono text-[10px] tracking-wider truncate mt-0.5">Roll: {student.rollNo}</p>
           </div>
         </div>
-        {student.admissionStatus === 'Transferred' && (
+        {student.admissionStatus === 'Exited' && (
           <span className="inline-flex items-center px-2.5 py-1 text-[10px] font-bold border rounded-[12px] bg-rose-500/10 border-rose-500/20 text-rose-400 shrink-0">
             Exit
           </span>

@@ -141,7 +141,7 @@ const Overview = ({ students, onAddStudent }) => {
     const currentMonth = new Date().toISOString().slice(0, 7);
 
     const { totalStudents, feesCollected, pendingFeesCount } = React.useMemo(() => {
-        const activeStudents = students.filter(s => s.admissionStatus !== 'Transferred');
+        const activeStudents = students.filter(s => s.admissionStatus !== 'Exited');
         const total = activeStudents.length;
 
         const collected = students.reduce((acc, student) => {

@@ -176,7 +176,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
     const confirmed = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Confirmed'), [filteredStudents]);
     const provisional = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Provisional'), [filteredStudents]);
     const cancelled = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Cancelled'), [filteredStudents]);
-    const transferred = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Transferred'), [filteredStudents]);
+    const exited = useMemo(() => filteredStudents.filter(s => s.admissionStatus === 'Exited'), [filteredStudents]);
 
     const handleMoveStudent = (student, newStatus) => {
         setPendingAction({
@@ -201,7 +201,7 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
             };
 
             // Issue #9: TC reversal via AdmissionStatus leaves stale tcDetails
-            if (student.admissionStatus === 'Transferred' && pendingAction.newStatus !== 'Transferred') {
+            if (student.admissionStatus === 'Exited' && pendingAction.newStatus !== 'Exited') {
                 updatedStudent.tcDetails = null;
             }
 
@@ -475,12 +475,12 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                     onMove={handleMoveStudent}
                 />
                 <StatusColumn
-                    title="Transferred"
-                    count={transferred.length}
+                    title="Exited"
+                    count={exited.length}
                     total={filteredStudents.length}
-                    color={statusHexColors.Transferred}
+                    color={statusHexColors.Exited}
                     icon={FileText}
-                    students={transferred}
+                    students={exited}
                     onMove={handleMoveStudent}
                 />
             </div>

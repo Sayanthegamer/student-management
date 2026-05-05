@@ -306,7 +306,7 @@ const PaymentHistory = ({ students, onEditFee }) => {
                                             <div className="min-w-0">
                                                 <p className="font-bold text-[var(--text-primary)] text-sm truncate flex items-center gap-3">
                                                     {student.name}
-                                                    {student.admissionStatus === 'Transferred' && (
+                                                    {student.admissionStatus === 'Exited' && (
                                                         <span className="text-[10px] font-bold bg-rose-500/10 text-rose-400 px-2 py-1 rounded-[12px] border border-rose-500/20 uppercase tracking-wide">Exit</span>
                                                     )}
                                                 </p>

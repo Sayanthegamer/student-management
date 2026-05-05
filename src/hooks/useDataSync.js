@@ -376,19 +376,32 @@ export const useDataSync = () => {
                 allStudentsDB.push(student);
                 if (replaceFeeHistoryIds.has(mergedStudent.id) && fees && fees.length > 0) {
                     allFeesDB.push(...fees);
+                } else if (fees && fees.length > 0) {
+                    // For appends, we should also push fees to upsert
+                    allFeesDB.push(...fees);
                 }
             }
         });
 
         const batchReplaceIds = Array.from(replaceFeeHistoryIds);
 
-        const { error } = await supabase.rpc('sync_student_fee_batch', {
-            p_students: allStudentsDB,
-            p_fees: allFeesDB,
-            p_replace_fee_student_ids: batchReplaceIds
-        });
-
-        if (error) throw error;
+        if (batchReplaceIds.length > 0) {
+            const { error: rpcError } = await supabase.rpc('sync_student_fee_batch', {
+                p_students: allStudentsDB,
+                p_fees: allFeesDB,
+                p_replace_fee_student_ids: batchReplaceIds
+            });
+            if (rpcError) throw rpcError;
+        } else {
+            if (allStudentsDB.length > 0) {
+                const { error: studentError } = await supabase.from('students').upsert(allStudentsDB, { onConflict: 'id' });
+                if (studentError) throw studentError;
+            }
+            if (allFeesDB.length > 0) {
+                const { error: feesError } = await supabase.from('fees').upsert(allFeesDB, { onConflict: 'id' });
+                if (feesError) throw feesError;
+            }
+        }
 
         batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
 

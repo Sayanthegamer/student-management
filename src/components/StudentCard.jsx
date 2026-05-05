@@ -5,12 +5,27 @@ import { Edit2, IndianRupee, Trash2, Zap } from 'lucide-react';
  * Kinetic Student Card - Mobile-optimized with spotlight effect
  * Refined for high-density display and instant action feedback
  */
-const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee }) => (
-  <div className="card-base p-3 transition-all duration-200 group hover:bg-[var(--bg-card-hover)] spotlight-card relative overflow-hidden">
+const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee, isSelected, onSelect }) => (
+  <div className={`card-base p-3 transition-all duration-200 group hover:bg-[var(--bg-card-hover)] spotlight-card relative overflow-hidden ${isSelected ? 'ring-2 ring-[var(--accent-primary)] bg-[var(--accent-primary)]/5' : ''}`}>
     {/* Subtle gradient accent on hover */}
     <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[var(--accent-primary)]/5 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     
     <div className="flex items-start justify-between gap-3 mb-3 relative z-10">
+      <button
+        onClick={(e) => { e.stopPropagation(); onSelect(); }}
+        className={`mt-1 shrink-0 ${isSelected ? 'text-[var(--accent-primary)]' : 'text-[var(--border-strong)]'}`}
+        aria-label={isSelected ? "Deselect student" : "Select student"}
+        aria-pressed={isSelected}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          {isSelected ? (
+             <path d="M9 11l3 3L22 4" />
+          ) : (
+             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          )}
+          {isSelected && <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />}
+        </svg>
+      </button>
       {/* Student avatar with kinetic glow */}
       <div className="flex items-center gap-3 min-w-0 flex-1">
         <div 
