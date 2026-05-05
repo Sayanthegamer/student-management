@@ -15,6 +15,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
     const [amount, setAmount] = useState('');
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
     const [remarks, setRemarks] = useState('Transportation Fee');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Only show active, non-exited students
     const activeStudents = useMemo(() => {
@@ -84,6 +85,8 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (isSubmitting) return;
+
         if (selectedStudentIds.size === 0) {
             showToast('Please select at least one student.', 'error');
             return;
@@ -103,6 +106,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
         const confirmMessage = `Are you sure you want to add a Transportation Fee of ₹${numAmount} for ${selectedStudentIds.size} student(s)?`;
         if (!window.confirm(confirmMessage)) return;
 
+        setIsSubmitting(true);
         try {
             const updates = Array.from(selectedStudentIds).map(id => {
                 const student = students.find(s => s.id === id);
@@ -134,6 +138,8 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
         } catch (error) {
             console.error('Error applying transportation fees:', error);
             showToast('Failed to apply transportation fees. Please try again.', 'error');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -349,7 +355,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                         </div>
                                         <button
                                             type="submit"
-                                            disabled={selectedStudentIds.size === 0 || !amount}
+                                            disabled={selectedStudentIds.size === 0 || !amount || isSubmitting}
                                             className="w-full py-2.5 px-4 bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] disabled:bg-[var(--bg-elevated)] disabled:text-[var(--text-muted)] disabled:border disabled:border-[var(--border-color)] text-white text-sm font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
                                         >
                                             <Bus size={16} />
