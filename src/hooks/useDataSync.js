@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent as localUpdateStudent, deleteStudent as localDeleteStudent, addFeePayment as localAddFeePayment } from '../utils/storage';
+import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent as localUpdateStudent, bulkUpdateStudents as localBulkUpdateStudents, deleteStudent as localDeleteStudent, addFeePayment as localAddFeePayment } from '../utils/storage';
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
 import { useAuth } from '../context/AuthContext';
 
@@ -289,6 +289,17 @@ export const useDataSync = () => {
         const { error } = await supabase.from('students').upsert(student);
         if (error) throw error;
 
+        const feeIdsToKeep = fees.map(f => f.id).filter(Boolean);
+        
+        // Find existing fees to safely delete orphans
+        const { data: existingFees } = await supabase.from('fees').select('id').eq('student_id', student.id);
+        if (existingFees) {
+            const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
+            if (feeIdsToDelete.length > 0) {
+                await supabase.from('fees').delete().in('id', feeIdsToDelete);
+            }
+        }
+
         if (fees.length > 0) {
           // Use upsert instead of delete-then-insert to avoid race conditions
           // where concurrent fee payments could be wiped between delete and insert.
@@ -322,6 +333,62 @@ export const useDataSync = () => {
     }
   }, [user]);
 
+  const bulkUpdateStudents = useCallback(async (studentsData) => {
+    if (!studentsData || studentsData.length === 0) return;
+
+    // 1. Local Update
+    const updatedList = localBulkUpdateStudents(studentsData);
+    guardedSetStudents(updatedList);
+    guardedSetSyncStatus('unsaved');
+
+    if (!user || !supabase) {
+      console.warn("Supabase not configured - changes saved locally only");
+      syncChannel?.postMessage('sync_required');
+      return;
+    }
+
+    // 2. Cloud Update
+    guardedSetSyncStatus('syncing');
+    try {
+        const allStudentsDB = [];
+        const allFeesDB = [];
+
+        studentsData.forEach(sd => {
+            const { student, fees } = normalizeStudent(sd);
+            allStudentsDB.push(student);
+            if (fees && fees.length > 0) allFeesDB.push(...fees);
+        });
+
+        // Upsert students
+        const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
+        if (sError) throw sError;
+
+        // Upsert fees (we skip orphan deletion here as bulk is mostly used for adding promotions)
+        if (allFeesDB.length > 0) {
+            const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
+            if (fError) throw fError;
+        }
+
+        guardedSetSyncStatus('synced');
+        syncChannel?.postMessage('sync_required');
+    } catch (err) {
+        console.error("Cloud bulk update error", err);
+        guardedSetSyncStatus('error');
+
+        let userMessage = "Failed to bulk update students on server.";
+        if (err.message?.includes('permission')) {
+          userMessage = "You don't have permission to perform this action.";
+        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+          userMessage = "Network error. Please check your connection.";
+        }
+
+        guardedSetSyncError({ message: userMessage, details: err });
+        scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
+    }
+  }, [user]);
+
   const deleteStudent = useCallback(async (id) => {
     // 1. Local Update
     const updatedList = localDeleteStudent(id);
@@ -337,6 +404,9 @@ export const useDataSync = () => {
     // 2. Cloud Update
     guardedSetSyncStatus('syncing');
     try {
+        // Issue #4: Explicitly cascade delete fees to prevent orphans
+        await supabase.from('fees').delete().eq('student_id', id);
+
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
         guardedSetSyncStatus('synced');
@@ -474,6 +544,10 @@ export const useDataSync = () => {
           }
         });
 
+        // Issue #10: Delete old records before import to prevent ghost records
+        await supabase.from('fees').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        await supabase.from('students').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+
         // Batch Insert Students
         // Using upsert to handle potential ID collisions or updates if IDs are preserved
         const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
@@ -519,6 +593,7 @@ export const useDataSync = () => {
     syncError,
     addStudent,
     updateStudent,
+    bulkUpdateStudents,
     deleteStudent,
     addFeePayment,
     importStudents,

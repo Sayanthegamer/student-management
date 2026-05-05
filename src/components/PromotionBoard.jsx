@@ -32,7 +32,7 @@ import { useToast } from '../context/ToastContext';
  * @param {User} props.user - The current authenticated user.
  * @returns {JSX.Element} The rendered promotion board component.
  */
-const PromotionBoard = ({ students, onUpdateStudent, user }) => {
+const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user }) => {
     const { showToast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -112,6 +112,8 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
             const dateStr = new Date().toISOString().split('T')[0];
             const studentById = new Map(students.map(s => [s.id, s]));
 
+            const studentsToUpdate = [];
+
             selectedStudents.forEach(id => {
                 const student = studentById.get(id);
                 if (student) {
@@ -127,7 +129,7 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
                         });
                     }
 
-                    onUpdateStudent({
+                    studentsToUpdate.push({
                         ...student,
                         class: nextClass,
                         feesAmount: CLASS_FEES[nextClass] || student.feesAmount,
@@ -138,10 +140,19 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
                 }
             });
 
+            if (studentsToUpdate.length > 0) {
+                if (onBulkUpdateStudents) {
+                    onBulkUpdateStudents(studentsToUpdate);
+                } else {
+                    // Fallback just in case
+                    studentsToUpdate.forEach(student => onUpdateStudent(student));
+                }
+            }
+
             logActivity('promotion', `Bulk promoted ${selectedStudents.size} students to ${nextClass}`);
             showToast(`${selectedStudents.size} student(s) promoted to ${nextClass}`, 'success');
             setSelectedStudents(new Set());
-                setPendingAction(null);
+            setPendingAction(null);
             }
         });
     };
