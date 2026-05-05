@@ -376,19 +376,32 @@ export const useDataSync = () => {
                 allStudentsDB.push(student);
                 if (replaceFeeHistoryIds.has(mergedStudent.id) && fees && fees.length > 0) {
                     allFeesDB.push(...fees);
+                } else if (fees && fees.length > 0) {
+                    // For appends, we should also push fees to upsert
+                    allFeesDB.push(...fees);
                 }
             }
         });
 
         const batchReplaceIds = Array.from(replaceFeeHistoryIds);
 
-        const { error } = await supabase.rpc('sync_student_fee_batch', {
-            p_students: allStudentsDB,
-            p_fees: allFeesDB,
-            p_replace_fee_student_ids: batchReplaceIds
-        });
+        // First upsert students
+        const { error: studentError } = await supabase.from('students').upsert(allStudentsDB, { onConflict: 'id' });
+        if (studentError) throw studentError;
 
-        if (error) throw error;
+        // Then if there are replacements, do those
+        if (batchReplaceIds.length > 0) {
+            const { error: rpcError } = await supabase.rpc('sync_student_fee_batch', {
+                p_students: allStudentsDB,
+                p_fees: allFeesDB,
+                p_replace_fee_student_ids: batchReplaceIds
+            });
+            if (rpcError) throw rpcError;
+        } else if (allFeesDB.length > 0) {
+            // Otherwise just upsert the fees
+            const { error: feesError } = await supabase.from('fees').upsert(allFeesDB, { onConflict: 'id' });
+            if (feesError) throw feesError;
+        }
 
         batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
 
