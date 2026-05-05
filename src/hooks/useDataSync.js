@@ -376,8 +376,18 @@ export const useDataSync = () => {
     const existingStudent = students.find(s => s.id === studentId);
     const existingMonths = existingStudent?.feeHistory?.map(f => f.month).filter(Boolean) || [];
     
+    const newMonthSet = new Set();
+    let hasInternalDuplicates = false;
+    for (const month of newMonths) {
+        if (newMonthSet.has(month)) {
+            hasInternalDuplicates = true;
+            break;
+        }
+        newMonthSet.add(month);
+    }
+
     const duplicates = newMonths.filter(month => existingMonths.includes(month));
-    if (duplicates.length > 0) {
+    if (duplicates.length > 0 || hasInternalDuplicates) {
         const errorMessage = "Fee already recorded for one or more selected months.";
         guardedSetSyncError({ message: errorMessage, details: new Error(errorMessage) });
         return Promise.reject(new Error(errorMessage));
@@ -433,6 +443,21 @@ export const useDataSync = () => {
   }, [user, supabase, students, fetchFromCloud]);
 
   const editFeePayment = useCallback(async (oldStudentId, newStudentId, updatedFee) => {
+    // 0. Synchronous duplicate check
+    if (updatedFee.type === 'Monthly' && updatedFee.month) {
+        const targetStudent = students.find(s => s.id === newStudentId);
+        if (targetStudent && targetStudent.feeHistory) {
+            const hasDuplicate = targetStudent.feeHistory.some(
+                f => f.id !== updatedFee.id && f.type === 'Monthly' && f.month === updatedFee.month
+            );
+            if (hasDuplicate) {
+                const errorMessage = "Fee already recorded for the selected month.";
+                guardedSetSyncError({ message: errorMessage, details: new Error(errorMessage) });
+                return Promise.reject(new Error(errorMessage));
+            }
+        }
+    }
+
     // 1. Local Optimistic Update
     const updatedList = localEditFeePayment(oldStudentId, newStudentId, updatedFee);
     guardedSetStudents(updatedList);

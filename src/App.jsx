@@ -57,7 +57,7 @@ function EditStudentRoute({ students, onSave, onCancel }) {
 function App() {
   const { user, loading } = useAuth();
   const { showToast } = useToast();
-  const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, importStudents, dismissError, forceSync } = useDataSync();
+  const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, editFeePayment, importStudents, dismissError, forceSync } = useDataSync();
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();

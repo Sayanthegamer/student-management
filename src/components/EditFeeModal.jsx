@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Save, IndianRupee } from 'lucide-react';
 
@@ -12,6 +12,10 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
     const [type, setType] = useState(payment.type || 'Monthly');
     const [month, setMonth] = useState(payment.month || '');
     const [selectedStudentId, setSelectedStudentId] = useState(student.id);
+    const modalRef = useRef(null);
+
+
+
 
     const handleClose = () => {
         setIsClosing(true);
@@ -19,6 +23,53 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
             onClose();
         }, 200);
     };
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                handleClose();
+            } else if (e.key === 'Tab') {
+                if (!modalRef.current) return;
+
+                const focusableElements = modalRef.current.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+
+                if (focusableElements.length === 0) return;
+
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Focus first element on open
+        if (modalRef.current) {
+            const focusableElements = modalRef.current.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusableElements.length > 0) {
+                 focusableElements[0].focus();
+            }
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,12 +89,16 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
 
     return createPortal(
         <div 
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-fee-title"
             className={`fixed inset-0 bg-slate-900/80 z-[60] flex items-center justify-center p-4 backdrop-blur-sm ${isClosing ? 'closing' : ''}`}
             onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
         >
             <div className={`bg-[var(--bg-card)] rounded-[16px] shadow-lg w-full max-w-md overflow-hidden border border-[var(--border-color)] ${isClosing ? 'scale-out' : 'scale-in'}`}>
                 <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-color)] bg-[var(--bg-main)]">
-                    <h3 className="font-bold text-lg text-[var(--text-primary)] flex items-center gap-2">
+                    <h3 id="edit-fee-title" className="font-bold text-lg text-[var(--text-primary)] flex items-center gap-2">
                         <IndianRupee className="text-[var(--accent-primary)]" size={20} />
                         Edit Transaction
                     </h3>
