@@ -133,6 +133,8 @@ const PaymentHistory = ({ students, onEditFee }) => {
         return parsedDate.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
     };
 
+    const selectedStudent = students.find(s => s.id === selectedStudentId);
+
     return (
         <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
             <div className="bg-[var(--bg-card)] rounded-[16px] shadow-sm border border-[var(--border-color)] overflow-hidden page-enter">
@@ -363,17 +365,14 @@ const PaymentHistory = ({ students, onEditFee }) => {
                 )}
             </div>
 
-            {showHistoryModal && selectedStudentId && (() => {
-                const selectedStudent = students.find(s => s.id === selectedStudentId);
-                return selectedStudent ? (
-                    <PaymentHistoryModal
-                        student={selectedStudent}
-                        allStudents={students}
-                        onEditFee={onEditFee}
-                        onClose={() => setShowHistoryModal(false)}
-                    />
-                ) : null;
-            })()}
+            {showHistoryModal && selectedStudentId && selectedStudent && (
+                <PaymentHistoryModal
+                    student={selectedStudent}
+                    allStudents={students}
+                    onEditFee={onEditFee}
+                    onClose={() => setShowHistoryModal(false)}
+                />
+            )}
         </div>
     );
 };

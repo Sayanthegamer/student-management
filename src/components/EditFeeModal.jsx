@@ -4,7 +4,7 @@ import { X, Save, IndianRupee } from 'lucide-react';
 
 const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
     const [isClosing, setIsClosing] = useState(false);
-    
+
     // Form state
     const [amount, setAmount] = useState(payment.amount || 0);
     const [fine, setFine] = useState(payment.fine || 0);
@@ -12,6 +12,8 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
     const [type, setType] = useState(payment.type || 'Monthly');
     const [month, setMonth] = useState(payment.month || '');
     const [selectedStudentId, setSelectedStudentId] = useState(student.id);
+    const [error, setError] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
     const modalRef = useRef(null);
 
     const handleClose = useCallback(() => {
@@ -70,7 +72,7 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const updatedFee = {
             ...payment,
             amount: Number(amount),
@@ -80,8 +82,16 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
             month: type === 'Monthly' ? month : null,
         };
 
-        await onSave(student.id, selectedStudentId, updatedFee);
-        handleClose();
+        setIsSaving(true);
+        try {
+            await onSave(student.id, selectedStudentId, updatedFee);
+            setError(null);
+            handleClose();
+        } catch (err) {
+            setError(err.message || 'Failed to save changes');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return createPortal(
@@ -162,10 +172,10 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Base Amount (₹)</label>
-                            <input 
-                                type="number" 
+                            <input
+                                type="number"
                                 min="0"
-                                value={amount} 
+                                value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                                 className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[10px] px-3 py-2 text-[var(--text-primary)] font-mono focus:border-[var(--accent-primary)] outline-none"
                                 required
@@ -173,15 +183,21 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Fine (₹)</label>
-                            <input 
-                                type="number" 
+                            <input
+                                type="number"
                                 min="0"
-                                value={fine} 
+                                value={fine}
                                 onChange={(e) => setFine(e.target.value)}
                                 className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[10px] px-3 py-2 text-[var(--text-primary)] font-mono focus:border-[var(--accent-primary)] outline-none"
                             />
                         </div>
                     </div>
+
+                    {error && (
+                        <div className="p-3 rounded-[10px] bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
+                            {error}
+                        </div>
+                    )}
 
                     <div className="pt-4 border-t border-[var(--border-color)] flex justify-end gap-3 mt-6">
                         <button 
@@ -191,12 +207,13 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
                         >
                             Cancel
                         </button>
-                        <button 
+                        <button
                             type="submit"
-                            className="px-4 py-2 rounded-[10px] bg-[var(--accent-primary)] text-white font-medium hover:bg-[var(--accent-hover)] transition-colors flex items-center gap-2 shadow-sm shadow-[var(--accent-primary)]/20"
+                            disabled={isSaving}
+                            className="px-4 py-2 rounded-[10px] bg-[var(--accent-primary)] text-white font-medium hover:bg-[var(--accent-hover)] transition-colors flex items-center gap-2 shadow-sm shadow-[var(--accent-primary)]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <Save size={16} />
-                            Save Changes
+                            {isSaving ? 'Saving...' : 'Save Changes'}
                         </button>
                     </div>
                 </form>
