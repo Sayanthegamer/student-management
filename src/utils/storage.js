@@ -178,6 +178,48 @@ export const addFeePayment = (studentId, paymentDetails) => {
   return updatedStudents;
 };
 
+/**
+ * Edits an existing fee payment.
+ *
+ * @param {string} oldStudentId - The ID of the student who currently owns the fee.
+ * @param {string} newStudentId - The ID of the student who should own the fee.
+ * @param {Object} updatedFee - The updated fee object.
+ * @returns {Object[]} The updated array of student objects.
+ */
+export const editFeePayment = (oldStudentId, newStudentId, updatedFee) => {
+  const students = getStudents();
+  const currentMonth = new Date().toISOString().slice(0, 7);
+
+  const updatedStudents = students.map(student => {
+    if (student.id !== oldStudentId && student.id !== newStudentId) {
+      return student;
+    }
+
+    let currentHistory = student.feeHistory || [];
+
+    if (oldStudentId === newStudentId) {
+      currentHistory = currentHistory.map(f => f.id === updatedFee.id ? updatedFee : f);
+    } else {
+      if (student.id === oldStudentId) {
+        currentHistory = currentHistory.filter(f => f.id !== updatedFee.id);
+      } else if (student.id === newStudentId) {
+        currentHistory = [...currentHistory, updatedFee];
+      }
+    }
+
+    const newFeesStatus = calculateFeesStatus({ feeHistory: currentHistory }, currentMonth, currentMonth);
+
+    return {
+      ...student,
+      feeHistory: currentHistory,
+      feesStatus: newFeesStatus
+    };
+  });
+
+  saveStudents(updatedStudents);
+  return updatedStudents;
+};
+
 // --- Activity Logging System ---
 
 /**

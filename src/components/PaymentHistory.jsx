@@ -43,7 +43,7 @@ const FilterSelects = ({ classes, sections, filterClass, setFilterClass, filterS
     );
 };
 
-const PaymentHistory = ({ students }) => {
+const PaymentHistory = ({ students, onEditFee }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
@@ -58,7 +58,7 @@ const PaymentHistory = ({ students }) => {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [showMobileSort, setShowMobileSort] = useState(false);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
-    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [selectedStudentId, setSelectedStudentId] = useState(null);
 
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
     const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
@@ -104,7 +104,7 @@ const PaymentHistory = ({ students }) => {
     );
 
     const handleViewHistory = (student) => {
-        setSelectedStudent(student);
+        setSelectedStudentId(student.id);
         setShowHistoryModal(true);
     };
 
@@ -132,6 +132,8 @@ const PaymentHistory = ({ students }) => {
 
         return parsedDate.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
     };
+
+    const selectedStudent = students.find(s => s.id === selectedStudentId);
 
     return (
         <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
@@ -363,9 +365,11 @@ const PaymentHistory = ({ students }) => {
                 )}
             </div>
 
-            {showHistoryModal && selectedStudent && (
+            {showHistoryModal && selectedStudentId && selectedStudent && (
                 <PaymentHistoryModal
                     student={selectedStudent}
+                    allStudents={students}
+                    onEditFee={onEditFee}
                     onClose={() => setShowHistoryModal(false)}
                 />
             )}
