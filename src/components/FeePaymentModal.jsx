@@ -157,6 +157,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         const numericSmartBoardFee = Number(smartBoardFee) || 0;
         const numericComputerFee = Number(computerFee) || 0;
 
+        // Reject negative values
+        if (numericTuitionFee < 0 || numericSmartBoardFee < 0 || numericComputerFee < 0) {
+            setError('Fee components cannot be negative');
+            return;
+        }
+
         const totalFees = numericTuitionFee + numericSmartBoardFee + numericComputerFee;
 
         if (!Number.isFinite(totalFees) || totalFees <= 0) {
@@ -412,6 +418,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                             value={tuitionFee}
                                             onChange={(e) => setTuitionFee(e.target.value)}
                                             className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            min="0"
+                                            step="0.01"
                                             required
                                         />
                                     </div>
@@ -428,6 +436,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                             value={computerFee}
                                             onChange={(e) => setComputerFee(e.target.value)}
                                             className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            min="0"
+                                            step="0.01"
                                         />
                                     </div>
                                 </div>
@@ -443,6 +453,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                             value={smartBoardFee}
                                             onChange={(e) => setSmartBoardFee(e.target.value)}
                                             className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            min="0"
+                                            step="0.01"
                                         />
                                     </div>
                                 </div>
