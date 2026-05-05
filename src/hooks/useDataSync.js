@@ -284,7 +284,7 @@ export const useDataSync = () => {
     // 2. Cloud Update
     guardedSetSyncStatus('syncing');
     try {
-        const { student, fees } = normalizeStudent(studentData);
+        const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
 
         const { error } = await supabase.from('students').upsert(student);
         if (error) throw error;
@@ -295,19 +295,19 @@ export const useDataSync = () => {
         const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').eq('student_id', student.id);
         if (selectError) throw selectError;
         
-        if (existingFees) {
-            const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
-            if (feeIdsToDelete.length > 0) {
-                const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
-                if (deleteError) throw deleteError;
-            }
-        }
-
         if (fees.length > 0) {
           // Use upsert instead of delete-then-insert to avoid race conditions
           // where concurrent fee payments could be wiped between delete and insert.
           const { error: fError } = await supabase.from('fees').upsert(fees);
           if (fError) throw fError;
+        }
+
+        if (existingFees && studentData.replaceFeeHistory) {
+            const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
+            if (feeIdsToDelete.length > 0) {
+                const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
+                if (deleteError) throw deleteError;
+            }
         }
 
         guardedSetSyncStatus('synced');
@@ -353,36 +353,64 @@ export const useDataSync = () => {
     // 2. Cloud Update
     guardedSetSyncStatus('syncing');
     try {
+        // First, get merged student objects from localBulkUpdateStudents result
+        // (which preserves existing feeHistory for partial patches)
         const allStudentsDB = [];
         const allFeesDB = [];
 
-        studentsData.forEach(sd => {
-            const { student, fees } = normalizeStudent(sd);
-            allStudentsDB.push(student);
-            if (fees && fees.length > 0) allFeesDB.push(...fees);
+        // Build allStudentsDB and allFeesDB from the merged student objects
+        const updatedIds = new Set(studentsData.map(item => item.id));
+        updatedList.forEach(mergedStudent => {
+            // Only process students that were part of the update
+            if (updatedIds.has(mergedStudent.id)) {
+                const { student, fees } = normalizeStudent(mergedStudent);
+                allStudentsDB.push(student);
+                if (fees && fees.length > 0) allFeesDB.push(...fees);
+            }
         });
 
         // Upsert students
         const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
         if (sError) throw sError;
 
-        // Issue: Mirror updateStudent's reconciliation for fees
-        const studentIds = allStudentsDB.map(s => s.id);
-        const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').in('student_id', studentIds);
-        if (selectError) throw selectError;
+        // Mirror updateStudent's reconciliation for fees using per-student comparisons
+        // Only fetch existing fees for students that explicitly requested replaceFeeHistory
+        const studentIdsToReplaceFees = studentsData.filter(s => s.replaceFeeHistory).map(s => s.id);
 
-        if (existingFees) {
-            const incomingFeeIds = new Set(allFeesDB.map(f => f.id).filter(Boolean));
-            const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !incomingFeeIds.has(id));
-            if (feeIdsToDelete.length > 0) {
-                const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
-                if (deleteError) throw deleteError;
-            }
+        let existingFees = null;
+        if (studentIdsToReplaceFees.length > 0) {
+            const { data: fetchedFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', studentIdsToReplaceFees);
+            if (selectError) throw selectError;
+            existingFees = fetchedFees;
         }
 
         if (allFeesDB.length > 0) {
             const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
             if (fError) throw fError;
+        }
+
+        if (existingFees) {
+            // Group incoming fees by student_id
+            const incomingFeesByStudent = {};
+            allFeesDB.forEach(fee => {
+                if (!incomingFeesByStudent[fee.student_id]) {
+                    incomingFeesByStudent[fee.student_id] = new Set();
+                }
+                if (fee.id) incomingFeesByStudent[fee.student_id].add(fee.id);
+            });
+
+            // Compute feeIdsToDelete using per-student comparisons
+            const feeIdsToDelete = existingFees
+                .filter(existingFee => {
+                    const incomingFeeIds = incomingFeesByStudent[existingFee.student_id];
+                    return !incomingFeeIds || !incomingFeeIds.has(existingFee.id);
+                })
+                .map(f => f.id);
+
+            if (feeIdsToDelete.length > 0) {
+                const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
+                if (deleteError) throw deleteError;
+            }
         }
 
         guardedSetSyncStatus('synced');
@@ -420,9 +448,7 @@ export const useDataSync = () => {
     // 2. Cloud Update
     guardedSetSyncStatus('syncing');
     try {
-        // Issue #4: Explicitly cascade delete fees to prevent orphans
-        const { error: feeError } = await supabase.from('fees').delete().eq('student_id', id);
-        if (feeError) throw feeError;
+        // Issue #4: Rely on database ON DELETE CASCADE for fees
 
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
@@ -561,23 +587,11 @@ export const useDataSync = () => {
           }
         });
 
-        // Issue #10: Delete old records before import to prevent ghost records
-        const { error: delFeesError } = await supabase.from('fees').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        if (delFeesError) throw delFeesError;
-
-        const { error: delStudentsError } = await supabase.from('students').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        if (delStudentsError) throw delStudentsError;
-
-        // Batch Insert Students
-        // Using upsert to handle potential ID collisions or updates if IDs are preserved
-        const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
-        if (sError) throw sError;
-
-        // Batch Insert Fees
-        if (allFeesDB.length > 0) {
-             const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
-             if (fError) throw fError;
-        }
+        const { error: rpcError } = await supabase.rpc('full_replace_import', {
+            students: allStudentsDB,
+            fees: allFeesDB
+        });
+        if (rpcError) throw rpcError;
 
         guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
