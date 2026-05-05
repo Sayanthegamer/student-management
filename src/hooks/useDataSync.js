@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent as localUpdateStudent, deleteStudent as localDeleteStudent, addFeePayment as localAddFeePayment } from '../utils/storage';
+import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent as localUpdateStudent, bulkUpdateStudents as localBulkUpdateStudents, deleteStudent as localDeleteStudent, addFeePayment as localAddFeePayment } from '../utils/storage';
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
 import { useAuth } from '../context/AuthContext';
 
@@ -17,6 +17,7 @@ const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChann
  *   syncError: Object|null,
  *   addStudent: (studentData: Object) => Promise<void>,
  *   updateStudent: (studentData: Object) => Promise<void>,
+ *   bulkUpdateStudents: (studentsData: Object[]) => Promise<void>,
  *   deleteStudent: (id: string) => Promise<void>,
  *   addFeePayment: (studentId: string, paymentDetails: Object|Object[]) => Promise<void>,
  *   importStudents: (newStudents: Object[]) => Promise<void>,
@@ -31,6 +32,7 @@ export const useDataSync = () => {
   const [syncError, setSyncError] = useState(null);
   const isSyncingRef = useRef(false);
   const pendingSyncRef = useRef(false);
+  const pendingFeeReplacementIdsRef = useRef(new Set());
   const latestDoFetchRef = useRef(null);
   const fetchAbortControllerRef = useRef(null);
   const isMountedRef = useRef(true);
@@ -266,12 +268,16 @@ export const useDataSync = () => {
         scheduleTimeout(() => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        throw new Error(userMessage);
     }
   }, [user]);
 
   const updateStudent = useCallback(async (studentData) => {
     // 1. Local Update
-    const updatedList = localUpdateStudent(studentData);
+    const shouldReplaceFee = !!studentData.replaceFeeHistory;
+    const { replaceFeeHistory, ...cleanData } = studentData;
+    
+    const updatedList = localUpdateStudent(cleanData);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
 
@@ -281,20 +287,31 @@ export const useDataSync = () => {
       return;
     }
 
-    // 2. Cloud Update
-    guardedSetSyncStatus('syncing');
-    try {
-        const { student, fees } = normalizeStudent(studentData);
+    if (shouldReplaceFee) {
+        pendingFeeReplacementIdsRef.current.add(studentData.id);
+    }
 
-        const { error } = await supabase.from('students').upsert(student);
-        if (error) throw error;
+        // 2. Cloud Update
+        guardedSetSyncStatus('syncing');
+        try {
+            const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
 
-        if (fees.length > 0) {
-          // Use upsert instead of delete-then-insert to avoid race conditions
-          // where concurrent fee payments could be wiped between delete and insert.
-          const { error: fError } = await supabase.from('fees').upsert(fees);
-          if (fError) throw fError;
-        }
+            // Use transactional RPC when replacing fees to ensure atomicity
+            if (shouldReplaceFee) {
+                const { error } = await supabase.rpc('sync_student_fee_batch', {
+                    p_students: [student],
+                    p_fees: fees,
+                    p_replace_fee_student_ids: [student.id]
+                });
+
+                if (error) throw error;
+
+                // Clear the intent after successful sync
+                pendingFeeReplacementIdsRef.current.delete(student.id);
+            } else {
+                const { error } = await supabase.from('students').upsert(student);
+                if (error) throw error;
+            }
 
         guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
@@ -319,6 +336,80 @@ export const useDataSync = () => {
         scheduleTimeout(() => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        throw new Error(userMessage);
+    }
+  }, [user]);
+
+  const bulkUpdateStudents = useCallback(async (studentsData) => {
+    if (!studentsData || studentsData.length === 0) return;
+
+    // 1. Local Update
+    const replaceFeeHistoryIds = new Set(studentsData.filter(s => s.replaceFeeHistory).map(s => s.id));
+    const cleanDataList = studentsData.map(s => {
+        const { replaceFeeHistory, ...clean } = s;
+        return clean;
+    });
+
+    const updatedList = localBulkUpdateStudents(cleanDataList);
+    guardedSetStudents(updatedList);
+    guardedSetSyncStatus('unsaved');
+
+    if (!user || !supabase) {
+      console.warn("Supabase not configured - changes saved locally only");
+      syncChannel?.postMessage('sync_required');
+      return;
+    }
+
+    // Record intent
+    replaceFeeHistoryIds.forEach(id => pendingFeeReplacementIdsRef.current.add(id));
+
+    // 2. Cloud Update (Transactional via RPC)
+    guardedSetSyncStatus('syncing');
+    try {
+        const allStudentsDB = [];
+        const allFeesDB = [];
+        const updatedIds = new Set(studentsData.map(item => item.id));
+
+        updatedList.forEach(mergedStudent => {
+            if (updatedIds.has(mergedStudent.id)) {
+                const { student, fees } = normalizeStudent(mergedStudent);
+                allStudentsDB.push(student);
+                if (replaceFeeHistoryIds.has(mergedStudent.id) && fees && fees.length > 0) {
+                    allFeesDB.push(...fees);
+                }
+            }
+        });
+
+        const batchReplaceIds = Array.from(replaceFeeHistoryIds);
+
+        const { error } = await supabase.rpc('sync_student_fee_batch', {
+            p_students: allStudentsDB,
+            p_fees: allFeesDB,
+            p_replace_fee_student_ids: batchReplaceIds
+        });
+
+        if (error) throw error;
+
+        batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
+
+        guardedSetSyncStatus('synced');
+        syncChannel?.postMessage('sync_required');
+    } catch (err) {
+        console.error("Cloud bulk update error", err);
+        guardedSetSyncStatus('error');
+
+        let userMessage = "Failed to bulk update students on server.";
+        if (err.message?.includes('permission')) {
+          userMessage = "You don't have permission to perform this action.";
+        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+          userMessage = "Network error. Please check your connection.";
+        }
+
+        guardedSetSyncError({ message: userMessage, details: err });
+        scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
+        throw new Error(userMessage);
     }
   }, [user]);
 
@@ -337,6 +428,8 @@ export const useDataSync = () => {
     // 2. Cloud Update
     guardedSetSyncStatus('syncing');
     try {
+        // Issue #4: Rely on database ON DELETE CASCADE for fees
+
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
         guardedSetSyncStatus('synced');
@@ -433,6 +526,10 @@ export const useDataSync = () => {
   }, [user, supabase, students, fetchFromCloud]);
 
   const importStudents = useCallback(async (newStudents) => {
+    // Save snapshot for rollback
+    const previousStudents = [...students];
+    const previousStatus = syncStatus;
+
     // 1. Local Update (Full Replace)
     saveStudents(newStudents);
     guardedSetStudents(newStudents);
@@ -458,16 +555,15 @@ export const useDataSync = () => {
           }
         });
 
-        // Batch Insert Students
-        // Using upsert to handle potential ID collisions or updates if IDs are preserved
-        const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
-        if (sError) throw sError;
-
-        // Batch Insert Fees
-        if (allFeesDB.length > 0) {
-             const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
-             if (fError) throw fError;
-        }
+        // Call the 'import-students' Edge Function instead of the RPC directly.
+        // This moves the execution to a trusted server environment with service_role access.
+        const { data: functionData, error: functionError } = await supabase.functions.invoke('import-students', {
+            body: {
+                students: allStudentsDB,
+                fees: allFeesDB
+            }
+        });
+        if (functionError) throw functionError;
 
         guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
@@ -490,6 +586,11 @@ export const useDataSync = () => {
         scheduleTimeout(() => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+
+        // Rollback to snapshot
+        saveStudents(previousStudents);
+        guardedSetStudents(previousStudents);
+        guardedSetSyncStatus(previousStatus);
     }
   }, [user]);
 
@@ -503,6 +604,7 @@ export const useDataSync = () => {
     syncError,
     addStudent,
     updateStudent,
+    bulkUpdateStudents,
     deleteStudent,
     addFeePayment,
     importStudents,

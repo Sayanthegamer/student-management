@@ -92,6 +92,23 @@ export const updateStudent = (updatedStudent) => {
 };
 
 /**
+ * Bulk updates existing students in the storage.
+ *
+ * @param {Object[]} updatedStudentsList - Array of student objects with updated fields.
+ * @returns {Object[]} The updated array of student objects.
+ */
+export const bulkUpdateStudents = (updatedStudentsList) => {
+  const students = getStudents();
+  const updateMap = new Map(updatedStudentsList.map(us => [us.id, us]));
+  const updatedStudents = students.map(s => {
+    const update = updateMap.get(s.id);
+    return update ? { ...s, ...update } : s;
+  });
+  saveStudents(updatedStudents);
+  return updatedStudents;
+};
+
+/**
  * Deletes a student from the storage.
  *
  * @param {string} id - The ID of the student to delete.

@@ -28,11 +28,12 @@ import { useToast } from '../context/ToastContext';
  *
  * @param {Object} props - The component props.
  * @param {Student[]} props.students - The array of student objects.
- * @param {(student: Student) => void} props.onUpdateStudent - Callback function to update a student's class and fee details.
+ * @param {(student: Student) => void} props.onUpdateStudent - Callback function to update a single student's details.
+ * @param {(students: Object[]) => void} [props.onBulkUpdateStudents] - Optional callback to update multiple students in bulk.
  * @param {User} props.user - The current authenticated user.
  * @returns {JSX.Element} The rendered promotion board component.
  */
-const PromotionBoard = ({ students, onUpdateStudent, user }) => {
+const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user }) => {
     const { showToast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -41,6 +42,7 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
     const [selectedStudents, setSelectedStudents] = useState(new Set());
     const [pendingAction, setPendingAction] = useState(null);
     const [promotionFee, setPromotionFee] = useState('');
+    const [isSubmittingPromotion, setIsSubmittingPromotion] = useState(false);
     
     // Only show Confirmed students
     const eligibleStudents = useMemo(() => students.filter(s => s.admissionStatus === 'Confirmed'), [students]);
@@ -108,40 +110,64 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
         const feeAmount = Math.max(0, Number(promotionFee) || 0);
         setPendingAction({
             label: `Promote ${selectedStudents.size} student(s) to ${nextClass} with a promotion fee of ₹${feeAmount}?`,
-            onConfirm: () => {
-            const dateStr = new Date().toISOString().split('T')[0];
-            const studentById = new Map(students.map(s => [s.id, s]));
+            onConfirm: async () => {
+                if (isSubmittingPromotion) return;
+                setIsSubmittingPromotion(true);
+                
+                try {
+                    const dateStr = new Date().toISOString().split('T')[0];
+                    const studentById = new Map(students.map(s => [s.id, s]));
 
-            selectedStudents.forEach(id => {
-                const student = studentById.get(id);
-                if (student) {
-                    const newFeeHistory = [...(student.feeHistory || [])];
-                    if (feeAmount > 0) {
-                        newFeeHistory.push({
-                            id: crypto.randomUUID(),
-                            date: dateStr,
-                            amount: feeAmount,
-                            type: 'Promotion',
-                            month: null,
-                            fine: 0
-                        });
-                    }
+                    const studentsToUpdate = [];
 
-                    onUpdateStudent({
-                        ...student,
-                        class: nextClass,
-                        feesAmount: CLASS_FEES[nextClass] || student.feesAmount,
-                        feeHistory: newFeeHistory,
-                        lastStatusChangeDate: dateStr,
-                        lastStatusChangedBy: user?.email || user?.id || 'system'
+                    selectedStudents.forEach(id => {
+                        const student = studentById.get(id);
+                        if (student) {
+                            const hasFee = feeAmount > 0;
+                            const newFeeHistory = [...(student.feeHistory || [])];
+                            
+                            if (hasFee) {
+                                newFeeHistory.push({
+                                    id: crypto.randomUUID(),
+                                    date: dateStr,
+                                    amount: feeAmount,
+                                    type: 'Promotion',
+                                    month: null,
+                                    fine: 0
+                                });
+                            }
+
+                            studentsToUpdate.push({
+                                ...student,
+                                class: nextClass,
+                                tuitionFee: CLASS_FEES[nextClass] || student.tuitionFee,
+                                feeHistory: newFeeHistory,
+                                replaceFeeHistory: hasFee, // Only replace if we added a fee
+                                lastStatusChangeDate: dateStr,
+                                lastStatusChangedBy: user?.email || user?.id || 'system'
+                            });
+                        }
                     });
-                }
-            });
 
-            logActivity('promotion', `Bulk promoted ${selectedStudents.size} students to ${nextClass}`);
-            showToast(`${selectedStudents.size} student(s) promoted to ${nextClass}`, 'success');
-            setSelectedStudents(new Set());
-                setPendingAction(null);
+                    if (studentsToUpdate.length > 0) {
+                        if (onBulkUpdateStudents) {
+                            await onBulkUpdateStudents(studentsToUpdate);
+                        } else {
+                            // Fallback just in case
+                            await Promise.all(studentsToUpdate.map(student => onUpdateStudent(student)));
+                        }
+                        
+                        logActivity('promotion', `Bulk promoted ${selectedStudents.size} students to ${nextClass}`);
+                        showToast(`${selectedStudents.size} student(s) promoted to ${nextClass}`, 'success');
+                        setSelectedStudents(new Set());
+                        setPendingAction(null);
+                    }
+                } catch (err) {
+                    console.error('Promotion failed:', err);
+                    showToast(`Failed to promote students: ${err.message || 'Unknown error'}`, 'error');
+                } finally {
+                    setIsSubmittingPromotion(false);
+                }
             }
         });
     };
@@ -350,15 +376,26 @@ const PromotionBoard = ({ students, onUpdateStudent, user }) => {
                             <button
                                 onClick={() => setPendingAction(null)}
                                 className="btn btn-secondary text-sm"
+                                disabled={isSubmittingPromotion}
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={pendingAction.onConfirm}
                                 className="btn btn-primary text-sm"
+                                disabled={isSubmittingPromotion}
                             >
-                                <UserCheck size={16} />
-                                Confirm
+                                {isSubmittingPromotion ? (
+                                    <>
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        Promoting...
+                                    </>
+                                ) : (
+                                    <>
+                                        <UserCheck size={16} />
+                                        Confirm
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>
