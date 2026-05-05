@@ -119,11 +119,11 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                     id: crypto.randomUUID(),
                     date: date,
                     month: date.substring(0, 7),
-                    type: 'Fee',
+                    type: 'Transportation',
                     amount: numAmount,
                     fine: 0,
                     remarks: remarks || 'Transportation Fee',
-                    itemized_breakdown: { transport: numAmount }
+
                 };
 
                 return {
