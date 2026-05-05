@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { Edit2, Trash2, Search, Plus, IndianRupee, Filter, ChevronDown, ChevronUp, UserPlus, X, Zap } from 'lucide-react';
+import { Edit2, Trash2, Search, Plus, IndianRupee, Filter, ChevronDown, ChevronUp, UserPlus, X, Zap, CheckSquare, Square, LogOut } from 'lucide-react';
 import FeePaymentModal from './FeePaymentModal';
 import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
@@ -22,7 +22,7 @@ const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
  * Lightning-Fast Student Directory - Kinetic Ledger Design
  * High-density data table with instant feedback and keyboard-friendly interactions
  */
-const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
+const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdateStudents }) => {
     // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
     const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -38,6 +38,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
     const [selectedStudentForFee, setSelectedStudentForFee] = useState(null);
     const [showFilters, setShowFilters] = useState(false);
     const searchRef = useRef(null);
+    const [selectedStudents, setSelectedStudents] = useState(new Set());
 
     // Keyboard shortcut handler
     useEffect(() => {
@@ -83,7 +84,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
             const matchesClass = filterClass ? student.class === filterClass : true;
             const matchesSection = filterSection ? student.section === filterSection : true;
 
-            const isNotTransferred = student.admissionStatus !== 'Transferred';
+            const isNotExited = student.admissionStatus !== 'Exited';
 
             let matchesFeeStatus = true;
             if (filterFeeStatus) {
@@ -91,7 +92,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 matchesFeeStatus = status === filterFeeStatus;
             }
 
-            return matchesSearch && matchesClass && matchesSection && matchesFeeStatus && isNotTransferred;
+            return matchesSearch && matchesClass && matchesSection && matchesFeeStatus && isNotExited;
         })
         .sort((a, b) => {
             let valA = a[sortBy]?.toString().toLowerCase() || '';
@@ -306,13 +307,15 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee }) => {
                 <div className="md:hidden p-3 space-y-2 stagger-choreograph">
                     {currentStudents.length > 0 ? (
                         currentStudents.map((student) => (
-                            <StudentCard
+                                                        <StudentCard
                                 key={student.id}
                                 student={student}
                                 status={getFeeStatusForMonth(student, filterMonth, currentMonth)}
                                 onEdit={onEdit}
                                 onDelete={onDelete}
                                 onPayFee={handlePayFeeClick}
+                                isSelected={selectedStudents.has(student.id)}
+                                onSelect={() => toggleStudentSelection(student.id)}
                             />
                         ))
                     ) : (

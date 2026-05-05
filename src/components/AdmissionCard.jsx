@@ -6,7 +6,7 @@ const statusIcons = {
   Provisional: Clock,
   Confirmed: CheckCircle,
   Cancelled: XCircle,
-  Transferred: UserX,
+  Exited: UserX,
 };
 
 /**
@@ -99,16 +99,16 @@ const AdmissionCard = React.memo(({ student, onUpdateStatus }) => {
 
         {status === 'Confirmed' && (
           <button
-            onClick={() => onUpdateStatus(student, 'Transferred')}
+            onClick={() => onUpdateStatus(student, 'Exited')}
             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-[12px] hover:bg-purple-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"
-            aria-label={`Mark as transferred for ${student.name}`}
+            aria-label={`Mark as exited for ${student.name}`}
           >
             <UserX size={16} className="stroke-[2.5px]" />
-            <span className="hidden sm:inline">Mark Transferred</span>
+            <span className="hidden sm:inline">Mark Exited</span>
           </button>
         )}
 
-        {(status === 'Cancelled' || status === 'Transferred') && (
+        {(status === 'Cancelled' || status === 'Exited') && (
           <button
             onClick={() => onUpdateStatus(student, 'Provisional')}
             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-[12px] hover:bg-amber-500 hover:text-white transition-all font-bold text-xs touch-manipulation min-h-[44px] active:scale-[0.97]"

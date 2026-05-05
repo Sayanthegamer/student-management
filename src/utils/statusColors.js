@@ -10,7 +10,7 @@ export const statusStyles = {
   Provisional: 'bg-amber-500/10 text-amber-400 border-amber-500/20 rounded-md',
   Confirmed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 rounded-md',
   Cancelled: 'bg-rose-500/10 text-rose-400 border-rose-500/20 rounded-md',
-  Transferred: 'bg-violet-500/10 text-violet-400 border-violet-500/20 rounded-md',
+  Exited: 'bg-violet-500/10 text-violet-400 border-violet-500/20 rounded-md',
 };
 
 // Color values for progress bars, border-top accents, and icon tinting
@@ -20,5 +20,5 @@ export const statusHexColors = {
   Confirmed: 'var(--color-status-confirmed, #10b981)',
   Provisional: 'var(--color-status-provisional, #f59e0b)',
   Cancelled: 'var(--color-status-cancelled, #f43f5e)',
-  Transferred: 'var(--color-status-transferred, #a855f7)',
+  Exited: 'var(--color-status-exited, #a855f7)',
 };

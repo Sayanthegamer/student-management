@@ -54,7 +54,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     const closeTimeoutRef = useRef(null);
     const submitTimeoutRef = useRef(null);
     
-    const isTransferred = student.admissionStatus === 'Transferred';
+    const isExited = student.admissionStatus === 'Exited';
 
     // Cleanup timers on unmount and manage focus
     useEffect(() => {
@@ -310,12 +310,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                     </div>
                 </div>
 
-                {/* Transferred warning */}
-                {isTransferred && (
+                {/* Exited warning */}
+                {isExited && (
                     <div className="mx-6 mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center gap-3">
                         <AlertCircle size={16} className="text-amber-400 shrink-0" />
                         <div className="flex-1">
-                            <p className="text-amber-400 font-bold text-xs">Transferred Student</p>
+                            <p className="text-amber-400 font-bold text-xs">Exited Student</p>
                             <p className="text-amber-400/70 text-[10px] mt-0.5">Verify if payment is appropriate</p>
                         </div>
                     </div>

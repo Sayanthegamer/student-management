@@ -57,7 +57,7 @@
   --color-status-confirmed: #22C55E;
   --color-status-provisional: #F59E0B;
   --color-status-cancelled: #F43F5E;
-  --color-status-transferred: #A855F7;
+  --color-status-exited: #A855F7;
   
   /* Tailwind Color Overrides for Dynamic Theming */
   --emerald-400: #34d399;

@@ -24,9 +24,9 @@ const StudentForm = lazy(() => import('./components/StudentForm'));
 const AdmissionStatus = lazy(() => import('./components/AdmissionStatus'));
 const PromotionBoard = lazy(() => import('./components/PromotionBoard'));
 const DataManagement = lazy(() => import('./components/DataManagement'));
-const TransferCertificate = lazy(() => import('./components/TransferCertificate'));
 const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
 const Walkthrough = lazy(() => import('./components/Walkthrough'));
+const TransportationFees = lazy(() => import('./components/TransportationFees'));
 const Reports = lazy(() => import('./components/Reports'));
 
 /**
@@ -277,6 +277,7 @@ function App() {
                   onEdit={handleEditClick}
                   onDelete={handleDeleteClick}
                   onPayFee={handlePayFee}
+                  onBulkUpdateStudents={handleBulkUpdateStudents}
                 />
               } />
               <Route path="/students/new" element={
@@ -292,7 +293,7 @@ function App() {
               <Route path="/payment-history" element={<PaymentHistory students={students} onEditFee={editFeePayment} />} />
               <Route path="/admission" element={<AdmissionStatus students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/promotions" element={<PromotionBoard students={students} onUpdateStudent={handleUpdateStudent} onBulkUpdateStudents={handleBulkUpdateStudents} user={user} />} />
-              <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
+              <Route path="/transport-fees" element={<TransportationFees students={students} onBulkUpdateStudents={handleBulkUpdateStudents} />} />
               <Route path="/data" element={<DataManagement students={students} onImportSuccess={handleImportSuccess} />} />
               <Route path="/reports" element={<Reports students={students} />} />
             </Routes>

@@ -120,7 +120,7 @@ const LandingPage = () => {
                   One-Click Certificates
                 </h3>
                 <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
-                  Generate Transfer Certificates and manage promotions with a
+                  Manage student exits and promotions with a
                   single click. Save hours of manual typing and formatting.
                 </p>
               </div>
