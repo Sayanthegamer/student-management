@@ -34,7 +34,9 @@ export const saveStudents = (students) => {
   } catch (error) {
     console.error("Error saving to sessionStorage", error);
     if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-      window.dispatchEvent(new CustomEvent('storage_quota_exceeded'));
+      if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function' && typeof CustomEvent === 'function') {
+        window.dispatchEvent(new CustomEvent('storage_quota_exceeded'));
+      }
     }
   }
 };
@@ -108,7 +110,15 @@ export const addFeePayment = (studentId, paymentDetails) => {
         newPayments = [{ ...paymentDetails, id: paymentDetails.id || crypto.randomUUID() }];
       }
 
-      const updatedHistory = [...currentHistory, ...newPayments];
+
+      // Deduplicate history by month (for monthly fees) or type (for admission/promotion)
+      // to prevent duplicate entries on retries.
+      const historyMap = new Map();
+      [...currentHistory, ...newPayments].forEach(p => {
+        const key = p.type === 'Monthly' ? p.month : p.type;
+        historyMap.set(key, p);
+      });
+      const updatedHistory = Array.from(historyMap.values());
       const newFeesStatus = calculateFeesStatus({ feeHistory: updatedHistory }, currentMonth, currentMonth);
 
       return {
