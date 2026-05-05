@@ -115,7 +115,13 @@ export const addFeePayment = (studentId, paymentDetails) => {
       // to prevent duplicate entries on retries.
       const historyMap = new Map();
       [...currentHistory, ...newPayments].forEach(p => {
-        const key = p.type === 'Monthly' ? p.month : p.type;
+        let key = p.type;
+        if (p.type === 'Monthly') {
+          key = p.month;
+        } else if (p.type === 'Promotion') {
+          // Preserve separate promotions across different times
+          key = `${p.type}:${p.date || p.createdAt || new Date().toISOString()}`;
+        }
         historyMap.set(key, p);
       });
       const updatedHistory = Array.from(historyMap.values());
