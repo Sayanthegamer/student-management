@@ -362,6 +362,8 @@ export const useDataSync = () => {
 
         // Build allStudentsDB and allFeesDB from the merged student objects
         const updatedIds = new Set(studentsData.map(item => item.id));
+        const replaceFeeHistoryIds = new Set(studentsData.filter(s => s.replaceFeeHistory).map(s => s.id));
+
         updatedList.forEach(mergedStudent => {
             // Only process students that were part of the update
             if (updatedIds.has(mergedStudent.id)) {
@@ -369,8 +371,7 @@ export const useDataSync = () => {
                 allStudentsDB.push(student);
                 
                 // Only include fees for students that explicitly requested replaceFeeHistory
-                // (skip for generic edits or promotions to avoid overwriting newer remote data)
-                if (mergedStudent.replaceFeeHistory && fees && fees.length > 0) {
+                if (replaceFeeHistoryIds.has(mergedStudent.id) && fees && fees.length > 0) {
                     allFeesDB.push(...fees);
                 }
             }
@@ -381,12 +382,9 @@ export const useDataSync = () => {
         if (sError) throw sError;
 
         // Mirror updateStudent's reconciliation for fees using per-student comparisons
-        // Only fetch existing fees for students that explicitly requested replaceFeeHistory
-        const studentIdsToReplaceFees = studentsData.filter(s => s.replaceFeeHistory).map(s => s.id);
-
         let existingFees = null;
-        if (studentIdsToReplaceFees.length > 0) {
-            const { data: fetchedFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', studentIdsToReplaceFees);
+        if (replaceFeeHistoryIds.size > 0) {
+            const { data: fetchedFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', Array.from(replaceFeeHistoryIds));
             if (selectError) throw selectError;
             existingFees = fetchedFees;
         }
@@ -409,6 +407,9 @@ export const useDataSync = () => {
             // Compute feeIdsToDelete using per-student comparisons
             const feeIdsToDelete = existingFees
                 .filter(existingFee => {
+                    // Important: only consider students who were marked for fee replacement
+                    if (!replaceFeeHistoryIds.has(existingFee.student_id)) return false;
+                    
                     const incomingFeeIds = incomingFeesByStudent[existingFee.student_id];
                     return !incomingFeeIds || !incomingFeeIds.has(existingFee.id);
                 })

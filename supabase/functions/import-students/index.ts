@@ -41,6 +41,16 @@ serve(async (req) => {
       })
     }
 
+    // RBAC: Only allow users with 'admin' role or 'is_admin' claim to trigger full replace
+    const isAdmin = user.app_metadata?.role === 'admin' || user.user_metadata?.is_admin === true;
+    if (!isAdmin) {
+      console.warn(`Unauthorized attempt to call full_replace_import by user: ${user.email}`);
+      return new Response(JSON.stringify({ error: 'Forbidden: Admin privileges required' }), { 
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     // Use service role to call the RPC
     const adminClient = createClient(supabaseUrl, supabaseServiceKey)
 
