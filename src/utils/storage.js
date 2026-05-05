@@ -118,8 +118,6 @@ export const addFeePayment = (studentId, paymentDetails) => {
     }
     return student;
   });
-    return student;
-  });
   saveStudents(updatedStudents);
   return updatedStudents;
 };
