@@ -94,7 +94,8 @@ export const deleteStudent = (id) => {
  */
 export const addFeePayment = (studentId, paymentDetails) => {
   const students = getStudents();
-  const currentMonth = new Date().toISOString().slice(0, 7);
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   
   const updatedStudents = students.map(student => {
     if (student.id === studentId) {
