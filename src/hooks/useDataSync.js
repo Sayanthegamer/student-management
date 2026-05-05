@@ -284,7 +284,7 @@ export const useDataSync = () => {
     // 2. Cloud Update
     guardedSetSyncStatus('syncing');
     try {
-        const { student, fees } = normalizeStudent(studentData);
+        const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
 
         const { error } = await supabase.from('students').upsert(student);
         if (error) throw error;
@@ -295,19 +295,19 @@ export const useDataSync = () => {
         const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').eq('student_id', student.id);
         if (selectError) throw selectError;
         
+        if (fees.length > 0) {
+          // Use upsert instead of delete-then-insert to avoid race conditions
+          // where concurrent fee payments could be wiped between delete and insert.
+          const { error: fError } = await supabase.from('fees').upsert(fees);
+          if (fError) throw fError;
+        }
+
         if (existingFees) {
             const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
             if (feeIdsToDelete.length > 0) {
                 const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
                 if (deleteError) throw deleteError;
             }
-        }
-
-        if (fees.length > 0) {
-          // Use upsert instead of delete-then-insert to avoid race conditions
-          // where concurrent fee payments could be wiped between delete and insert.
-          const { error: fError } = await supabase.from('fees').upsert(fees);
-          if (fError) throw fError;
         }
 
         guardedSetSyncStatus('synced');
@@ -359,9 +359,10 @@ export const useDataSync = () => {
         const allFeesDB = [];
 
         // Build allStudentsDB and allFeesDB from the merged student objects
+        const updatedIds = new Set(studentsData.map(item => item.id));
         updatedList.forEach(mergedStudent => {
             // Only process students that were part of the update
-            if (studentsData.some(sd => sd.id === mergedStudent.id)) {
+            if (updatedIds.has(mergedStudent.id)) {
                 const { student, fees } = normalizeStudent(mergedStudent);
                 allStudentsDB.push(student);
                 if (fees && fees.length > 0) allFeesDB.push(...fees);
@@ -376,6 +377,11 @@ export const useDataSync = () => {
         const studentIds = allStudentsDB.map(s => s.id);
         const { data: existingFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', studentIds);
         if (selectError) throw selectError;
+
+        if (allFeesDB.length > 0) {
+            const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
+            if (fError) throw fError;
+        }
 
         if (existingFees) {
             // Group incoming fees by student_id
@@ -399,11 +405,6 @@ export const useDataSync = () => {
                 const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
                 if (deleteError) throw deleteError;
             }
-        }
-
-        if (allFeesDB.length > 0) {
-            const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
-            if (fError) throw fError;
         }
 
         guardedSetSyncStatus('synced');
@@ -580,35 +581,11 @@ export const useDataSync = () => {
           }
         });
 
-        // Batch Upsert Students FIRST
-        // Using upsert to handle potential ID collisions or updates if IDs are preserved
-        const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
-        if (sError) throw sError;
-
-        // Batch Upsert Fees FIRST
-        if (allFeesDB.length > 0) {
-             const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
-             if (fError) throw fError;
-        }
-
-        // Issue #10: Delete old records AFTER successful upsert to prevent ghost records and avoid total data wipe on partial failure
-        const studentIdsToKeep = allStudentsDB.map(s => s.id);
-        const feeIdsToKeep = allFeesDB.map(f => f.id);
-
-        let feesQuery = supabase.from('fees').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        if (feeIdsToKeep.length > 0) {
-            // Because Supabase 'not.in' expects a comma-separated list formatted string like '(id1,id2)'
-            feesQuery = feesQuery.not('id', 'in', `(${feeIdsToKeep.join(',')})`);
-        }
-        const { error: delFeesError } = await feesQuery;
-        if (delFeesError) throw delFeesError;
-
-        let studentsQuery = supabase.from('students').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        if (studentIdsToKeep.length > 0) {
-            studentsQuery = studentsQuery.not('id', 'in', `(${studentIdsToKeep.join(',')})`);
-        }
-        const { error: delStudentsError } = await studentsQuery;
-        if (delStudentsError) throw delStudentsError;
+        const { error: rpcError } = await supabase.rpc('full_replace_import', {
+            students: allStudentsDB,
+            fees: allFeesDB
+        });
+        if (rpcError) throw rpcError;
 
         guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
