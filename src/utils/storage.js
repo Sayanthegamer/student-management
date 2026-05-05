@@ -52,7 +52,7 @@ export const saveStudents = (students) => {
     console.error("Error saving to sessionStorage", error);
     if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
       if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function' && typeof CustomEvent === 'function') {
-        window.dispatchEvent(new CustomEvent('storage_quota_exceeded'));
+        window.dispatchEvent(new CustomEvent('storage_quota_exceeded', { detail: error }));
       }
     }
   }
