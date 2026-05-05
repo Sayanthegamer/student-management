@@ -302,7 +302,7 @@ export const useDataSync = () => {
           if (fError) throw fError;
         }
 
-        if (existingFees) {
+        if (existingFees && studentData.replaceFeeHistory) {
             const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
             if (feeIdsToDelete.length > 0) {
                 const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
@@ -374,9 +374,15 @@ export const useDataSync = () => {
         if (sError) throw sError;
 
         // Mirror updateStudent's reconciliation for fees using per-student comparisons
-        const studentIds = allStudentsDB.map(s => s.id);
-        const { data: existingFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', studentIds);
-        if (selectError) throw selectError;
+        // Only fetch existing fees for students that explicitly requested replaceFeeHistory
+        const studentIdsToReplaceFees = studentsData.filter(s => s.replaceFeeHistory).map(s => s.id);
+
+        let existingFees = null;
+        if (studentIdsToReplaceFees.length > 0) {
+            const { data: fetchedFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', studentIdsToReplaceFees);
+            if (selectError) throw selectError;
+            existingFees = fetchedFees;
+        }
 
         if (allFeesDB.length > 0) {
             const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
