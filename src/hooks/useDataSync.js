@@ -274,10 +274,8 @@ export const useDataSync = () => {
 
   const updateStudent = useCallback(async (studentData) => {
     // 1. Local Update
+    const shouldReplaceFee = !!studentData.replaceFeeHistory;
     const { replaceFeeHistory, ...cleanData } = studentData;
-    if (replaceFeeHistory) {
-        pendingFeeReplacementIdsRef.current.add(studentData.id);
-    }
     
     const updatedList = localUpdateStudent(cleanData);
     guardedSetStudents(updatedList);
@@ -289,6 +287,10 @@ export const useDataSync = () => {
       return;
     }
 
+    if (shouldReplaceFee) {
+        pendingFeeReplacementIdsRef.current.add(studentData.id);
+    }
+
         // 2. Cloud Update
         guardedSetSyncStatus('syncing');
         try {
@@ -298,7 +300,7 @@ export const useDataSync = () => {
             if (error) throw error;
 
             // Only touch fees if explicitly requested via replaceFeeHistory
-            if (pendingFeeReplacementIdsRef.current.has(student.id)) {
+            if (shouldReplaceFee) {
                 const feeIdsToKeep = fees.map(f => f.id).filter(Boolean);
                 
                 // Find existing fees to safely delete orphans
@@ -354,11 +356,9 @@ export const useDataSync = () => {
     if (!studentsData || studentsData.length === 0) return;
 
     // 1. Local Update
+    const replaceFeeHistoryIds = new Set(studentsData.filter(s => s.replaceFeeHistory).map(s => s.id));
     const cleanDataList = studentsData.map(s => {
         const { replaceFeeHistory, ...clean } = s;
-        if (replaceFeeHistory) {
-            pendingFeeReplacementIdsRef.current.add(s.id);
-        }
         return clean;
     });
 
@@ -372,6 +372,9 @@ export const useDataSync = () => {
       return;
     }
 
+    // Record intent
+    replaceFeeHistoryIds.forEach(id => pendingFeeReplacementIdsRef.current.add(id));
+
     // 2. Cloud Update (Transactional via RPC)
     guardedSetSyncStatus('syncing');
     try {
@@ -383,15 +386,13 @@ export const useDataSync = () => {
             if (updatedIds.has(mergedStudent.id)) {
                 const { student, fees } = normalizeStudent(mergedStudent);
                 allStudentsDB.push(student);
-                if (pendingFeeReplacementIdsRef.current.has(mergedStudent.id) && fees && fees.length > 0) {
+                if (replaceFeeHistoryIds.has(mergedStudent.id) && fees && fees.length > 0) {
                     allFeesDB.push(...fees);
                 }
             }
         });
 
-        const batchReplaceIds = Array.from(new Set(
-            allStudentsDB.filter(s => pendingFeeReplacementIdsRef.current.has(s.id)).map(s => s.id)
-        ));
+        const batchReplaceIds = Array.from(replaceFeeHistoryIds);
 
         const { error } = await supabase.rpc('sync_student_fee_batch', {
             p_students: allStudentsDB,

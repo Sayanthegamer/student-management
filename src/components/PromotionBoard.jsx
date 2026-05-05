@@ -123,8 +123,10 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                     selectedStudents.forEach(id => {
                         const student = studentById.get(id);
                         if (student) {
+                            const hasFee = feeAmount > 0;
                             const newFeeHistory = [...(student.feeHistory || [])];
-                            if (feeAmount > 0) {
+                            
+                            if (hasFee) {
                                 newFeeHistory.push({
                                     id: crypto.randomUUID(),
                                     date: dateStr,
@@ -140,7 +142,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                 class: nextClass,
                                 tuitionFee: CLASS_FEES[nextClass] || student.tuitionFee,
                                 feeHistory: newFeeHistory,
-                                replaceFeeHistory: true, // Force cloud to sync the new promotion fee
+                                replaceFeeHistory: hasFee, // Only replace if we added a fee
                                 lastStatusChangeDate: dateStr,
                                 lastStatusChangedBy: user?.email || user?.id || 'system'
                             });
