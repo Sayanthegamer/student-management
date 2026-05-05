@@ -363,14 +363,17 @@ const PaymentHistory = ({ students, onEditFee }) => {
                 )}
             </div>
 
-            {showHistoryModal && selectedStudentId && (
-                <PaymentHistoryModal
-                    student={students.find(s => s.id === selectedStudentId)}
-                    allStudents={students}
-                    onEditFee={onEditFee}
-                    onClose={() => setShowHistoryModal(false)}
-                />
-            )}
+            {showHistoryModal && selectedStudentId && (() => {
+                const selectedStudent = students.find(s => s.id === selectedStudentId);
+                return selectedStudent ? (
+                    <PaymentHistoryModal
+                        student={selectedStudent}
+                        allStudents={students}
+                        onEditFee={onEditFee}
+                        onClose={() => setShowHistoryModal(false)}
+                    />
+                ) : null;
+            })()}
         </div>
     );
 };

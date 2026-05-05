@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Save, IndianRupee } from 'lucide-react';
 
@@ -14,15 +14,12 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
     const [selectedStudentId, setSelectedStudentId] = useState(student.id);
     const modalRef = useRef(null);
 
-
-
-
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setIsClosing(true);
         setTimeout(() => {
             onClose();
         }, 200);
-    };
+    }, [onClose]);
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -69,7 +66,7 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, []);
+    }, [handleClose]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
