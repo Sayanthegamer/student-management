@@ -268,7 +268,7 @@ export const useDataSync = () => {
         scheduleTimeout(() => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
-        throw err;
+        throw new Error(userMessage);
     }
   }, [user]);
 
@@ -526,6 +526,10 @@ export const useDataSync = () => {
   }, [user, supabase, students, fetchFromCloud]);
 
   const importStudents = useCallback(async (newStudents) => {
+    // Save snapshot for rollback
+    const previousStudents = [...students];
+    const previousStatus = syncStatus;
+
     // 1. Local Update (Full Replace)
     saveStudents(newStudents);
     guardedSetStudents(newStudents);
@@ -582,6 +586,11 @@ export const useDataSync = () => {
         scheduleTimeout(() => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+
+        // Rollback to snapshot
+        saveStudents(previousStudents);
+        guardedSetStudents(previousStudents);
+        guardedSetSyncStatus(previousStatus);
     }
   }, [user]);
 
