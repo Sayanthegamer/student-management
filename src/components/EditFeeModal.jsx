@@ -17,11 +17,12 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
     const modalRef = useRef(null);
 
     const handleClose = useCallback(() => {
+        if (isSaving) return;
         setIsClosing(true);
         setTimeout(() => {
             onClose();
         }, 200);
-    }, [onClose]);
+    }, [onClose, isSaving]);
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -109,7 +110,7 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
                         <IndianRupee className="text-[var(--accent-primary)]" size={20} />
                         Edit Transaction
                     </h3>
-                    <button onClick={handleClose} className="p-2 hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] rounded-full transition-colors">
+                    <button onClick={handleClose} className="p-2 hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] rounded-full transition-colors" aria-label="Close">
                         <X size={20} />
                     </button>
                 </div>
