@@ -385,22 +385,26 @@ export const useDataSync = () => {
 
         const batchReplaceIds = Array.from(replaceFeeHistoryIds);
 
-        // First upsert students
-        const { error: studentError } = await supabase.from('students').upsert(allStudentsDB, { onConflict: 'id' });
-        if (studentError) throw studentError;
-
-        // Then if there are replacements, do those
         if (batchReplaceIds.length > 0) {
+            // Use the transactional RPC for atomicity: it upserts students + fees and
+            // deletes orphaned fee rows in a single transaction. Do NOT pre-upsert students
+            // here, because if the RPC fails we don't want student rows committed without
+            // their corresponding fee replacements.
             const { error: rpcError } = await supabase.rpc('sync_student_fee_batch', {
                 p_students: allStudentsDB,
                 p_fees: allFeesDB,
                 p_replace_fee_student_ids: batchReplaceIds
             });
             if (rpcError) throw rpcError;
-        } else if (allFeesDB.length > 0) {
-            // Otherwise just upsert the fees
-            const { error: feesError } = await supabase.from('fees').upsert(allFeesDB, { onConflict: 'id' });
-            if (feesError) throw feesError;
+        } else {
+            // No fee replacements — upsert students then append fees separately.
+            const { error: studentError } = await supabase.from('students').upsert(allStudentsDB, { onConflict: 'id' });
+            if (studentError) throw studentError;
+
+            if (allFeesDB.length > 0) {
+                const { error: feesError } = await supabase.from('fees').upsert(allFeesDB, { onConflict: 'id' });
+                if (feesError) throw feesError;
+            }
         }
 
         batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
