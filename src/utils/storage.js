@@ -75,8 +75,9 @@ export const updateStudent = (updatedStudent) => {
  */
 export const bulkUpdateStudents = (updatedStudentsList) => {
   const students = getStudents();
+  const updateMap = new Map(updatedStudentsList.map(us => [us.id, us]));
   const updatedStudents = students.map(s => {
-    const update = updatedStudentsList.find(us => us.id === s.id);
+    const update = updateMap.get(s.id);
     return update ? { ...s, ...update } : s;
   });
   saveStudents(updatedStudents);

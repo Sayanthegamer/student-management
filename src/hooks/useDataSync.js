@@ -292,11 +292,14 @@ export const useDataSync = () => {
         const feeIdsToKeep = fees.map(f => f.id).filter(Boolean);
         
         // Find existing fees to safely delete orphans
-        const { data: existingFees } = await supabase.from('fees').select('id').eq('student_id', student.id);
+        const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').eq('student_id', student.id);
+        if (selectError) throw selectError;
+        
         if (existingFees) {
             const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
             if (feeIdsToDelete.length > 0) {
-                await supabase.from('fees').delete().in('id', feeIdsToDelete);
+                const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
+                if (deleteError) throw deleteError;
             }
         }
 
@@ -363,7 +366,20 @@ export const useDataSync = () => {
         const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
         if (sError) throw sError;
 
-        // Upsert fees (we skip orphan deletion here as bulk is mostly used for adding promotions)
+        // Issue: Mirror updateStudent's reconciliation for fees
+        const studentIds = allStudentsDB.map(s => s.id);
+        const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').in('student_id', studentIds);
+        if (selectError) throw selectError;
+
+        if (existingFees) {
+            const incomingFeeIds = new Set(allFeesDB.map(f => f.id).filter(Boolean));
+            const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !incomingFeeIds.has(id));
+            if (feeIdsToDelete.length > 0) {
+                const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
+                if (deleteError) throw deleteError;
+            }
+        }
+
         if (allFeesDB.length > 0) {
             const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
             if (fError) throw fError;
@@ -405,7 +421,8 @@ export const useDataSync = () => {
     guardedSetSyncStatus('syncing');
     try {
         // Issue #4: Explicitly cascade delete fees to prevent orphans
-        await supabase.from('fees').delete().eq('student_id', id);
+        const { error: feeError } = await supabase.from('fees').delete().eq('student_id', id);
+        if (feeError) throw feeError;
 
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
@@ -545,8 +562,11 @@ export const useDataSync = () => {
         });
 
         // Issue #10: Delete old records before import to prevent ghost records
-        await supabase.from('fees').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        await supabase.from('students').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        const { error: delFeesError } = await supabase.from('fees').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        if (delFeesError) throw delFeesError;
+
+        const { error: delStudentsError } = await supabase.from('students').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        if (delStudentsError) throw delStudentsError;
 
         // Batch Insert Students
         // Using upsert to handle potential ID collisions or updates if IDs are preserved
