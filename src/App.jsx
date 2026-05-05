@@ -120,6 +120,14 @@ function App() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [syncStatus]);
 
+  React.useEffect(() => {
+    const handleQuotaExceeded = () => {
+      showToast("Local storage is full. Some data might not be saved for offline use.", "error");
+    };
+    window.addEventListener('storage_quota_exceeded', handleQuotaExceeded);
+    return () => window.removeEventListener('storage_quota_exceeded', handleQuotaExceeded);
+  }, [showToast]);
+
   if (loading) {
     return <SkeletonLoader />;
   }

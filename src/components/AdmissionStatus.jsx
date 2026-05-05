@@ -192,12 +192,20 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
         const student = students.find(s => s.id === pendingAction.studentId);
         if (student) {
             logActivity('admission', `Changed admission status for ${student.name} to ${pendingAction.newStatus}`);
-            onUpdateStudent({
+            
+            const updatedStudent = {
                 ...student,
                 admissionStatus: pendingAction.newStatus,
                 lastStatusChangeDate: new Date().toISOString().slice(0, 10),
                 lastStatusChangedBy: user?.email || user?.id || 'system'
-            });
+            };
+
+            // Issue #9: TC reversal via AdmissionStatus leaves stale tcDetails
+            if (student.admissionStatus === 'Transferred' && pendingAction.newStatus !== 'Transferred') {
+                updatedStudent.tcDetails = null;
+            }
+
+            onUpdateStudent(updatedStudent);
         }
         setPendingAction(null);
     };
