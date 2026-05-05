@@ -13,7 +13,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
 
     const [selectedStudentIds, setSelectedStudentIds] = useState(new Set());
     const [amount, setAmount] = useState('');
-    const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+    const [date, setDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [remarks, setRemarks] = useState('Transportation Fee');
 
     // Only show active, non-exited students
@@ -45,7 +45,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
         return activeStudents.filter(student => {
             const matchesSearch = !debouncedSearchTerm ||
                 student.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-                student.rollNo?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+                String(student.rollNo || '').toLowerCase().includes(debouncedSearchTerm.toLowerCase());
             const matchesClass = !filterClass || student.class === filterClass;
             const matchesSection = !filterSection || student.section === filterSection;
 
@@ -119,7 +119,8 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
 
                 return {
                     ...student,
-                    feeHistory: [...(student.feeHistory || []), newFeeRecord]
+                    feeHistory: [...(student.feeHistory || []), newFeeRecord],
+                    replaceFeeHistory: true
                 };
             }).filter(Boolean);
 
@@ -214,20 +215,25 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                             {/* Student List */}
                             <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl shadow-sm flex-1 flex flex-col overflow-hidden">
                                 <div className="px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex justify-between items-center">
-                                                                        <div className="flex items-center gap-3">
-                                        <button
-                                            onClick={handleSelectAll}
-                                            className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
-                                            aria-label={selectedStudentIds.size === filteredStudents.length && filteredStudents.length > 0 ? "Deselect all students" : "Select all students"}
-                                            aria-checked={selectedStudentIds.size === filteredStudents.length && filteredStudents.length > 0}
-                                            role="checkbox"
-                                        >
-                                            {selectedStudentIds.size === filteredStudents.length && filteredStudents.length > 0 ? (
-                                                <CheckCircle2 size={20} className="text-[var(--accent-primary)]" aria-hidden="true" />
-                                            ) : (
-                                                <Circle size={20} aria-hidden="true" />
-                                            )}
-                                        </button>
+                                                                                                            <div className="flex items-center gap-3">
+                                        {(() => {
+                                            const isAllSelected = filteredStudents.length > 0 && filteredStudents.every(s => selectedStudentIds.has(s.id));
+                                            return (
+                                                <button
+                                                    onClick={handleSelectAll}
+                                                    className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
+                                                    aria-label={isAllSelected ? "Deselect all students" : "Select all students"}
+                                                    aria-checked={isAllSelected}
+                                                    role="checkbox"
+                                                >
+                                                    {isAllSelected ? (
+                                                        <CheckCircle2 size={20} className="text-[var(--accent-primary)]" aria-hidden="true" />
+                                                    ) : (
+                                                        <Circle size={20} aria-hidden="true" />
+                                                    )}
+                                                </button>
+                                            );
+                                        })()}
                                         <span className="text-sm font-semibold text-[var(--text-primary)]">
                                             {filteredStudents.length} Students Found
                                         </span>
