@@ -14,6 +14,8 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee, i
       <button
         onClick={(e) => { e.stopPropagation(); onSelect(); }}
         className={`mt-1 shrink-0 ${isSelected ? 'text-[var(--accent-primary)]' : 'text-[var(--border-strong)]'}`}
+        aria-label={isSelected ? "Deselect student" : "Select student"}
+        aria-pressed={isSelected}
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           {isSelected ? (

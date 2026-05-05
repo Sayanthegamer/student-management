@@ -64,8 +64,9 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
         setSelectedStudentIds(newSelected);
     };
 
-    const handleSelectAll = () => {
-        if (selectedStudentIds.size === filteredStudents.length && filteredStudents.length > 0) {
+        const handleSelectAll = () => {
+        const isAllSelected = filteredStudents.length > 0 && filteredStudents.every(s => selectedStudentIds.has(s.id));
+        if (isAllSelected) {
             setSelectedStudentIds(new Set());
         } else {
             setSelectedStudentIds(new Set(filteredStudents.map(s => s.id)));
@@ -213,15 +214,18 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                             {/* Student List */}
                             <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl shadow-sm flex-1 flex flex-col overflow-hidden">
                                 <div className="px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex justify-between items-center">
-                                    <div className="flex items-center gap-3">
+                                                                        <div className="flex items-center gap-3">
                                         <button
                                             onClick={handleSelectAll}
                                             className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
+                                            aria-label={selectedStudentIds.size === filteredStudents.length && filteredStudents.length > 0 ? "Deselect all students" : "Select all students"}
+                                            aria-checked={selectedStudentIds.size === filteredStudents.length && filteredStudents.length > 0}
+                                            role="checkbox"
                                         >
                                             {selectedStudentIds.size === filteredStudents.length && filteredStudents.length > 0 ? (
-                                                <CheckCircle2 size={20} className="text-[var(--accent-primary)]" />
+                                                <CheckCircle2 size={20} className="text-[var(--accent-primary)]" aria-hidden="true" />
                                             ) : (
-                                                <Circle size={20} />
+                                                <Circle size={20} aria-hidden="true" />
                                             )}
                                         </button>
                                         <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -238,18 +242,27 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                         filteredStudents.map(student => {
                                             const isSelected = selectedStudentIds.has(student.id);
                                             return (
-                                                <div
+                                                                                                <div
                                                     key={student.id}
                                                     onClick={() => toggleStudentSelection(student.id)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter' || e.key === ' ') {
+                                                            e.preventDefault();
+                                                            toggleStudentSelection(student.id);
+                                                        }
+                                                    }}
+                                                    role="checkbox"
+                                                    aria-checked={isSelected}
+                                                    tabIndex={0}
                                                     className={`
-                                                        flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-all duration-200
+                                                        flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]
                                                         ${isSelected ? 'bg-[var(--accent-primary)]/5 border border-[var(--accent-primary)]/30' : 'bg-[var(--bg-main)] border border-transparent hover:border-[var(--border-subtle)] hover:bg-[var(--bg-card-hover)]'}
                                                     `}
                                                 >
                                                     <div className={`
                                                         w-5 h-5 rounded flex items-center justify-center border transition-colors
                                                         ${isSelected ? 'bg-[var(--accent-primary)] border-[var(--accent-primary)] text-white' : 'border-[var(--border-strong)] bg-transparent'}
-                                                    `}>
+                                                    `} aria-hidden="true">
                                                         {isSelected && <CheckCircle2 size={14} />}
                                                     </div>
 
