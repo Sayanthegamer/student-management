@@ -157,6 +157,12 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         const numericSmartBoardFee = Number(smartBoardFee) || 0;
         const numericComputerFee = Number(computerFee) || 0;
 
+        // Reject negative values
+        if (numericTuitionFee < 0 || numericSmartBoardFee < 0 || numericComputerFee < 0) {
+            setError('Fee components cannot be negative');
+            return;
+        }
+
         const totalFees = numericTuitionFee + numericSmartBoardFee + numericComputerFee;
 
         if (!Number.isFinite(totalFees) || totalFees <= 0) {
@@ -398,24 +404,60 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
                         {/* Right column - Amount & Total */}
                         <div className="space-y-4">
-                            {/* Amount */}
-                            <div>
-                                <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
-                                    Base Amount (₹)
-                                </label>
-                                <div className="relative">
-                                    <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-                                    <input
-                                        ref={amountRef}
-                                        type="number"
-                                        value={tuitionFee}
-                                        onChange={(e) => setTuitionFee(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
-                                        required
-                                    />
+                            {/* Fees Breakdown */}
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                        Tuition Fee (₹)
+                                    </label>
+                                    <div className="relative">
+                                        <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+                                        <input
+                                            ref={amountRef}
+                                            type="number"
+                                            value={tuitionFee}
+                                            onChange={(e) => setTuitionFee(e.target.value)}
+                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            min="0"
+                                            step="0.01"
+                                            required
+                                        />
+                                    </div>
                                 </div>
                                 
+                                <div>
+                                    <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                        Computer Fee (₹)
+                                    </label>
+                                    <div className="relative">
+                                        <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+                                        <input
+                                            type="number"
+                                            value={computerFee}
+                                            onChange={(e) => setComputerFee(e.target.value)}
+                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            min="0"
+                                            step="0.01"
+                                        />
+                                    </div>
+                                </div>
 
+                                <div>
+                                    <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                        Smartboard Fee (₹)
+                                    </label>
+                                    <div className="relative">
+                                        <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+                                        <input
+                                            type="number"
+                                            value={smartBoardFee}
+                                            onChange={(e) => setSmartBoardFee(e.target.value)}
+                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            min="0"
+                                            step="0.01"
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
 
