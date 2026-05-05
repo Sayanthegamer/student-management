@@ -296,33 +296,21 @@ export const useDataSync = () => {
         try {
             const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
 
-            const { error } = await supabase.from('students').upsert(student);
-            if (error) throw error;
-
-            // Only touch fees if explicitly requested via replaceFeeHistory
+            // Use transactional RPC when replacing fees to ensure atomicity
             if (shouldReplaceFee) {
-                const feeIdsToKeep = fees.map(f => f.id).filter(Boolean);
-                
-                // Find existing fees to safely delete orphans
-                const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').eq('student_id', student.id);
-                if (selectError) throw selectError;
-                
-                if (fees.length > 0) {
-                  // Use upsert instead of delete-then-insert to avoid race conditions
-                  const { error: fError } = await supabase.from('fees').upsert(fees);
-                  if (fError) throw fError;
-                }
+                const { error } = await supabase.rpc('sync_student_fee_batch', {
+                    p_students: [student],
+                    p_fees: fees,
+                    p_replace_fee_student_ids: [student.id]
+                });
 
-                if (existingFees) {
-                    const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
-                    if (feeIdsToDelete.length > 0) {
-                        const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
-                        if (deleteError) throw deleteError;
-                    }
-                }
-                
+                if (error) throw error;
+
                 // Clear the intent after successful sync
                 pendingFeeReplacementIdsRef.current.delete(student.id);
+            } else {
+                const { error } = await supabase.from('students').upsert(student);
+                if (error) throw error;
             }
 
         guardedSetSyncStatus('synced');
