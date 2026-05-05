@@ -285,7 +285,7 @@ function App() {
               <Route path="/students/edit/:id" element={
                 <EditStudentRoute students={students} onSave={handleSave} onCancel={handleCancel} />
               } />
-              <Route path="/payment-history" element={<PaymentHistory students={students} />} />
+              <Route path="/payment-history" element={<PaymentHistory students={students} onEditFee={editFeePayment} />} />
               <Route path="/admission" element={<AdmissionStatus students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/promotions" element={<PromotionBoard students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />

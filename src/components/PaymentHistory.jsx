@@ -43,7 +43,7 @@ const FilterSelects = ({ classes, sections, filterClass, setFilterClass, filterS
     );
 };
 
-const PaymentHistory = ({ students }) => {
+const PaymentHistory = ({ students, onEditFee }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
@@ -366,6 +366,8 @@ const PaymentHistory = ({ students }) => {
             {showHistoryModal && selectedStudent && (
                 <PaymentHistoryModal
                     student={selectedStudent}
+                    allStudents={students}
+                    onEditFee={onEditFee}
                     onClose={() => setShowHistoryModal(false)}
                 />
             )}

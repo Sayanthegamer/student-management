@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Calendar, IndianRupee, FileText } from 'lucide-react';
+import { X, Calendar, IndianRupee, FileText, Edit2 } from 'lucide-react';
+import EditFeeModal from './EditFeeModal';
 
 /**
  * Modal component to display the detailed payment history for a specific student.
  *
  * @param {Object} props - The component props.
  * @param {Object} props.student - The student object whose history is to be displayed.
+ * @param {Object[]} props.allStudents - All students in the system.
+ * @param {Function} props.onEditFee - Callback function to edit a fee.
  * @param {Function} props.onClose - Callback function to close the modal.
  * @returns {JSX.Element} The rendered payment history modal component.
  */
-const PaymentHistoryModal = ({ student, onClose }) => {
+const PaymentHistoryModal = ({ student, allStudents, onEditFee, onClose }) => {
     const history = student.feeHistory || [];
     const [isClosing, setIsClosing] = useState(false);
+    const [editingPayment, setEditingPayment] = useState(null);
     const dialogRef = useRef(null);
     const previousActiveElementRef = useRef(null);
 
@@ -32,6 +36,10 @@ const PaymentHistoryModal = ({ student, onClose }) => {
             onClose();
             setIsClosing(false);
         }, 200);
+    };
+
+    const handleEditClick = (payment) => {
+        setEditingPayment(payment);
     };
 
     // Focus trap and keyboard handling
@@ -55,7 +63,11 @@ const PaymentHistoryModal = ({ student, onClose }) => {
 
             // Handle Escape key
             if (e.key === 'Escape') {
-                handleClose();
+                if (editingPayment) {
+                    setEditingPayment(null);
+                } else {
+                    handleClose();
+                }
                 return;
             }
 
@@ -96,7 +108,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                 previousActiveElementRef.current.focus();
             }
         };
-    }, []);
+    }, [editingPayment]);
 
     return createPortal(
         <div 
@@ -143,6 +155,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                         <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Base</th>
                                         <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Fine</th>
                                         <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Total</th>
+                                        <th className="px-5 py-4 border-b border-[var(--border-color)] text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-[var(--border-color)]">
@@ -192,6 +205,15 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                             <td className="px-5 py-5 text-[var(--color-positive)] font-bold text-right text-sm">
                                                 ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                             </td>
+                                            <td className="px-5 py-5 text-center">
+                                                <button
+                                                    onClick={() => handleEditClick(payment)}
+                                                    className="p-2 hover:bg-[var(--bg-main)] text-[var(--accent-primary)] rounded-[8px] transition-colors border border-transparent hover:border-[var(--accent-primary)]/20"
+                                                    title="Edit transaction"
+                                                >
+                                                    <Edit2 size={16} />
+                                                </button>
+                                            </td>
                                         </tr>
                                     );
                                     })}
@@ -233,7 +255,7 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="text-right">
+                                            <div className="text-right flex flex-col items-end">
                                                 <p className="text-base font-bold text-[var(--color-positive)]">
                                                     ₹{(Number(payment.amount) + Number(payment.fine || 0)).toLocaleString()}
                                                 </p>
@@ -252,6 +274,13 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                         Incl. ₹{payment.fine} fine
                                                     </p>
                                                 )}
+                                                <button
+                                                    onClick={() => handleEditClick(payment)}
+                                                    className="mt-3 flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[8px] text-[var(--accent-primary)] text-xs font-bold hover:bg-[var(--accent-light)] transition-colors"
+                                                >
+                                                    <Edit2 size={12} />
+                                                    Edit
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -268,6 +297,16 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                     )}
                 </div>
             </div>
+
+            {editingPayment && (
+                <EditFeeModal
+                    payment={editingPayment}
+                    student={student}
+                    allStudents={allStudents}
+                    onSave={onEditFee}
+                    onClose={() => setEditingPayment(null)}
+                />
+            )}
         </div>,
         document.body
     );

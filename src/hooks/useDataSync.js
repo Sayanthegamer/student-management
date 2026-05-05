@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent as localUpdateStudent, deleteStudent as localDeleteStudent, addFeePayment as localAddFeePayment } from '../utils/storage';
+import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent as localUpdateStudent, deleteStudent as localDeleteStudent, addFeePayment as localAddFeePayment, editFeePayment as localEditFeePayment } from '../utils/storage';
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
 import { useAuth } from '../context/AuthContext';
 
@@ -432,6 +432,58 @@ export const useDataSync = () => {
     }
   }, [user, supabase, students, fetchFromCloud]);
 
+  const editFeePayment = useCallback(async (oldStudentId, newStudentId, updatedFee) => {
+    // 1. Local Optimistic Update
+    const updatedList = localEditFeePayment(oldStudentId, newStudentId, updatedFee);
+    guardedSetStudents(updatedList);
+    guardedSetSyncStatus('unsaved');
+
+    if (!user || !supabase) {
+      console.warn("Supabase not configured - changes saved locally only");
+      syncChannel?.postMessage('sync_required');
+      return updatedList;
+    }
+
+    // 2. Cloud Update
+    guardedSetSyncStatus('syncing');
+    try {
+        const { id, ...feeData } = updatedFee;
+        // Make sure we update the student_id in case it was moved
+        const feeToSave = { ...feeData, id, student_id: newStudentId };
+        
+        // Remove itemized_breakdown if empty object (normalize)
+        if (feeToSave.itemized_breakdown && Object.keys(feeToSave.itemized_breakdown).length === 0) {
+            feeToSave.itemized_breakdown = null;
+        }
+
+        const { error } = await supabase.from('fees').upsert([feeToSave]);
+        if (error) throw error;
+
+        guardedSetSyncStatus('synced');
+        syncChannel?.postMessage('sync_required');
+        return updatedList;
+    } catch (err) {
+        console.error("Cloud edit fee error", err);
+        guardedSetSyncStatus('error');
+        
+        // Revert local optimistic update by forcing a sync from cloud
+        fetchFromCloud();
+
+        let userMessage = "Failed to edit payment on server.";
+        if (err.message?.includes('permission')) {
+          userMessage = "You don't have permission to perform this action.";
+        } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+          userMessage = "Network error. Please check your connection.";
+        }
+
+        guardedSetSyncError({ message: userMessage, details: err });
+        scheduleTimeout(() => {
+          guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
+        }, 5000);
+        return Promise.reject(new Error(userMessage));
+    }
+  }, [user, supabase, fetchFromCloud]);
+
   const importStudents = useCallback(async (newStudents) => {
     // 1. Local Update (Full Replace)
     saveStudents(newStudents);
@@ -505,6 +557,7 @@ export const useDataSync = () => {
     updateStudent,
     deleteStudent,
     addFeePayment,
+    editFeePayment,
     importStudents,
     dismissError,
     forceSync: fetchFromCloud
