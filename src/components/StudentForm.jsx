@@ -11,7 +11,7 @@ import { PhoneCall } from 'lucide-react';
  * @param {Object} props - The component props.
  * @returns {JSX.Element} The rendered input field component.
  */
-const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange, disabled = false, readOnly = false }) => (
+const InputField = ({ label, name, type = "text", placeholder, required = false, icon: Icon, options = null, value, onChange, disabled = false, readOnly = false, min }) => (
     <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-[var(--text-secondary)] px-1 flex items-center gap-2">
             {Icon && <Icon size={14} />}
@@ -41,6 +41,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 required={required}
                 disabled={disabled}
                 readOnly={readOnly}
+                min={min}
             />
         )}
     </div>
@@ -64,7 +65,9 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         section: '',
         rollNo: '',
         guardianName: '',
-        feesAmount: '',
+        tuitionFee: '',
+        smartBoardFee: '',
+        computerFee: '',
         feesStatus: 'Pending',
         fine: '',
         admissionDate: new Date().toISOString().split('T')[0],
@@ -78,7 +81,14 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         subsidiaryChargesBreakdown: {},
     };
 
-    const [formData, setFormData] = useState({ ...defaults, ...(initialData || {}) });
+    const getInitialState = () => {
+        let data = { ...defaults, ...(initialData || {}) };
+        if (initialData && 'feesAmount' in initialData && !initialData.tuitionFee) {
+            data.tuitionFee = String(initialData.feesAmount);
+        }
+        return data;
+    };
+    const [formData, setFormData] = useState(getInitialState());
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -91,7 +101,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
-                feesAmount: fee,
+                tuitionFee: fee,
                 // Only auto-fill admission fee if there's a configured value AND student is NEW enrollment
                 ...(prev.enrollmentType === 'NEW' && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {}),
                 // Itemized charges apply to both enrollment types during onboarding/admission
@@ -116,6 +126,10 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     ? prev.subsidiaryChargesBreakdown 
                     : subsidiary
             }));
+        } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'fine'].includes(name)) {
+            const parsedValue = Number(value);
+            const clampedValue = isNaN(parsedValue) ? 0 : Math.max(0, parsedValue);
+            setFormData(prev => ({ ...prev, [name]: clampedValue }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
@@ -179,9 +193,9 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             </div>
                             
                             <InputField 
-                                label="Full Name" 
-                                name="name" 
-                                placeholder="Rahul Kumar" 
+                                label="Full Name"
+                                name="name"
+                                placeholder="Rahul Kumar"
                                 required={true} 
                                 value={formData.name}
                                 onChange={handleChange}
@@ -201,7 +215,6 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                         label="Date of Birth"
                                         value={formData.dob}
                                         onChange={(val) => handleChange({ target: { name: 'dob', value: val } })}
-                                        required
                                     />
                                 </div>
                                 <InputField
@@ -209,7 +222,6 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     name="phone"
                                     type="tel"
                                     placeholder="9876543210"
-                                    required={true}
                                     value={formData.phone}
                                     onChange={handleChange}
                                 />
@@ -217,8 +229,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <InputField 
-                                    label="Class" 
-                                    name="class" 
+                                    label="Class"
+                                    name="class"
                                     required={true} 
                                     options={[
                                         { value: '', label: 'Select' },
@@ -229,8 +241,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 />
                                 <InputField 
                                     label="Section" 
-                                    name="section" 
-                                    placeholder="A" 
+                                    name="section"
+                                    placeholder="A"
                                     required={true} 
                                     value={formData.section}
                                     onChange={handleChange}
@@ -239,9 +251,9 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
                             <InputField 
                                 label="Roll Number" 
-                                name="rollNo" 
-                                placeholder="01" 
-                                required={true} 
+                                name="rollNo"
+                                placeholder="01"
+                                required={true}
                                 value={formData.rollNo}
                                 onChange={handleChange}
                             />
@@ -268,16 +280,47 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 </div>
                             </div>
 
-                            {/* Monthly Fee Section */}
-                            <div className="grid grid-cols-2 gap-4">
+                            {/* Monthly Fees Section */}
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                                 <InputField 
-                                    label="Monthly Fee (₹)" 
-                                    name="feesAmount" 
+                                    label="Tuition Fee (₹)"
+                                    name="tuitionFee"
                                     type="number" 
                                     placeholder="500" 
-                                    value={formData.feesAmount}
+                                    value={formData.tuitionFee}
                                     onChange={handleChange}
+                                    min={0}
                                 />
+                                <InputField
+                                    label="SmartBoard (₹)"
+                                    name="smartBoardFee"
+                                    type="number"
+                                    placeholder="0"
+                                    value={formData.smartBoardFee}
+                                    onChange={handleChange}
+                                    min={0}
+                                />
+                                <InputField
+                                    label="Computer (₹)"
+                                    name="computerFee"
+                                    type="number"
+                                    placeholder="0"
+                                    value={formData.computerFee}
+                                    onChange={handleChange}
+                                    min={0}
+                                />
+
+                                <div className="col-span-2 sm:col-span-3 flex justify-end">
+                                    <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[8px] px-4 py-2 flex items-center gap-3 shadow-sm">
+                                        <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Total Monthly:</span>
+                                        <span className="text-sm font-bold text-[var(--text-primary)]">
+                                            ₹{(Number(formData.tuitionFee) || 0) + (Number(formData.smartBoardFee) || 0) + (Number(formData.computerFee) || 0)}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
                                 <InputField 
                                     label="Late Fine (₹)" 
                                     name="fine" 
@@ -285,8 +328,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     placeholder="0" 
                                     value={formData.fine}
                                     onChange={handleChange}
+                                    min={0}
                                 />
-                            </div>
 
                             <InputField 
                                 label="Fee Status" 
@@ -305,7 +348,6 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     label="Admission Date"
                                     value={formData.admissionDate}
                                     onChange={(val) => handleChange({ target: { name: 'admissionDate', value: val } })}
-                                    required
                                 />
                             </div>
 
@@ -320,6 +362,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 value={formData.admissionStatus}
                                 onChange={handleChange}
                             />
+                            </div>
                         </div>
                     </div>
 

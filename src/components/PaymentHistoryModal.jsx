@@ -178,7 +178,8 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                 {payment.itemized_breakdown && Object.keys(payment.itemized_breakdown).length > 0 && (
                                                     <div className="text-[10px] text-[var(--text-muted)] font-sans font-normal mt-1 flex flex-col items-end gap-0.5 opacity-80">
                                                         {Number(payment.itemized_breakdown.tuition) > 0 && <span>Tuition: ₹{payment.itemized_breakdown.tuition}</span>}
-                                                        {Number(payment.itemized_breakdown.transport) > 0 && <span>Transport: ₹{payment.itemized_breakdown.transport}</span>}
+                                                        {Number(payment.itemized_breakdown.smartBoard) > 0 && <span>SmartBoard: ₹{payment.itemized_breakdown.smartBoard}</span>}
+                                                        {Number(payment.itemized_breakdown.computer) > 0 && <span>Computer: ₹{payment.itemized_breakdown.computer}</span>}
                                                         {Number(payment.itemized_breakdown.admission) > 0 && <span>Admission: ₹{payment.itemized_breakdown.admission}</span>}
                                                         {payment.itemized_breakdown.annual && Object.keys(payment.itemized_breakdown.annual).length > 0 && <span>Annual: ₹{Object.values(payment.itemized_breakdown.annual).reduce((a,b)=>a+Number(b),0)}</span>}
                                                         {payment.itemized_breakdown.subsidiary && Object.keys(payment.itemized_breakdown.subsidiary).length > 0 && <span>Subsidiary: ₹{Object.values(payment.itemized_breakdown.subsidiary).reduce((a,b)=>a+Number(b),0)}</span>}
@@ -239,7 +240,8 @@ const PaymentHistoryModal = ({ student, onClose }) => {
                                                 {payment.itemized_breakdown && Object.keys(payment.itemized_breakdown).length > 0 && (
                                                     <div className="text-[10px] text-[var(--text-muted)] font-sans font-normal mt-1 flex flex-col items-end gap-0.5 opacity-80">
                                                         {Number(payment.itemized_breakdown.tuition) > 0 && <span>Tuition: ₹{payment.itemized_breakdown.tuition}</span>}
-                                                        {Number(payment.itemized_breakdown.transport) > 0 && <span>Transport: ₹{payment.itemized_breakdown.transport}</span>}
+                                                        {Number(payment.itemized_breakdown.smartBoard) > 0 && <span>SmartBoard: ₹{payment.itemized_breakdown.smartBoard}</span>}
+                                                        {Number(payment.itemized_breakdown.computer) > 0 && <span>Computer: ₹{payment.itemized_breakdown.computer}</span>}
                                                         {Number(payment.itemized_breakdown.admission) > 0 && <span>Admission: ₹{payment.itemized_breakdown.admission}</span>}
                                                         {payment.itemized_breakdown.annual && Object.keys(payment.itemized_breakdown.annual).length > 0 && <span>Annual: ₹{Object.values(payment.itemized_breakdown.annual).reduce((a,b)=>a+Number(b),0)}</span>}
                                                         {payment.itemized_breakdown.subsidiary && Object.keys(payment.itemized_breakdown.subsidiary).length > 0 && <span>Subsidiary: ₹{Object.values(payment.itemized_breakdown.subsidiary).reduce((a,b)=>a+Number(b),0)}</span>}

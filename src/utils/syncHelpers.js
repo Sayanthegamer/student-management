@@ -132,6 +132,9 @@ export const normalizeStudent = (student) => {
     // Admission fee & concession
     admission_fee: student.admissionFee != null ? Number(student.admissionFee) : undefined,
     concession_amount: student.concessionAmount != null ? Number(student.concessionAmount) : undefined,
+    tuition_fee: student.tuitionFee != null ? Number(student.tuitionFee) : undefined,
+    smart_board_fee: student.smartBoardFee != null ? Number(student.smartBoardFee) : undefined,
+    computer_fee: student.computerFee != null ? Number(student.computerFee) : undefined,
   };
 
   // Only include tc_details if it's present in the student object
@@ -226,6 +229,9 @@ export const denormalizeStudents = (studentsData, feesData) => {
 
       // Admission fee & concession
       admissionFee: s.admission_fee || 0,
+      tuitionFee: s.tuition_fee || feesAmount, // Default to computed if not explicitly set
+      smartBoardFee: s.smart_board_fee || '',
+      computerFee: s.computer_fee || '',
       concessionAmount: s.concession_amount || 0,
 
       // Calculated fields - recalculated from data, not stored (Issue 2 fix)

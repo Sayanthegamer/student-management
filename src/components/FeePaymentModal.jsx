@@ -36,8 +36,9 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
     const [selectedMonth, setSelectedMonth] = useState(getLocalMonthString);
     const [isMultiMonth, setIsMultiMonth] = useState(false);
     const [endMonth, setEndMonth] = useState(getLocalMonthString);
-    const [amount, setAmount] = useState(student.feesAmount || '');
-    const [transportFee, setTransportFee] = useState('');
+    const [tuitionFee, setTuitionFee] = useState(student.tuitionFee || student.feesAmount || '');
+    const [smartBoardFee, setSmartBoardFee] = useState(student.smartBoardFee || '');
+    const [computerFee, setComputerFee] = useState(student.computerFee || '');
     const [fine, setFine] = useState(0);
     const [remarks, setRemarks] = useState('');
     const [error, setError] = useState('');
@@ -122,12 +123,13 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         setError('');
         setFine(calculatedFine);
 
-        const baseAmount = Number(amount) || 0;
-        const transFee = Number(transportFee) || 0;
-        const total = ((baseAmount + transFee) * monthsCount) + calculatedFine;
+        const tFee = Number(tuitionFee) || 0;
+        const sbFee = Number(smartBoardFee) || 0;
+        const cFee = Number(computerFee) || 0;
+        const total = ((tFee + sbFee + cFee) * monthsCount) + calculatedFine;
         setTotalPayable(total);
 
-    }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, amount, transportFee]);
+    }, [paymentDate, selectedMonth, endMonth, isMultiMonth, student.admissionDate, tuitionFee, smartBoardFee, computerFee]);
 
     // Escape key handler - inline to avoid dependency issues
     useEffect(() => {
@@ -151,21 +153,18 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         if (isSubmitting) return;
         
         // Validate amount is numeric and greater than 0
-        const numericAmount = Number(amount);
-        if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-            setError('Please enter a valid amount greater than 0');
+        const numericTuitionFee = Number(tuitionFee) || 0;
+        const numericSmartBoardFee = Number(smartBoardFee) || 0;
+        const numericComputerFee = Number(computerFee) || 0;
+
+        const totalFees = numericTuitionFee + numericSmartBoardFee + numericComputerFee;
+
+        if (!Number.isFinite(totalFees) || totalFees <= 0) {
+            setError('Please enter a valid total fee amount greater than 0');
             return;
         }
 
-        const numericTransportFee = Number(transportFee) || 0;
-        if (!Number.isFinite(numericTransportFee)) {
-            setError('Transport fee must be a valid finite number');
-            return;
-        }
-        if (numericTransportFee < 0) {
-            setError('Transport fee cannot be negative');
-            return;
-        }
+
         
         setIsSubmitting(true);
         setShowSuccess(true);
@@ -182,12 +181,13 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 payments.push({
                     date: paymentDate,
                     month: monthStr,
-                    amount: numericAmount + numericTransportFee,
+                    amount: numericTuitionFee + numericSmartBoardFee + numericComputerFee,
                     fine: monthFine,
                     remarks: remarks,
                     itemized_breakdown: {
-                        tuition: numericAmount,
-                        transport: numericTransportFee
+                        tuition: numericTuitionFee,
+                        smartBoard: numericSmartBoardFee,
+                        computer: numericComputerFee
                     }
                 });
 
@@ -212,17 +212,18 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             onSave(student.id, {
                 date: paymentDate,
                 month: selectedMonth,
-                amount: numericAmount + numericTransportFee,
+                amount: numericTuitionFee + numericSmartBoardFee + numericComputerFee,
                 fine: Number(fine),
                 remarks: remarks,
                 itemized_breakdown: {
-                    tuition: numericAmount,
-                    transport: numericTransportFee
+                    tuition: numericTuitionFee,
+                    smartBoard: numericSmartBoardFee,
+                    computer: numericComputerFee
                 }
             }).then(() => {
                 setShowSuccess(false);
                 doClose();
-                logActivity('fee', `Fee ₹${amount} from ${student.name} (${selectedMonth})`);
+                logActivity('fee', `Fee ₹${numericTuitionFee + numericSmartBoardFee + numericComputerFee} from ${student.name} (${selectedMonth})`);
                 if (mountedRef.current) {
                     setIsSubmitting(false);
                 }
@@ -407,8 +408,8 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                     <input
                                         ref={amountRef}
                                         type="number"
-                                        value={amount}
-                                        onChange={(e) => setAmount(e.target.value)}
+                                        value={tuitionFee}
+                                        onChange={(e) => setTuitionFee(e.target.value)}
                                         className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
                                         required
                                     />
@@ -417,26 +418,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
 
                             </div>
 
-                            {/* Transport Fee */}
-                            <div>
-                                <label className="block text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
-                                    Transport Fee (₹)
-                                </label>
-                                <div className="relative">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold">₹</div>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        value={transportFee}
-                                        onChange={(e) => {
-                                            const val = e.target.value;
-                                            setTransportFee(val === '' ? '' : Math.max(0, Number(val)));
-                                        }}
-                                        className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
-                                        placeholder="0"
-                                    />
-                                </div>
-                            </div>
+
 
                             {/* Fine */}
                             <div>
