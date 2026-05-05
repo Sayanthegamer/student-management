@@ -106,7 +106,13 @@ export const useDataSync = () => {
           guardedSetStudents(merged);
           guardedSetSyncStatus('synced');
         } catch (err) {
-          if (err.name === 'AbortError') return;
+          // Supabase client wraps native AbortErrors into its own error objects,
+          // so err.name won't be 'AbortError'. Check message and signal state too.
+          const isAbort = err.name === 'AbortError'
+            || err.message?.includes('AbortError')
+            || err.message?.includes('aborted')
+            || fetchAbortControllerRef.current?.signal?.aborted;
+          if (isAbort) return;
           console.error("Sync error:", err);
           guardedSetSyncStatus('error');
           guardedSetSyncError({
