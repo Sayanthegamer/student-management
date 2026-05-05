@@ -391,7 +391,7 @@ export const useDataSync = () => {
             const feeIdsToDelete = existingFees
                 .filter(existingFee => {
                     const incomingFeeIds = incomingFeesByStudent[existingFee.student_id];
-                    return incomingFeeIds && !incomingFeeIds.has(existingFee.id);
+                    return !incomingFeeIds || !incomingFeeIds.has(existingFee.id);
                 })
                 .map(f => f.id);
 
@@ -441,9 +441,7 @@ export const useDataSync = () => {
     // 2. Cloud Update
     guardedSetSyncStatus('syncing');
     try {
-        // Issue #4: Explicitly cascade delete fees to prevent orphans
-        const { error: feeError } = await supabase.from('fees').delete().eq('student_id', id);
-        if (feeError) throw feeError;
+        // Issue #4: Rely on database ON DELETE CASCADE for fees
 
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
@@ -582,23 +580,35 @@ export const useDataSync = () => {
           }
         });
 
-        // Issue #10: Delete old records before import to prevent ghost records
-        const { error: delFeesError } = await supabase.from('fees').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        if (delFeesError) throw delFeesError;
-
-        const { error: delStudentsError } = await supabase.from('students').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        if (delStudentsError) throw delStudentsError;
-
-        // Batch Insert Students
+        // Batch Upsert Students FIRST
         // Using upsert to handle potential ID collisions or updates if IDs are preserved
         const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
         if (sError) throw sError;
 
-        // Batch Insert Fees
+        // Batch Upsert Fees FIRST
         if (allFeesDB.length > 0) {
              const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
              if (fError) throw fError;
         }
+
+        // Issue #10: Delete old records AFTER successful upsert to prevent ghost records and avoid total data wipe on partial failure
+        const studentIdsToKeep = allStudentsDB.map(s => s.id);
+        const feeIdsToKeep = allFeesDB.map(f => f.id);
+
+        let feesQuery = supabase.from('fees').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        if (feeIdsToKeep.length > 0) {
+            // Because Supabase 'not.in' expects a comma-separated list formatted string like '(id1,id2)'
+            feesQuery = feesQuery.not('id', 'in', `(${feeIdsToKeep.join(',')})`);
+        }
+        const { error: delFeesError } = await feesQuery;
+        if (delFeesError) throw delFeesError;
+
+        let studentsQuery = supabase.from('students').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        if (studentIdsToKeep.length > 0) {
+            studentsQuery = studentsQuery.not('id', 'in', `(${studentIdsToKeep.join(',')})`);
+        }
+        const { error: delStudentsError } = await studentsQuery;
+        if (delStudentsError) throw delStudentsError;
 
         guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
