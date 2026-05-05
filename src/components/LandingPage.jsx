@@ -117,7 +117,7 @@ const LandingPage = () => {
                   <BookOpen className="text-[var(--accent-primary)] w-7 h-7" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3 tracking-tight">
-                  One-Click Exits &amp; Promotions
+                  One-Click Certificates
                 </h3>
                 <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
                   Manage student exits and promotions with a

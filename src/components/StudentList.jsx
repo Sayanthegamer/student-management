@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { Edit2, Trash2, Search, Plus, IndianRupee, Filter, ChevronDown, ChevronUp, UserPlus, X, Zap, CheckSquare, Square, LogOut } from 'lucide-react';
+import { Edit2, Trash2, Search, Plus, IndianRupee, Filter, ChevronDown, ChevronUp, UserPlus, X, Zap, CheckSquare, Square, MinusSquare, LogOut } from 'lucide-react';
 import FeePaymentModal from './FeePaymentModal';
 import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
@@ -39,18 +39,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
     const [showFilters, setShowFilters] = useState(false);
     const searchRef = useRef(null);
     const [selectedStudents, setSelectedStudents] = useState(new Set());
-
-    const toggleStudentSelection = useCallback((studentId) => {
-        setSelectedStudents(prev => {
-            const next = new Set(prev);
-            if (next.has(studentId)) {
-                next.delete(studentId);
-            } else {
-                next.add(studentId);
-            }
-            return next;
-        });
-    }, []);
+    const [bulkPending, setBulkPending] = useState(false);
 
     // Keyboard shortcut handler
     useEffect(() => {
@@ -82,6 +71,82 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [showFilters, showPaymentModal]);
+
+
+    // Bulk Action Handlers
+    const toggleStudentSelection = (id) => {
+        const newSelected = new Set(selectedStudents);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedStudents(newSelected);
+    };
+
+    const handleSelectAll = (isAllSelected) => {
+        if (isAllSelected) {
+            setSelectedStudents(new Set());
+        } else {
+            const newSelected = new Set(selectedStudents);
+            filteredStudents.forEach(s => newSelected.add(s.id));
+            setSelectedStudents(newSelected);
+        }
+    };
+
+    const handleBulkExit = async () => {
+        if (!selectedStudents.size) return;
+        if (!window.confirm(`Are you sure you want to mark ${selectedStudents.size} student(s) as Exited?`)) return;
+
+        setBulkPending(true);
+        try {
+            if (onBulkUpdateStudents) {
+                const updates = Array.from(selectedStudents).map(id => {
+                    const student = students.find(s => s.id === id);
+                    if (!student) return null;
+                    return { ...student, admissionStatus: 'Exited' };
+                }).filter(Boolean);
+
+                await onBulkUpdateStudents(updates);
+                setSelectedStudents(new Set());
+            }
+        } catch (error) {
+            console.error('Error applying bulk exit:', error);
+            alert('Failed to apply bulk exit. Please try again.');
+        } finally {
+            setBulkPending(false);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        if (!selectedStudents.size) return;
+        if (!window.confirm(`WARNING: Are you sure you want to PERMANENTLY DELETE ${selectedStudents.size} student(s)? This action cannot be undone.`)) return;
+
+        setBulkPending(true);
+        try {
+            await Promise.allSettled(Array.from(selectedStudents).map(id => onDelete(id)));
+            setSelectedStudents(new Set());
+        } catch (error) {
+            console.error('Error applying bulk delete:', error);
+            alert('Failed to apply bulk delete. Please try again.');
+        } finally {
+            setBulkPending(false);
+        }
+    };
+
+    // Prune stale selections when students change
+    useEffect(() => {
+        setSelectedStudents(prevSelected => {
+            const currentIds = new Set(students.map(s => s.id));
+            const newSelected = new Set();
+            for (const id of prevSelected) {
+                if (currentIds.has(id)) {
+                    newSelected.add(id);
+                }
+            }
+            return newSelected.size === prevSelected.size ? prevSelected : newSelected;
+        });
+    }, [students]);
 
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
     const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
@@ -122,7 +187,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
             if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
             return 0;
         });
-    }, [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder, currentMonth]);
+    }, [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
@@ -184,78 +249,6 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                     {filteredStudents.length} / {students.length}
                 </span>
             </div>
-
-            {/* Bulk action bar */}
-            {selectedStudents.size > 0 && (
-                <div className="mb-3 px-4 py-2.5 bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 rounded-xl flex items-center justify-between gap-3 flex-wrap">
-                    <span className="text-sm font-semibold text-[var(--accent-primary)]">
-                        {selectedStudents.size} student{selectedStudents.size !== 1 ? 's' : ''} selected
-                    </span>
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => {
-                                if (!window.confirm(`Mark ${selectedStudents.size} student(s) as Exited?`)) return;
-                                const today = new Date().toISOString().slice(0, 10);
-                                const updates = Array.from(selectedStudents).map(id => {
-                                    const student = students.find(s => s.id === id);
-                                    if (!student) return null;
-                                    return { ...student, admissionStatus: 'Exited', lastStatusChangeDate: today, lastStatusChangedBy: 'system' };
-                                }).filter(Boolean);
-                                onBulkUpdateStudents(updates);
-                                setSelectedStudents(new Set());
-                            }}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-lg hover:bg-purple-500/20 transition-colors"
-                            aria-label="Mark selected students as exited"
-                        >
-                            <LogOut size={13} />
-                            Mark as Exited
-                        </button>
-                        <button
-                            onClick={async () => {
-                                if (!window.confirm(`Delete ${selectedStudents.size} student(s)? This cannot be undone.`)) return;
-                                const idsToDelete = Array.from(selectedStudents);
-                                const results = await Promise.allSettled(idsToDelete.map(id => onDelete(id)));
-
-                                const failedIds = [];
-                                const successfulIds = [];
-                                results.forEach((result, index) => {
-                                    const id = idsToDelete[index];
-                                    if (result.status === 'rejected') {
-                                        failedIds.push(id);
-                                    } else {
-                                        successfulIds.push(id);
-                                    }
-                                });
-
-                                if (failedIds.length > 0) {
-                                    const failedNames = failedIds
-                                        .map(id => students.find(s => s.id === id)?.name || id.slice(0, 6))
-                                        .join(', ');
-                                    alert(`Failed to delete ${failedIds.length} student(s): ${failedNames}`);
-                                }
-
-                                setSelectedStudents(prev => {
-                                    const next = new Set(prev);
-                                    successfulIds.forEach(id => next.delete(id));
-                                    return next;
-                                });
-                            }}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg hover:bg-rose-500/20 transition-colors"
-                            aria-label="Delete selected students"
-                        >
-                            <Trash2 size={13} />
-                            Delete
-                        </button>
-                        <button
-                            onClick={() => setSelectedStudents(new Set())}
-                            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-lg transition-colors"
-                            aria-label="Clear selection"
-                        >
-                            <X size={13} />
-                        </button>
-                    </div>
-                </div>
-            )}
 
             {/* Main card - high density */}
             <div className="card-base spotlight-card overflow-hidden kinetic-enter flex flex-col mb-8">
@@ -416,31 +409,6 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-[var(--bg-main)] border-b border-[var(--border-subtle)]">
-                                <th className="px-3 py-3 w-8">
-                                    <button
-                                        onClick={() => {
-                                            const allSelected = currentStudents.length > 0 && currentStudents.every(s => selectedStudents.has(s.id));
-                                            setSelectedStudents(prev => {
-                                                const next = new Set(prev);
-                                                if (allSelected) {
-                                                    currentStudents.forEach(s => next.delete(s.id));
-                                                } else {
-                                                    currentStudents.forEach(s => next.add(s.id));
-                                                }
-                                                return next;
-                                            });
-                                        }}
-                                        role="checkbox"
-                                        aria-checked={currentStudents.length > 0 && currentStudents.every(s => selectedStudents.has(s.id))}
-                                        aria-label={currentStudents.length > 0 && currentStudents.every(s => selectedStudents.has(s.id)) ? "Deselect all on this page" : "Select all on this page"}
-                                        className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
-                                    >
-                                        {currentStudents.length > 0 && currentStudents.every(s => selectedStudents.has(s.id))
-                                            ? <CheckSquare size={14} className="text-[var(--accent-primary)]" />
-                                            : <Square size={14} />
-                                        }
-                                    </button>
-                                </th>
                                 <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">Student</th>
                                 <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">Details</th>
                                 <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider text-center">Status</th>
@@ -453,24 +421,9 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                                 return (
                                     <tr
                                         key={student.id}
-                                        className={`hover:bg-[var(--bg-card-hover)] group transition-colors ${selectedStudents.has(student.id) ? 'bg-[var(--accent-primary)]/5' : ''}`}
+                                        className="hover:bg-[var(--bg-card-hover)] group transition-colors"
                                         style={{ animation: `kinetic-enter 0.3s var(--kinetic-curve) both`, animationDelay: `${idx * 25}ms` }}
                                     >
-                                        {/* Checkbox */}
-                                        <td className="px-3 py-3">
-                                            <button
-                                                onClick={() => toggleStudentSelection(student.id)}
-                                                role="checkbox"
-                                                aria-checked={selectedStudents.has(student.id)}
-                                                aria-label={selectedStudents.has(student.id) ? `Deselect ${student.name}` : `Select ${student.name}`}
-                                                className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
-                                            >
-                                                {selectedStudents.has(student.id)
-                                                    ? <CheckSquare size={14} className="text-[var(--accent-primary)]" />
-                                                    : <Square size={14} />
-                                                }
-                                            </button>
-                                        </td>
                                         {/* Student Info */}
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
@@ -549,7 +502,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                             
                             {currentStudents.length === 0 && (
                                 <tr>
-                                    <td colSpan="5" className="py-12 text-center bg-[var(--bg-main)]">
+                                    <td colSpan="4" className="py-12 text-center bg-[var(--bg-main)]">
                                         <div className="flex flex-col items-center gap-3">
                                             <Zap size={24} className="text-[var(--text-muted)]" />
                                             <p className="text-[var(--text-primary)] font-medium text-sm">No results found</p>
