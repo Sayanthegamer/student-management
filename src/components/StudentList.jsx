@@ -211,10 +211,34 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                             Mark as Exited
                         </button>
                         <button
-                            onClick={() => {
+                            onClick={async () => {
                                 if (!window.confirm(`Delete ${selectedStudents.size} student(s)? This cannot be undone.`)) return;
-                                Array.from(selectedStudents).forEach(id => onDelete(id));
-                                setSelectedStudents(new Set());
+                                const idsToDelete = Array.from(selectedStudents);
+                                const results = await Promise.allSettled(idsToDelete.map(id => onDelete(id)));
+
+                                const failedIds = [];
+                                const successfulIds = [];
+                                results.forEach((result, index) => {
+                                    const id = idsToDelete[index];
+                                    if (result.status === 'rejected') {
+                                        failedIds.push(id);
+                                    } else {
+                                        successfulIds.push(id);
+                                    }
+                                });
+
+                                if (failedIds.length > 0) {
+                                    const failedNames = failedIds
+                                        .map(id => students.find(s => s.id === id)?.name || id.slice(0, 6))
+                                        .join(', ');
+                                    alert(`Failed to delete ${failedIds.length} student(s): ${failedNames}`);
+                                }
+
+                                setSelectedStudents(prev => {
+                                    const next = new Set(prev);
+                                    successfulIds.forEach(id => next.delete(id));
+                                    return next;
+                                });
                             }}
                             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg hover:bg-rose-500/20 transition-colors"
                             aria-label="Delete selected students"
