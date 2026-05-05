@@ -353,27 +353,48 @@ export const useDataSync = () => {
     // 2. Cloud Update
     guardedSetSyncStatus('syncing');
     try {
+        // First, get merged student objects from localBulkUpdateStudents result
+        // (which preserves existing feeHistory for partial patches)
         const allStudentsDB = [];
         const allFeesDB = [];
 
-        studentsData.forEach(sd => {
-            const { student, fees } = normalizeStudent(sd);
-            allStudentsDB.push(student);
-            if (fees && fees.length > 0) allFeesDB.push(...fees);
+        // Build allStudentsDB and allFeesDB from the merged student objects
+        updatedList.forEach(mergedStudent => {
+            // Only process students that were part of the update
+            if (studentsData.some(sd => sd.id === mergedStudent.id)) {
+                const { student, fees } = normalizeStudent(mergedStudent);
+                allStudentsDB.push(student);
+                if (fees && fees.length > 0) allFeesDB.push(...fees);
+            }
         });
 
         // Upsert students
         const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
         if (sError) throw sError;
 
-        // Issue: Mirror updateStudent's reconciliation for fees
+        // Mirror updateStudent's reconciliation for fees using per-student comparisons
         const studentIds = allStudentsDB.map(s => s.id);
-        const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').in('student_id', studentIds);
+        const { data: existingFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', studentIds);
         if (selectError) throw selectError;
 
         if (existingFees) {
-            const incomingFeeIds = new Set(allFeesDB.map(f => f.id).filter(Boolean));
-            const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !incomingFeeIds.has(id));
+            // Group incoming fees by student_id
+            const incomingFeesByStudent = {};
+            allFeesDB.forEach(fee => {
+                if (!incomingFeesByStudent[fee.student_id]) {
+                    incomingFeesByStudent[fee.student_id] = new Set();
+                }
+                if (fee.id) incomingFeesByStudent[fee.student_id].add(fee.id);
+            });
+
+            // Compute feeIdsToDelete using per-student comparisons
+            const feeIdsToDelete = existingFees
+                .filter(existingFee => {
+                    const incomingFeeIds = incomingFeesByStudent[existingFee.student_id];
+                    return incomingFeeIds && !incomingFeeIds.has(existingFee.id);
+                })
+                .map(f => f.id);
+
             if (feeIdsToDelete.length > 0) {
                 const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
                 if (deleteError) throw deleteError;
