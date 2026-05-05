@@ -40,6 +40,18 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
     const searchRef = useRef(null);
     const [selectedStudents, setSelectedStudents] = useState(new Set());
 
+    const toggleStudentSelection = useCallback((studentId) => {
+        setSelectedStudents(prev => {
+            const next = new Set(prev);
+            if (next.has(studentId)) {
+                next.delete(studentId);
+            } else {
+                next.add(studentId);
+            }
+            return next;
+        });
+    }, []);
+
     // Keyboard shortcut handler
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -172,6 +184,54 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                     {filteredStudents.length} / {students.length}
                 </span>
             </div>
+
+            {/* Bulk action bar */}
+            {selectedStudents.size > 0 && (
+                <div className="mb-3 px-4 py-2.5 bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 rounded-xl flex items-center justify-between gap-3 flex-wrap">
+                    <span className="text-sm font-semibold text-[var(--accent-primary)]">
+                        {selectedStudents.size} student{selectedStudents.size !== 1 ? 's' : ''} selected
+                    </span>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => {
+                                if (!window.confirm(`Mark ${selectedStudents.size} student(s) as Exited?`)) return;
+                                const today = new Date().toISOString().slice(0, 10);
+                                const updates = Array.from(selectedStudents).map(id => {
+                                    const student = students.find(s => s.id === id);
+                                    if (!student) return null;
+                                    return { ...student, admissionStatus: 'Exited', lastStatusChangeDate: today, lastStatusChangedBy: 'system' };
+                                }).filter(Boolean);
+                                onBulkUpdateStudents(updates);
+                                setSelectedStudents(new Set());
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-lg hover:bg-purple-500/20 transition-colors"
+                            aria-label="Mark selected students as exited"
+                        >
+                            <LogOut size={13} />
+                            Mark as Exited
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (!window.confirm(`Delete ${selectedStudents.size} student(s)? This cannot be undone.`)) return;
+                                Array.from(selectedStudents).forEach(id => onDelete(id));
+                                setSelectedStudents(new Set());
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg hover:bg-rose-500/20 transition-colors"
+                            aria-label="Delete selected students"
+                        >
+                            <Trash2 size={13} />
+                            Delete
+                        </button>
+                        <button
+                            onClick={() => setSelectedStudents(new Set())}
+                            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-lg transition-colors"
+                            aria-label="Clear selection"
+                        >
+                            <X size={13} />
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Main card - high density */}
             <div className="card-base spotlight-card overflow-hidden kinetic-enter flex flex-col mb-8">
@@ -332,6 +392,31 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-[var(--bg-main)] border-b border-[var(--border-subtle)]">
+                                <th className="px-3 py-3 w-8">
+                                    <button
+                                        onClick={() => {
+                                            const allSelected = currentStudents.length > 0 && currentStudents.every(s => selectedStudents.has(s.id));
+                                            setSelectedStudents(prev => {
+                                                const next = new Set(prev);
+                                                if (allSelected) {
+                                                    currentStudents.forEach(s => next.delete(s.id));
+                                                } else {
+                                                    currentStudents.forEach(s => next.add(s.id));
+                                                }
+                                                return next;
+                                            });
+                                        }}
+                                        role="checkbox"
+                                        aria-checked={currentStudents.length > 0 && currentStudents.every(s => selectedStudents.has(s.id))}
+                                        aria-label={currentStudents.length > 0 && currentStudents.every(s => selectedStudents.has(s.id)) ? "Deselect all on this page" : "Select all on this page"}
+                                        className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
+                                    >
+                                        {currentStudents.length > 0 && currentStudents.every(s => selectedStudents.has(s.id))
+                                            ? <CheckSquare size={14} className="text-[var(--accent-primary)]" />
+                                            : <Square size={14} />
+                                        }
+                                    </button>
+                                </th>
                                 <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">Student</th>
                                 <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">Details</th>
                                 <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider text-center">Status</th>
@@ -342,11 +427,26 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                             {currentStudents.map((student, idx) => {
                                 const status = getFeeStatusForMonth(student, filterMonth, currentMonth);
                                 return (
-                                    <tr 
-                                        key={student.id} 
-                                        className="hover:bg-[var(--bg-card-hover)] group transition-colors"
+                                    <tr
+                                        key={student.id}
+                                        className={`hover:bg-[var(--bg-card-hover)] group transition-colors ${selectedStudents.has(student.id) ? 'bg-[var(--accent-primary)]/5' : ''}`}
                                         style={{ animation: `kinetic-enter 0.3s var(--kinetic-curve) both`, animationDelay: `${idx * 25}ms` }}
                                     >
+                                        {/* Checkbox */}
+                                        <td className="px-3 py-3">
+                                            <button
+                                                onClick={() => toggleStudentSelection(student.id)}
+                                                role="checkbox"
+                                                aria-checked={selectedStudents.has(student.id)}
+                                                aria-label={selectedStudents.has(student.id) ? `Deselect ${student.name}` : `Select ${student.name}`}
+                                                className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
+                                            >
+                                                {selectedStudents.has(student.id)
+                                                    ? <CheckSquare size={14} className="text-[var(--accent-primary)]" />
+                                                    : <Square size={14} />
+                                                }
+                                            </button>
+                                        </td>
                                         {/* Student Info */}
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
@@ -425,7 +525,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                             
                             {currentStudents.length === 0 && (
                                 <tr>
-                                    <td colSpan="4" className="py-12 text-center bg-[var(--bg-main)]">
+                                    <td colSpan="5" className="py-12 text-center bg-[var(--bg-main)]">
                                         <div className="flex flex-col items-center gap-3">
                                             <Zap size={24} className="text-[var(--text-muted)]" />
                                             <p className="text-[var(--text-primary)] font-medium text-sm">No results found</p>
