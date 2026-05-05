@@ -147,7 +147,7 @@ export const addFeePayment = (studentId, paymentDetails) => {
       const affectedMonth = firstMonthlyPayment ? firstMonthlyPayment.month : undefined;
 
       const newFeesStatus = affectedMonth
-        ? calculateFeesStatus({ feeHistory: updatedHistory }, currentMonth, affectedMonth)
+        ? calculateFeesStatus({ feeHistory: updatedHistory }, affectedMonth, currentMonth)
         : student.feesStatus; // Preserve prior status if no monthly payment was added
 
       return {
@@ -208,6 +208,11 @@ export const logActivity = (type, description) => {
     return updatedActivities;
   } catch (error) {
     console.error("Error logging activity", error);
+    if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+      if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function' && typeof CustomEvent === 'function') {
+        window.dispatchEvent(new CustomEvent('storage_quota_exceeded', { detail: error }));
+      }
+    }
     return [];
   }
 };
