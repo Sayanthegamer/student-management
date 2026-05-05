@@ -298,10 +298,11 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div>
-                                        <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+                                        <label htmlFor="amount" className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                                             Amount (₹) *
                                         </label>
                                         <input
+                                            id="amount"
                                             type="number"
                                             value={amount}
                                             onChange={(e) => setAmount(e.target.value)}
@@ -313,10 +314,11 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+                                        <label htmlFor="date" className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                                             Date *
                                         </label>
                                         <input
+                                            id="date"
                                             type="date"
                                             value={date}
                                             onChange={(e) => setDate(e.target.value)}
@@ -326,10 +328,11 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+                                        <label htmlFor="remarks" className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                                             Remarks
                                         </label>
                                         <textarea
+                                            id="remarks"
                                             value={remarks}
                                             onChange={(e) => setRemarks(e.target.value)}
                                             placeholder="Optional remarks"
