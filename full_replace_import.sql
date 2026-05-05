@@ -1,3 +1,5 @@
+-- Function runs as SECURITY DEFINER to allow upserting/deleting records,
+-- bypassing RLS, but is restricted to specific authorized roles via the guard below.
 CREATE OR REPLACE FUNCTION full_replace_import(students jsonb, fees jsonb)
 RETURNS void
 LANGUAGE plpgsql
@@ -10,6 +12,11 @@ DECLARE
     kept_student_ids uuid[] := ARRAY[]::uuid[];
     kept_fee_ids uuid[] := ARRAY[]::uuid[];
 BEGIN
+    -- Authorization guard: only allow execution by specific roles (e.g., service_role or postgres)
+    IF NOT pg_has_role(session_user, 'service_role', 'USAGE') AND session_user != 'postgres' THEN
+        RAISE EXCEPTION 'Unauthorized: must have service_role or be postgres superuser';
+    END IF;
+
     -- Upsert students
     FOR student_record IN SELECT * FROM jsonb_to_recordset(students) AS x(
         id uuid,
@@ -113,3 +120,7 @@ BEGIN
     AND NOT (id = ANY(kept_student_ids));
 END;
 $$;
+
+-- Lock down execution permission
+REVOKE EXECUTE ON FUNCTION full_replace_import(jsonb, jsonb) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION full_replace_import(jsonb, jsonb) TO service_role;
