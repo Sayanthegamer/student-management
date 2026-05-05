@@ -132,7 +132,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                     studentsToUpdate.push({
                         ...student,
                         class: nextClass,
-                        feesAmount: CLASS_FEES[nextClass] || student.feesAmount,
+                        tuitionFee: CLASS_FEES[nextClass] || student.tuitionFee,
                         feeHistory: newFeeHistory,
                         lastStatusChangeDate: dateStr,
                         lastStatusChangedBy: user?.email || user?.id || 'system'

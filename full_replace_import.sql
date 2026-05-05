@@ -37,14 +37,18 @@ BEGIN
         admission_fee numeric,
         concession_amount numeric,
         dob date,
-        enrollment_type text
+        enrollment_type text,
+        tuition_fee numeric,
+        smart_board_fee numeric,
+        computer_fee numeric
     )
     LOOP
         INSERT INTO public.students (
             id, name, guardian_name, class, section, address, phone, email,
             admission_date, admission_number, roll_no, status, tc_details,
             last_status_change_date, last_status_changed_by, admission_fee,
-            concession_amount, dob, enrollment_type
+            concession_amount, dob, enrollment_type, tuition_fee,
+            smart_board_fee, computer_fee
         ) VALUES (
             student_record.id, student_record.name, student_record.guardian_name,
             student_record.class, student_record.section, student_record.address,
@@ -52,7 +56,8 @@ BEGIN
             student_record.admission_number, student_record.roll_no, student_record.status,
             student_record.tc_details, student_record.last_status_change_date,
             student_record.last_status_changed_by, student_record.admission_fee,
-            student_record.concession_amount, student_record.dob, student_record.enrollment_type
+            student_record.concession_amount, student_record.dob, student_record.enrollment_type,
+            student_record.tuition_fee, student_record.smart_board_fee, student_record.computer_fee
         )
         ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name,
@@ -72,7 +77,10 @@ BEGIN
             admission_fee = EXCLUDED.admission_fee,
             concession_amount = EXCLUDED.concession_amount,
             dob = EXCLUDED.dob,
-            enrollment_type = EXCLUDED.enrollment_type;
+            enrollment_type = EXCLUDED.enrollment_type,
+            tuition_fee = EXCLUDED.tuition_fee,
+            smart_board_fee = EXCLUDED.smart_board_fee,
+            computer_fee = EXCLUDED.computer_fee;
 
         kept_student_ids := array_append(kept_student_ids, student_record.id);
     END LOOP;

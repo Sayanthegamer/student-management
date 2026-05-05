@@ -281,34 +281,36 @@ export const useDataSync = () => {
       return;
     }
 
-    // 2. Cloud Update
-    guardedSetSyncStatus('syncing');
-    try {
-        const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
+        // 2. Cloud Update
+        guardedSetSyncStatus('syncing');
+        try {
+            const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
 
-        const { error } = await supabase.from('students').upsert(student);
-        if (error) throw error;
+            const { error } = await supabase.from('students').upsert(student);
+            if (error) throw error;
 
-        const feeIdsToKeep = fees.map(f => f.id).filter(Boolean);
-        
-        // Find existing fees to safely delete orphans
-        const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').eq('student_id', student.id);
-        if (selectError) throw selectError;
-        
-        if (fees.length > 0) {
-          // Use upsert instead of delete-then-insert to avoid race conditions
-          // where concurrent fee payments could be wiped between delete and insert.
-          const { error: fError } = await supabase.from('fees').upsert(fees);
-          if (fError) throw fError;
-        }
+            // Only touch fees if explicitly requested via replaceFeeHistory
+            if (studentData.replaceFeeHistory) {
+                const feeIdsToKeep = fees.map(f => f.id).filter(Boolean);
+                
+                // Find existing fees to safely delete orphans
+                const { data: existingFees, error: selectError } = await supabase.from('fees').select('id').eq('student_id', student.id);
+                if (selectError) throw selectError;
+                
+                if (fees.length > 0) {
+                  // Use upsert instead of delete-then-insert to avoid race conditions
+                  const { error: fError } = await supabase.from('fees').upsert(fees);
+                  if (fError) throw fError;
+                }
 
-        if (existingFees && studentData.replaceFeeHistory) {
-            const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
-            if (feeIdsToDelete.length > 0) {
-                const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
-                if (deleteError) throw deleteError;
+                if (existingFees) {
+                    const feeIdsToDelete = existingFees.map(f => f.id).filter(id => !feeIdsToKeep.includes(id));
+                    if (feeIdsToDelete.length > 0) {
+                        const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
+                        if (deleteError) throw deleteError;
+                    }
+                }
             }
-        }
 
         guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
@@ -365,7 +367,12 @@ export const useDataSync = () => {
             if (updatedIds.has(mergedStudent.id)) {
                 const { student, fees } = normalizeStudent(mergedStudent);
                 allStudentsDB.push(student);
-                if (fees && fees.length > 0) allFeesDB.push(...fees);
+                
+                // Only include fees for students that explicitly requested replaceFeeHistory
+                // (skip for generic edits or promotions to avoid overwriting newer remote data)
+                if (mergedStudent.replaceFeeHistory && fees && fees.length > 0) {
+                    allFeesDB.push(...fees);
+                }
             }
         });
 
@@ -587,11 +594,15 @@ export const useDataSync = () => {
           }
         });
 
-        const { error: rpcError } = await supabase.rpc('full_replace_import', {
-            students: allStudentsDB,
-            fees: allFeesDB
+        // Call the 'import-students' Edge Function instead of the RPC directly.
+        // This moves the execution to a trusted server environment with service_role access.
+        const { data: functionData, error: functionError } = await supabase.functions.invoke('import-students', {
+            body: {
+                students: allStudentsDB,
+                fees: allFeesDB
+            }
         });
-        if (rpcError) throw rpcError;
+        if (functionError) throw functionError;
 
         guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
