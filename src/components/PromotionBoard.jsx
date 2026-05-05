@@ -28,7 +28,8 @@ import { useToast } from '../context/ToastContext';
  *
  * @param {Object} props - The component props.
  * @param {Student[]} props.students - The array of student objects.
- * @param {(student: Student) => void} props.onUpdateStudent - Callback function to update a student's class and fee details.
+ * @param {(student: Student) => void} props.onUpdateStudent - Callback function to update a single student's details.
+ * @param {(students: Object[]) => void} [props.onBulkUpdateStudents] - Optional callback to update multiple students in bulk.
  * @param {User} props.user - The current authenticated user.
  * @returns {JSX.Element} The rendered promotion board component.
  */
@@ -134,6 +135,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                             class: nextClass,
                             tuitionFee: CLASS_FEES[nextClass] || student.tuitionFee,
                             feeHistory: newFeeHistory,
+                            replaceFeeHistory: true, // Force cloud to sync the new promotion fee
                             lastStatusChangeDate: dateStr,
                             lastStatusChangedBy: user?.email || user?.id || 'system'
                         });

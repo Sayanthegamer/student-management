@@ -13,8 +13,6 @@ serve(async (req) => {
   }
 
   try {
-    const { students, fees } = await req.json()
-
     // Get current user's JWT from headers to verify they are authenticated
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
@@ -23,6 +21,9 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
+
+    // Parse body only after checking auth header exists (malformed bodies shouldn't be processed if unauthorized)
+    const { students, fees } = await req.json()
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
@@ -70,8 +71,9 @@ serve(async (req) => {
     })
 
   } catch (err) {
-    console.error('Function Error:', err)
-    return new Response(JSON.stringify({ error: err.message }), { 
+    const safeMessage = err instanceof Error ? err.message : String(err)
+    console.error('Function Error:', safeMessage)
+    return new Response(JSON.stringify({ error: safeMessage }), { 
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })

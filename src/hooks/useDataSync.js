@@ -17,6 +17,7 @@ const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChann
  *   syncError: Object|null,
  *   addStudent: (studentData: Object) => Promise<void>,
  *   updateStudent: (studentData: Object) => Promise<void>,
+ *   bulkUpdateStudents: (studentsData: Object[]) => Promise<void>,
  *   deleteStudent: (id: string) => Promise<void>,
  *   addFeePayment: (studentId: string, paymentDetails: Object|Object[]) => Promise<void>,
  *   importStudents: (newStudents: Object[]) => Promise<void>,
