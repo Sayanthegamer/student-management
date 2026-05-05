@@ -268,6 +268,7 @@ export const useDataSync = () => {
         scheduleTimeout(() => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        throw err;
     }
   }, [user]);
 
@@ -345,6 +346,7 @@ export const useDataSync = () => {
         scheduleTimeout(() => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        throw new Error(userMessage);
     }
   }, [user]);
 
@@ -370,81 +372,36 @@ export const useDataSync = () => {
       return;
     }
 
-    // 2. Cloud Update
+    // 2. Cloud Update (Transactional via RPC)
     guardedSetSyncStatus('syncing');
     try {
-        // First, get merged student objects from localBulkUpdateStudents result
-        // (which preserves existing feeHistory for partial patches)
         const allStudentsDB = [];
         const allFeesDB = [];
-
-        // Build allStudentsDB and allFeesDB from the merged student objects
         const updatedIds = new Set(studentsData.map(item => item.id));
 
         updatedList.forEach(mergedStudent => {
-            // Only process students that were part of the update
             if (updatedIds.has(mergedStudent.id)) {
                 const { student, fees } = normalizeStudent(mergedStudent);
                 allStudentsDB.push(student);
-                
-                // Only include fees for students that explicitly requested replaceFeeHistory
                 if (pendingFeeReplacementIdsRef.current.has(mergedStudent.id) && fees && fees.length > 0) {
                     allFeesDB.push(...fees);
                 }
             }
         });
 
-        // Upsert students
-        const { error: sError } = await supabase.from('students').upsert(allStudentsDB);
-        if (sError) throw sError;
-
-        // Mirror updateStudent's reconciliation for fees using per-student comparisons
-        let existingFees = null;
-        // Collect IDs of students in this batch that need fee replacement
-        const batchReplaceIds = new Set(
+        const batchReplaceIds = Array.from(new Set(
             allStudentsDB.filter(s => pendingFeeReplacementIdsRef.current.has(s.id)).map(s => s.id)
-        );
+        ));
 
-        if (batchReplaceIds.size > 0) {
-            const { data: fetchedFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', Array.from(batchReplaceIds));
-            if (selectError) throw selectError;
-            existingFees = fetchedFees;
-        }
+        const { error } = await supabase.rpc('sync_student_fee_batch', {
+            p_students: allStudentsDB,
+            p_fees: allFeesDB,
+            p_replace_fee_student_ids: batchReplaceIds
+        });
 
-        if (allFeesDB.length > 0) {
-            const { error: fError } = await supabase.from('fees').upsert(allFeesDB);
-            if (fError) throw fError;
-        }
+        if (error) throw error;
 
-        if (existingFees) {
-            // Group incoming fees by student_id
-            const incomingFeesByStudent = {};
-            allFeesDB.forEach(fee => {
-                if (!incomingFeesByStudent[fee.student_id]) {
-                    incomingFeesByStudent[fee.student_id] = new Set();
-                }
-                if (fee.id) incomingFeesByStudent[fee.student_id].add(fee.id);
-            });
-
-            // Compute feeIdsToDelete using per-student comparisons
-            const feeIdsToDelete = existingFees
-                .filter(existingFee => {
-                    // Important: only consider students who were marked for fee replacement
-                    if (!batchReplaceIds.has(existingFee.student_id)) return false;
-                    
-                    const incomingFeeIds = incomingFeesByStudent[existingFee.student_id];
-                    return !incomingFeeIds || !incomingFeeIds.has(existingFee.id);
-                })
-                .map(f => f.id);
-
-            if (feeIdsToDelete.length > 0) {
-                const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
-                if (deleteError) throw deleteError;
-            }
-
-            // Clear the intent for all students in this batch after successful sync
-            batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
-        }
+        batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
 
         guardedSetSyncStatus('synced');
         syncChannel?.postMessage('sync_required');
@@ -463,6 +420,7 @@ export const useDataSync = () => {
         scheduleTimeout(() => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
+        throw new Error(userMessage);
     }
   }, [user]);
 

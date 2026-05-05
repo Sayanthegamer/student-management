@@ -42,6 +42,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
     const [selectedStudents, setSelectedStudents] = useState(new Set());
     const [pendingAction, setPendingAction] = useState(null);
     const [promotionFee, setPromotionFee] = useState('');
+    const [isSubmittingPromotion, setIsSubmittingPromotion] = useState(false);
     
     // Only show Confirmed students
     const eligibleStudents = useMemo(() => students.filter(s => s.admissionStatus === 'Confirmed'), [students]);
