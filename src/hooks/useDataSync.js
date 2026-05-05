@@ -36,6 +36,13 @@ export const useDataSync = () => {
   const isMountedRef = useRef(true);
   const pendingTimeoutsRef = useRef([]);
 
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const guardedSetSyncStatus = useCallback((status) => {
     if (isMountedRef.current) {
         if (typeof status === 'function') {
@@ -152,7 +159,6 @@ export const useDataSync = () => {
       latestDoFetchRef.current = null;
       isSyncingRef.current = false;
       pendingSyncRef.current = false;
-      isMountedRef.current = false;
       pendingTimeoutsRef.current.forEach(clearTimeout);
       pendingTimeoutsRef.current = [];
     };
