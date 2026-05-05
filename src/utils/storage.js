@@ -143,11 +143,10 @@ export const addFeePayment = (studentId, paymentDetails) => {
       });
       const updatedHistory = Array.from(historyMap.values());
 
-      const firstMonthlyPayment = newPayments.find(p => p.type === 'Monthly' && p.month);
-      const affectedMonth = firstMonthlyPayment ? firstMonthlyPayment.month : undefined;
+      const hasMonthlyPayment = newPayments.some(p => p.type === 'Monthly' && p.month);
 
-      const newFeesStatus = affectedMonth
-        ? calculateFeesStatus({ feeHistory: updatedHistory }, affectedMonth, currentMonth)
+      const newFeesStatus = hasMonthlyPayment
+        ? calculateFeesStatus({ feeHistory: updatedHistory }, currentMonth, currentMonth)
         : student.feesStatus; // Preserve prior status if no monthly payment was added
 
       return {
