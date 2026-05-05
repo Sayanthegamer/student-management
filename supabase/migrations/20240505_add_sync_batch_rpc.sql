@@ -44,8 +44,8 @@ BEGIN
 
     -- 2. Bulk upsert fees using a single set-based operation
     IF jsonb_array_length(p_fees) > 0 THEN
-        INSERT INTO public.fees (id, student_id, date, amount, type, month, fine)
-        SELECT id, student_id, date, amount, type, month, fine
+        INSERT INTO public.fees (id, student_id, date, amount, type, month, fine, remarks, itemized_breakdown)
+        SELECT id, student_id, date, amount, type, month, fine, remarks, itemized_breakdown
         FROM jsonb_to_recordset(p_fees) AS x(
             id UUID,
             student_id UUID,
@@ -53,14 +53,18 @@ BEGIN
             amount NUMERIC,
             type TEXT,
             month TEXT,
-            fine NUMERIC
+            fine NUMERIC,
+            remarks TEXT,
+            itemized_breakdown JSONB
         )
         ON CONFLICT (id) DO UPDATE SET
             amount = EXCLUDED.amount,
             date = EXCLUDED.date,
             type = EXCLUDED.type,
             month = EXCLUDED.month,
-            fine = EXCLUDED.fine;
+            fine = EXCLUDED.fine,
+            remarks = EXCLUDED.remarks,
+            itemized_breakdown = EXCLUDED.itemized_breakdown;
     END IF;
 
     -- 3. Delete orphaned fees for students in p_replace_fee_student_ids

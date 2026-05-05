@@ -15,6 +15,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
     const [amount, setAmount] = useState('');
     const [date, setDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [remarks, setRemarks] = useState('Transportation Fee');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Only show active, non-exited students
     const activeStudents = useMemo(() => {
@@ -64,13 +65,16 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
         setSelectedStudentIds(newSelected);
     };
 
-        const handleSelectAll = () => {
+            const handleSelectAll = () => {
         const isAllSelected = filteredStudents.length > 0 && filteredStudents.every(s => selectedStudentIds.has(s.id));
+        const newSelected = new Set(selectedStudentIds);
+
         if (isAllSelected) {
-            setSelectedStudentIds(new Set());
+            filteredStudents.forEach(s => newSelected.delete(s.id));
         } else {
-            setSelectedStudentIds(new Set(filteredStudents.map(s => s.id)));
+            filteredStudents.forEach(s => newSelected.add(s.id));
         }
+        setSelectedStudentIds(newSelected);
     };
 
     // Auto-reset section filter if class changes and section is no longer valid
@@ -83,6 +87,8 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
     // Handle Submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (isSubmitting) return;
 
         if (selectedStudentIds.size === 0) {
             showToast('Please select at least one student.', 'error');
@@ -104,13 +110,16 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
         if (!window.confirm(confirmMessage)) return;
 
         try {
+            setIsSubmitting(true);
             const updates = Array.from(selectedStudentIds).map(id => {
                 const student = students.find(s => s.id === id);
                 if (!student) return null;
 
-                const newFeeRecord = {
+                                const newFeeRecord = {
                     id: crypto.randomUUID(),
                     date: date,
+                    month: date.substring(0, 7),
+                    type: 'Fee',
                     amount: numAmount,
                     fine: 0,
                     remarks: remarks || 'Transportation Fee',
@@ -135,6 +144,8 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
         } catch (error) {
             console.error('Error applying transportation fees:', error);
             showToast('Failed to apply transportation fees. Please try again.', 'error');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -303,11 +314,12 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                 </h3>
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+                                                                        <div>
+                                        <label htmlFor="transport-amount" className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                                             Amount (₹) *
                                         </label>
                                         <input
+                                            id="transport-amount"
                                             type="number"
                                             value={amount}
                                             onChange={(e) => setAmount(e.target.value)}
@@ -319,10 +331,11 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+                                        <label htmlFor="transport-date" className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                                             Date *
                                         </label>
                                         <input
+                                            id="transport-date"
                                             type="date"
                                             value={date}
                                             onChange={(e) => setDate(e.target.value)}
@@ -332,10 +345,11 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+                                        <label htmlFor="transport-remarks" className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                                             Remarks
                                         </label>
                                         <textarea
+                                            id="transport-remarks"
                                             value={remarks}
                                             onChange={(e) => setRemarks(e.target.value)}
                                             placeholder="Optional remarks"
@@ -350,13 +364,13 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                                 ₹{(Number(amount) || 0) * selectedStudentIds.size}
                                             </span>
                                         </div>
-                                        <button
+                                                                                <button
                                             type="submit"
-                                            disabled={selectedStudentIds.size === 0 || !amount}
+                                            disabled={selectedStudentIds.size === 0 || !amount || isSubmitting}
                                             className="w-full py-2.5 px-4 bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] disabled:bg-[var(--bg-elevated)] disabled:text-[var(--text-muted)] disabled:border disabled:border-[var(--border-color)] text-white text-sm font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
                                         >
                                             <Bus size={16} />
-                                            Apply to {selectedStudentIds.size} Student{selectedStudentIds.size !== 1 ? 's' : ''}
+                                            {isSubmitting ? 'Applying...' : `Apply to ${selectedStudentIds.size} Student${selectedStudentIds.size !== 1 ? 's' : ''}`}
                                         </button>
                                     </div>
                                 </form>
