@@ -4,6 +4,23 @@ import { calculateFeesStatus } from './syncHelpers';
  * Storage key for session data.
  * @type {string}
  */
+
+/**
+ * Generates a stable numeric hash from a string.
+ *
+ * @param {string} str - The input string.
+ * @returns {number} The numeric hash.
+ */
+const stableHash = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 const STORAGE_KEY = 'student_management_session_v1';
 
 /**
@@ -120,12 +137,18 @@ export const addFeePayment = (studentId, paymentDetails) => {
           key = p.month;
         } else if (p.type === 'Promotion') {
           // Preserve separate promotions across different times
-          key = `${p.type}:${p.date || p.createdAt || new Date().toISOString()}`;
+          key = `${p.type}:${p.id || stableHash(JSON.stringify(p)) || 'UNKNOWN_PROMOTION'}`;
         }
         historyMap.set(key, p);
       });
       const updatedHistory = Array.from(historyMap.values());
-      const newFeesStatus = calculateFeesStatus({ feeHistory: updatedHistory }, currentMonth, currentMonth);
+
+      const firstMonthlyPayment = newPayments.find(p => p.type === 'Monthly' && p.month);
+      const affectedMonth = firstMonthlyPayment ? firstMonthlyPayment.month : undefined;
+
+      const newFeesStatus = affectedMonth
+        ? calculateFeesStatus({ feeHistory: updatedHistory }, currentMonth, affectedMonth)
+        : student.feesStatus; // Preserve prior status if no monthly payment was added
 
       return {
         ...student,
