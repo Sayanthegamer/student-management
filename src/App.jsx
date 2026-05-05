@@ -93,11 +93,11 @@ function App() {
   }, [updateStudent, addStudent, navigate]);
 
   const handleUpdateStudent = useCallback((updatedStudent) => {
-    updateStudent(updatedStudent);
+    return updateStudent(updatedStudent);
   }, [updateStudent]);
 
   const handleBulkUpdateStudents = useCallback((updatedStudentsList) => {
-    bulkUpdateStudents(updatedStudentsList);
+    return bulkUpdateStudents(updatedStudentsList);
   }, [bulkUpdateStudents]);
 
   const handlePayFee = useCallback((studentId, paymentDetails) => {
