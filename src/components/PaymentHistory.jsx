@@ -58,7 +58,7 @@ const PaymentHistory = ({ students, onEditFee }) => {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [showMobileSort, setShowMobileSort] = useState(false);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
-    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [selectedStudentId, setSelectedStudentId] = useState(null);
 
     const classes = useMemo(() => [...new Set(students.map(s => s.class))].sort(), [students]);
     const sections = useMemo(() => [...new Set(students.map(s => s.section))].sort(), [students]);
@@ -104,7 +104,7 @@ const PaymentHistory = ({ students, onEditFee }) => {
     );
 
     const handleViewHistory = (student) => {
-        setSelectedStudent(student);
+        setSelectedStudentId(student.id);
         setShowHistoryModal(true);
     };
 
@@ -363,9 +363,9 @@ const PaymentHistory = ({ students, onEditFee }) => {
                 )}
             </div>
 
-            {showHistoryModal && selectedStudent && (
+            {showHistoryModal && selectedStudentId && (
                 <PaymentHistoryModal
-                    student={selectedStudent}
+                    student={students.find(s => s.id === selectedStudentId)}
                     allStudents={students}
                     onEditFee={onEditFee}
                     onClose={() => setShowHistoryModal(false)}
