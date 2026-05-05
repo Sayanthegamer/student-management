@@ -32,6 +32,7 @@ export const useDataSync = () => {
   const [syncError, setSyncError] = useState(null);
   const isSyncingRef = useRef(false);
   const pendingSyncRef = useRef(false);
+  const pendingFeeReplacementIdsRef = useRef(new Set());
   const latestDoFetchRef = useRef(null);
   const fetchAbortControllerRef = useRef(null);
   const isMountedRef = useRef(true);
@@ -272,7 +273,12 @@ export const useDataSync = () => {
 
   const updateStudent = useCallback(async (studentData) => {
     // 1. Local Update
-    const updatedList = localUpdateStudent(studentData);
+    const { replaceFeeHistory, ...cleanData } = studentData;
+    if (replaceFeeHistory) {
+        pendingFeeReplacementIdsRef.current.add(studentData.id);
+    }
+    
+    const updatedList = localUpdateStudent(cleanData);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
 
@@ -291,7 +297,7 @@ export const useDataSync = () => {
             if (error) throw error;
 
             // Only touch fees if explicitly requested via replaceFeeHistory
-            if (studentData.replaceFeeHistory) {
+            if (pendingFeeReplacementIdsRef.current.has(student.id)) {
                 const feeIdsToKeep = fees.map(f => f.id).filter(Boolean);
                 
                 // Find existing fees to safely delete orphans
@@ -311,6 +317,9 @@ export const useDataSync = () => {
                         if (deleteError) throw deleteError;
                     }
                 }
+                
+                // Clear the intent after successful sync
+                pendingFeeReplacementIdsRef.current.delete(student.id);
             }
 
         guardedSetSyncStatus('synced');
@@ -343,7 +352,15 @@ export const useDataSync = () => {
     if (!studentsData || studentsData.length === 0) return;
 
     // 1. Local Update
-    const updatedList = localBulkUpdateStudents(studentsData);
+    const cleanDataList = studentsData.map(s => {
+        const { replaceFeeHistory, ...clean } = s;
+        if (replaceFeeHistory) {
+            pendingFeeReplacementIdsRef.current.add(s.id);
+        }
+        return clean;
+    });
+
+    const updatedList = localBulkUpdateStudents(cleanDataList);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
 
@@ -363,7 +380,6 @@ export const useDataSync = () => {
 
         // Build allStudentsDB and allFeesDB from the merged student objects
         const updatedIds = new Set(studentsData.map(item => item.id));
-        const replaceFeeHistoryIds = new Set(studentsData.filter(s => s.replaceFeeHistory).map(s => s.id));
 
         updatedList.forEach(mergedStudent => {
             // Only process students that were part of the update
@@ -372,7 +388,7 @@ export const useDataSync = () => {
                 allStudentsDB.push(student);
                 
                 // Only include fees for students that explicitly requested replaceFeeHistory
-                if (replaceFeeHistoryIds.has(mergedStudent.id) && fees && fees.length > 0) {
+                if (pendingFeeReplacementIdsRef.current.has(mergedStudent.id) && fees && fees.length > 0) {
                     allFeesDB.push(...fees);
                 }
             }
@@ -384,8 +400,13 @@ export const useDataSync = () => {
 
         // Mirror updateStudent's reconciliation for fees using per-student comparisons
         let existingFees = null;
-        if (replaceFeeHistoryIds.size > 0) {
-            const { data: fetchedFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', Array.from(replaceFeeHistoryIds));
+        // Collect IDs of students in this batch that need fee replacement
+        const batchReplaceIds = new Set(
+            allStudentsDB.filter(s => pendingFeeReplacementIdsRef.current.has(s.id)).map(s => s.id)
+        );
+
+        if (batchReplaceIds.size > 0) {
+            const { data: fetchedFees, error: selectError } = await supabase.from('fees').select('id, student_id').in('student_id', Array.from(batchReplaceIds));
             if (selectError) throw selectError;
             existingFees = fetchedFees;
         }
@@ -409,7 +430,7 @@ export const useDataSync = () => {
             const feeIdsToDelete = existingFees
                 .filter(existingFee => {
                     // Important: only consider students who were marked for fee replacement
-                    if (!replaceFeeHistoryIds.has(existingFee.student_id)) return false;
+                    if (!batchReplaceIds.has(existingFee.student_id)) return false;
                     
                     const incomingFeeIds = incomingFeesByStudent[existingFee.student_id];
                     return !incomingFeeIds || !incomingFeeIds.has(existingFee.id);
@@ -420,6 +441,9 @@ export const useDataSync = () => {
                 const { error: deleteError } = await supabase.from('fees').delete().in('id', feeIdsToDelete);
                 if (deleteError) throw deleteError;
             }
+
+            // Clear the intent for all students in this batch after successful sync
+            batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
         }
 
         guardedSetSyncStatus('synced');

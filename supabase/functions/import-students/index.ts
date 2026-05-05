@@ -25,6 +25,14 @@ serve(async (req) => {
     // Parse body only after checking auth header exists (malformed bodies shouldn't be processed if unauthorized)
     const { students, fees } = await req.json()
 
+    // Validate payload
+    if (!Array.isArray(students) || !Array.isArray(fees)) {
+      return new Response(JSON.stringify({ error: 'Bad Request: students and fees must be arrays' }), { 
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -42,8 +50,9 @@ serve(async (req) => {
       })
     }
 
-    // RBAC: Only allow users with 'admin' role or 'is_admin' claim to trigger full replace
-    const isAdmin = user.app_metadata?.role === 'admin' || user.user_metadata?.is_admin === true;
+    // RBAC: Only allow users with 'admin' role in app_metadata to trigger full replace.
+    // user_metadata is user-controllable and insecure for privilege checks.
+    const isAdmin = user.app_metadata?.role === 'admin';
     if (!isAdmin) {
       console.warn(`Unauthorized attempt to call full_replace_import by user: ${user.email}`);
       return new Response(JSON.stringify({ error: 'Forbidden: Admin privileges required' }), { 

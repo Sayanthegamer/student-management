@@ -110,40 +110,43 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
         setPendingAction({
             label: `Promote ${selectedStudents.size} student(s) to ${nextClass} with a promotion fee of ₹${feeAmount}?`,
             onConfirm: async () => {
-                const dateStr = new Date().toISOString().split('T')[0];
-                const studentById = new Map(students.map(s => [s.id, s]));
+                if (isSubmittingPromotion) return;
+                setIsSubmittingPromotion(true);
+                
+                try {
+                    const dateStr = new Date().toISOString().split('T')[0];
+                    const studentById = new Map(students.map(s => [s.id, s]));
 
-                const studentsToUpdate = [];
+                    const studentsToUpdate = [];
 
-                selectedStudents.forEach(id => {
-                    const student = studentById.get(id);
-                    if (student) {
-                        const newFeeHistory = [...(student.feeHistory || [])];
-                        if (feeAmount > 0) {
-                            newFeeHistory.push({
-                                id: crypto.randomUUID(),
-                                date: dateStr,
-                                amount: feeAmount,
-                                type: 'Promotion',
-                                month: null,
-                                fine: 0
+                    selectedStudents.forEach(id => {
+                        const student = studentById.get(id);
+                        if (student) {
+                            const newFeeHistory = [...(student.feeHistory || [])];
+                            if (feeAmount > 0) {
+                                newFeeHistory.push({
+                                    id: crypto.randomUUID(),
+                                    date: dateStr,
+                                    amount: feeAmount,
+                                    type: 'Promotion',
+                                    month: null,
+                                    fine: 0
+                                });
+                            }
+
+                            studentsToUpdate.push({
+                                ...student,
+                                class: nextClass,
+                                tuitionFee: CLASS_FEES[nextClass] || student.tuitionFee,
+                                feeHistory: newFeeHistory,
+                                replaceFeeHistory: true, // Force cloud to sync the new promotion fee
+                                lastStatusChangeDate: dateStr,
+                                lastStatusChangedBy: user?.email || user?.id || 'system'
                             });
                         }
+                    });
 
-                        studentsToUpdate.push({
-                            ...student,
-                            class: nextClass,
-                            tuitionFee: CLASS_FEES[nextClass] || student.tuitionFee,
-                            feeHistory: newFeeHistory,
-                            replaceFeeHistory: true, // Force cloud to sync the new promotion fee
-                            lastStatusChangeDate: dateStr,
-                            lastStatusChangedBy: user?.email || user?.id || 'system'
-                        });
-                    }
-                });
-
-                if (studentsToUpdate.length > 0) {
-                    try {
+                    if (studentsToUpdate.length > 0) {
                         if (onBulkUpdateStudents) {
                             await onBulkUpdateStudents(studentsToUpdate);
                         } else {
@@ -155,10 +158,12 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                         showToast(`${selectedStudents.size} student(s) promoted to ${nextClass}`, 'success');
                         setSelectedStudents(new Set());
                         setPendingAction(null);
-                    } catch (err) {
-                        console.error('Promotion failed:', err);
-                        showToast(`Failed to promote students: ${err.message || 'Unknown error'}`, 'error');
                     }
+                } catch (err) {
+                    console.error('Promotion failed:', err);
+                    showToast(`Failed to promote students: ${err.message || 'Unknown error'}`, 'error');
+                } finally {
+                    setIsSubmittingPromotion(false);
                 }
             }
         });
@@ -368,15 +373,26 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                             <button
                                 onClick={() => setPendingAction(null)}
                                 className="btn btn-secondary text-sm"
+                                disabled={isSubmittingPromotion}
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={pendingAction.onConfirm}
                                 className="btn btn-primary text-sm"
+                                disabled={isSubmittingPromotion}
                             >
-                                <UserCheck size={16} />
-                                Confirm
+                                {isSubmittingPromotion ? (
+                                    <>
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        Promoting...
+                                    </>
+                                ) : (
+                                    <>
+                                        <UserCheck size={16} />
+                                        Confirm
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>
