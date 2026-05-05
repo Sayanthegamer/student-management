@@ -1,3 +1,5 @@
+import { calculateFeesStatus } from './syncHelpers';
+
 /**
  * Storage key for session data.
  * @type {string}
@@ -31,6 +33,9 @@ export const saveStudents = (students) => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(students));
   } catch (error) {
     console.error("Error saving to sessionStorage", error);
+    if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+      window.dispatchEvent(new CustomEvent('storage_quota_exceeded'));
+    }
   }
 };
 
@@ -89,6 +94,8 @@ export const deleteStudent = (id) => {
  */
 export const addFeePayment = (studentId, paymentDetails) => {
   const students = getStudents();
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  
   const updatedStudents = students.map(student => {
     if (student.id === studentId) {
       const currentHistory = student.feeHistory || [];
@@ -100,11 +107,17 @@ export const addFeePayment = (studentId, paymentDetails) => {
         newPayments = [{ ...paymentDetails, id: paymentDetails.id || crypto.randomUUID() }];
       }
 
+      const updatedHistory = [...currentHistory, ...newPayments];
+      const newFeesStatus = calculateFeesStatus({ feeHistory: updatedHistory }, currentMonth, currentMonth);
+
       return {
         ...student,
-        feeHistory: [...currentHistory, ...newPayments]
+        feeHistory: updatedHistory,
+        feesStatus: newFeesStatus
       };
     }
+    return student;
+  });
     return student;
   });
   saveStudents(updatedStudents);
