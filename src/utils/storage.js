@@ -4,6 +4,23 @@ import { calculateFeesStatus } from './syncHelpers';
  * Storage key for session data.
  * @type {string}
  */
+
+/**
+ * Generates a stable numeric hash from a string.
+ *
+ * @param {string} str - The input string.
+ * @returns {number} The numeric hash.
+ */
+const stableHash = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 const STORAGE_KEY = 'student_management_session_v1';
 
 /**
@@ -34,7 +51,9 @@ export const saveStudents = (students) => {
   } catch (error) {
     console.error("Error saving to sessionStorage", error);
     if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-      window.dispatchEvent(new CustomEvent('storage_quota_exceeded'));
+      if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function' && typeof CustomEvent === 'function') {
+        window.dispatchEvent(new CustomEvent('storage_quota_exceeded', { detail: error }));
+      }
     }
   }
 };
@@ -73,6 +92,23 @@ export const updateStudent = (updatedStudent) => {
 };
 
 /**
+ * Bulk updates existing students in the storage.
+ *
+ * @param {Object[]} updatedStudentsList - Array of student objects with updated fields.
+ * @returns {Object[]} The updated array of student objects.
+ */
+export const bulkUpdateStudents = (updatedStudentsList) => {
+  const students = getStudents();
+  const updateMap = new Map(updatedStudentsList.map(us => [us.id, us]));
+  const updatedStudents = students.map(s => {
+    const update = updateMap.get(s.id);
+    return update ? { ...s, ...update } : s;
+  });
+  saveStudents(updatedStudents);
+  return updatedStudents;
+};
+
+/**
  * Deletes a student from the storage.
  *
  * @param {string} id - The ID of the student to delete.
@@ -94,7 +130,8 @@ export const deleteStudent = (id) => {
  */
 export const addFeePayment = (studentId, paymentDetails) => {
   const students = getStudents();
-  const currentMonth = new Date().toISOString().slice(0, 7);
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   
   const updatedStudents = students.map(student => {
     if (student.id === studentId) {
@@ -107,8 +144,27 @@ export const addFeePayment = (studentId, paymentDetails) => {
         newPayments = [{ ...paymentDetails, id: paymentDetails.id || crypto.randomUUID() }];
       }
 
-      const updatedHistory = [...currentHistory, ...newPayments];
-      const newFeesStatus = calculateFeesStatus({ feeHistory: updatedHistory }, currentMonth, currentMonth);
+
+      // Deduplicate history by month (for monthly fees) or type (for admission/promotion)
+      // to prevent duplicate entries on retries.
+      const historyMap = new Map();
+      [...currentHistory, ...newPayments].forEach(p => {
+        let key = p.type;
+        if (p.type === 'Monthly') {
+          key = p.month;
+        } else if (p.type === 'Promotion') {
+          // Preserve separate promotions across different times
+          key = `${p.type}:${p.id || stableHash(JSON.stringify(p)) || 'UNKNOWN_PROMOTION'}`;
+        }
+        historyMap.set(key, p);
+      });
+      const updatedHistory = Array.from(historyMap.values());
+
+      const hasMonthlyPayment = newPayments.some(p => p.type === 'Monthly' && p.month);
+
+      const newFeesStatus = hasMonthlyPayment
+        ? calculateFeesStatus({ feeHistory: updatedHistory }, currentMonth, currentMonth)
+        : student.feesStatus; // Preserve prior status if no monthly payment was added
 
       return {
         ...student,
@@ -210,6 +266,11 @@ export const logActivity = (type, description) => {
     return updatedActivities;
   } catch (error) {
     console.error("Error logging activity", error);
+    if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+      if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function' && typeof CustomEvent === 'function') {
+        window.dispatchEvent(new CustomEvent('storage_quota_exceeded', { detail: error }));
+      }
+    }
     return [];
   }
 };

@@ -57,7 +57,7 @@ function EditStudentRoute({ students, onSave, onCancel }) {
 function App() {
   const { user, loading } = useAuth();
   const { showToast } = useToast();
-  const { students, syncStatus, syncError, addStudent, updateStudent, deleteStudent, addFeePayment, editFeePayment, importStudents, dismissError, forceSync } = useDataSync();
+  const { students, syncStatus, syncError, addStudent, updateStudent, bulkUpdateStudents, deleteStudent, addFeePayment, editFeePayment, importStudents, dismissError, forceSync } = useDataSync();
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -93,8 +93,12 @@ function App() {
   }, [updateStudent, addStudent, navigate]);
 
   const handleUpdateStudent = useCallback((updatedStudent) => {
-    updateStudent(updatedStudent);
+    return updateStudent(updatedStudent);
   }, [updateStudent]);
+
+  const handleBulkUpdateStudents = useCallback((updatedStudentsList) => {
+    return bulkUpdateStudents(updatedStudentsList);
+  }, [bulkUpdateStudents]);
 
   const handlePayFee = useCallback((studentId, paymentDetails) => {
     return addFeePayment(studentId, paymentDetails);
@@ -287,7 +291,7 @@ function App() {
               } />
               <Route path="/payment-history" element={<PaymentHistory students={students} onEditFee={editFeePayment} />} />
               <Route path="/admission" element={<AdmissionStatus students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
-              <Route path="/promotions" element={<PromotionBoard students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
+              <Route path="/promotions" element={<PromotionBoard students={students} onUpdateStudent={handleUpdateStudent} onBulkUpdateStudents={handleBulkUpdateStudents} user={user} />} />
               <Route path="/tc" element={<TransferCertificate students={students} onUpdateStudent={handleUpdateStudent} user={user} />} />
               <Route path="/data" element={<DataManagement students={students} onImportSuccess={handleImportSuccess} />} />
               <Route path="/reports" element={<Reports students={students} />} />
