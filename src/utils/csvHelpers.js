@@ -43,19 +43,6 @@ export const convertToCSV = (data) => {
                 return `"${formatted}"`;
             }
 
-            // Handle TC Details (Object)
-            if (header === 'tcDetails' && typeof val === 'object') {
-                // Format: Issued: 2023-10-27, Reason: ...
-                const parts = [];
-                if (val.issueDate) parts.push(`Issued: ${val.issueDate}`);
-                if (val.dateOfLeaving) parts.push(`Leaving: ${val.dateOfLeaving}`);
-                if (val.reason) parts.push(`Reason: ${val.reason}`);
-                if (val.conduct) parts.push(`Conduct: ${val.conduct}`);
-                if (val.remarks) parts.push(`Rem: ${val.remarks}`);
-
-                const formatted = parts.join(', ');
-                return `"${formatted}"`;
-            }
 
             // Handle other objects/arrays (Fallback to JSON)
             if (typeof val === 'object') {
@@ -161,7 +148,6 @@ export const validateAndCoerceStudent = (obj) => {
 
         // Arrays and Objects
         feeHistory: obj.feeHistory || [],
-        tcDetails: obj.tcDetails || null,
     };
 
     // Remove undefined values for cleaner objects
@@ -249,28 +235,6 @@ export const parseCSV = (csvText) => {
         });
     };
 
-    // Helper to parse TC Details string
-    const parseTCDetails = (str) => {
-        if (!str) return null;
-        // Try JSON first
-        if (str.startsWith('{')) {
-            try { return JSON.parse(str); } catch { /* ignore */ }
-        }
-
-        const tc = {};
-        const parts = str.split(', ');
-        parts.forEach(part => {
-            const [key, ...valParts] = part.split(': ');
-            const val = valParts.join(': ');
-
-            if (key === 'Issued') tc.issueDate = val;
-            else if (key === 'Leaving') tc.dateOfLeaving = val;
-            else if (key === 'Reason') tc.reason = val;
-            else if (key === 'Conduct') tc.conduct = val;
-            else if (key === 'Rem') tc.remarks = val;
-        });
-        return Object.keys(tc).length > 0 ? tc : null;
-    };
 
     const errors = [];
 
@@ -286,8 +250,6 @@ export const parseCSV = (csvText) => {
 
             if (header === 'feeHistory') {
                 obj[header] = parseFeeHistory(val);
-            } else if (header === 'tcDetails') {
-                obj[header] = parseTCDetails(val);
             } else {
                 // Try to parse JSON for other complex fields if any
                 if (val && (val.startsWith('[') || val.startsWith('{'))) {
