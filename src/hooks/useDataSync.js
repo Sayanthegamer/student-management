@@ -725,6 +725,7 @@ export const useDataSync = () => {
   }, [user]);
 
 
+const dismissError = useCallback(() => {
     guardedSetSyncError(null);
   }, []);
 
