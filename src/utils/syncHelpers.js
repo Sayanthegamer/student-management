@@ -49,6 +49,12 @@ export const getClassFeeAmount = (className) => {
  * @returns {{student: Object, fees: Object[]}} An object containing the normalized student and their fees.
  */
 export const normalizeStudent = (student) => {
+  // Validate required fields before normalizing
+  const missingFields = ['id', 'name', 'class', 'section', 'rollNo'].filter(f => !student[f]);
+  if (missingFields.length > 0) {
+    throw new Error(`normalizeStudent: missing required fields: ${missingFields.join(', ')}`);
+  }
+
   // Extract ONLY storage/sync fields, ignore calculated fields
   const {
     feeHistory,
