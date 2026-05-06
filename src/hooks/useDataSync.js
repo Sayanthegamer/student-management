@@ -4,8 +4,6 @@ import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
 import { useAuth } from '../context/AuthContext';
 
-const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('stdmgr_sync_channel') : null;
-
 /**
  * Custom hook for managing student data synchronization with Supabase and local storage.
  * Provides functions for CRUD operations on students and fee payments, handling both local optimistic updates
@@ -37,11 +35,22 @@ export const useDataSync = () => {
   const fetchAbortControllerRef = useRef(null);
   const isMountedRef = useRef(true);
   const pendingTimeoutsRef = useRef([]);
+  const syncChannelRef = useRef(null);
 
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof BroadcastChannel !== 'undefined') {
+      syncChannelRef.current = new BroadcastChannel('stdmgr_sync_channel');
+    }
+    return () => {
+      syncChannelRef.current?.close();
+      syncChannelRef.current = null;
     };
   }, []);
 
@@ -152,13 +161,13 @@ export const useDataSync = () => {
       }
     };
 
-    if (syncChannel) {
-      syncChannel.addEventListener('message', handleSyncMessage);
+    if (syncChannelRef.current) {
+      syncChannelRef.current.addEventListener('message', handleSyncMessage);
     }
 
     return () => {
-      if (syncChannel) {
-        syncChannel.removeEventListener('message', handleSyncMessage);
+      if (syncChannelRef.current) {
+        syncChannelRef.current.removeEventListener('message', handleSyncMessage);
       }
       if (fetchAbortControllerRef.current) {
         fetchAbortControllerRef.current.abort();
@@ -228,7 +237,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -246,7 +255,7 @@ export const useDataSync = () => {
         }
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud save error", err);
         guardedSetSyncStatus('error');
@@ -276,14 +285,17 @@ export const useDataSync = () => {
     // 1. Local Update
     const shouldReplaceFee = !!studentData.replaceFeeHistory;
     const { replaceFeeHistory, ...cleanData } = studentData;
-    
+
+    // Save snapshot for rollback on cloud failure
+    const snapshot = getStudents();
+
     const updatedList = localUpdateStudent(cleanData);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -296,10 +308,12 @@ export const useDataSync = () => {
         try {
             const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
 
-            // Use transactional RPC when replacing fees to ensure atomicity
+            // Use transactional RPC when replacing fees to ensure atomicity.
+            // Dependency: the RPC must accept all student columns (see migration 20240601_fix_sync_rpc.sql).
+            // normalizeStudent() produces the full student object that the RPC expects.
             if (shouldReplaceFee) {
                 const { error } = await supabase.rpc('sync_student_fee_batch', {
-                    p_students: [student],
+                    p_students: [student], // must be FULL student object from normalizeStudent
                     p_fees: fees,
                     p_replace_fee_student_ids: [student.id]
                 });
@@ -314,9 +328,14 @@ export const useDataSync = () => {
             }
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud update error", err);
+
+        // Rollback optimistic local update to keep local state consistent with cloud
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
+
         guardedSetSyncStatus('error');
 
         let userMessage = "Failed to update student on server.";
@@ -350,13 +369,16 @@ export const useDataSync = () => {
         return clean;
     });
 
+    // Save snapshot for rollback on cloud failure
+    const snapshot = getStudents();
+
     const updatedList = localBulkUpdateStudents(cleanDataList);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -406,9 +428,14 @@ export const useDataSync = () => {
         batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud bulk update error", err);
+
+        // Rollback optimistic local update to keep local state consistent with cloud
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
+
         guardedSetSyncStatus('error');
 
         let userMessage = "Failed to bulk update students on server.";
@@ -434,7 +461,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -446,7 +473,7 @@ export const useDataSync = () => {
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud delete error", err);
         guardedSetSyncStatus('error');
@@ -479,7 +506,10 @@ export const useDataSync = () => {
     // 1. Client-Side Validation (Catch duplicates before DB insert)
     const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds });
     const newMonths = fees.map(f => f.month).filter(Boolean);
-    const existingStudent = students.find(s => s.id === studentId);
+    // Read directly from sessionStorage (always current after a local write) to avoid
+    // stale-closure reads of the `students` state variable when two fee submissions
+    // happen in quick succession.
+    const existingStudent = getStudents().find(s => s.id === studentId);
     const existingMonths = existingStudent?.feeHistory?.map(f => f.month).filter(Boolean) || [];
     
     const newMonthSet = new Set();
@@ -506,7 +536,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
         console.warn("Supabase not configured - changes saved locally only");
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
         return;
     }
 
@@ -523,7 +553,7 @@ export const useDataSync = () => {
         }
         
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud fee error", err);
         guardedSetSyncStatus('error');
@@ -546,7 +576,7 @@ export const useDataSync = () => {
         // Security: don't expose raw err.message unless it's our custom one
         return Promise.reject(new Error(userMessage));
     }
-  }, [user, supabase, students, fetchFromCloud]);
+  }, [user, supabase, fetchFromCloud]);
 
   const editFeePayment = useCallback(async (oldStudentId, newStudentId, updatedFee) => {
     // 0. Synchronous duplicate check
@@ -571,7 +601,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return updatedList;
     }
 
@@ -591,7 +621,7 @@ export const useDataSync = () => {
         if (error) throw error;
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
         return updatedList;
     } catch (err) {
         console.error("Cloud edit fee error", err);
@@ -627,7 +657,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -656,7 +686,7 @@ export const useDataSync = () => {
         if (functionError) throw functionError;
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud import error", err);
         guardedSetSyncStatus('error');
