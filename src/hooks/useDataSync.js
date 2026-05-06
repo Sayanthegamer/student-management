@@ -236,6 +236,9 @@ export const useDataSync = () => {
 
 
     // 1. Local Update (Optimistic)
+    // Snapshot for rollback in case the cloud insert fails
+    const snapshot = getStudents();
+
     const updatedList = localAddStudent(newStudent);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
@@ -263,6 +266,10 @@ export const useDataSync = () => {
         syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud save error", err);
+
+        // Rollback optimistic local update to the pre-mutation snapshot
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
         guardedSetSyncStatus('error');
 
         let userMessage = "Failed to save data to server.";
@@ -582,8 +589,9 @@ export const useDataSync = () => {
 
   const editFeePayment = useCallback(async (oldStudentId, newStudentId, updatedFee) => {
     // 0. Synchronous duplicate check
+    // Read from sessionStorage directly to avoid stale closure over the students state variable
     if (updatedFee.type === 'Monthly' && updatedFee.month) {
-        const targetStudent = students.find(s => s.id === newStudentId);
+        const targetStudent = getStudents().find(s => s.id === newStudentId);
         if (targetStudent && targetStudent.feeHistory) {
             const hasDuplicate = targetStudent.feeHistory.some(
                 f => f.id !== updatedFee.id && f.type === 'Monthly' && f.month === updatedFee.month
@@ -648,9 +656,8 @@ export const useDataSync = () => {
   }, [user, supabase, fetchFromCloud]);
 
   const importStudents = useCallback(async (newStudents) => {
-    // Save snapshot for rollback
-    const previousStudents = [...students];
-    const previousStatus = syncStatus;
+    // Save snapshot for rollback — read from sessionStorage to avoid stale closure
+    const previousStudents = getStudents();
 
     // 1. Local Update (Full Replace)
     saveStudents(newStudents);
@@ -709,14 +716,15 @@ export const useDataSync = () => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
 
-        // Rollback to snapshot
+        // Rollback local data to snapshot but keep 'error' sync status so the
+        // user can see the failure. Do NOT restore previousStatus here as that
+        // would silently overwrite the 'error' state set above.
         saveStudents(previousStudents);
         guardedSetStudents(previousStudents);
-        guardedSetSyncStatus(previousStatus);
     }
   }, [user]);
 
-  const dismissError = useCallback(() => {
+
     guardedSetSyncError(null);
   }, []);
 
