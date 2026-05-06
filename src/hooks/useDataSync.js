@@ -4,7 +4,9 @@ import { getStudents, saveStudents, addStudent as localAddStudent, updateStudent
 import { denormalizeStudents, normalizeStudent } from '../utils/syncHelpers';
 import { useAuth } from '../context/AuthContext';
 
-const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('stdmgr_sync_channel') : null;
+// BroadcastChannel is created inside the hook via useRef to prevent a module-level
+// channel leak when the hook is unmounted and remounted (e.g. HMR, StrictMode).
+
 
 /**
  * Custom hook for managing student data synchronization with Supabase and local storage.
@@ -37,11 +39,23 @@ export const useDataSync = () => {
   const fetchAbortControllerRef = useRef(null);
   const isMountedRef = useRef(true);
   const pendingTimeoutsRef = useRef([]);
+  const syncChannelRef = useRef(null);
 
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
+    };
+  }, []);
+
+  // Initialise BroadcastChannel per-instance so it is properly closed on unmount.
+  useEffect(() => {
+    if (typeof BroadcastChannel !== 'undefined') {
+      syncChannelRef.current = new BroadcastChannel('stdmgr_sync_channel');
+    }
+    return () => {
+      syncChannelRef.current?.close();
+      syncChannelRef.current = null;
     };
   }, []);
 
@@ -152,13 +166,13 @@ export const useDataSync = () => {
       }
     };
 
-    if (syncChannel) {
-      syncChannel.addEventListener('message', handleSyncMessage);
+    if (syncChannelRef.current) {
+      syncChannelRef.current.addEventListener('message', handleSyncMessage);
     }
 
     return () => {
-      if (syncChannel) {
-        syncChannel.removeEventListener('message', handleSyncMessage);
+      if (syncChannelRef.current) {
+        syncChannelRef.current.removeEventListener('message', handleSyncMessage);
       }
       if (fetchAbortControllerRef.current) {
         fetchAbortControllerRef.current.abort();
@@ -222,13 +236,16 @@ export const useDataSync = () => {
 
 
     // 1. Local Update (Optimistic)
+    // Snapshot for rollback in case the cloud insert fails
+    const snapshot = getStudents();
+
     const updatedList = localAddStudent(newStudent);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -246,9 +263,13 @@ export const useDataSync = () => {
         }
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud save error", err);
+
+        // Rollback optimistic local update to the pre-mutation snapshot
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
         guardedSetSyncStatus('error');
 
         let userMessage = "Failed to save data to server.";
@@ -273,17 +294,20 @@ export const useDataSync = () => {
   }, [user]);
 
   const updateStudent = useCallback(async (studentData) => {
-    // 1. Local Update
+    // 1. Local Update (Optimistic)
     const shouldReplaceFee = !!studentData.replaceFeeHistory;
     const { replaceFeeHistory, ...cleanData } = studentData;
-    
+
+    // Snapshot for rollback in case the cloud update fails
+    const snapshot = getStudents();
+
     const updatedList = localUpdateStudent(cleanData);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -294,6 +318,9 @@ export const useDataSync = () => {
         // 2. Cloud Update
         guardedSetSyncStatus('syncing');
         try {
+            // normalizeStudent returns the full student object required by the RPC.
+            // The sync_student_fee_batch RPC (see supabase/migrations/20240601_fix_sync_rpc.sql)
+            // must be present for the shouldReplaceFee path to work correctly.
             const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
 
             // Use transactional RPC when replacing fees to ensure atomicity
@@ -314,9 +341,13 @@ export const useDataSync = () => {
             }
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud update error", err);
+
+        // Rollback optimistic local update to the pre-mutation snapshot
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
         guardedSetSyncStatus('error');
 
         let userMessage = "Failed to update student on server.";
@@ -343,12 +374,15 @@ export const useDataSync = () => {
   const bulkUpdateStudents = useCallback(async (studentsData) => {
     if (!studentsData || studentsData.length === 0) return;
 
-    // 1. Local Update
+    // 1. Local Update (Optimistic)
     const replaceFeeHistoryIds = new Set(studentsData.filter(s => s.replaceFeeHistory).map(s => s.id));
     const cleanDataList = studentsData.map(s => {
         const { replaceFeeHistory, ...clean } = s;
         return clean;
     });
+
+    // Snapshot for rollback in case the cloud update fails
+    const snapshot = getStudents();
 
     const updatedList = localBulkUpdateStudents(cleanDataList);
     guardedSetStudents(updatedList);
@@ -356,7 +390,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -406,9 +440,13 @@ export const useDataSync = () => {
         batchReplaceIds.forEach(id => pendingFeeReplacementIdsRef.current.delete(id));
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud bulk update error", err);
+
+        // Rollback optimistic local update to the pre-mutation snapshot
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
         guardedSetSyncStatus('error');
 
         let userMessage = "Failed to bulk update students on server.";
@@ -434,7 +472,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -446,7 +484,7 @@ export const useDataSync = () => {
         const { error } = await supabase.from('students').delete().eq('id', id);
         if (error) throw error;
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud delete error", err);
         guardedSetSyncStatus('error');
@@ -477,9 +515,10 @@ export const useDataSync = () => {
     const paymentsWithIds = payments.map(p => ({ ...p, id: crypto.randomUUID(), student_id: studentId }));
 
     // 1. Client-Side Validation (Catch duplicates before DB insert)
-    const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds });
+    const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds, name: '_', class: '_', section: '_', rollNo: '_' });
     const newMonths = fees.map(f => f.month).filter(Boolean);
-    const existingStudent = students.find(s => s.id === studentId);
+    // Read from sessionStorage directly to avoid stale closure over the students state variable
+    const existingStudent = getStudents().find(s => s.id === studentId);
     const existingMonths = existingStudent?.feeHistory?.map(f => f.month).filter(Boolean) || [];
     
     const newMonthSet = new Set();
@@ -506,7 +545,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
         console.warn("Supabase not configured - changes saved locally only");
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
         return;
     }
 
@@ -523,7 +562,7 @@ export const useDataSync = () => {
         }
         
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud fee error", err);
         guardedSetSyncStatus('error');
@@ -546,12 +585,13 @@ export const useDataSync = () => {
         // Security: don't expose raw err.message unless it's our custom one
         return Promise.reject(new Error(userMessage));
     }
-  }, [user, supabase, students, fetchFromCloud]);
+  }, [user, supabase, fetchFromCloud]);
 
   const editFeePayment = useCallback(async (oldStudentId, newStudentId, updatedFee) => {
     // 0. Synchronous duplicate check
+    // Read from sessionStorage directly to avoid stale closure over the students state variable
     if (updatedFee.type === 'Monthly' && updatedFee.month) {
-        const targetStudent = students.find(s => s.id === newStudentId);
+        const targetStudent = getStudents().find(s => s.id === newStudentId);
         if (targetStudent && targetStudent.feeHistory) {
             const hasDuplicate = targetStudent.feeHistory.some(
                 f => f.id !== updatedFee.id && f.type === 'Monthly' && f.month === updatedFee.month
@@ -571,7 +611,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return updatedList;
     }
 
@@ -591,7 +631,7 @@ export const useDataSync = () => {
         if (error) throw error;
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
         return updatedList;
     } catch (err) {
         console.error("Cloud edit fee error", err);
@@ -616,9 +656,8 @@ export const useDataSync = () => {
   }, [user, supabase, fetchFromCloud]);
 
   const importStudents = useCallback(async (newStudents) => {
-    // Save snapshot for rollback
-    const previousStudents = [...students];
-    const previousStatus = syncStatus;
+    // Save snapshot for rollback — read from sessionStorage to avoid stale closure
+    const previousStudents = getStudents();
 
     // 1. Local Update (Full Replace)
     saveStudents(newStudents);
@@ -627,7 +666,7 @@ export const useDataSync = () => {
 
     if (!user || !supabase) {
       console.warn("Supabase not configured - changes saved locally only");
-      syncChannel?.postMessage('sync_required');
+      syncChannelRef.current?.postMessage('sync_required');
       return;
     }
 
@@ -656,7 +695,7 @@ export const useDataSync = () => {
         if (functionError) throw functionError;
 
         guardedSetSyncStatus('synced');
-        syncChannel?.postMessage('sync_required');
+        syncChannelRef.current?.postMessage('sync_required');
     } catch (err) {
         console.error("Cloud import error", err);
         guardedSetSyncStatus('error');
@@ -677,14 +716,15 @@ export const useDataSync = () => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
 
-        // Rollback to snapshot
+        // Rollback local data to snapshot but keep 'error' sync status so the
+        // user can see the failure. Do NOT restore previousStatus here as that
+        // would silently overwrite the 'error' state set above.
         saveStudents(previousStudents);
         guardedSetStudents(previousStudents);
-        guardedSetSyncStatus(previousStatus);
     }
   }, [user]);
 
-  const dismissError = useCallback(() => {
+
     guardedSetSyncError(null);
   }, []);
 

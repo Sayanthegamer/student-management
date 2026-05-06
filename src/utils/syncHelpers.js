@@ -49,6 +49,12 @@ export const getClassFeeAmount = (className) => {
  * @returns {{student: Object, fees: Object[]}} An object containing the normalized student and their fees.
  */
 export const normalizeStudent = (student) => {
+  // Validate required fields before normalizing
+  const missingFields = ['id', 'name', 'class', 'section', 'rollNo'].filter(f => !student[f]);
+  if (missingFields.length > 0) {
+    throw new Error(`normalizeStudent: missing required fields: ${missingFields.join(', ')}`);
+  }
+
   // Extract ONLY storage/sync fields, ignore calculated fields
   const {
     feeHistory,
@@ -59,7 +65,6 @@ export const normalizeStudent = (student) => {
 
     fine,            // ✗ Calculated per-payment in fee history - not stored
 
-    tcDetails,       // ✓ Store as JSON string (packed separately below)
 
     ...rest          // ✓ All other fields (intentionally spread and ignored)
   } = student;
@@ -137,11 +142,6 @@ export const normalizeStudent = (student) => {
     computer_fee: student.computerFee != null ? Number(student.computerFee) : undefined,
   };
 
-  // Only include tc_details if it's present in the student object
-  // This preserves existing tc_details during partial updates
-  if ('tcDetails' in student && student.tcDetails) {
-    cleanedStudent.tc_details = JSON.stringify(student.tcDetails);
-  }
 
   // Filter out undefined keys explicitly (though JSON.stringify does this, Supabase client might check keys before stringifying)
   Object.keys(cleanedStudent).forEach(key =>
@@ -185,15 +185,6 @@ export const denormalizeStudents = (studentsData, feesData) => {
   return studentsData.map(s => {
     const feeHistory = feesMap[s.id] || [];
 
-    // Parse tc_details if present (Issue 1 fix)
-    let tcDetails = null;
-    if (s.tc_details) {
-      try {
-        tcDetails = typeof s.tc_details === 'string' ? JSON.parse(s.tc_details) : s.tc_details;
-      } catch {
-        tcDetails = null;
-      }
-    }
 
     // Get the class fee amount
     const feesAmount = getClassFeeAmount(s.class);
@@ -220,8 +211,6 @@ export const denormalizeStudents = (studentsData, feesData) => {
       email: s.email,
       admissionNumber: s.admission_number,
 
-      // TC Details (Issue 1 fix)
-      tcDetails,
 
       // Status change metadata (Issue 4 fix)
       lastStatusChangeDate: s.last_status_change_date,
