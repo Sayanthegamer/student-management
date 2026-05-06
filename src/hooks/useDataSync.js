@@ -101,14 +101,12 @@ export const useDataSync = () => {
 
         if (!user || !supabase) {
           guardedSetStudents(getStudents());
-          guardedSetSyncError(null);
           guardedSetSyncStatus('synced');
           return;
         }
 
         isSyncingRef.current = true;
         guardedSetSyncStatus('syncing');
-        guardedSetSyncError(null);
         try {
           const { data: studentsData, error: sError } = await supabase.from('students').select('*').abortSignal(signal);
           if (sError) throw sError;
@@ -723,6 +721,7 @@ export const useDataSync = () => {
         guardedSetStudents(previousStudents);
     }
   }, [user]);
+
 
   const dismissError = useCallback(() => {
     guardedSetSyncError(null);
