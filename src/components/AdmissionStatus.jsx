@@ -200,10 +200,6 @@ const AdmissionStatus = ({ students, onUpdateStudent, user }) => {
                 lastStatusChangedBy: user?.email || user?.id || 'system'
             };
 
-            // Issue #9: TC reversal via AdmissionStatus leaves stale tcDetails
-            if (student.admissionStatus === 'Exited' && pendingAction.newStatus !== 'Exited') {
-                updatedStudent.tcDetails = null;
-            }
 
             onUpdateStudent(updatedStudent);
         }
