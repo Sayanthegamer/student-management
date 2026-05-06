@@ -76,6 +76,10 @@ function App() {
     setDeleteConfirm(id);
   }, []);
 
+  const handleBulkDeleteStudents = useCallback(async (ids) => {
+    await Promise.allSettled(ids.map(id => deleteStudent(id)));
+  }, [deleteStudent]);
+
   const confirmDelete = useCallback(() => {
     if (deleteConfirm) {
       deleteStudent(deleteConfirm);
@@ -108,9 +112,16 @@ function App() {
     navigate('/students');
   }, [navigate]);
 
-  const handleImportSuccess = useCallback((importedData) => {
-    importStudents(importedData);
-    showToast('Data imported and synced successfully!', 'success');
+  const handleImportSuccess = useCallback(async (importedData) => {
+    try {
+      await importStudents(importedData);
+
+      showToast("Data imported and synced successfully!", "success");
+    } catch (err) {
+      console.error("Import failed", err);
+      showToast("Failed to import data.", "error");
+      throw err;
+    }
   }, [importStudents, showToast]);
 
   React.useEffect(() => {
@@ -276,6 +287,7 @@ function App() {
                   onAdd={handleAddClick}
                   onEdit={handleEditClick}
                   onDelete={handleDeleteClick}
+                  onBulkDelete={handleBulkDeleteStudents}
                   onPayFee={handlePayFee}
                   onBulkUpdateStudents={handleBulkUpdateStudents}
                 />

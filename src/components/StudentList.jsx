@@ -124,7 +124,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
 
         setBulkPending(true);
         try {
-            await Promise.allSettled(Array.from(selectedStudents).map(id => onDelete(id)));
+            await onBulkDelete(Array.from(selectedStudents));
             setSelectedStudents(new Set());
         } catch (error) {
             console.error('Error applying bulk delete:', error);
