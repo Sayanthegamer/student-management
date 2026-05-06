@@ -49,10 +49,6 @@ export const getClassFeeAmount = (className) => {
  * @returns {{student: Object, fees: Object[]}} An object containing the normalized student and their fees.
  */
 export const normalizeStudent = (student) => {
-  if (!student.id || !student.name || !student.class || !student.section || !student.rollNo) {
-    throw new Error(`normalizeStudent: missing required field on student ${JSON.stringify({id: student.id, name: student.name})}`);
-  }
-
   // Extract ONLY storage/sync fields, ignore calculated fields
   const {
     feeHistory,
@@ -204,7 +200,6 @@ export const denormalizeStudents = (studentsData, feesData) => {
 
     // Calculate fees status based on fee history
     // ⚡ Bolt Performance Optimization: Pass pre-computed currentMonth to avoid O(N) Date object creations
-    // feesStatus reflects whether the student has paid for the current calendar month
     const feesStatus = calculateFeesStatus({ feeHistory }, currentMonth, currentMonth);
 
     return {
