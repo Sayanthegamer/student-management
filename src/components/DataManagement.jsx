@@ -63,7 +63,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
         }
     };
 
-    const handleImport = (event) => {
+    const handleImport = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
 
@@ -73,7 +73,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
         setMessage('Executing safety backup and validating import data...');
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             try {
                 const content = e.target.result;
                 let parsedData;
@@ -92,8 +92,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
                     throw new Error('Invalid data structure: Missing required student fields.');
                 }
 
-                saveStudents(parsedData);
-                onImportSuccess(parsedData);
+                await onImportSuccess(parsedData);
 
                 setImportStatus('success');
                 setMessage(`Import Complete: ${parsedData.length} student records processed. Safety backup downloaded.`);

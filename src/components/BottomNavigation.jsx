@@ -11,7 +11,6 @@ const mainNavItems = [
 
 const moreNavItems = [
   { path: '/promotions', label: 'Promotions', icon: ArrowUpRight },
-  { path: '/tc', label: 'Certificates', icon: FileText },
   { path: '/data', label: 'Settings', icon: Settings },
 ];
 
