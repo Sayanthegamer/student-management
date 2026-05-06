@@ -1,0 +1,16 @@
+{
+  "name": "Kinetic Ledger",
+  "short_name": "Kinetic Ledger",
+  "description": "High-performance student management system.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020203",
+  "theme_color": "#020203",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
