@@ -10,12 +10,12 @@ BEGIN
     -- 1. Bulk upsert students using a single set-based operation
     IF jsonb_typeof(p_students) = 'array' THEN
         INSERT INTO public.students (
-            id, name, roll_no, class, section, admission_status,
+            id, name, roll_no, class, section, status,
             tuition_fee, smart_board_fee, computer_fee,
             last_status_change_date, last_status_changed_by
         )
         SELECT
-            id, name, roll_no, class, section, admission_status,
+            id, name, roll_no, class, section, status,
             tuition_fee, smart_board_fee, computer_fee,
             last_status_change_date, last_status_changed_by
         FROM jsonb_to_recordset(p_students) AS x(
@@ -24,7 +24,7 @@ BEGIN
             roll_no TEXT,
             class TEXT,
             section TEXT,
-            admission_status TEXT,
+            status TEXT,
             tuition_fee NUMERIC,
             smart_board_fee NUMERIC,
             computer_fee NUMERIC,
@@ -36,7 +36,7 @@ BEGIN
             roll_no = EXCLUDED.roll_no,
             class = EXCLUDED.class,
             section = EXCLUDED.section,
-            admission_status = EXCLUDED.admission_status,
+            status = EXCLUDED.status,
             tuition_fee = EXCLUDED.tuition_fee,
             smart_board_fee = EXCLUDED.smart_board_fee,
             computer_fee = EXCLUDED.computer_fee,
@@ -81,4 +81,4 @@ SET search_path = public;
 
 -- Revoke and grant execute permissions
 REVOKE EXECUTE ON FUNCTION public.sync_student_fee_batch(JSONB, JSONB, UUID[]) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.sync_student_fee_batch(JSONB, JSONB, UUID[]) TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.sync_student_fee_batch(JSONB, JSONB, UUID[]) TO anon, authenticated, service_role;
