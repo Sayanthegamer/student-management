@@ -145,16 +145,25 @@ export const addFeePayment = (studentId, paymentDetails) => {
       }
 
 
-      // Deduplicate history by month (for monthly fees) or type (for admission/promotion)
-      // to prevent duplicate entries on retries.
+      // Deduplicate history to prevent the same payment record (by id) from appearing
+      // twice (e.g. on optimistic-update retries), while still allowing multiple
+      // distinct payments of the same type (e.g. re-enrollment admission fees).
+      // Keys:
+      //   Monthly    → p.month          (one entry per calendar month)
+      //   Promotion  → Promotion:<id>   (each promotion event is unique)
+      //   Admission  → Admission:<id>   (each admission event is unique)
+      //   All others → <type>:<id>      (deduplicate by exact payment id only)
       const historyMap = new Map();
       [...currentHistory, ...newPayments].forEach(p => {
-        let key = p.type;
+        let key;
         if (p.type === 'Monthly') {
           key = p.month;
         } else if (p.type === 'Promotion') {
-          // Preserve separate promotions across different times
-          key = `${p.type}:${p.id || stableHash(JSON.stringify(p)) || 'UNKNOWN_PROMOTION'}`;
+          key = `Promotion:${p.id}`;
+        } else if (p.type === 'Admission') {
+          key = `Admission:${p.id}`;
+        } else {
+          key = `${p.type}:${p.id}`;
         }
         historyMap.set(key, p);
       });
