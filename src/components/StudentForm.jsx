@@ -3,7 +3,6 @@ import { Save, X, User, GraduationCap, IndianRupee, Calendar, CheckCircle2, Tick
 import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
 import { CLASS_FEES, ADMISSION_FEES, ANNUAL_CHARGES, SUBSIDIARY_CHARGES, ANNUAL_CHARGE_CATEGORIES, SUBSIDIARY_CATEGORIES } from '../utils/constants';
-import { PhoneCall } from 'lucide-react';
 
 /**
  * A sub-component for rendering form input fields consistently.

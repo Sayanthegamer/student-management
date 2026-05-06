@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight, HelpCircle, Zap, TrendingUp, Download, PieChart } from 'lucide-react';
+import { Users, IndianRupee, AlertCircle, UserPlus, FileText, Activity, Clock, ArrowRight, HelpCircle, Zap, Download } from 'lucide-react';
 import { getActivities } from '../utils/storage';
 
 // Activity type metadata map for consistent styling and icons
