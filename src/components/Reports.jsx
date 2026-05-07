@@ -4,7 +4,7 @@ import XLSX from 'xlsx-js-style';
 import useDebounce from '../hooks/useDebounce';
 import Pagination from './Pagination';
 
-const Reports = ({ students }) => {
+const Reports = ({ students = [] }) => {
     const [timeframe, setTimeframe] = useState('month'); // 'today', 'month', 'year', 'custom'
     const [customStartDate, setCustomStartDate] = useState('');
     const [customEndDate, setCustomEndDate] = useState('');
@@ -15,14 +15,21 @@ const Reports = ({ students }) => {
 
     const allTransactions = useMemo(() => {
         const transactions = [];
-        students.forEach(student => {
-            if (student.feeHistory && Array.isArray(student.feeHistory)) {
-                student.feeHistory.forEach(fee => {
+        students?.forEach(student => {
+            if (student?.feeHistory && Array.isArray(student.feeHistory)) {
+                student?.feeHistory?.forEach(fee => {
                     let safeDate = '';
-                    if (fee.date) {
+                    if (fee?.date) {
                         const parsedDate = new Date(fee.date);
                         if (!isNaN(parsedDate.getTime())) {
-                            safeDate = parsedDate.toISOString();
+                            // Format as YYYY-MM-DDTHH:mm:ss local time
+                            const yr = parsedDate.getFullYear();
+                            const mo = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                            const da = String(parsedDate.getDate()).padStart(2, '0');
+                            const hr = String(parsedDate.getHours()).padStart(2, '0');
+                            const mi = String(parsedDate.getMinutes()).padStart(2, '0');
+                            const se = String(parsedDate.getSeconds()).padStart(2, '0');
+                            safeDate = `${yr}-${mo}-${da}T${hr}:${mi}:${se}`;
                         } else {
                             safeDate = String(fee.date); // fallback to raw string if valid string but not date
                         }
@@ -32,14 +39,14 @@ const Reports = ({ students }) => {
                         id: fee.id,
                         date: safeDate,
                         studentId: student.id,
-                        studentName: String(student.name || ''),
-                        rollNumber: String(student.rollNo || 'N/A'),
-                        studentClass: String(student.class || ''),
-                        section: String(student.section || 'N/A'),
-                        particulars: String(fee.remarks || 'Fee Payment'),
+                        studentName: String(student?.name || ''),
+                        rollNumber: String(student?.rollNo || 'N/A'),
+                        studentClass: String(student?.class || ''),
+                        section: String(student?.section || 'N/A'),
+                        particulars: String(fee?.remarks || 'Fee Payment'),
                         amount: parseFloat(fee.amount) || 0,
                         fine: fee.fine || 0,
-                        itemized: fee.itemized_breakdown || {}
+                        itemized: fee?.itemized_breakdown || {}
                     });
                 });
             }
@@ -51,11 +58,15 @@ const Reports = ({ students }) => {
     const filteredTransactions = useMemo(() => {
         let filtered = allTransactions;
 
-        // Apply time filter using string comparisons to avoid timezone shifts
-        const nowStr = new Date().toISOString();
-        const todayStr = nowStr.slice(0, 10);
-        const currentMonthStr = nowStr.slice(0, 7);
-        const currentYearStr = nowStr.slice(0, 4);
+        // Apply time filter using string comparisons to avoid timezone shifts (using local time)
+        const now = new Date();
+        const yr = now.getFullYear();
+        const mo = String(now.getMonth() + 1).padStart(2, '0');
+        const da = String(now.getDate()).padStart(2, '0');
+
+        const todayStr = `${yr}-${mo}-${da}`;
+        const currentMonthStr = `${yr}-${mo}`;
+        const currentYearStr = `${yr}`;
 
         if (timeframe === 'today') {
             filtered = filtered.filter(t => t.date.slice(0, 10) === todayStr);
@@ -94,7 +105,7 @@ const Reports = ({ students }) => {
             return strVal;
         };
 
-        const titleRow = [`Transactions Report - ${new Date().toISOString().slice(0, 10)}`];
+        const titleRow = [`Transactions Report - ${new Date().toLocaleDateString('en-CA')}`];
         const headerRow = ['Date', 'Student Name', 'Roll No', 'Class', 'Section', 'Particulars', 'Tuition Fee', 'SmartBoard Fee', 'Computer Fee', 'Admission Fee', 'Annual Charges', 'Subsidiary Charges', 'Fine', 'Total Amount'];
 
         // Setup rows for aoa_to_sheet
@@ -229,7 +240,7 @@ const Reports = ({ students }) => {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Transactions');
 
-        XLSX.writeFile(workbook, `Transactions_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
+        XLSX.writeFile(workbook, `Transactions_Report_${new Date().toLocaleDateString('en-CA')}.xlsx`);
     };
 
     // Pagination logic
@@ -380,10 +391,10 @@ const Reports = ({ students }) => {
                                     <tr key={t.id} className="hover:bg-[var(--bg-main)] transition-colors">
                                         <td className="p-4 whitespace-nowrap">
                                             <div className="text-sm font-medium text-[var(--text-primary)]">
-                                                {t.date.slice(0, 10)}
+                                                {t.date ? t.date.slice(0, 10) : 'Date Unavailable'}
                                             </div>
                                             <div className="text-xs text-[var(--text-secondary)] mt-0.5">
-                                                {t.date.length > 10 ? t.date.slice(11, 16) : ''}
+                                                {t.date && t.date.length > 10 && t.date !== 'Date Unavailable' ? t.date.slice(11, 16) : ''}
                                             </div>
                                         </td>
                                         <td className="p-4">
@@ -423,7 +434,7 @@ const Reports = ({ students }) => {
                                         </div>
                                         <div className="text-right">
                                             <p className="text-emerald-400 font-bold text-sm flex items-center justify-end"><IndianRupee size={12} className="mr-0.5"/>{t.amount.toLocaleString()}</p>
-                                            <p className="text-[var(--text-muted)] text-[10px]">{new Date(t.date).toLocaleDateString()}</p>
+                                            <p className="text-[var(--text-muted)] text-[10px]">{t.date && !isNaN(new Date(t.date).getTime()) ? new Date(t.date).toLocaleDateString() : 'Date Unavailable'}</p>
                                         </div>
                                     </div>
                                     <div className="bg-[var(--bg-main)] rounded-md p-2 mt-1">
