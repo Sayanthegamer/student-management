@@ -269,6 +269,7 @@ export const useDataSync = () => {
         saveStudents(snapshot);
         guardedSetStudents(snapshot);
         guardedSetSyncStatus('error');
+        await fetchFromCloud();
 
         let userMessage = "Failed to save data to server.";
         if (err.message?.includes('duplicate')) {
@@ -289,7 +290,7 @@ export const useDataSync = () => {
         }, 5000);
         throw new Error(userMessage);
     }
-  }, [user]);
+  }, [user, supabase, fetchFromCloud]);
 
   const updateStudent = useCallback(async (studentData) => {
     // 1. Local Update (Optimistic)
@@ -347,6 +348,7 @@ export const useDataSync = () => {
         saveStudents(snapshot);
         guardedSetStudents(snapshot);
         guardedSetSyncStatus('error');
+        await fetchFromCloud();
 
         let userMessage = "Failed to update student on server.";
         if (err.message?.includes('duplicate')) {
@@ -367,7 +369,7 @@ export const useDataSync = () => {
         }, 5000);
         throw new Error(userMessage);
     }
-  }, [user]);
+  }, [user, supabase, fetchFromCloud]);
 
   const bulkUpdateStudents = useCallback(async (studentsData) => {
     if (!studentsData || studentsData.length === 0) return;
@@ -446,6 +448,7 @@ export const useDataSync = () => {
         saveStudents(snapshot);
         guardedSetStudents(snapshot);
         guardedSetSyncStatus('error');
+        await fetchFromCloud();
 
         let userMessage = "Failed to bulk update students on server.";
         if (err.message?.includes('permission')) {
@@ -460,10 +463,11 @@ export const useDataSync = () => {
         }, 5000);
         throw new Error(userMessage);
     }
-  }, [user]);
+  }, [user, supabase, fetchFromCloud]);
 
   const deleteStudent = useCallback(async (id) => {
     // 1. Local Update
+    const snapshot = getStudents();
     const updatedList = localDeleteStudent(id);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
@@ -487,6 +491,11 @@ export const useDataSync = () => {
         console.error("Cloud delete error", err);
         guardedSetSyncStatus('error');
 
+        // Rollback optimistic update
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
+        await fetchFromCloud();
+
         let userMessage = "Failed to delete student from server.";
         if (err.message?.includes('permission')) {
           userMessage = "You don't have permission to perform this action.";
@@ -503,7 +512,7 @@ export const useDataSync = () => {
           guardedSetSyncStatus(prev => prev === 'error' ? 'unsaved' : prev);
         }, 5000);
     }
-  }, [user]);
+  }, [user, supabase, fetchFromCloud]);
 
   const addFeePayment = useCallback(async (studentId, paymentDetails) => {
     if (!paymentDetails) return Promise.reject(new Error('Invalid payment details'));
@@ -537,6 +546,7 @@ export const useDataSync = () => {
     }
 
     // 2. Local Update (Optimistic)
+    const snapshot = getStudents();
     const updatedList = localAddFeePayment(studentId, paymentsWithIds);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
@@ -566,7 +576,9 @@ export const useDataSync = () => {
         guardedSetSyncStatus('error');
 
         // Rollback optimistic update
-        fetchFromCloud();
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
+        await fetchFromCloud();
 
         let userMessage = err.message || "Failed to save fee payment to server.";
         if (err.message?.includes('permission')) {
@@ -603,6 +615,7 @@ export const useDataSync = () => {
     }
 
     // 1. Local Optimistic Update
+    const snapshot = getStudents();
     const updatedList = localEditFeePayment(oldStudentId, newStudentId, updatedFee);
     guardedSetStudents(updatedList);
     guardedSetSyncStatus('unsaved');
@@ -635,8 +648,10 @@ export const useDataSync = () => {
         console.error("Cloud edit fee error", err);
         guardedSetSyncStatus('error');
         
-        // Revert local optimistic update by forcing a sync from cloud
-        fetchFromCloud();
+        // Rollback optimistic update
+        saveStudents(snapshot);
+        guardedSetStudents(snapshot);
+        await fetchFromCloud();
 
         let userMessage = "Failed to edit payment on server.";
         if (err.message?.includes('permission')) {
@@ -719,8 +734,9 @@ export const useDataSync = () => {
         // would silently overwrite the 'error' state set above.
         saveStudents(previousStudents);
         guardedSetStudents(previousStudents);
+        await fetchFromCloud();
     }
-  }, [user]);
+  }, [user, supabase, fetchFromCloud]);
 
 
   const dismissError = useCallback(() => {
