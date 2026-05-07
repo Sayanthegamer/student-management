@@ -1,9 +1,15 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Filter, Bus, CheckCircle2, Circle } from 'lucide-react';
+import { Search, Filter, Bus, CheckCircle2, Circle, AlertCircle, ArrowRight } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import useDebounce from '../hooks/useDebounce';
 import CustomMonthPicker from './CustomMonthPicker';
 import { CLASS_ORDER } from '../utils/constants';
+
+const getLocalMonthString = (date = new Date()) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    return `${y}-${m}`;
+};
 
 const TransportationFees = ({ students, onBulkUpdateStudents }) => {
     const { showToast } = useToast();
@@ -17,12 +23,33 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
         const m = String(now.getMonth() + 1).padStart(2, '0');
         return `${now.getFullYear()}-${m}`;
     });
+    const [isMultiMonth, setIsMultiMonth] = useState(false);
+    const [endMonth, setEndMonth] = useState(() => getLocalMonthString());
 
     const [selectedStudentIds, setSelectedStudentIds] = useState(new Set());
     const [amount, setAmount] = useState('');
     const [date, setDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [remarks, setRemarks] = useState('Transportation Fee');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+    const errorMessage = (isMultiMonth && endMonth < selectedMonth) ? 'End month cannot be before start month' : '';
+
+    const monthsToApply = useMemo(() => {
+        if (!isMultiMonth) return [selectedMonth];
+        if (errorMessage) return [];
+
+        const start = new Date(selectedMonth + '-01T00:00:00');
+        const end = new Date(endMonth + '-01T00:00:00');
+
+        const months = [];
+        let current = new Date(start);
+        while (current <= end) {
+            months.push(getLocalMonthString(current));
+            current.setMonth(current.getMonth() + 1);
+        }
+        return months;
+    }, [selectedMonth, endMonth, isMultiMonth, errorMessage]);
 
     // Only show active, non-exited students
     const activeStudents = useMemo(() => {
@@ -58,12 +85,12 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
             const matchesSection = !filterSection || student.section === filterSection;
 
             const hasPaidForMonth = student.feeHistory?.some(
-                fee => fee.type === 'Transportation' && fee.month === selectedMonth
+                fee => fee.type === 'Transportation' && monthsToApply.includes(fee.month)
             );
 
             return matchesSearch && matchesClass && matchesSection && !hasPaidForMonth;
         }).sort((a, b) => a.name.localeCompare(b.name));
-    }, [activeStudents, debouncedSearchTerm, filterClass, filterSection, selectedMonth]);
+    }, [activeStudents, debouncedSearchTerm, filterClass, filterSection, monthsToApply]);
 
     // Select/Deselect handlers
     const toggleStudentSelection = (id) => {
@@ -98,7 +125,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
     // Clear selection when month changes
     useEffect(() => {
         setSelectedStudentIds(new Set());
-    }, [selectedMonth]);
+    }, [selectedMonth, isMultiMonth, endMonth]);
 
     // Handle Submission
     const handleSubmit = async (e) => {
@@ -122,7 +149,13 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
             return;
         }
 
-        const confirmMessage = `Are you sure you want to add a Transportation Fee of ₹${numAmount} for ${selectedStudentIds.size} student(s)?`;
+        if (errorMessage || monthsToApply.length === 0) {
+            showToast(errorMessage || 'No valid months selected.', 'error');
+            return;
+        }
+
+        const totalPerStudent = numAmount * monthsToApply.length;
+        const confirmMessage = `Are you sure you want to add a Transportation Fee of ₹${totalPerStudent} for ${selectedStudentIds.size} student(s) over ${monthsToApply.length} month(s)?`;
         if (!window.confirm(confirmMessage)) return;
 
         try {
@@ -131,20 +164,19 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                 const student = students.find(s => s.id === id);
                 if (!student) return null;
 
-                                const newFeeRecord = {
+                const newFeeRecords = monthsToApply.map(monthStr => ({
                     id: crypto.randomUUID(),
                     date: date,
-                    month: selectedMonth,
+                    month: monthStr,
                     type: 'Transportation',
                     amount: numAmount,
                     fine: 0,
                     remarks: remarks || 'Transportation Fee',
-
-                };
+                }));
 
                 return {
                     ...student,
-                    feeHistory: [...(student.feeHistory || []), newFeeRecord],
+                    feeHistory: [...(student.feeHistory || []), ...newFeeRecords],
                     replaceFeeHistory: true
                 };
             }).filter(Boolean);
@@ -236,12 +268,53 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="relative sm:col-span-3 lg:col-span-1">
-                                        <CustomMonthPicker
-                                            value={selectedMonth}
-                                            onChange={setSelectedMonth}
-                                            compact={true}
-                                        />
+                                    <div className="relative sm:col-span-3 lg:col-span-3">
+                                        <div className="bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-subtle)] space-y-3">
+                                            <div className="flex justify-between items-center">
+                                                <label className="text-xs font-semibold text-[var(--text-secondary)]">Duration</label>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsMultiMonth(!isMultiMonth)}
+                                                    className={`text-[10px] font-bold px-3 py-1.5 rounded-lg transition-colors border ${
+                                                        isMultiMonth
+                                                            ? 'bg-[var(--accent-light)] text-[var(--accent-primary)] border-[var(--accent-primary)]/20'
+                                                            : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
+                                                    }`}
+                                                >
+                                                    {isMultiMonth ? 'Multi' : 'Single'}
+                                                </button>
+                                            </div>
+
+                                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                                                <div className="flex-1 w-full">
+                                                    <CustomMonthPicker
+                                                        value={selectedMonth}
+                                                        onChange={setSelectedMonth}
+                                                        compact={isMultiMonth}
+                                                    />
+                                                </div>
+                                                {isMultiMonth && (
+                                                    <>
+                                                        <div className="hidden sm:flex items-center text-[var(--text-muted)]">
+                                                            <ArrowRight size={16} />
+                                                        </div>
+                                                        <div className="flex-1 w-full">
+                                                            <CustomMonthPicker
+                                                                value={endMonth}
+                                                                onChange={setEndMonth}
+                                                                compact={true}
+                                                            />
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                            {errorMessage && (
+                                                <div className="flex items-center gap-1.5 text-red-500 text-xs mt-1.5 font-medium">
+                                                    <AlertCircle size={14} />
+                                                    <span>{errorMessage}</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -389,12 +462,12 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                         <div className="flex justify-between items-center mb-4">
                                             <span className="text-sm text-[var(--text-secondary)]">Total to Apply</span>
                                             <span className="text-lg font-bold text-[var(--text-primary)] tabular-nums">
-                                                ₹{(Number(amount) || 0) * selectedStudentIds.size}
+                                                ₹{(Number(amount) || 0) * selectedStudentIds.size * (monthsToApply.length || 0)}
                                             </span>
                                         </div>
                                                                                 <button
                                             type="submit"
-                                            disabled={selectedStudentIds.size === 0 || !amount || isSubmitting}
+                                            disabled={selectedStudentIds.size === 0 || !amount || isSubmitting || !!errorMessage || monthsToApply.length === 0}
                                             className="w-full py-2.5 px-4 bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] disabled:bg-[var(--bg-elevated)] disabled:text-[var(--text-muted)] disabled:border disabled:border-[var(--border-color)] text-white text-sm font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
                                         >
                                             <Bus size={16} />
