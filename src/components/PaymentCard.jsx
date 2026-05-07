@@ -28,6 +28,8 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
     return new Date(year, month - 1, day).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
+  const lastPayment = isExpanded ? getLastPayment(student) : null;
+
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[16px] p-4 transition-all duration-200 slide-up group hover:shadow-md hover:border-[var(--accent-primary)]/30">
       <div className="flex items-start justify-between gap-3 mb-4">
@@ -60,17 +62,12 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
           </div>
         </div>
 
-        {isExpanded && (() => {
-          const lastPayment = getLastPayment(student);
-          if (!lastPayment) {
-             return (
-                 <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
-                   <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Last Payment</p>
-                   <p className="text-[var(--text-secondary)] font-mono text-xs font-semibold">N/A</p>
-                 </div>
-             );
-          }
-          return (
+        {isExpanded && (!lastPayment ? (
+             <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-2.5">
+               <p className="text-[10px] text-[var(--text-muted)] font-medium mb-1 tracking-wide">Last Payment</p>
+               <p className="text-[var(--text-secondary)] font-mono text-xs font-semibold">N/A</p>
+             </div>
+        ) : (
              <div className="col-span-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] p-3 flex flex-col justify-center">
                  <div className="flex items-center justify-between mb-1.5">
                      <p className="text-[10px] text-[var(--text-muted)] font-medium tracking-wide">Last Payment</p>
@@ -88,8 +85,7 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
                      )}
                  </div>
              </div>
-          );
-        })()}
+        ))}
       </div>
 
       <div className="flex items-center gap-2">
@@ -104,7 +100,7 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
 
           <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="p-2.5 text-[var(--text-secondary)] bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] hover:bg-[var(--bg-card-hover)] transition-colors min-h-[44px] flex items-center justify-center"
+              className="p-2.5 text-[var(--text-secondary)] bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] hover:bg-[var(--bg-card-hover)] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-expanded={isExpanded}
               aria-label="Toggle details"
           >

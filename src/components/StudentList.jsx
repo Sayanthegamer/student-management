@@ -438,7 +438,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
 
                 {/* Desktop Table View - High Density */}
                 <div className="hidden md:block flex-1 overflow-x-auto">
-                    <table className="w-full text-left border-collapse hidden md:table">
+                    <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-[var(--bg-main)] border-b border-[var(--border-subtle)]">
                                 <th className="px-4 py-3 w-10">

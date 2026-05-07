@@ -419,7 +419,7 @@ const Reports = ({ students }) => {
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <p className="text-[var(--text-primary)] font-bold text-sm">{t.studentName}</p>
-                                            <p className="text-[var(--text-secondary)] text-xs">{t.class} - {t.section} (Roll: {t.rollNo})</p>
+                                            <p className="text-[var(--text-secondary)] text-xs">{t.studentClass} (Roll: {t.rollNumber})</p>
                                         </div>
                                         <div className="text-right">
                                             <p className="text-emerald-400 font-bold text-sm flex items-center justify-end"><IndianRupee size={12} className="mr-0.5"/>{t.amount.toLocaleString()}</p>
@@ -429,11 +429,15 @@ const Reports = ({ students }) => {
                                     <div className="bg-[var(--bg-main)] rounded-md p-2 mt-1">
                                         <p className="text-[var(--text-muted)] text-[10px] mb-0.5">Particulars</p>
                                         <div className="flex flex-wrap gap-1">
-                                            {t.particulars.map((p, i) => (
-                                                <span key={i} className="px-1.5 py-0.5 bg-[var(--accent-light)] text-[var(--accent-primary)] rounded text-[10px] font-medium">
-                                                    {p.type}
-                                                </span>
-                                            ))}
+                                            {typeof t.particulars === 'string' ? (
+                                                t.particulars.split(', ').map((p, i) => (
+                                                    <span key={i} className="px-1.5 py-0.5 bg-[var(--accent-light)] text-[var(--accent-primary)] rounded text-[10px] font-medium">
+                                                        {p}
+                                                    </span>
+                                                ))
+                                            ) : (
+                                                <span className="text-[var(--text-primary)] text-xs">{t.particulars}</span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

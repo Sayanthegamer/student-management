@@ -7,6 +7,8 @@ import { Edit2, IndianRupee, Trash2, Zap, ChevronDown, ChevronUp } from 'lucide-
  */
 const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee, isSelected, onSelect }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const totalMonthly = (Number(student.tuitionFee) || 0) + (Number(student.smartBoardFee) || 0) + (Number(student.computerFee) || 0);
+  const displayContact = student.phone || student.contactNumber;
 
   return (
     <div className={`card-base p-3 transition-all duration-200 group hover:bg-[var(--bg-card-hover)] spotlight-card relative overflow-hidden ${isSelected ? 'ring-2 ring-[var(--accent-primary)] bg-[var(--accent-primary)]/5' : ''}`}>
@@ -82,12 +84,12 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee, i
         <div className="mb-3 space-y-2 border-t border-[var(--border-subtle)] pt-2 mt-2">
             <div className="flex justify-between text-xs">
                 <span className="text-[var(--text-muted)]">Monthly Fee:</span>
-                <span className="text-[var(--text-primary)] font-semibold">₹{student.monthlyFee}</span>
+                <span className="text-[var(--text-primary)] font-semibold">₹{totalMonthly}</span>
             </div>
-            {student.contactNumber && (
+            {displayContact && (
                 <div className="flex justify-between text-xs">
                     <span className="text-[var(--text-muted)]">Contact:</span>
-                    <span className="text-[var(--text-primary)] font-medium">{student.contactNumber}</span>
+                    <span className="text-[var(--text-primary)] font-medium">{displayContact}</span>
                 </div>
             )}
             <div className="flex justify-between text-xs">
@@ -129,7 +131,7 @@ const StudentCard = React.memo(({ student, status, onEdit, onDelete, onPayFee, i
         </button>
         <button
             onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}
-            className="p-2 border border-[var(--border-subtle)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] rounded-lg transition-all duration-150 touch-target active:scale-95"
+            className="p-2 border border-[var(--border-subtle)] bg-[var(--bg-main)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] rounded-lg transition-all duration-150 touch-target active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label={isExpanded ? `Collapse details for ${student.name}` : `Expand details for ${student.name}`}
             aria-expanded={isExpanded}
         >

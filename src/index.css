@@ -881,6 +881,6 @@ tbody tr:hover {
 
 @media (min-width: 640px) {
   .input-premium {
-    font-size: 14px;
+    font-size: 14px !important;
   }
 }

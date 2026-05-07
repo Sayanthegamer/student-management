@@ -285,7 +285,7 @@ const PaymentHistory = ({ students, onEditFee }) => {
                 </div>
 
                 <div className="hidden md:block overflow-x-auto">
-                    <table className="w-full text-left border-collapse hidden md:table">
+                    <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-[var(--bg-main)] border-b border-[var(--border-color)]">
                                 <th className="px-6 py-4 text-[10px] font-medium text-[var(--text-secondary)]  border-b border-[var(--border-color)]">Beneficiary</th>
