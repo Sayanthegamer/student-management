@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, Bus, CheckCircle2, Circle } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import useDebounce from '../hooks/useDebounce';
+import CustomMonthPicker from './CustomMonthPicker';
 import { CLASS_ORDER } from '../utils/constants';
 
 const TransportationFees = ({ students, onBulkUpdateStudents }) => {
@@ -10,6 +11,12 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const [filterClass, setFilterClass] = useState('');
     const [filterSection, setFilterSection] = useState('');
+
+    const [selectedMonth, setSelectedMonth] = useState(() => {
+        const now = new Date();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        return `${now.getFullYear()}-${m}`;
+    });
 
     const [selectedStudentIds, setSelectedStudentIds] = useState(new Set());
     const [amount, setAmount] = useState('');
@@ -50,9 +57,13 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
             const matchesClass = !filterClass || student.class === filterClass;
             const matchesSection = !filterSection || student.section === filterSection;
 
-            return matchesSearch && matchesClass && matchesSection;
+            const hasPaidForMonth = student.feeHistory?.some(
+                fee => fee.type === 'Transportation' && fee.month === selectedMonth
+            );
+
+            return matchesSearch && matchesClass && matchesSection && !hasPaidForMonth;
         }).sort((a, b) => a.name.localeCompare(b.name));
-    }, [activeStudents, debouncedSearchTerm, filterClass, filterSection]);
+    }, [activeStudents, debouncedSearchTerm, filterClass, filterSection, selectedMonth]);
 
     // Select/Deselect handlers
     const toggleStudentSelection = (id) => {
@@ -83,6 +94,11 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
             setFilterSection('');
         }
     }, [filterClass, filterSection, availableSections]);
+
+    // Clear selection when month changes
+    useEffect(() => {
+        setSelectedStudentIds(new Set());
+    }, [selectedMonth]);
 
     // Handle Submission
     const handleSubmit = async (e) => {
@@ -118,7 +134,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                 const newFeeRecord = {
                     id: crypto.randomUUID(),
                     date: date,
-                    month: null,
+                    month: selectedMonth,
                     type: 'Transportation',
                     amount: numAmount,
                     fine: 0,
@@ -220,6 +236,13 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                             ))}
                                         </select>
                                     </div>
+                                    <div className="relative sm:col-span-3 lg:col-span-1">
+                                        <CustomMonthPicker
+                                            value={selectedMonth}
+                                            onChange={setSelectedMonth}
+                                            compact={true}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -298,7 +321,12 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                     ) : (
                                         <div className="h-full flex flex-col items-center justify-center text-[var(--text-muted)] space-y-3 py-12">
                                             <Bus size={32} className="opacity-20" />
-                                            <p className="text-sm">No students match your search.</p>
+                                            <p className="text-sm text-center">
+                                                {(!debouncedSearchTerm && !filterClass && !filterSection)
+                                                    ? <>All transportation fees collected<br />for this month.</>
+                                                    : 'No students match your filters.'
+                                                }
+                                            </p>
                                         </div>
                                     )}
                                 </div>
