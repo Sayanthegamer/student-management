@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, ArrowRight, UserCheck, CreditCard, ChevronRight } from 'lucide-react';
-import { CLASS_ORDER, getNextClass, PROMOTION_FEES, CLASS_FEES } from '../utils/constants';
+import { CLASS_ORDER, getNextClass, CLASS_FEES, ANNUAL_CHARGE_CATEGORIES, SUBSIDIARY_CATEGORIES } from '../utils/constants';
 import { logActivity } from '../utils/storage';
 import useDebounce from '../hooks/useDebounce';
 import { useToast } from '../context/ToastContext';
@@ -41,7 +41,8 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
     const [filterSection, setFilterSection] = useState('');
     const [selectedStudents, setSelectedStudents] = useState(new Set());
     const [pendingAction, setPendingAction] = useState(null);
-    const [promotionFee, setPromotionFee] = useState('');
+    const [annualCharges, setAnnualCharges] = useState({});
+    const [subsidiaryCharges, setSubsidiaryCharges] = useState({});
     const [isSubmittingPromotion, setIsSubmittingPromotion] = useState(false);
     
     // Only show Confirmed students
@@ -71,14 +72,10 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
     const nextClass = filterClass ? getNextClass(filterClass) : null;
     const canPromote = selectedStudents.size > 0 && nextClass;
 
-    // Default promotion fee when class changes
+    // Reset charges when class changes
     useEffect(() => {
-        const next = getNextClass(filterClass);
-        if (next) {
-            setPromotionFee(PROMOTION_FEES[next] || '');
-        } else {
-            setPromotionFee('');
-        }
+        setAnnualCharges({});
+        setSubsidiaryCharges({});
     }, [filterClass]);
 
     // Deselect all when class or section filter changes
@@ -94,6 +91,24 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
         }
     };
 
+    const totalPromotionFee = useMemo(() => {
+        let total = 0;
+
+        // Sum annual charges
+        Object.values(annualCharges).forEach(amount => {
+            total += Number(amount) || 0;
+        });
+
+        // Sum subsidiary charges
+        Object.values(subsidiaryCharges).forEach(charge => {
+            const qty = Number(charge?.qty) || 0;
+            const price = Number(charge?.price) || 0;
+            total += (qty * price);
+        });
+
+        return total;
+    }, [annualCharges, subsidiaryCharges]);
+
     const handleSelectStudent = (id) => {
         const newSet = new Set(selectedStudents);
         if (newSet.has(id)) {
@@ -107,7 +122,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
     const handlePromote = () => {
         if (!canPromote) return;
         
-        const feeAmount = Math.max(0, Number(promotionFee) || 0);
+        const feeAmount = totalPromotionFee;
         setPendingAction({
             label: `Promote ${selectedStudents.size} student(s) to ${nextClass} with a promotion fee of ₹${feeAmount}?`,
             onConfirm: async () => {
@@ -127,13 +142,28 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                             const newFeeHistory = [...(student.feeHistory || [])];
                             
                             if (hasFee) {
+                                const itemized_breakdown = {
+                                    annual: { ...annualCharges },
+                                    subsidiary: {}
+                                };
+
+                                SUBSIDIARY_CATEGORIES.forEach(cat => {
+                                    const qty = Number(subsidiaryCharges[cat]?.qty) || 0;
+                                    const price = Number(subsidiaryCharges[cat]?.price) || 0;
+                                    const total = qty * price;
+                                    if (total > 0) {
+                                        itemized_breakdown.subsidiary[cat] = total;
+                                    }
+                                });
+
                                 newFeeHistory.push({
                                     id: crypto.randomUUID(),
                                     date: dateStr,
                                     amount: feeAmount,
                                     type: 'Promotion',
                                     month: null,
-                                    fine: 0
+                                    fine: 0,
+                                    itemized_breakdown
                                 });
                             }
 
@@ -318,19 +348,57 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Promotion Fee (₹)</label>
-                                    <div className="relative">
-                                        <CreditCard size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-                                        <input
-                                            type="number"
-                                            value={promotionFee}
-                                            onChange={(e) => setPromotionFee(e.target.value)}
-                                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] pl-9 text-sm font-medium placeholder:text-[var(--text-muted)]"
-                                            placeholder="Enter fee amount..."
-                                        />
+                                <div className="max-h-[400px] overflow-y-auto pr-2 space-y-4">
+                                    <div className="space-y-3">
+                                        <h4 className="text-sm font-bold text-[var(--text-primary)] border-b border-[var(--border-color)] pb-1">Annual Charges</h4>
+                                        {ANNUAL_CHARGE_CATEGORIES.map(category => (
+                                            <div key={category}>
+                                                <label className="block text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1">{category} (₹)</label>
+                                                <input
+                                                    type="number"
+                                                    value={annualCharges[category] || ''}
+                                                    onChange={(e) => setAnnualCharges(prev => ({ ...prev, [category]: e.target.value }))}
+                                                    className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2 rounded-[8px] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-sm font-medium placeholder:text-[var(--text-muted)]"
+                                                    placeholder="0"
+                                                />
+                                            </div>
+                                        ))}
                                     </div>
-                                    <p className="text-[10px] text-[var(--text-muted)] mt-2">Leave blank or 0 if free.</p>
+
+                                    <div className="space-y-3">
+                                        <h4 className="text-sm font-bold text-[var(--text-primary)] border-b border-[var(--border-color)] pb-1 mt-4">Subsidiary Charges</h4>
+                                        {SUBSIDIARY_CATEGORIES.map(category => {
+                                            const qty = Number(subsidiaryCharges[category]?.qty) || 0;
+                                            const price = Number(subsidiaryCharges[category]?.price) || 0;
+                                            const subtotal = qty * price;
+
+                                            return (
+                                                <div key={category} className="space-y-1">
+                                                    <label className="block text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">{category}</label>
+                                                    <div className="flex items-center gap-2">
+                                                        <input
+                                                            type="number"
+                                                            value={subsidiaryCharges[category]?.qty || ''}
+                                                            onChange={(e) => setSubsidiaryCharges(prev => ({ ...prev, [category]: { ...prev[category], qty: e.target.value } }))}
+                                                            className="w-1/3 bg-[var(--bg-main)] border border-[var(--border-color)] px-2 py-2 rounded-[8px] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-sm font-medium placeholder:text-[var(--text-muted)]"
+                                                            placeholder="Qty"
+                                                        />
+                                                        <span className="text-[var(--text-muted)] text-sm">×</span>
+                                                        <input
+                                                            type="number"
+                                                            value={subsidiaryCharges[category]?.price || ''}
+                                                            onChange={(e) => setSubsidiaryCharges(prev => ({ ...prev, [category]: { ...prev[category], price: e.target.value } }))}
+                                                            className="w-1/3 bg-[var(--bg-main)] border border-[var(--border-color)] px-2 py-2 rounded-[8px] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-sm font-medium placeholder:text-[var(--text-muted)]"
+                                                            placeholder="Price"
+                                                        />
+                                                        <span className="text-[var(--text-secondary)] font-bold text-sm ml-auto whitespace-nowrap">
+                                                            = ₹{subtotal}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
 
                                 <button
@@ -344,6 +412,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                 >
                                     <UserCheck size={18} />
                                     Promote {selectedStudents.size > 0 ? `${selectedStudents.size} ` : ''}{selectedStudents.size === 1 ? 'Student' : 'Students'}
+                                    {totalPromotionFee > 0 && ` - ₹${totalPromotionFee}`}
                                 </button>
                             </div>
                         )}
