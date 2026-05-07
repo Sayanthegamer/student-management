@@ -63,7 +63,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
 
             return matchesSearch && matchesClass && matchesSection && !hasPaidForMonth;
         }).sort((a, b) => a.name.localeCompare(b.name));
-    }, [activeStudents, debouncedSearchTerm, filterClass, filterSection]);
+    }, [activeStudents, debouncedSearchTerm, filterClass, filterSection, selectedMonth]);
 
     // Select/Deselect handlers
     const toggleStudentSelection = (id) => {
@@ -322,9 +322,9 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                         <div className="h-full flex flex-col items-center justify-center text-[var(--text-muted)] space-y-3 py-12">
                                             <Bus size={32} className="opacity-20" />
                                             <p className="text-sm text-center">
-                                                {!debouncedSearchTerm
+                                                {(!debouncedSearchTerm && !filterClass && !filterSection)
                                                     ? <>All transportation fees collected<br />for this month.</>
-                                                    : 'No students match your search.'
+                                                    : 'No students match your filters.'
                                                 }
                                             </p>
                                         </div>
