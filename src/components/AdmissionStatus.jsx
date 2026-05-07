@@ -64,6 +64,15 @@ const StatusCard = ({ student, color, onMove }) => {
                             <XCircle size={14} className="stroke-[2.5px]" /> Cancelled
                         </button>
                     )}
+                    {student.admissionStatus !== 'Exited' && (
+                        <button
+                            onClick={() => { onMove(student, 'Exited'); setShowActions(false); }}
+                            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-slate-400 hover:bg-slate-500/10 flex items-center gap-2.5 transition-colors"
+                            role="menuitem"
+                        >
+                            <FileText size={14} className="stroke-[2.5px]" /> Exited
+                        </button>
+                    )}
                 </div>
             )}
 

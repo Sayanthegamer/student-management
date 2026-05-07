@@ -356,7 +356,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 options={[
                                     { value: 'Confirmed', label: 'Confirmed' },
                                     { value: 'Provisional', label: 'Provisional' },
-                                    { value: 'Cancelled', label: 'Cancelled' }
+                                    { value: 'Cancelled', label: 'Cancelled' },
+                                    { value: 'Exited', label: 'Exited' }
                                 ]}
                                 value={formData.admissionStatus}
                                 onChange={handleChange}
