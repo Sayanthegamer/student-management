@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Calendar, FileSpreadsheet, Download, Search } from 'lucide-react';
+import { Calendar, FileSpreadsheet, Download, Search, IndianRupee } from 'lucide-react';
 import XLSX from 'xlsx-js-style';
 import useDebounce from '../hooks/useDebounce';
 import Pagination from './Pagination';
