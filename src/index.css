@@ -362,7 +362,7 @@ input, select, textarea {
   gap: 8px;
   padding: 10px 16px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   border-radius: 10px;
   cursor: pointer;
   border: 1px solid transparent;
@@ -432,7 +432,7 @@ color: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 10px 14px;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-primary);
   outline: none;
   transition: all var(--duration-instant) var(--kinetic-curve);
@@ -528,7 +528,7 @@ button, a, input, select, textarea {
 }
 
 .text-body {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -877,4 +877,10 @@ tbody tr:hover {
 
 [data-theme='light'] main {
   background-color: transparent !important;
+}
+
+@media (min-width: 640px) {
+  .input-premium {
+    font-size: 14px;
+  }
 }

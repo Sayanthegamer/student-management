@@ -254,7 +254,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
             aria-modal="true"
             aria-labelledby="fee-payment-title"
             aria-describedby="fee-payment-desc"
-            className={`fixed inset-0 z-50 overflow-y-auto flex items-start md:items-center p-3 md:p-6 modal-backdrop backdrop-blur-md ${isClosing ? 'closing' : ''}`}
+            className={`fixed inset-0 z-50 overflow-y-auto flex items-start md:items-center p-2 md:p-6 modal-backdrop backdrop-blur-md ${isClosing ? 'closing' : ''}`}
             style={{ backgroundColor: 'rgba(2, 2, 3, 0.85)' }}
             onClick={(e) => {
                 if (e.target === e.currentTarget) doClose();
@@ -262,7 +262,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
         >
             <div 
                 className={`
-                    relative w-full max-w-2xl mx-auto my-4 md:my-auto flex flex-col overflow-hidden
+                    relative w-full max-w-2xl mx-auto my-auto max-h-[100dvh] md:max-h-[90vh] flex flex-col overflow-hidden
                     bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl
                     ${isClosing ? 'scale-95 opacity-0' : 'scale-in'}
                     transition-all duration-300
@@ -417,7 +417,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                             type="number"
                                             value={tuitionFee}
                                             onChange={(e) => setTuitionFee(e.target.value)}
-                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold text-base sm:text-sm focus:border-[var(--accent-primary)] outline-none transition-colors"
                                             min="0"
                                             step="0.01"
                                             required
@@ -435,7 +435,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                             type="number"
                                             value={computerFee}
                                             onChange={(e) => setComputerFee(e.target.value)}
-                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold text-base sm:text-sm focus:border-[var(--accent-primary)] outline-none transition-colors"
                                             min="0"
                                             step="0.01"
                                         />
@@ -452,7 +452,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                                             type="number"
                                             value={smartBoardFee}
                                             onChange={(e) => setSmartBoardFee(e.target.value)}
-                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold focus:border-[var(--accent-primary)] outline-none transition-colors"
+                                            className="w-full pl-12 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-bold text-base sm:text-sm focus:border-[var(--accent-primary)] outline-none transition-colors"
                                             min="0"
                                             step="0.01"
                                         />

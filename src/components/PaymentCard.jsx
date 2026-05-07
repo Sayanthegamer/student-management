@@ -1,5 +1,5 @@
-import React from 'react';
-import { IndianRupee, FileText, Calendar, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { IndianRupee, FileText, Calendar, User, ChevronDown, ChevronUp } from 'lucide-react';
 
 /**
  * A memoized functional component that displays a summary card of a student's payment history.
@@ -10,6 +10,8 @@ import { IndianRupee, FileText, Calendar, User } from 'lucide-react';
  * @returns {JSX.Element} The rendered payment card component.
  */
 const PaymentCard = React.memo(({ student, onViewHistory }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const getTotalPaid = (student) => {
     if (!student.feeHistory) return 0;
     return student.feeHistory.reduce((sum, p) => sum + (Number(p.amount) || 0) + (Number(p.fine) || 0), 0);
@@ -57,7 +59,8 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
             <p className="text-emerald-400 font-bold text-sm tracking-wider">₹{getTotalPaid(student).toLocaleString()}</p>
           </div>
         </div>
-        {(() => {
+
+        {isExpanded && (() => {
           const lastPayment = getLastPayment(student);
           if (!lastPayment) {
              return (
@@ -89,14 +92,25 @@ const PaymentCard = React.memo(({ student, onViewHistory }) => {
         })()}
       </div>
 
-      <button
-        onClick={() => onViewHistory(student)}
-        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-[var(--accent-primary)] bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 rounded-[12px] hover:bg-[var(--accent-hover)] hover:text-white transition-colors font-semibold text-xs touch-manipulation min-h-[44px]"
-        aria-label="View payment history"
-      >
-        <FileText size={16} className="stroke-[2.5px]" />
-        <span className="hidden sm:inline">View History</span>
-      </button>
+      <div className="flex items-center gap-2">
+          <button
+            onClick={() => onViewHistory(student)}
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-[var(--accent-primary)] bg-[var(--accent-light)] border border-[var(--accent-primary)]/20 rounded-[12px] hover:bg-[var(--accent-hover)] hover:text-white transition-colors font-semibold text-xs touch-manipulation min-h-[44px]"
+            aria-label="View payment history"
+          >
+            <FileText size={16} className="stroke-[2.5px]" />
+            <span className="hidden sm:inline">View History</span>
+          </button>
+
+          <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="p-2.5 text-[var(--text-secondary)] bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px] hover:bg-[var(--bg-card-hover)] transition-colors min-h-[44px] flex items-center justify-center"
+              aria-expanded={isExpanded}
+              aria-label="Toggle details"
+          >
+              {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+      </div>
     </div>
   );
 });

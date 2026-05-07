@@ -70,8 +70,8 @@ const CustomMonthPicker = ({ value, onChange, label, required, className = '', c
     };
 
     const inputClasses = compact 
-        ? "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[10px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-sm appearance-none cursor-pointer"
-        : "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3.5 rounded-[12px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-sm appearance-none cursor-pointer";
+        ? "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[10px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-base sm:text-sm appearance-none cursor-pointer"
+        : "w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-4 py-3.5 rounded-[12px] text-[var(--text-primary)] font-medium outline-none transition-colors focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-base sm:text-sm appearance-none cursor-pointer";
 
     return (
         <div className={className}>

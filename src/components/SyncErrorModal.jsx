@@ -44,7 +44,7 @@ const SyncErrorModal = ({ error, students, onDismiss }) => {
         if (e.target === e.currentTarget) onDismiss();
       }}
     >
-      <div className="bg-[var(--bg-card)] rounded-[24px] border border-[var(--border-color)] shadow-xl w-full max-w-2xl flex flex-col overflow-hidden transform transition-all">
+      <div className="bg-[var(--bg-card)] rounded-[24px] border border-[var(--border-color)] shadow-xl w-full max-w-2xl flex flex-col max-h-[100dvh] md:max-h-[90vh] overflow-hidden transform transition-all">
 
         {/* Header */}
         <div className="bg-rose-500/10 border-b border-rose-500/20 p-6 flex items-start gap-4 relative">

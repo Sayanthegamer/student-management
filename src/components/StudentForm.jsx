@@ -21,7 +21,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-sm"
+                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-base sm:text-sm"
                 required={required}
                 disabled={disabled}
             >
@@ -35,7 +35,7 @@ const InputField = ({ label, name, type = "text", placeholder, required = false,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className={`w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-sm placeholder:text-[var(--text-muted)] ${readOnly ? 'opacity-60 pointer-events-none' : ''}`}
+                className={`w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md px-3 py-2.5 text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-base sm:text-sm placeholder:text-[var(--text-muted)] ${readOnly ? 'opacity-60 pointer-events-none' : ''}`}
                 placeholder={placeholder}
                 required={required}
                 disabled={disabled}
@@ -208,7 +208,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 onChange={handleChange}
                             />
                             
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="flex flex-col gap-1.5 h-[62px]">
                                     <CustomDatePicker
                                         label="Date of Birth"
@@ -226,7 +226,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <InputField 
                                     label="Class"
                                     name="class"
@@ -319,7 +319,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <InputField 
                                     label="Late Fine (₹)" 
                                     name="fine" 
@@ -390,7 +390,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                         name="admissionFee"
                                         value={formData.admissionFee}
                                         onChange={handleChange}
-                                        className="w-full pl-8 pr-3 py-2.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-sm font-semibold"
+                                        className="w-full pl-8 pr-3 py-2.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-[var(--accent-primary)] text-base sm:text-sm font-semibold"
                                         placeholder="e.g. 40000"
                                         min="0"
                                     />
@@ -408,7 +408,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                         name="concessionAmount"
                                         value={formData.concessionAmount}
                                         onChange={handleChange}
-                                        className="w-full pl-10 pr-3 py-2.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-amber-400 text-sm font-semibold"
+                                        className="w-full pl-10 pr-3 py-2.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-amber-400 text-base sm:text-sm font-semibold"
                                         placeholder="0"
                                         min="0"
                                         max={grossAdmissionFee || undefined}
