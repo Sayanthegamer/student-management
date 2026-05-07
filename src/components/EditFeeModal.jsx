@@ -8,10 +8,11 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
     const [studentSearch, setStudentSearch] = useState('');
 
     const filteredStudents = useMemo(() => {
-        if (!studentSearch.trim()) return allStudents;
+        const students = allStudents || [];
+        if (!studentSearch.trim()) return students;
         const lowerSearch = studentSearch.toLowerCase();
-        return allStudents.filter(s =>
-            s.name.toLowerCase().includes(lowerSearch) ||
+        return students.filter(s =>
+            (s.name && s.name.toLowerCase().includes(lowerSearch)) ||
             (s.rollNo && String(s.rollNo).toLowerCase().includes(lowerSearch))
         );
     }, [allStudents, studentSearch]);
@@ -133,6 +134,7 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
                             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
                             <input
                                 type="text"
+                                aria-label="Search by student name or roll number"
                                 placeholder="Search by name or roll number..."
                                 value={studentSearch}
                                 onChange={(e) => setStudentSearch(e.target.value)}
@@ -145,9 +147,13 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
                             className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[10px] px-3 py-2 text-[var(--text-primary)] focus:border-[var(--accent-primary)] outline-none"
                             required
                         >
-                            {filteredStudents.length === 0 && (
+                            {filteredStudents.length === 0 && (!selectedStudentId || !(allStudents || []).some(s => s.id === selectedStudentId)) && (
                                 <option value="" disabled>No students found...</option>
                             )}
+                            {selectedStudentId && !filteredStudents.some(s => s.id === selectedStudentId) && (allStudents || []).find(s => s.id === selectedStudentId) && (() => {
+                                const s = (allStudents || []).find(s => s.id === selectedStudentId);
+                                return <option key={`selected-${s.id}`} value={s.id}>{s.name} ({s.class}-{s.section})</option>;
+                            })()}
                             {filteredStudents.map(s => (
                                 <option key={s.id} value={s.id}>{s.name} ({s.class}-{s.section})</option>
                             ))}
