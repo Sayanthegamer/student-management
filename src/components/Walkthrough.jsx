@@ -336,7 +336,7 @@ const Walkthrough = () => {
                 aria-labelledby={`walkthrough-title-${currentStep}`}
                 aria-describedby={`walkthrough-desc-${currentStep}`}
                 tabIndex="-1"
-                className="absolute pointer-events-auto bg-[var(--bg-card)] p-8 rounded-[24px] shadow-xl w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
+                className="absolute pointer-events-auto bg-[var(--bg-card)] p-6 md:p-8 rounded-[24px] shadow-xl w-[90vw] md:w-full md:max-w-sm transition-all duration-300 ease-in-out border border-[var(--border-color)] z-[110]"
                 style={tooltipPosition}
             >
                 <div className="flex justify-between items-start mb-6">

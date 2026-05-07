@@ -358,7 +358,7 @@ const Reports = ({ students }) => {
             {/* Table */}
             <div className="flex-1 overflow-hidden bg-[var(--bg-card)] rounded-[16px] border border-[var(--border-color)] flex flex-col shadow-sm">
                 <div className="overflow-x-auto flex-1">
-                    <table className="w-full text-left border-collapse min-w-[800px]">
+                    <table className="w-full text-left border-collapse hidden md:table">
                         <thead className="bg-[var(--bg-main)] text-[var(--text-secondary)] text-[10px] font-bold tracking-wider uppercase sticky top-0 z-10 border-b border-[var(--border-color)]">
                             <tr>
                                 <th className="p-4">Date</th>
@@ -407,6 +407,43 @@ const Reports = ({ students }) => {
                             )}
                         </tbody>
                     </table>
+                    {/* Mobile Card View for Reports */}
+                    <div className="md:hidden flex flex-col gap-3 p-3">
+                        {paginatedData.length === 0 ? (
+                            <div className="p-8 text-center text-[var(--text-muted)] bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[12px]">
+                                No transactions found for the selected criteria.
+                            </div>
+                        ) : (
+                            paginatedData.map(t => (
+                                <div key={t.id} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-3 flex flex-col gap-2">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <p className="text-[var(--text-primary)] font-bold text-sm">{t.studentName}</p>
+                                            <p className="text-[var(--text-secondary)] text-xs">{t.studentClass} (Roll: {t.rollNumber})</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-emerald-400 font-bold text-sm flex items-center justify-end"><IndianRupee size={12} className="mr-0.5"/>{t.amount.toLocaleString()}</p>
+                                            <p className="text-[var(--text-muted)] text-[10px]">{new Date(t.date).toLocaleDateString()}</p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-[var(--bg-main)] rounded-md p-2 mt-1">
+                                        <p className="text-[var(--text-muted)] text-[10px] mb-0.5">Particulars</p>
+                                        <div className="flex flex-wrap gap-1">
+                                            {typeof t.particulars === 'string' ? (
+                                                t.particulars.split(', ').map((p, i) => (
+                                                    <span key={i} className="px-1.5 py-0.5 bg-[var(--accent-light)] text-[var(--accent-primary)] rounded text-[10px] font-medium">
+                                                        {p}
+                                                    </span>
+                                                ))
+                                            ) : (
+                                                <span className="text-[var(--text-primary)] text-xs">{t.particulars}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
 
                 {totalPages > 1 && (

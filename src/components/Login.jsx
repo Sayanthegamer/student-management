@@ -63,7 +63,7 @@ export default function Login() {
         </div>
 
         <div 
-          className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[20px] p-8 md:p-10 transition-all duration-300 glow-accent fade-in-up"
+          className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[20px] p-6 sm:p-8 md:p-10 transition-all duration-300 glow-accent fade-in-up"
           style={{ animationDelay: '0.1s' }}
         >
           <div className="mb-8 border-b border-[var(--border-color)] pb-6">

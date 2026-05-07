@@ -117,7 +117,7 @@ const PaymentHistoryModal = ({ student, allStudents, onEditFee, onClose }) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
         >
-            <div ref={dialogRef} className={`bg-[var(--bg-main)] rounded-[16px] shadow-lg w-full max-w-2xl max-h-[calc(100vh-3rem)] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[var(--border-color)] ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="payment-ledger-title" aria-describedby="payment-ledger-desc">
+            <div ref={dialogRef} className={`bg-[var(--bg-main)] rounded-[16px] shadow-lg w-full max-w-2xl max-h-[100dvh] md:max-h-[90vh] mx-auto my-4 md:my-auto flex flex-col overflow-hidden border border-[var(--border-color)] ${isClosing ? 'scale-out' : 'scale-in'}`} role="dialog" aria-modal="true" aria-labelledby="payment-ledger-title" aria-describedby="payment-ledger-desc">
 
                 <div className="bg-[var(--bg-card)] px-4 md:px-6 py-5 md:py-6 text-[var(--text-primary)] relative flex-shrink-0 border-b border-[var(--border-color)]">
                     <div className="relative z-10 pr-12">

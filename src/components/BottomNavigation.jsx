@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, IndianRupee, ClipboardCheck, FileText, Settings, ArrowUpRight, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, IndianRupee, ClipboardCheck, FileText, Settings, ArrowUpRight, Menu, X, Bus } from 'lucide-react';
 
 const mainNavItems = [
   { path: '/overview', label: 'Dashboard', icon: LayoutDashboard },
@@ -10,6 +10,8 @@ const mainNavItems = [
 ];
 
 const moreNavItems = [
+  { path: '/reports', label: 'Reports', icon: FileText },
+  { path: '/transport-fees', label: 'Transport Fees', icon: Bus },
   { path: '/promotions', label: 'Promotions', icon: ArrowUpRight },
   { path: '/data', label: 'Settings', icon: Settings },
 ];

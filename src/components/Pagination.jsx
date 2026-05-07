@@ -34,9 +34,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                     <ChevronLeft size={20} className="stroke-[2.5px]" />
                 </button>
 
-                <div className="flex flex-wrap justify-center items-center gap-1 flex-1 sm:flex-none">
+                <div className="hidden sm:flex flex-wrap justify-center items-center gap-1">
                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        // Logic to show window of pages around current page
                         let pageNum;
                         if (totalPages <= 5) {
                             pageNum = i + 1;
@@ -52,7 +51,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                             <button
                                 key={pageNum}
                                 onClick={() => onPageChange(pageNum)}
-                                className={`w-11 h-11 sm:w-10 sm:h-10 text-xs sm:text-sm font-bold transition-colors border rounded-[12px] shrink-0 flex items-center justify-center ${currentPage === pageNum
+                                className={`w-10 h-10 text-sm font-bold transition-colors border rounded-[12px] shrink-0 flex items-center justify-center ${currentPage === pageNum
                                         ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
                                         : 'bg-[var(--bg-main)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
                                     }`}
@@ -61,6 +60,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange, totalItems, itemsPe
                             </button>
                         );
                     })}
+                </div>
+
+                {/* Mobile page indicator */}
+                <div className="sm:hidden flex items-center justify-center px-4 font-bold text-sm text-[var(--text-primary)] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] h-[44px]">
+                    Page {currentPage} / {totalPages}
                 </div>
 
                 <button
