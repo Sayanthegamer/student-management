@@ -118,7 +118,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                 const newFeeRecord = {
                     id: crypto.randomUUID(),
                     date: date,
-                    month: date.substring(0, 7),
+                    month: null,
                     type: 'Transportation',
                     amount: numAmount,
                     fine: 0,
