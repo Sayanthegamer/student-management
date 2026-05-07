@@ -1,9 +1,20 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Save, IndianRupee } from 'lucide-react';
+import { X, Save, IndianRupee, Search } from 'lucide-react';
 
 const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
     const [isClosing, setIsClosing] = useState(false);
+
+    const [studentSearch, setStudentSearch] = useState('');
+
+    const filteredStudents = useMemo(() => {
+        if (!studentSearch.trim()) return allStudents;
+        const lowerSearch = studentSearch.toLowerCase();
+        return allStudents.filter(s =>
+            s.name.toLowerCase().includes(lowerSearch) ||
+            (s.rollNo && String(s.rollNo).toLowerCase().includes(lowerSearch))
+        );
+    }, [allStudents, studentSearch]);
 
     // Form state
     const [amount, setAmount] = useState(payment.amount || 0);
@@ -118,13 +129,26 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Assigned Student</label>
+                        <div className="relative mb-2">
+                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+                            <input
+                                type="text"
+                                placeholder="Search by name or roll number..."
+                                value={studentSearch}
+                                onChange={(e) => setStudentSearch(e.target.value)}
+                                className="w-full pl-9 pr-3 py-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[10px] text-[var(--text-primary)] text-sm focus:border-[var(--accent-primary)] outline-none"
+                            />
+                        </div>
                         <select 
                             value={selectedStudentId} 
                             onChange={(e) => setSelectedStudentId(e.target.value)}
                             className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[10px] px-3 py-2 text-[var(--text-primary)] focus:border-[var(--accent-primary)] outline-none"
                             required
                         >
-                            {allStudents.map(s => (
+                            {filteredStudents.length === 0 && (
+                                <option value="" disabled>No students found...</option>
+                            )}
+                            {filteredStudents.map(s => (
                                 <option key={s.id} value={s.id}>{s.name} ({s.class}-{s.section})</option>
                             ))}
                         </select>
