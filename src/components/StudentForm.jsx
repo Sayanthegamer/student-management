@@ -117,23 +117,25 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
             setFormData(prev => ({
                 ...prev,
-                transportFee: feeData.transport,
+                transportFee: feeData.transport || '',
                 annualChargesBreakdown: {
                     ...prev.annualChargesBreakdown,
-                    ...feeData.annual
+                    ...(feeData.annual || {})
                 },
                 subsidiaryChargesBreakdown: {
                     ...prev.subsidiaryChargesBreakdown,
-                    ...feeData.subsidiary
+                    ...(feeData.subsidiary || {})
                 }
             }));
 
             // Sync subsidiary inputs visual state
             setSubsidiaryInputs(prev => {
                 const newInputs = { ...prev };
-                Object.entries(feeData.subsidiary).forEach(([cat, price]) => {
-                    newInputs[cat] = { qty: 1, price };
-                });
+                if (feeData.subsidiary) {
+                    Object.entries(feeData.subsidiary).forEach(([cat, price]) => {
+                        newInputs[cat] = { qty: 1, price };
+                    });
+                }
                 return newInputs;
             });
         }
