@@ -3,6 +3,7 @@ import { Calendar, FileSpreadsheet, Download, Search, IndianRupee } from 'lucide
 import XLSX from 'xlsx-js-style';
 import useDebounce from '../hooks/useDebounce';
 import Pagination from './Pagination';
+import { ANNUAL_CHARGE_CATEGORIES, SUBSIDIARY_CATEGORIES } from '../utils/constants';
 
 const Reports = ({ students = [] }) => {
     const [timeframe, setTimeframe] = useState('month'); // 'today', 'month', 'year', 'custom'
@@ -106,7 +107,7 @@ const Reports = ({ students = [] }) => {
         };
 
         const titleRow = [`Transactions Report - ${new Date().toLocaleDateString('en-CA')}`];
-        const headerRow = ['Date', 'Student Name', 'Roll No', 'Class', 'Section', 'Particulars', 'Tuition Fee', 'SmartBoard Fee', 'Computer Fee', 'Admission Fee', 'Annual Charges', 'Subsidiary Charges', 'Fine', 'Total Amount'];
+        const headerRow = ['Date', 'Student Name', 'Roll No', 'Class', 'Section', 'Particulars', 'Tuition Fee', 'SmartBoard Fee', 'Computer Fee', 'Admission Fee', ...ANNUAL_CHARGE_CATEGORIES, 'Total Annual', ...SUBSIDIARY_CATEGORIES, 'Total Subsidiary', 'Fine', 'Total Amount'];
 
         // Setup rows for aoa_to_sheet
         const rows = [
@@ -119,13 +120,13 @@ const Reports = ({ students = [] }) => {
                 // Calculate Annual total
                 let annualTotal = 0;
                 if (itemized.annual) {
-                    annualTotal = Object.values(itemized.annual).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                    annualTotal = ANNUAL_CHARGE_CATEGORIES.reduce((sum, cat) => sum + (Number(itemized.annual[cat]) || 0), 0);
                 }
 
                 // Calculate Subsidiary total
                 let subsidiaryTotal = 0;
                 if (itemized.subsidiary) {
-                    subsidiaryTotal = Object.values(itemized.subsidiary).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                    subsidiaryTotal = SUBSIDIARY_CATEGORIES.reduce((sum, cat) => sum + (Number(itemized.subsidiary[cat]) || 0), 0);
                 }
 
                 return [
@@ -139,7 +140,9 @@ const Reports = ({ students = [] }) => {
                     itemized.smartBoard || 0,
                     itemized.computer || 0,
                     itemized.admission || 0,
+                    ...ANNUAL_CHARGE_CATEGORIES.map(cat => (itemized.annual && itemized.annual[cat]) ? Number(itemized.annual[cat]) : 0),
                     annualTotal,
+                    ...SUBSIDIARY_CATEGORIES.map(cat => (itemized.subsidiary && itemized.subsidiary[cat]) ? Number(itemized.subsidiary[cat]) : 0),
                     subsidiaryTotal,
                     t.fine || 0,
                     t.amount + (t.fine || 0)
@@ -151,26 +154,24 @@ const Reports = ({ students = [] }) => {
 
         // Merge cells for the title
         worksheet['!merges'] = [
-            { s: { r: 0, c: 0 }, e: { r: 0, c: 13 } }
+            { s: { r: 0, c: 0 }, e: { r: 0, c: headerRow.length - 1 } }
         ];
 
         // Column widths
-        worksheet['!cols'] = [
+        const cols = [
             { wch: 15 }, // Date
             { wch: 30 }, // Name
             { wch: 10 }, // Roll No
             { wch: 10 }, // Class
             { wch: 10 }, // Section
-            { wch: 25 }, // Particulars
-            { wch: 12 }, // Tuition
-            { wch: 15 }, // SmartBoard
-            { wch: 15 }, // Computer
-            { wch: 15 }, // Admission
-            { wch: 15 }, // Annual
-            { wch: 15 }, // Subsidiary
-            { wch: 10 }, // Fine
-            { wch: 15 }  // Total Amount
+            { wch: 25 }  // Particulars
         ];
+
+        // Add dynamic width for all other columns
+        for (let i = 6; i < headerRow.length; i++) {
+            cols.push({ wch: 15 });
+        }
+        worksheet['!cols'] = cols;
 
         // Apply Styles
 
@@ -222,7 +223,7 @@ const Reports = ({ students = [] }) => {
                     };
 
                     // Format Amount column as currency
-                    if (C >= 6 && C <= 13) { // Amount columns
+                    if (C >= 6 && C <= range.e.c) { // Amount columns
                         rowStyle.numFmt = '"₹"#,##0.00';
                         rowStyle.alignment.horizontal = "right";
                     }
