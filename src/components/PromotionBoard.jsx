@@ -42,6 +42,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
     const [selectedStudents, setSelectedStudents] = useState(new Set());
     const [pendingAction, setPendingAction] = useState(null);
     const [annualCharges, setAnnualCharges] = useState({});
+    const [promotionFine, setPromotionFine] = useState('');
     const [subsidiaryCharges, setSubsidiaryCharges] = useState({});
     const [isSubmittingPromotion, setIsSubmittingPromotion] = useState(false);
     
@@ -76,6 +77,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
     useEffect(() => {
         setAnnualCharges({});
         setSubsidiaryCharges({});
+        setPromotionFine('');
     }, [filterClass]);
 
     // Deselect all when class or section filter changes
@@ -162,7 +164,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                     amount: feeAmount,
                                     type: 'Promotion',
                                     month: null,
-                                    fine: 0,
+                                    fine: Number(promotionFine) || 0,
                                     itemized_breakdown
                                 });
                             }
@@ -401,6 +403,20 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                     </div>
                                 </div>
 
+                                <div className="pt-4 border-t border-[var(--border-color)] mb-4">
+                                    <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Late Fine (₹)</label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-sm font-bold">₹</span>
+                                        <input
+                                            type="number"
+                                            value={promotionFine}
+                                            onChange={(e) => setPromotionFine(e.target.value)}
+                                            className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-400 pl-8 text-sm font-medium placeholder:text-[var(--text-muted)]"
+                                            placeholder="0"
+                                            min="0"
+                                        />
+                                    </div>
+                                </div>
                                 <button
                                     onClick={handlePromote}
                                     disabled={!canPromote}
@@ -411,8 +427,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                     }`}
                                 >
                                     <UserCheck size={18} />
-                                    Promote {selectedStudents.size > 0 ? `${selectedStudents.size} ` : ''}{selectedStudents.size === 1 ? 'Student' : 'Students'}
-                                    {totalPromotionFee > 0 && ` - ₹${totalPromotionFee}`}
+                                    Promote {selectedStudents.size} Student(s) (Total: ₹{totalPromotionFee + (Number(promotionFine) || 0)})
                                 </button>
                             </div>
                         )}
