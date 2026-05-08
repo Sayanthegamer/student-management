@@ -120,13 +120,13 @@ const Reports = ({ students = [] }) => {
                 // Calculate Annual total
                 let annualTotal = 0;
                 if (itemized.annual) {
-                    annualTotal = Object.values(itemized.annual).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                    annualTotal = ANNUAL_CHARGE_CATEGORIES.reduce((sum, cat) => sum + (Number(itemized.annual[cat]) || 0), 0);
                 }
 
                 // Calculate Subsidiary total
                 let subsidiaryTotal = 0;
                 if (itemized.subsidiary) {
-                    subsidiaryTotal = Object.values(itemized.subsidiary).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                    subsidiaryTotal = SUBSIDIARY_CATEGORIES.reduce((sum, cat) => sum + (Number(itemized.subsidiary[cat]) || 0), 0);
                 }
 
                 return [
