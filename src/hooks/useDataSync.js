@@ -212,7 +212,7 @@ export const useDataSync = () => {
     
     const totalInitialFee = netAdmission + annualTotal + subsidiaryTotal;
 
-    if (totalInitialFee > 0) {
+    if (totalInitialFee > 0 || Number(studentData.admissionFine) > 0) {
       const isNew = studentData.enrollmentType === 'NEW';
       const admissionPayment = {
         id: crypto.randomUUID(),
