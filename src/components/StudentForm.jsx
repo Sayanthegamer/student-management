@@ -72,6 +72,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         admissionDate: new Date().toISOString().split('T')[0],
         admissionStatus: 'Confirmed',
         admissionFee: '',
+        admissionFine: '',
         concessionAmount: '',
         dob: '',
         enrollmentType: 'OLD',
@@ -133,7 +134,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 ...prev,
                 [name]: value,
                 ...(value === 'NEW' && ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
-                ...(value === 'OLD' ? { admissionFee: '', concessionAmount: '' } : {}),
+                ...(value === 'OLD' ? { admissionFee: '',
+        admissionFine: '', concessionAmount: '' } : {}),
                 // Preserve existing breakdowns if they have data, otherwise initialize with defaults
                 annualChargesBreakdown: (prev.annualChargesBreakdown && Object.keys(prev.annualChargesBreakdown).length > 0) 
                     ? prev.annualChargesBreakdown 
@@ -151,7 +153,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 newSubsidiaryInputs[cat] = { qty: val > 0 ? 1 : 0, price: val };
             });
             setSubsidiaryInputs(newSubsidiaryInputs);
-        } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'fine'].includes(name)) {
+        } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'fine', 'admissionFine'].includes(name)) {
             const parsedValue = Number(value);
             const clampedValue = isNaN(parsedValue) ? 0 : Math.max(0, parsedValue);
             setFormData(prev => ({ ...prev, [name]: clampedValue }));
@@ -166,6 +168,8 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     const rawConcession = Number(formData.concessionAmount);
     const concessionAmount = Math.max(0, Math.min(isNaN(rawConcession) ? 0 : rawConcession, grossAdmissionFee));
     const netAdmissionFee = grossAdmissionFee - concessionAmount;
+    const admissionFineAmount = Math.max(0, Number(formData.admissionFine) || 0);
+    const totalAdmissionPayable = netAdmissionFee + admissionFineAmount;
     const hasConcession = concessionAmount > 0;
 
     const handleSubmit = (e) => {
@@ -175,6 +179,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
 
         // Ensure clamped numeric values are stored properly
         dataToSave.admissionFee = grossAdmissionFee;
+        dataToSave.admissionFine = admissionFineAmount;
         dataToSave.concessionAmount = concessionAmount;
 
         if (initialData && initialData.admissionStatus !== formData.admissionStatus) {
@@ -404,7 +409,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             )}
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-xs font-medium text-[var(--text-secondary)] px-1">
                                     Gross Admission Fee (₹)
@@ -441,17 +446,34 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     />
                                 </div>
                             </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-[var(--text-secondary)] px-1">
+                                    Late Fine (₹)
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-rose-400 font-bold text-sm">+₹</span>
+                                    <input
+                                        type="number"
+                                        name="admissionFine"
+                                        value={formData.admissionFine}
+                                        onChange={handleChange}
+                                        className="w-full pl-9 pr-3 py-2.5 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-custom-md text-[var(--text-primary)] outline-none transition-colors focus:border-rose-400 text-base sm:text-sm font-semibold"
+                                        placeholder="0"
+                                        min="0"
+                                    />
+                                </div>
+                            </div>
 
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-xs font-medium text-[var(--text-secondary)] px-1">
-                                    Net Admission Fee
+                                    Total Payable
                                 </label>
                                 <div className={`px-4 py-2.5 rounded-custom-md border text-sm font-bold tabular-nums ${
                                     hasConcession 
                                         ? 'bg-amber-500/5 border-amber-500/20 text-amber-400' 
                                         : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400'
                                 }`}>
-                                    ₹{netAdmissionFee.toLocaleString()}
+                                    ₹{totalAdmissionPayable.toLocaleString()}
                                     {hasConcession && (
                                         <span className="text-[10px] font-medium ml-2 text-amber-400/60">
                                             (saved ₹{concessionAmount.toLocaleString()})

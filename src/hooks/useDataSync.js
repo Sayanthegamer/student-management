@@ -212,14 +212,14 @@ export const useDataSync = () => {
     
     const totalInitialFee = netAdmission + annualTotal + subsidiaryTotal;
 
-    if (totalInitialFee > 0) {
+    if (totalInitialFee > 0 || Number(studentData.admissionFine) > 0) {
       const isNew = studentData.enrollmentType === 'NEW';
       const admissionPayment = {
         id: crypto.randomUUID(),
         date: studentData.admissionDate || new Date().toISOString().split('T')[0],
         month: '', // Admission/Initial fees are not tied to a specific month
         amount: totalInitialFee,
-        fine: 0,
+        fine: Math.max(0, Number(studentData.admissionFine) || 0),
         type: 'Admission',
         remarks: (isNew ? 'New Registration Checkout' : 'Annual Re-enrollment Checkout') + (concession > 0 ? ` (Concession: ₹${concession})` : ''),
         itemized_breakdown: {
