@@ -124,9 +124,12 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
     const handlePromote = () => {
         if (!canPromote) return;
         
+        const fineAmount = Math.max(0, Number(promotionFine) || 0);
         const feeAmount = totalPromotionFee;
+        const totalAmount = feeAmount + fineAmount;
+
         setPendingAction({
-            label: `Promote ${selectedStudents.size} student(s) to ${nextClass} with a promotion fee of ₹${feeAmount}?`,
+            label: `Promote ${selectedStudents.size} student(s) to ${nextClass} with a promotion fee of ₹${totalAmount}?`,
             onConfirm: async () => {
                 if (isSubmittingPromotion) return;
                 setIsSubmittingPromotion(true);
@@ -140,7 +143,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                     selectedStudents.forEach(id => {
                         const student = studentById.get(id);
                         if (student) {
-                            const hasFee = feeAmount > 0;
+                            const hasFee = feeAmount > 0 || fineAmount > 0;
                             const newFeeHistory = [...(student.feeHistory || [])];
                             
                             if (hasFee) {
@@ -164,7 +167,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                     amount: feeAmount,
                                     type: 'Promotion',
                                     month: null,
-                                    fine: Number(promotionFine) || 0,
+                                    fine: Math.max(0, Number(promotionFine) || 0),
                                     itemized_breakdown
                                 });
                             }
@@ -410,7 +413,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                         <input
                                             type="number"
                                             value={promotionFine}
-                                            onChange={(e) => setPromotionFine(e.target.value)}
+                                            onChange={(e) => { const val = parseInt(e.target.value, 10); setPromotionFine(isNaN(val) ? "" : Math.max(0, val)); }}
                                             className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] px-3 py-2.5 rounded-[8px] text-[var(--text-primary)] outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-400 pl-8 text-sm font-medium placeholder:text-[var(--text-muted)]"
                                             placeholder="0"
                                             min="0"
