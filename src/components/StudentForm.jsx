@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Save, X, User, GraduationCap, IndianRupee, Calendar, CheckCircle2, Ticket } from 'lucide-react';
 import CustomDatePicker from './CustomDatePicker';
 import { logActivity } from '../utils/storage';
@@ -67,6 +67,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         tuitionFee: '',
         smartBoardFee: '',
         computerFee: '',
+        transportFee: '',
         feesStatus: 'Pending',
         fine: '',
         admissionDate: new Date().toISOString().split('T')[0],
@@ -99,14 +100,54 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         return initial;
     });
 
+    const prevClassRef = useRef(formData.class);
+
+    useEffect(() => {
+        // Only run if the class has actually changed
+        if (formData.class && formData.class !== prevClassRef.current) {
+
+            // TODO: putt real values/fees
+            const DUMMY_FEE_MAP = {
+                '11': { transport: 500, annual: { 'Sports': 1500 }, subsidiary: { 'Tie': 400 } },
+                '12': { transport: 600, annual: { 'Sports': 1600 }, subsidiary: { 'Tie': 450 } },
+                'default': { transport: 500, annual: { 'Development': 1500 }, subsidiary: { 'Belt': 400 } }
+            };
+
+            const feeData = DUMMY_FEE_MAP[formData.class] || DUMMY_FEE_MAP['default'];
+
+            setFormData(prev => ({
+                ...prev,
+                transportFee: feeData.transport || '',
+                annualChargesBreakdown: {
+                    ...prev.annualChargesBreakdown,
+                    ...(feeData.annual || {})
+                },
+                subsidiaryChargesBreakdown: {
+                    ...prev.subsidiaryChargesBreakdown,
+                    ...(feeData.subsidiary || {})
+                }
+            }));
+
+            // Sync subsidiary inputs visual state
+            setSubsidiaryInputs(prev => {
+                const newInputs = { ...prev };
+                if (feeData.subsidiary) {
+                    Object.entries(feeData.subsidiary).forEach(([cat, price]) => {
+                        newInputs[cat] = { qty: 1, price };
+                    });
+                }
+                return newInputs;
+            });
+        }
+        prevClassRef.current = formData.class;
+    }, [formData.class]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         if (name === 'class') {
             const fee = CLASS_FEES[value] ?? '';
             const admFee = ADMISSION_FEES[value] ?? '';
-            const annual = ANNUAL_CHARGES[value] || {};
-            const subsidiary = SUBSIDIARY_CHARGES[value] || {};
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
@@ -154,7 +195,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 newSubsidiaryInputs[cat] = { qty: val > 0 ? 1 : 0, price: val };
             });
             setSubsidiaryInputs(newSubsidiaryInputs);
-        } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'fine', 'admissionFine'].includes(name)) {
+        } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'transportFee', 'fine', 'admissionFine'].includes(name)) {
             const parsedValue = Number(value);
             const clampedValue = isNaN(parsedValue) ? 0 : Math.max(0, parsedValue);
             setFormData(prev => ({ ...prev, [name]: clampedValue }));
@@ -319,7 +360,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             )}
 
                             {/* Monthly Fees Section */}
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 <InputField 
                                     label="Tuition Fee (₹)"
                                     name="tuitionFee"
@@ -347,12 +388,21 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                     onChange={handleChange}
                                     min={0}
                                 />
+                                <InputField
+                                    label="Transport (₹)"
+                                    name="transportFee"
+                                    type="number"
+                                    placeholder="0"
+                                    value={formData.transportFee}
+                                    onChange={handleChange}
+                                    min={0}
+                                />
 
-                                <div className="col-span-2 sm:col-span-3 flex justify-end">
+                                <div className="col-span-2 sm:col-span-4 flex justify-end">
                                     <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[8px] px-4 py-2 flex items-center gap-3 shadow-sm">
                                         <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Total Monthly:</span>
                                         <span className="text-sm font-bold text-[var(--text-primary)]">
-                                            ₹{(Number(formData.tuitionFee) || 0) + (Number(formData.smartBoardFee) || 0) + (Number(formData.computerFee) || 0)}
+                                            ₹{(Number(formData.tuitionFee) || 0) + (Number(formData.smartBoardFee) || 0) + (Number(formData.computerFee) || 0) + (Number(formData.transportFee) || 0)}
                                         </span>
                                     </div>
                                 </div>
