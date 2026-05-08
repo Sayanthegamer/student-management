@@ -71,9 +71,9 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         fine: '',
         admissionDate: new Date().toISOString().split('T')[0],
         admissionStatus: 'Confirmed',
-        admissionFee: '',
-        admissionFine: '',
-        concessionAmount: '',
+        admissionFee: 0,
+        admissionFine: 0,
+        concessionAmount: 0,
         dob: '',
         enrollmentType: 'OLD',
         phone: '',
@@ -113,6 +113,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 tuitionFee: fee,
                 // Only auto-fill admission fee if there's a configured value AND student is NEW enrollment
                 ...(prev.enrollmentType === 'NEW' && ADMISSION_FEES[value] != null ? { admissionFee: admFee } : {}),
+                ...(prev.enrollmentType === 'OLD' ? { admissionFee: 0, admissionFine: 0, concessionAmount: 0 } : {}),
                 // Itemized charges apply to both enrollment types during onboarding/admission
                 annualChargesBreakdown: {...annual},
                 subsidiaryChargesBreakdown: {...subsidiary}
@@ -125,17 +126,17 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                 newSubsidiaryInputs[cat] = { qty: val > 0 ? 1 : 0, price: val };
             });
             setSubsidiaryInputs(newSubsidiaryInputs);
-        } else if (name === 'enrollmentType' && formData.class) {
-            const feeClass = formData.class;
-            const admFee = ADMISSION_FEES[feeClass] ?? '';
-            const annual = ANNUAL_CHARGES[feeClass] || {};
-            const subsidiary = SUBSIDIARY_CHARGES[feeClass] || {};
+        } else if (name === 'enrollmentType') {
+            const feeClass = formData.class || '';
+            const admFee = feeClass ? (ADMISSION_FEES[feeClass] ?? '') : '';
+            const annual = feeClass ? (ANNUAL_CHARGES[feeClass] || {}) : {};
+            const subsidiary = feeClass ? (SUBSIDIARY_CHARGES[feeClass] || {}) : {};
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
                 ...(value === 'NEW' && ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
-                ...(value === 'OLD' ? { admissionFee: '',
-        admissionFine: '', concessionAmount: '' } : {}),
+                ...(value === 'OLD' ? { admissionFee: 0,
+        admissionFine: 0, concessionAmount: 0 } : {}),
                 // Preserve existing breakdowns if they have data, otherwise initialize with defaults
                 annualChargesBreakdown: (prev.annualChargesBreakdown && Object.keys(prev.annualChargesBreakdown).length > 0) 
                     ? prev.annualChargesBreakdown 
@@ -310,6 +311,13 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                                 </div>
                             </div>
 
+                            {formData.enrollmentType === 'OLD' && (
+                                <div className="text-[11px] text-[var(--text-secondary)] bg-blue-500/10 border border-blue-500/20 px-3 py-2 rounded-md mb-2 flex items-start gap-2">
+                                    <span className="text-blue-500 mt-0.5">•</span>
+                                    <span>Registering an old student counts as a promotion. Admission fees are not required.</span>
+                                </div>
+                            )}
+
                             {/* Monthly Fees Section */}
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                                 <InputField 
@@ -398,6 +406,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </div>
 
                     {/* Admission Fee Section — full width below the 2-col grid */}
+                    {formData.enrollmentType === 'NEW' && (
                     <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-5 md:p-6 space-y-5">
                         <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-color)]">
                             <Ticket size={18} className="text-[var(--accent-primary)]" />
@@ -483,6 +492,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                             </div>
                         </div>
                     </div>
+                    )}
 
                     {/* Itemized Annual & Subsidiary Charges - Shown for both New and Old students during onboarding */}
                     <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[12px] p-5 md:p-6 space-y-5 mt-6">
