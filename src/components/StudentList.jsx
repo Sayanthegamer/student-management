@@ -22,7 +22,7 @@ const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
  * Lightning-Fast Student Directory - Kinetic Ledger Design
  * High-density data table with instant feedback and keyboard-friendly interactions
  */
-const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdateStudents }) => {
+const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdateStudents, onBulkDelete }) => {
     // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
     const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -39,6 +39,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
     const [showFilters, setShowFilters] = useState(false);
     const searchRef = useRef(null);
     const [selectedStudents, setSelectedStudents] = useState(new Set());
+    const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
     const [bulkPending, setBulkPending] = useState(false);
 
     // Keyboard shortcut handler
@@ -118,11 +119,14 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
         }
     };
 
-    const handleBulkDelete = async () => {
+    const handleBulkDelete = () => {
         if (!selectedStudents.size) return;
-        if (!window.confirm(`WARNING: Are you sure you want to PERMANENTLY DELETE ${selectedStudents.size} student(s)? This action cannot be undone.`)) return;
+        setShowBulkDeleteConfirm(true);
+    };
 
+    const confirmBulkDelete = async () => {
         setBulkPending(true);
+        setShowBulkDeleteConfirm(false);
         try {
             await onBulkDelete(Array.from(selectedStudents));
             setSelectedStudents(new Set());
@@ -608,6 +612,40 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                     onSave={handlePaymentSave}
                 />
             )}
+
+            {/* Bulk Delete Confirmation Modal */}
+            {showBulkDeleteConfirm && (
+                <div className="fixed inset-0 bg-[var(--bg-main)]/80 backdrop-blur-md z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setShowBulkDeleteConfirm(false)}>
+                    <div
+                        className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 kinetic-scale shadow-2xl rounded-xl"
+                        onClick={e => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="bulk-delete-confirm-title"
+                        aria-describedby="bulk-delete-confirm-desc"
+                    >
+                        <h3 id="bulk-delete-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] mb-2 tracking-tight">Delete {selectedStudents.size} Records?</h3>
+                        <p id="bulk-delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6 leading-relaxed">This action cannot be undone. All associated data will be permanently removed for the selected students.</p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowBulkDeleteConfirm(false)}
+                                className="btn btn-secondary text-sm"
+                                disabled={bulkPending}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmBulkDelete}
+                                className="btn btn-danger text-sm"
+                                disabled={bulkPending}
+                            >
+                                {bulkPending ? 'Deleting...' : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
