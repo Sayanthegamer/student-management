@@ -173,9 +173,7 @@ export default function Login() {
           </div>
         </div>
 
-        <p className="mt-10 text-center text-[var(--text-muted)]/40 text-xs font-mono">
-          SYSTEM_VER: 2.0.4 <br /> CLASSIFICATION: CONFIDENTIAL
-        </p>
+
       </div>
     </div>
   );

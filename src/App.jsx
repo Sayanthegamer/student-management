@@ -27,6 +27,7 @@ const DataManagement = lazy(() => import('./components/DataManagement'));
 const PaymentHistory = lazy(() => import('./components/PaymentHistory'));
 const Walkthrough = lazy(() => import('./components/Walkthrough'));
 const TransportationFees = lazy(() => import('./components/TransportationFees'));
+import ConfirmationModal from './components/ConfirmationModal';
 const Reports = lazy(() => import('./components/Reports'));
 
 /**
@@ -315,35 +316,15 @@ function App() {
       </div>
 
       {/* Delete Confirmation Modal */}
-      {deleteConfirm && (
-        <div className="fixed inset-0 bg-[var(--bg-main)]/80 backdrop-blur-md z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setDeleteConfirm(null)}>
-          <div
-            className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 kinetic-scale shadow-2xl rounded-xl"
-            onClick={e => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="delete-confirm-title"
-            aria-describedby="delete-confirm-desc"
-          >
-            <h3 id="delete-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] mb-2 tracking-tight">Delete Record?</h3>
-            <p id="delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6 leading-relaxed">This action cannot be undone. All associated data will be permanently removed.</p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setDeleteConfirm(null)}
-                className="btn btn-secondary text-sm"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="btn btn-danger text-sm"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={!!deleteConfirm}
+        onClose={() => setDeleteConfirm(null)}
+        onConfirm={confirmDelete}
+        title="Delete Record?"
+        message="This action cannot be undone. All associated data will be permanently removed."
+        confirmText="Delete"
+        isDestructive={true}
+      />
 
     </ErrorBoundary>
   );

@@ -3,6 +3,7 @@ import { Edit2, Trash2, Search, Plus, IndianRupee, Filter, ChevronDown, ChevronU
 import FeePaymentModal from './FeePaymentModal';
 import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
+import ConfirmationModal from './ConfirmationModal';
 import StudentCard from './StudentCard';
 import useDebounce from '../hooks/useDebounce';
 
@@ -22,10 +23,11 @@ const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
  * Lightning-Fast Student Directory - Kinetic Ledger Design
  * High-density data table with instant feedback and keyboard-friendly interactions
  */
-const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdateStudents, onBulkDelete }) => {
+const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee, onBulkUpdateStudents }) => {
     // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
     const currentMonth = new Date().toISOString().slice(0, 7);
 
+    const [confirmAction, setConfirmAction] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
     const [filterMonth, setFilterMonth] = useState(currentMonth);
@@ -39,7 +41,6 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
     const [showFilters, setShowFilters] = useState(false);
     const searchRef = useRef(null);
     const [selectedStudents, setSelectedStudents] = useState(new Set());
-    const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
     const [bulkPending, setBulkPending] = useState(false);
 
     // Keyboard shortcut handler
@@ -97,8 +98,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
 
     const handleBulkExit = async () => {
         if (!selectedStudents.size) return;
-        if (!window.confirm(`Are you sure you want to mark ${selectedStudents.size} student(s) as Exited?`)) return;
+        setConfirmAction('exit');
+    };
 
+    const executeBulkExit = async () => {
         setBulkPending(true);
         try {
             if (onBulkUpdateStudents) {
@@ -116,25 +119,29 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
             alert('Failed to apply bulk exit. Please try again.');
         } finally {
             setBulkPending(false);
+            setConfirmAction(null);
         }
     };
 
-    const handleBulkDelete = () => {
+    const handleBulkDelete = async () => {
         if (!selectedStudents.size) return;
-        setShowBulkDeleteConfirm(true);
+        setConfirmAction('delete');
     };
 
-    const confirmBulkDelete = async () => {
+    const executeBulkDelete = async () => {
         setBulkPending(true);
-        setShowBulkDeleteConfirm(false);
         try {
-            await onBulkDelete(Array.from(selectedStudents));
+            if (onBulkUpdateStudents) {
+                // Pass array of student IDs to trigger bulk delete
+                await onBulkUpdateStudents(Array.from(selectedStudents));
+            }
             setSelectedStudents(new Set());
         } catch (error) {
             console.error('Error applying bulk delete:', error);
             alert('Failed to apply bulk delete. Please try again.');
         } finally {
             setBulkPending(false);
+            setConfirmAction(null);
         }
     };
 
@@ -613,40 +620,20 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                 />
             )}
 
-            {/* Bulk Delete Confirmation Modal */}
-            {showBulkDeleteConfirm && (
-                <div className="fixed inset-0 bg-[var(--bg-main)]/80 backdrop-blur-md z-50 flex items-center justify-center p-4 modal-backdrop" onClick={() => setShowBulkDeleteConfirm(false)}>
-                    <div
-                        className="bg-[var(--bg-card)] border border-[var(--border-color)] max-w-sm w-full p-6 kinetic-scale shadow-2xl rounded-xl"
-                        onClick={e => e.stopPropagation()}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="bulk-delete-confirm-title"
-                        aria-describedby="bulk-delete-confirm-desc"
-                    >
-                        <h3 id="bulk-delete-confirm-title" className="text-lg font-semibold text-[var(--text-primary)] mb-2 tracking-tight">Delete {selectedStudents.size} Records?</h3>
-                        <p id="bulk-delete-confirm-desc" className="text-[var(--text-secondary)] text-sm mb-6 leading-relaxed">This action cannot be undone. All associated data will be permanently removed for the selected students.</p>
-                        <div className="flex justify-end gap-3">
-                            <button
-                                onClick={() => setShowBulkDeleteConfirm(false)}
-                                className="btn btn-secondary text-sm"
-                                disabled={bulkPending}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={confirmBulkDelete}
-                                className="btn btn-danger text-sm"
-                                disabled={bulkPending}
-                            >
-                                {bulkPending ? 'Deleting...' : 'Delete'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-        </div>
+            {/* Bulk Action Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={!!confirmAction}
+                onClose={() => setConfirmAction(null)}
+                onConfirm={confirmAction === 'exit' ? executeBulkExit : executeBulkDelete}
+                title={confirmAction === 'exit' ? 'Mark as Exited?' : 'Delete Records?'}
+                message={confirmAction === 'exit'
+                    ? `Are you sure you want to mark ${selectedStudents.size} student(s) as Exited?`
+                    : `WARNING: Are you sure you want to PERMANENTLY DELETE ${selectedStudents.size} student(s)? This action cannot be undone.`
+                }
+                confirmText={confirmAction === 'exit' ? 'Mark Exited' : 'Delete'}
+                isDestructive={confirmAction === 'delete'}
+            />
+</div>
     );
 };
 
