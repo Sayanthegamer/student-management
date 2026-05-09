@@ -322,7 +322,7 @@ const FeePaymentModal = ({ student, onClose, onSave }) => {
                 )}
 
                 {/* Two-column form */}
-                <form onSubmit={handleSubmit} className="flex flex-col">
+                <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0 overflow-y-auto">
                     <div className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
                         {/* Left column - Date & Month */}
                         <div className="space-y-4">

@@ -127,7 +127,7 @@ const EditFeeModal = ({ payment, student, allStudents, onSave, onClose }) => {
                     </button>
                 </div>
                 
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                <form onSubmit={handleSubmit} className="p-6 space-y-4 min-h-0 overflow-y-auto">
                     <div>
                         <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Assigned Student</label>
                         <div className="relative mb-2">

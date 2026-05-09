@@ -198,7 +198,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
     };
 
     return (
-        <div className="h-full flex flex-col bg-[var(--bg-main)] animate-fade-in">
+        <div className="min-h-full flex flex-col bg-[var(--bg-main)] animate-fade-in">
             {/* Header section */}
             <div className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] relative z-10 overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent-primary)]/5 rounded-full blur-3xl" />
@@ -350,7 +350,7 @@ const TransportationFees = ({ students, onBulkUpdateStudents }) => {
                                     </span>
                                 </div>
 
-                                <div className="flex-1 overflow-y-auto p-2 space-y-1">
+                                <div className="flex-1 p-2 space-y-1">
                                     {filteredStudents.length > 0 ? (
                                         filteredStudents.map(student => {
                                             const isSelected = selectedStudentIds.has(student.id);

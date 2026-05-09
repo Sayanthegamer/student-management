@@ -353,7 +353,7 @@ const PromotionBoard = ({ students, onUpdateStudent, onBulkUpdateStudents, user 
                                     </div>
                                 </div>
 
-                                <div className="max-h-[400px] overflow-y-auto pr-2 space-y-4">
+                                <div className="max-h-[400px] pr-2 space-y-4 overflow-y-auto">
                                     <div className="space-y-3">
                                         <h4 className="text-sm font-bold text-[var(--text-primary)] border-b border-[var(--border-color)] pb-1">Annual Charges</h4>
                                         {ANNUAL_CHARGE_CATEGORIES.map(category => (

@@ -263,7 +263,7 @@ const Reports = ({ students = [] }) => {
     }, [filteredTransactions]);
 
     return (
-        <div className="h-full flex flex-col p-4 md:p-8 pt-20 md:pt-8 min-h-full max-w-[1600px] mx-auto w-full">
+        <div className="flex flex-col p-4 md:p-8 pt-20 md:pt-8 min-h-full max-w-[1600px] mx-auto w-full">
             <div className="mb-8">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
                     <div>

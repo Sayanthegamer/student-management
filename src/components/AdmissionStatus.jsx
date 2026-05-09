@@ -124,7 +124,7 @@ const StatusColumn = ({ title, count, total, color, icon: Icon, students, onMove
                 <p className="text-[10px] font-bold tracking-wider text-[var(--text-secondary)] mt-3 text-right uppercase">{percentage}% of total</p>
             </div>
 
-            <div className="flex flex-col gap-4 overflow-y-auto pr-1 pb-2 flex-1 custom-scrollbar">
+            <div className="flex flex-col gap-4 pr-1 pb-2 flex-1 custom-scrollbar">
                 {students.map(student => (
                     <StatusCard key={student.id} student={student} color={color} onMove={onMove} />
                 ))}

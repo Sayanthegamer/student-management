@@ -27,7 +27,7 @@ const SkeletonLoader = () => {
         </div>
 
         {/* Page Content */}
-        <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
+        <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto min-h-0">
              {/* Page Title */}
              <div className="h-8 w-48 bg-[var(--border-color)] rounded-custom animate-pulse"></div>
 
