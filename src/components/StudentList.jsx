@@ -23,7 +23,7 @@ const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
  * Lightning-Fast Student Directory - Kinetic Ledger Design
  * High-density data table with instant feedback and keyboard-friendly interactions
  */
-const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdateStudents, onBulkDelete }) => {
+const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee, onBulkUpdateStudents }) => {
     // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
     const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -41,7 +41,6 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
     const [showFilters, setShowFilters] = useState(false);
     const searchRef = useRef(null);
     const [selectedStudents, setSelectedStudents] = useState(new Set());
-    const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
     const [bulkPending, setBulkPending] = useState(false);
 
     // Keyboard shortcut handler
@@ -124,7 +123,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
         }
     };
 
-    const handleBulkDelete = () => {
+    const handleBulkDelete = async () => {
         if (!selectedStudents.size) return;
         setConfirmAction('delete');
     };
@@ -132,7 +131,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
     const executeBulkDelete = async () => {
         setBulkPending(true);
         try {
-            await onDelete(Array.from(selectedStudents));
+            if (onBulkUpdateStudents) {
+                // Pass array of student IDs to trigger bulk delete
+                await onBulkUpdateStudents(Array.from(selectedStudents));
+            }
             setSelectedStudents(new Set());
         } catch (error) {
             console.error('Error applying bulk delete:', error);
@@ -631,7 +633,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                 confirmText={confirmAction === 'exit' ? 'Mark Exited' : 'Delete'}
                 isDestructive={confirmAction === 'delete'}
             />
-        </div>
+</div>
     );
 };
 

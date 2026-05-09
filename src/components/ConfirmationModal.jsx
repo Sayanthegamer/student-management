@@ -14,6 +14,27 @@ const ConfirmationModal = ({
 }) => {
     const [isClosing, setIsClosing] = useState(false);
     const closeTimeoutRef = useRef(null);
+    const previousFocusRef = useRef(null);
+    const cancelBtnRef = useRef(null);
+    const confirmBtnRef = useRef(null);
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+        };
+    }, []);
+
+    // Focus management on open/close
+    useEffect(() => {
+        if (isOpen) {
+            previousFocusRef.current = document.activeElement;
+            // Focus cancel button by default for safety
+            if (cancelBtnRef.current) cancelBtnRef.current.focus();
+        } else if (!isClosing && previousFocusRef.current) {
+            previousFocusRef.current.focus();
+        }
+    }, [isOpen, isClosing]);
 
     const doClose = useCallback(() => {
         if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
@@ -21,7 +42,7 @@ const ConfirmationModal = ({
         closeTimeoutRef.current = setTimeout(() => {
             onClose();
             setIsClosing(false);
-        }, 200); // matches the duration of the transition
+        }, 300); // matches the duration of the transition
     }, [onClose]);
 
     // Escape key handler
@@ -29,6 +50,16 @@ const ConfirmationModal = ({
         const handleKeyDown = (e) => {
             if (e.key === 'Escape' && isOpen) {
                 doClose();
+            }
+            // Basic focus trapping for Tab
+            if (e.key === 'Tab' && isOpen) {
+                if (e.shiftKey && document.activeElement === cancelBtnRef.current) {
+                    e.preventDefault();
+                    confirmBtnRef.current?.focus();
+                } else if (!e.shiftKey && document.activeElement === confirmBtnRef.current) {
+                    e.preventDefault();
+                    cancelBtnRef.current?.focus();
+                }
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -91,12 +122,14 @@ const ConfirmationModal = ({
                 {/* Footer */}
                 <div className="px-5 py-4 bg-[var(--bg-sidebar)] border-t border-[var(--border-subtle)] flex justify-end gap-3">
                     <button
+                        ref={cancelBtnRef}
                         onClick={doClose}
                         className="btn btn-secondary text-sm font-medium"
                     >
                         {cancelText}
                     </button>
                     <button
+                        ref={confirmBtnRef}
                         onClick={handleConfirm}
                         className={`text-sm font-bold ${isDestructive ? 'btn btn-danger' : 'btn btn-primary cta-primary'}`}
                     >
