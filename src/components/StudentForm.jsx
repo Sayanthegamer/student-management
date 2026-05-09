@@ -100,54 +100,14 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
         return initial;
     });
 
-    const prevClassRef = useRef(formData.class);
-
-    useEffect(() => {
-        // Only run if the class has actually changed
-        if (formData.class && formData.class !== prevClassRef.current) {
-
-            // TODO: putt real values/fees
-            const DUMMY_FEE_MAP = {
-                '11': { transport: 500, annual: { 'Sports': 1500 }, subsidiary: { 'Tie': 400 } },
-                '12': { transport: 600, annual: { 'Sports': 1600 }, subsidiary: { 'Tie': 450 } },
-                'default': { transport: 500, annual: { 'Development': 1500 }, subsidiary: { 'Belt': 400 } }
-            };
-
-            const feeData = DUMMY_FEE_MAP[formData.class] || DUMMY_FEE_MAP['default'];
-
-            setFormData(prev => ({
-                ...prev,
-                transportFee: feeData.transport || '',
-                annualChargesBreakdown: {
-                    ...prev.annualChargesBreakdown,
-                    ...(feeData.annual || {})
-                },
-                subsidiaryChargesBreakdown: {
-                    ...prev.subsidiaryChargesBreakdown,
-                    ...(feeData.subsidiary || {})
-                }
-            }));
-
-            // Sync subsidiary inputs visual state
-            setSubsidiaryInputs(prev => {
-                const newInputs = { ...prev };
-                if (feeData.subsidiary) {
-                    Object.entries(feeData.subsidiary).forEach(([cat, price]) => {
-                        newInputs[cat] = { qty: 1, price };
-                    });
-                }
-                return newInputs;
-            });
-        }
-        prevClassRef.current = formData.class;
-    }, [formData.class]);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         if (name === 'class') {
             const fee = CLASS_FEES[value] ?? '';
             const admFee = ADMISSION_FEES[value] ?? '';
+            const annual = ANNUAL_CHARGES[value] || {};
+            const subsidiary = SUBSIDIARY_CHARGES[value] || {};
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
@@ -172,32 +132,35 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
             const admFee = feeClass ? (ADMISSION_FEES[feeClass] ?? '') : '';
             const annual = feeClass ? (ANNUAL_CHARGES[feeClass] || {}) : {};
             const subsidiary = feeClass ? (SUBSIDIARY_CHARGES[feeClass] || {}) : {};
+
+            // Compute active values outside the updater to keep it pure
+            const currentAnnual = (formData.annualChargesBreakdown && Object.keys(formData.annualChargesBreakdown).length > 0)
+                ? formData.annualChargesBreakdown
+                : annual;
+            const currentSubsidiary = (formData.subsidiaryChargesBreakdown && Object.keys(formData.subsidiaryChargesBreakdown).length > 0)
+                ? formData.subsidiaryChargesBreakdown
+                : subsidiary;
+
+            // Pure updater - only returns new state
             setFormData(prev => ({
                 ...prev,
                 [name]: value,
                 ...(value === 'NEW' && ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
-                ...(value === 'OLD' ? { admissionFee: 0,
-        admissionFine: 0, concessionAmount: 0 } : {}),
-                // Preserve existing breakdowns if they have data, otherwise initialize with defaults
-                annualChargesBreakdown: (prev.annualChargesBreakdown && Object.keys(prev.annualChargesBreakdown).length > 0) 
-                    ? prev.annualChargesBreakdown 
-                    : annual,
-                subsidiaryChargesBreakdown: (prev.subsidiaryChargesBreakdown && Object.keys(prev.subsidiaryChargesBreakdown).length > 0)
-                    ? prev.subsidiaryChargesBreakdown 
-                    : subsidiary
+                ...(value === 'OLD' ? { admissionFee: 0, admissionFine: 0, concessionAmount: 0 } : {}),
+                annualChargesBreakdown: currentAnnual,
+                subsidiaryChargesBreakdown: currentSubsidiary
             }));
-            const newSubsidiaryInputs = { ...subsidiaryInputs };
-            const activeSubsidiary = (formData.subsidiaryChargesBreakdown && Object.keys(formData.subsidiaryChargesBreakdown).length > 0)
-                ? formData.subsidiaryChargesBreakdown : subsidiary;
 
+            // Sync inputs after state update to prevent state desync
+            const newSubsidiaryInputs = { ...subsidiaryInputs };
             SUBSIDIARY_CATEGORIES.forEach(cat => {
-                const val = activeSubsidiary[cat] || 0;
+                const val = currentSubsidiary[cat] || 0;
                 newSubsidiaryInputs[cat] = { qty: val > 0 ? 1 : 0, price: val };
             });
             setSubsidiaryInputs(newSubsidiaryInputs);
-        } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'transportFee', 'fine', 'admissionFine'].includes(name)) {
-            const parsedValue = Number(value);
-            const clampedValue = isNaN(parsedValue) ? 0 : Math.max(0, parsedValue);
+        } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'transportFee', 'fine', 'admissionFine', 'admissionFee', 'concessionAmount'].includes(name)) {
+            const parsedValue = value === '' ? '' : Number(value);
+            const clampedValue = parsedValue === '' ? '' : (isNaN(parsedValue) ? 0 : Math.max(0, parsedValue));
             setFormData(prev => ({ ...prev, [name]: clampedValue }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
@@ -659,7 +622,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
                     </div>
                 </form>
 
-                {initialData && initialData.feeHistory && initialData.feeHistory.length > 0 && (
+                {initialData && Array.isArray(initialData.feeHistory) && initialData.feeHistory.length > 0 && (
                     <div className="bg-[var(--bg-card)] p-6 md:p-8 border-t border-[var(--border-color)]">
                         <div className="flex items-center gap-3 mb-6">
                             <Calendar size={18} className="text-[var(--accent-primary)]" />
