@@ -137,7 +137,7 @@ const PaymentHistory = ({ students, onEditFee }) => {
 
     return (
         <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
-            <div className="bg-[var(--bg-card)] rounded-[16px] shadow-sm border border-[var(--border-color)] overflow-hidden page-enter">
+            <div className="bg-[var(--bg-card)] rounded-[16px] shadow-sm border border-[var(--border-color)] overflow-clip page-enter">
                 <div className="p-4 md:p-8 border-b border-[var(--border-color)] flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex items-center gap-4">
                         <div className="p-3 bg-[var(--accent-light)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 rounded-[16px]">

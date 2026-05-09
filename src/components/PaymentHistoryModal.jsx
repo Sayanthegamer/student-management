@@ -138,7 +138,7 @@ const PaymentHistoryModal = ({ student, allStudents, onEditFee, onClose }) => {
                     </button>
                 </div>
 
-                <div className="overflow-y-auto p-4 md:p-8 flex-1 bg-[var(--bg-main)]">
+                <div className="overflow-y-auto min-h-0 p-4 md:p-8 flex-1 bg-[var(--bg-main)]">
                     {sortedHistory.length === 0 ? (
                         <div className="text-center py-20 bg-[var(--bg-card)] rounded-[12px] border border-[var(--border-color)]">
                             <Calendar size={48} className="mx-auto mb-4 text-[var(--text-muted)]" />
