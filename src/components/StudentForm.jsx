@@ -133,33 +133,31 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
             const annual = feeClass ? (ANNUAL_CHARGES[feeClass] || {}) : {};
             const subsidiary = feeClass ? (SUBSIDIARY_CHARGES[feeClass] || {}) : {};
 
-            setFormData(prev => {
-                const activeAnnual = (prev.annualChargesBreakdown && Object.keys(prev.annualChargesBreakdown).length > 0)
-                    ? prev.annualChargesBreakdown 
-                    : annual;
-                const activeSubsidiary = (prev.subsidiaryChargesBreakdown && Object.keys(prev.subsidiaryChargesBreakdown).length > 0)
-                    ? prev.subsidiaryChargesBreakdown 
-                    : subsidiary;
+            // Compute active values outside the updater to keep it pure
+            const currentAnnual = (formData.annualChargesBreakdown && Object.keys(formData.annualChargesBreakdown).length > 0)
+                ? formData.annualChargesBreakdown
+                : annual;
+            const currentSubsidiary = (formData.subsidiaryChargesBreakdown && Object.keys(formData.subsidiaryChargesBreakdown).length > 0)
+                ? formData.subsidiaryChargesBreakdown
+                : subsidiary;
 
-                // Sync inputs immediately to prevent state desync
-                setSubsidiaryInputs(prevInputs => {
-                    const newSubsidiaryInputs = { ...prevInputs };
-                    SUBSIDIARY_CATEGORIES.forEach(cat => {
-                        const val = activeSubsidiary[cat] || 0;
-                        newSubsidiaryInputs[cat] = { qty: val > 0 ? 1 : 0, price: val };
-                    });
-                    return newSubsidiaryInputs;
-                });
+            // Pure updater - only returns new state
+            setFormData(prev => ({
+                ...prev,
+                [name]: value,
+                ...(value === 'NEW' && ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
+                ...(value === 'OLD' ? { admissionFee: 0, admissionFine: 0, concessionAmount: 0 } : {}),
+                annualChargesBreakdown: currentAnnual,
+                subsidiaryChargesBreakdown: currentSubsidiary
+            }));
 
-                return {
-                    ...prev,
-                    [name]: value,
-                    ...(value === 'NEW' && ADMISSION_FEES[feeClass] != null ? { admissionFee: admFee } : {}),
-                    ...(value === 'OLD' ? { admissionFee: 0, admissionFine: 0, concessionAmount: 0 } : {}),
-                    annualChargesBreakdown: activeAnnual,
-                    subsidiaryChargesBreakdown: activeSubsidiary
-                };
+            // Sync inputs after state update to prevent state desync
+            const newSubsidiaryInputs = { ...subsidiaryInputs };
+            SUBSIDIARY_CATEGORIES.forEach(cat => {
+                const val = currentSubsidiary[cat] || 0;
+                newSubsidiaryInputs[cat] = { qty: val > 0 ? 1 : 0, price: val };
             });
+            setSubsidiaryInputs(newSubsidiaryInputs);
         } else if (['tuitionFee', 'smartBoardFee', 'computerFee', 'transportFee', 'fine', 'admissionFine', 'admissionFee', 'concessionAmount'].includes(name)) {
             const parsedValue = value === '' ? '' : Number(value);
             const clampedValue = parsedValue === '' ? '' : (isNaN(parsedValue) ? 0 : Math.max(0, parsedValue));
