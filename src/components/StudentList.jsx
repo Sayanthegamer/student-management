@@ -251,7 +251,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
             </div>
 
             {/* Main card - high density */}
-            <div className="card-base spotlight-card overflow-hidden kinetic-enter flex flex-col mb-8">
+            <div className="card-base spotlight-card overflow-clip kinetic-enter flex flex-col mb-8">
                 {/* Toolbar - optimized for speed */}
                 <div className="px-4 py-3 border-b border-[var(--border-subtle)] flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[var(--bg-card)]">
                     {/* Search with keyboard hint */}
