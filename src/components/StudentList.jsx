@@ -3,6 +3,7 @@ import { Edit2, Trash2, Search, Plus, IndianRupee, Filter, ChevronDown, ChevronU
 import FeePaymentModal from './FeePaymentModal';
 import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
+import ConfirmationModal from './ConfirmationModal';
 import StudentCard from './StudentCard';
 import useDebounce from '../hooks/useDebounce';
 
@@ -26,6 +27,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
     // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
     const currentMonth = new Date().toISOString().slice(0, 7);
 
+    const [confirmAction, setConfirmAction] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
     const [filterMonth, setFilterMonth] = useState(currentMonth);
@@ -96,8 +98,10 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
 
     const handleBulkExit = async () => {
         if (!selectedStudents.size) return;
-        if (!window.confirm(`Are you sure you want to mark ${selectedStudents.size} student(s) as Exited?`)) return;
+        setConfirmAction('exit');
+    };
 
+    const executeBulkExit = async () => {
         setBulkPending(true);
         try {
             if (onBulkUpdateStudents) {
@@ -115,22 +119,26 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
             alert('Failed to apply bulk exit. Please try again.');
         } finally {
             setBulkPending(false);
+            setConfirmAction(null);
         }
     };
 
     const handleBulkDelete = async () => {
         if (!selectedStudents.size) return;
-        if (!window.confirm(`WARNING: Are you sure you want to PERMANENTLY DELETE ${selectedStudents.size} student(s)? This action cannot be undone.`)) return;
+        setConfirmAction('delete');
+    };
 
+    const executeBulkDelete = async () => {
         setBulkPending(true);
         try {
-            await onBulkDelete(Array.from(selectedStudents));
+            await onDelete(Array.from(selectedStudents));
             setSelectedStudents(new Set());
         } catch (error) {
             console.error('Error applying bulk delete:', error);
             alert('Failed to apply bulk delete. Please try again.');
         } finally {
             setBulkPending(false);
+            setConfirmAction(null);
         }
     };
 
@@ -608,7 +616,21 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                     onSave={handlePaymentSave}
                 />
             )}
-        </div>
+
+            {/* Bulk Action Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={!!confirmAction}
+                onClose={() => setConfirmAction(null)}
+                onConfirm={confirmAction === 'exit' ? executeBulkExit : executeBulkDelete}
+                title={confirmAction === 'exit' ? 'Mark as Exited?' : 'Delete Records?'}
+                message={confirmAction === 'exit'
+                    ? `Are you sure you want to mark ${selectedStudents.size} student(s) as Exited?`
+                    : `WARNING: Are you sure you want to PERMANENTLY DELETE ${selectedStudents.size} student(s)? This action cannot be undone.`
+                }
+                confirmText={confirmAction === 'exit' ? 'Mark Exited' : 'Delete'}
+                isDestructive={confirmAction === 'delete'}
+            />
+</div>
     );
 };
 
