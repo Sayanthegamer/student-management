@@ -67,7 +67,7 @@ const SyncErrorModal = ({ error, students, onDismiss }) => {
         </div>
 
         {/* Content */}
-        <div className="p-6 md:p-8 overflow-y-auto">
+        <div className="p-6 md:p-8 overflow-y-auto min-h-0 flex-1">
           <div className="space-y-6">
             <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-[16px] p-5">
               <h3 className="font-bold text-[var(--text-primary)] text-sm mb-3">Error Details</h3>

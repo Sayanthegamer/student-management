@@ -73,7 +73,7 @@ const Sidebar = ({ onClose, syncStatus, onSync }) => {
             </div>
 
             {/* Navigation Items */}
-            <nav className="flex flex-col gap-1 flex-1">
+            <nav className="flex flex-col gap-1 flex-1 min-h-0 overflow-y-auto">
                 {menuItems.map((item) => {
                     const Icon = item.icon;
 

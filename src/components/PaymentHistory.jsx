@@ -136,7 +136,7 @@ const PaymentHistory = ({ students, onEditFee }) => {
     const selectedStudent = students.find(s => s.id === selectedStudentId);
 
     return (
-        <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto p-3 md:p-6 lg:p-8 min-h-full flex flex-col">
             <div className="bg-[var(--bg-card)] rounded-[16px] shadow-sm border border-[var(--border-color)] overflow-clip page-enter">
                 <div className="p-4 md:p-8 border-b border-[var(--border-color)] flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex items-center gap-4">

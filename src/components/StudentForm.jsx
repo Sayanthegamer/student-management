@@ -202,7 +202,7 @@ const StudentForm = ({ onSave, onCancel, initialData = null }) => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 min-h-full flex flex-col">
             <div className="card-base overflow-hidden page-enter flex flex-col">
                 <div className="bg-[var(--bg-card)] border-b border-[var(--border-color)] px-6 py-6 md:px-8 text-[var(--text-primary)] relative overflow-hidden flex items-start justify-between">
                     <div className="relative z-10">

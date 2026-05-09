@@ -116,7 +116,7 @@ const DataManagement = ({ students, onImportSuccess }) => {
     };
 
     return (
-        <div className="max-w-5xl mx-auto px-3 md:px-6 lg:px-8 py-4 md:py-8">
+        <div className="max-w-5xl mx-auto px-3 md:px-6 lg:px-8 py-4 md:py-8 min-h-full flex flex-col">
             <div className="bg-[var(--bg-card)] rounded-[24px] shadow-sm border border-[var(--border-color)] overflow-hidden page-enter">
                 <div className="p-6 md:p-10 border-b border-[var(--border-color)] bg-[var(--bg-main)]">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-2">

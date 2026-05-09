@@ -311,7 +311,7 @@ const Overview = ({ students, onAddStudent }) => {
     }
 
     return (
-        <div className="p-4 md:px-8 md:py-5 max-w-6xl mx-auto kinetic-enter">
+        <div className="p-4 md:px-8 md:py-5 max-w-6xl mx-auto kinetic-enter min-h-full flex flex-col">
             {/* Section header - compact */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 mt-1 gap-4">
                 <div className="flex items-center gap-4">
