@@ -23,7 +23,7 @@ const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
  * Lightning-Fast Student Directory - Kinetic Ledger Design
  * High-density data table with instant feedback and keyboard-friendly interactions
  */
-const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdateStudents }) => {
+const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdateStudents, onBulkDelete }) => {
     // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
     const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -41,6 +41,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
     const [showFilters, setShowFilters] = useState(false);
     const searchRef = useRef(null);
     const [selectedStudents, setSelectedStudents] = useState(new Set());
+    const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
     const [bulkPending, setBulkPending] = useState(false);
 
     // Keyboard shortcut handler
@@ -123,7 +124,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
         }
     };
 
-    const handleBulkDelete = async () => {
+    const handleBulkDelete = () => {
         if (!selectedStudents.size) return;
         setConfirmAction('delete');
     };
@@ -630,7 +631,7 @@ const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdate
                 confirmText={confirmAction === 'exit' ? 'Mark Exited' : 'Delete'}
                 isDestructive={confirmAction === 'delete'}
             />
-</div>
+        </div>
     );
 };
 
