@@ -44,13 +44,25 @@ serve(async (req) => {
     // Verify user is logged in
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized', details: authError }), { 
+      if (authError) console.error('Auth Error:', authError)
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
-    // Use service role to call the RPC, now passing the user.id
+    // RBAC: Only allow users with 'admin' role in app_metadata to trigger full replace.
+    // user_metadata is user-controllable and insecure for privilege checks.
+    const isAdmin = user.app_metadata?.role === 'admin';
+    if (!isAdmin) {
+      console.warn(`Unauthorized attempt to call full_replace_import by user: ${user.id}`);
+      return new Response(JSON.stringify({ error: 'Forbidden: Admin privileges required' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // Use service role to call the RPC, passing the user.id for tenant isolation
     const adminClient = createClient(supabaseUrl, supabaseServiceKey)
 
     const { data, error } = await adminClient.rpc('full_replace_import', {
@@ -61,7 +73,7 @@ serve(async (req) => {
 
     if (error) {
       console.error('RPC Error:', error)
-      return new Response(JSON.stringify({ error: error.message }), { 
+      return new Response(JSON.stringify({ error: 'Internal server error' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
@@ -73,9 +85,8 @@ serve(async (req) => {
     })
 
   } catch (err) {
-    const safeMessage = err instanceof Error ? err.message : String(err)
-    console.error('Function Error:', safeMessage)
-    return new Response(JSON.stringify({ error: safeMessage }), { 
+    console.error('Function Error:', err)
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { 
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
