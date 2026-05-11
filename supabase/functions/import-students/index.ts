@@ -80,9 +80,8 @@ serve(async (req) => {
     })
 
   } catch (err) {
-    const safeMessage = err instanceof Error ? err.message : String(err)
-    console.error('Function Error:', safeMessage)
-    return new Response(JSON.stringify({ error: safeMessage }), { 
+    console.error('Function Error:', err)
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { 
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
