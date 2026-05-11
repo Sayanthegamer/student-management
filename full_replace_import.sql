@@ -31,7 +31,6 @@ BEGIN
         admission_number text,
         roll_no text,
         status text,
-        tc_details jsonb,
         last_status_change_date date,
         last_status_changed_by text,
         admission_fee numeric,
@@ -45,7 +44,7 @@ BEGIN
     LOOP
         INSERT INTO public.students (
             id, name, guardian_name, class, section, address, phone, email,
-            admission_date, admission_number, roll_no, status, tc_details,
+            admission_date, admission_number, roll_no, status, 
             last_status_change_date, last_status_changed_by, admission_fee,
             concession_amount, dob, enrollment_type, tuition_fee,
             smart_board_fee, computer_fee
@@ -54,7 +53,7 @@ BEGIN
             student_record.class, student_record.section, student_record.address,
             student_record.phone, student_record.email, student_record.admission_date,
             student_record.admission_number, student_record.roll_no, student_record.status,
-            student_record.tc_details, student_record.last_status_change_date,
+            student_record.last_status_change_date,
             student_record.last_status_changed_by, student_record.admission_fee,
             student_record.concession_amount, student_record.dob, student_record.enrollment_type,
             student_record.tuition_fee, student_record.smart_board_fee, student_record.computer_fee
@@ -71,7 +70,6 @@ BEGIN
             admission_number = EXCLUDED.admission_number,
             roll_no = EXCLUDED.roll_no,
             status = EXCLUDED.status,
-            tc_details = EXCLUDED.tc_details,
             last_status_change_date = EXCLUDED.last_status_change_date,
             last_status_changed_by = EXCLUDED.last_status_changed_by,
             admission_fee = EXCLUDED.admission_fee,
