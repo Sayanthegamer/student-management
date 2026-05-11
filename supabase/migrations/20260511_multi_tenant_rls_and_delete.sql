@@ -5,12 +5,12 @@
 TRUNCATE TABLE public.fees CASCADE;
 TRUNCATE TABLE public.students CASCADE;
 
--- 2. Add user_id columns
+-- 2. Add user_id columns (updated for idempotency)
 ALTER TABLE public.students
-  ADD COLUMN user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE;
+  ADD COLUMN IF NOT EXISTS user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE;
 
 ALTER TABLE public.fees
-  ADD COLUMN user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE;
+  ADD COLUMN IF NOT EXISTS user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE;
 
 -- 3. Overhaul RLS Policies (Drop old ones first)
 DROP POLICY IF EXISTS "authenticated_read_students" ON public.students;
