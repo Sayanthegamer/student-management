@@ -10,9 +10,11 @@ const ConfirmationModal = ({
     message,
     confirmText = "Confirm",
     cancelText = "Cancel",
-    isDestructive = false
+    isDestructive = false,
+    requiredInputText = ""
 }) => {
     const [isClosing, setIsClosing] = useState(false);
+    const [inputText, setInputText] = useState("");
     const closeTimeoutRef = useRef(null);
     const previousFocusRef = useRef(null);
     const cancelBtnRef = useRef(null);
@@ -41,6 +43,7 @@ const ConfirmationModal = ({
         setIsClosing(true);
         closeTimeoutRef.current = setTimeout(() => {
             onClose();
+            setInputText("");
             setIsClosing(false);
         }, 300); // matches the duration of the transition
     }, [onClose]);
@@ -117,6 +120,20 @@ const ConfirmationModal = ({
                     <p id="confirm-modal-desc" className="text-sm text-[var(--text-secondary)] leading-relaxed">
                         {message}
                     </p>
+                    {requiredInputText && (
+                        <div className="mt-4">
+                            <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+                                Type "{requiredInputText}" to confirm
+                            </label>
+                            <input
+                                type="text"
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/50 transition-all"
+                                placeholder={requiredInputText}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* Footer */}
@@ -131,7 +148,8 @@ const ConfirmationModal = ({
                     <button
                         ref={confirmBtnRef}
                         onClick={handleConfirm}
-                        className={`text-sm font-bold ${isDestructive ? 'btn btn-danger' : 'btn btn-primary cta-primary'}`}
+                        disabled={requiredInputText ? inputText !== requiredInputText : false}
+                        className={`text-sm font-bold ${isDestructive ? 'btn btn-danger' : 'btn btn-primary cta-primary'} ${requiredInputText && inputText !== requiredInputText ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         {confirmText}
                     </button>

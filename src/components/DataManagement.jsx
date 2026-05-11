@@ -1,5 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Download, Upload, AlertTriangle, CheckCircle, Database, Github, FileJson, FileSpreadsheet, Loader2 } from 'lucide-react';
+import { Download, Upload, AlertTriangle, CheckCircle, Database, Github, FileJson, FileSpreadsheet, Loader2, Trash2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import ConfirmationModal from './ConfirmationModal';
 import { saveStudents } from '../utils/storage';
 import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 
@@ -14,6 +18,10 @@ import { convertToCSV, parseCSV } from '../utils/csvHelpers';
 const DataManagement = ({ students, onImportSuccess }) => {
     const [importStatus, setImportStatus] = useState(null); // 'success', 'error', 'loading'
     const [message, setMessage] = useState('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const { signOut } = useAuth();
+    const { showToast } = useToast();
     const fileInputRef = useRef(null);
 
     const handleExport = () => {
@@ -40,6 +48,24 @@ const DataManagement = ({ students, onImportSuccess }) => {
             console.error(err);
             setImportStatus('error');
             setMessage('Failed to export data.');
+        }
+    };
+
+
+    const handleDeleteAccount = async () => {
+        setIsDeleting(true);
+        try {
+            const { error } = await supabase.rpc('delete_user_account');
+            if (error) throw error;
+
+            showToast('Account successfully deleted.', 'success');
+            await signOut();
+            // AuthContext handles redirect to login
+        } catch (err) {
+            console.error('Failed to delete account:', err);
+            showToast(err.message || 'Failed to delete account.', 'error');
+            setIsDeleting(false);
+            setShowDeleteModal(false);
         }
     };
 
@@ -198,6 +224,40 @@ const DataManagement = ({ students, onImportSuccess }) => {
                             ))}
                         </div>
                     </div>
+
+
+                <div className="px-4 pb-6 md:px-10 md:pb-10 bg-[var(--bg-card)]">
+                    <div className="bg-rose-500/5 rounded-[16px] p-6 md:p-8 border border-rose-500/20">
+                        <h3 className="text-rose-500 font-bold mb-4 flex items-center gap-3 text-lg">
+                            <Trash2 size={24} className="stroke-[2.5px]" />
+                            Danger Zone
+                        </h3>
+                        <p className="text-[var(--text-secondary)] text-sm mb-6">
+                            Permanently delete your account and all associated data (students, fees, etc.). This action is irreversible.
+                        </p>
+                        <button
+                            onClick={() => setShowDeleteModal(true)}
+                            disabled={isDeleting}
+                            aria-busy={isDeleting}
+                            className="w-full md:w-auto py-3 px-6 bg-rose-600 text-white font-bold rounded-[12px] hover:bg-rose-700 transition-colors active:scale-[0.98] text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                            {isDeleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                            {isDeleting ? 'Deleting...' : 'Delete Account'}
+                        </button>
+                    </div>
+                </div>
+
+                <ConfirmationModal
+                    isOpen={showDeleteModal}
+                    onClose={() => setShowDeleteModal(false)}
+                    onConfirm={handleDeleteAccount}
+                    title="Delete Account"
+                    message="Are you absolutely sure you want to delete your account? All your data will be permanently wiped. This action cannot be undone."
+                    confirmText="Delete My Account"
+                    cancelText="Cancel"
+                    isDestructive={true}
+                    requiredInputText="DELETE"
+                />
 
                     {importStatus && (() => {
                         const statusConfig = {
