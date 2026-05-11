@@ -44,7 +44,8 @@ serve(async (req) => {
     // Verify user is logged in
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized', details: authError }), { 
+      if (authError) console.error('Auth Error:', authError)
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
@@ -54,7 +55,7 @@ serve(async (req) => {
     // user_metadata is user-controllable and insecure for privilege checks.
     const isAdmin = user.app_metadata?.role === 'admin';
     if (!isAdmin) {
-      console.warn(`Unauthorized attempt to call full_replace_import by user: ${user.email}`);
+      console.warn(`Unauthorized attempt to call full_replace_import by user: ${user.id}`);
       return new Response(JSON.stringify({ error: 'Forbidden: Admin privileges required' }), { 
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -68,11 +69,11 @@ serve(async (req) => {
 
     if (error) {
       console.error('RPC Error:', error)
-      return new Response(JSON.stringify({ error: error.message }), { 
+      return new Response(JSON.stringify({ error: 'Internal server error' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
-    }
+
 
     return new Response(JSON.stringify({ data }), { 
       status: 200,
