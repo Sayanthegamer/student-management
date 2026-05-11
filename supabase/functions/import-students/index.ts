@@ -22,7 +22,7 @@ serve(async (req) => {
       })
     }
 
-    // Parse body only after checking auth header exists (malformed bodies shouldn't be processed if unauthorized)
+    // Parse body only after checking auth header exists
     const { students, fees } = await req.json()
 
     // Validate payload
@@ -56,16 +56,20 @@ serve(async (req) => {
     const isAdmin = user.app_metadata?.role === 'admin';
     if (!isAdmin) {
       console.warn(`Unauthorized attempt to call full_replace_import by user: ${user.id}`);
-      return new Response(JSON.stringify({ error: 'Forbidden: Admin privileges required' }), { 
+      return new Response(JSON.stringify({ error: 'Forbidden: Admin privileges required' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
-    // Use service role to call the RPC
+    // Use service role to call the RPC, passing the user.id for tenant isolation
     const adminClient = createClient(supabaseUrl, supabaseServiceKey)
 
-    const { data, error } = await adminClient.rpc('full_replace_import', { students, fees })
+    const { data, error } = await adminClient.rpc('full_replace_import', {
+      p_user_id: user.id,
+      students,
+      fees
+    })
 
     if (error) {
       console.error('RPC Error:', error)
@@ -73,7 +77,7 @@ serve(async (req) => {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
-
+    }
 
     return new Response(JSON.stringify({ data }), { 
       status: 200,

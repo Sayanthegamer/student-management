@@ -251,6 +251,8 @@ export const useDataSync = () => {
     guardedSetSyncStatus('syncing');
     try {
         const { student, fees } = normalizeStudent(newStudent);
+        student.user_id = user.id;
+        fees.forEach(f => f.user_id = user.id);
 
         const { error } = await supabase.from('students').insert(student);
         if (error) throw error;
@@ -321,6 +323,8 @@ export const useDataSync = () => {
             // The sync_student_fee_batch RPC (see supabase/migrations/20240601_fix_sync_rpc.sql)
             // must be present for the shouldReplaceFee path to work correctly.
             const { student, fees } = normalizeStudent(updatedList.find(s => s.id === studentData.id));
+            student.user_id = user.id;
+            fees.forEach(f => f.user_id = user.id);
 
             // Use transactional RPC when replacing fees to ensure atomicity
             if (shouldReplaceFee) {
@@ -407,6 +411,8 @@ export const useDataSync = () => {
         updatedList.forEach(mergedStudent => {
             if (updatedIds.has(mergedStudent.id)) {
                 const { student, fees } = normalizeStudent(mergedStudent);
+                student.user_id = user.id;
+                fees.forEach(f => f.user_id = user.id);
                 allStudentsDB.push(student);
                 if (replaceFeeHistoryIds.has(mergedStudent.id) && fees && fees.length > 0) {
                     allFeesDB.push(...fees);
@@ -523,6 +529,7 @@ export const useDataSync = () => {
 
     // 1. Client-Side Validation (Catch duplicates before DB insert)
     const { fees } = normalizeStudent({ id: studentId, feeHistory: paymentsWithIds, name: '_', class: '_', section: '_', rollNo: '_' });
+    fees.forEach(f => f.user_id = user?.id);
     const newMonths = fees.map(f => f.month).filter(Boolean);
     // Read from sessionStorage directly to avoid stale closure over the students state variable
     const existingStudent = getStudents().find(s => s.id === studentId);
@@ -631,7 +638,7 @@ export const useDataSync = () => {
     try {
         const { id, ...feeData } = updatedFee;
         // Make sure we update the student_id in case it was moved
-        const feeToSave = { ...feeData, id, student_id: newStudentId };
+        const feeToSave = { ...feeData, id, student_id: newStudentId, user_id: user.id };
         
         // Remove itemized_breakdown if empty object (normalize)
         if (feeToSave.itemized_breakdown && Object.keys(feeToSave.itemized_breakdown).length === 0) {
@@ -691,6 +698,8 @@ export const useDataSync = () => {
 
         newStudents.forEach(s => {
           const { student, fees } = normalizeStudent(s);
+          student.user_id = user.id;
+          if (fees) fees.forEach(f => f.user_id = user.id);
           allStudentsDB.push(student);
           if (fees && fees.length > 0) {
               allFeesDB.push(...fees);
