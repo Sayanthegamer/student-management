@@ -20,7 +20,7 @@ const LandingPage = lazy(() => import('./components/LandingPage'));
 // Lazy Load Components for Performance
 const Overview = lazy(() => import('./components/Overview'));
 const StudentList = lazy(() => import('./components/StudentList'));
-const StudentForm = lazy(() => import('./components/StudentForm'));
+const StudentForm = lazy(() => import('./pages/StudentForm'));
 const AdmissionStatus = lazy(() => import('./components/AdmissionStatus'));
 const PromotionBoard = lazy(() => import('./components/PromotionBoard'));
 const DataManagement = lazy(() => import('./components/DataManagement'));
@@ -330,4 +330,9 @@ function App() {
   );
 }
 
-export default App;
+export default App;/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
