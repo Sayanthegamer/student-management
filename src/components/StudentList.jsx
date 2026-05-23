@@ -1,16 +1,19 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { Edit2, Trash2, Search, Plus, IndianRupee, Filter, ChevronDown, ChevronUp, UserPlus, X, Zap, CheckSquare, Square, MinusSquare, LogOut } from 'lucide-react';
+import { Search, Plus, Filter, UserPlus, X, Zap } from 'lucide-react';
 import FeePaymentModal from './FeePaymentModal';
-import CustomMonthPicker from './CustomMonthPicker';
 import Pagination from './Pagination';
 import ConfirmationModal from './ConfirmationModal';
 import StudentCard from './StudentCard';
 import useDebounce from '../hooks/useDebounce';
 
+// Sub-components
+import FilterPanel from './StudentList/FilterPanel';
+import BulkActionsBar from './StudentList/BulkActionsBar';
+import StudentTable from './StudentList/StudentTable';
+
 /**
  * Calculates the fee status for a student for a specific month.
  */
-// ⚡ Bolt Performance Optimization: Accept hoisted currentMonth to avoid O(N) Date object creations in loops
 const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
     const isPaid = student.feeHistory?.some(p => p.month === month);
     if (isPaid) return 'Paid';
@@ -23,7 +26,7 @@ const getFeeStatusForMonth = (student, month, hoistedCurrentMonth) => {
  * Lightning-Fast Student Directory - Kinetic Ledger Design
  * High-density data table with instant feedback and keyboard-friendly interactions
  */
-const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee, onBulkUpdateStudents }) => {
+const StudentList = ({ students, onEdit, onDelete, onAdd, onPayFee, onBulkUpdateStudents }) => {
     // ⚡ Bolt Performance Optimization: Hoist invariant Date calculation out of loops
     const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -46,17 +49,14 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
     // Keyboard shortcut handler
     useEffect(() => {
         const handleKeyDown = (e) => {
-            // Don't operate shortcuts when payment modal is open
             if (showPaymentModal) return;
 
-            // Handle Escape key first - should work even in editable elements
             if (e.key === 'Escape' && showFilters) {
                 e.preventDefault();
                 setShowFilters(false);
                 return;
             }
 
-            // Ignore events from editable elements for remaining shortcuts
             const target = e.target;
             const isEditableTarget =
                 target.tagName === 'INPUT' ||
@@ -132,7 +132,6 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
         setBulkPending(true);
         try {
             if (onBulkUpdateStudents) {
-                // Pass array of student IDs to trigger bulk delete
                 await onBulkUpdateStudents(Array.from(selectedStudents));
             }
             setSelectedStudents(new Set());
@@ -145,7 +144,7 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
         }
     };
 
-    // Prune stale selections when students change
+    // Prune stale selections
     useEffect(() => {
         setSelectedStudents(prevSelected => {
             const currentIds = new Set(students.map(s => s.id));
@@ -198,7 +197,7 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
             if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
             return 0;
         });
-    }, [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder]);
+    }, [students, debouncedSearchTerm, filterClass, filterSection, filterFeeStatus, filterMonth, sortBy, sortOrder, currentMonth]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
@@ -252,7 +251,6 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
 
     return (
         <div className="max-w-6xl mx-auto p-4 md:px-8 md:py-5 min-h-full flex flex-col">
-            {/* Section header */}
             <div className="flex items-center gap-4 mb-5 mt-1">
                 <div className="h-6 w-px bg-gradient-to-b from-[var(--accent-primary)]/60 to-transparent hidden sm:block" />
                 <h2 className="text-[var(--text-primary)] text-lg font-bold tracking-tight">Student Directory</h2>
@@ -261,11 +259,8 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
                 </span>
             </div>
 
-            {/* Main card - high density */}
             <div className="card-base spotlight-card overflow-clip kinetic-enter flex flex-col mb-8">
-                {/* Toolbar - optimized for speed */}
                 <div className="px-4 py-3 border-b border-[var(--border-subtle)] flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[var(--bg-card)]">
-                    {/* Search with keyboard hint */}
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
                         <div className="relative flex-1 max-w-md">
                             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
@@ -277,14 +272,12 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="input-premium pl-9 pr-16 py-2 w-full text-sm"
                             />
-                            {/* Keyboard shortcut hint */}
                             <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[var(--bg-elevated)] text-[var(--text-muted)] rounded border border-[var(--border-color)] hidden sm:inline">⌘</kbd>
                                 <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[var(--bg-elevated)] text-[var(--text-muted)] rounded border border-[var(--border-color)] hidden sm:inline">K</kbd>
                             </div>
                         </div>
                         
-                        {/* Action buttons */}
                         <div className="flex items-center gap-2 shrink-0">
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
@@ -294,8 +287,6 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
                                         : 'bg-[var(--bg-main)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--border-highlight)]'
                                 }`}
                                 aria-label="Toggle filters"
-                                aria-expanded={showFilters}
-                                aria-controls="filter-panel"
                             >
                                 <Filter size={14} />
                                 {hasActiveFilters && (
@@ -310,92 +301,24 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
                     </div>
                 </div>
 
-                {/* Slide-out filter panel */}
                 {showFilters && (
-                    <div id="filter-panel" className="p-4 bg-[var(--bg-card)] border-b border-[var(--border-subtle)] kinetic-slide">
-                        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-                            <div className="col-span-1">
-                                <label className="block text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Class</label>
-                                <select
-                                    value={filterClass}
-                                    onChange={(e) => setFilterClass(e.target.value)}
-                                    className="input-premium w-full text-sm py-2"
-                                >
-                                    <option value="">All</option>
-                                    {classes.map(c => <option key={c} value={c}>{c}</option>)}
-                                </select>
-                            </div>
-                            <div className="col-span-1">
-                                <label className="block text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Section</label>
-                                <select
-                                    value={filterSection}
-                                    onChange={(e) => setFilterSection(e.target.value)}
-                                    className="input-premium w-full text-sm py-2"
-                                >
-                                    <option value="">All</option>
-                                    {sections.map(s => <option key={s} value={s}>{s}</option>)}
-                                </select>
-                            </div>
-                            <div className="col-span-1">
-                                <label className="block text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Fee Status</label>
-                                <select
-                                    value={filterFeeStatus}
-                                    onChange={(e) => setFilterFeeStatus(e.target.value)}
-                                    className="input-premium w-full text-sm py-2"
-                                >
-                                    <option value="">All</option>
-                                    <option value="Paid">Paid</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Overdue">Overdue</option>
-                                </select>
-                            </div>
-                            <div className="col-span-1">
-                                <label className="block text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Month</label>
-                                <CustomMonthPicker
-                                    value={filterMonth}
-                                    onChange={setFilterMonth}
-                                    compact={true}
-                                />
-                            </div>
-                            <div className="col-span-1">
-                                <label className="block text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Sort</label>
-                                <select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value)}
-                                    className="input-premium w-full text-sm py-2"
-                                >
-                                    <option value="name">Name</option>
-                                    <option value="rollNo">Roll No</option>
-                                    <option value="class">Class</option>
-                                </select>
-                            </div>
-                            <div className="col-span-1 flex items-end gap-2">
-                                <button
-                                    onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                    className="p-2 border border-[var(--border-color)] rounded-lg text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--border-highlight)] transition-all touch-target"
-                                    title={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
-                                >
-                                    {sortOrder === 'asc' ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
-                                </button>
-                                {hasActiveFilters && (
-                                    <button
-                                        onClick={handleClearFilters}
-                                        className="p-2 text-[var(--text-muted)] hover:text-rose-400 rounded-lg hover:bg-rose-500/10 transition-all touch-target"
-                                        title="Clear filters"
-                                    >
-                                        <X size={14} />
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+                    <FilterPanel 
+                        filterClass={filterClass} setFilterClass={setFilterClass}
+                        filterSection={filterSection} setFilterSection={setFilterSection}
+                        filterFeeStatus={filterFeeStatus} setFilterFeeStatus={setFilterFeeStatus}
+                        filterMonth={filterMonth} setFilterMonth={setFilterMonth}
+                        sortBy={sortBy} setSortBy={setSortBy}
+                        sortOrder={sortOrder} setSortOrder={setSortOrder}
+                        classes={classes} sections={sections}
+                        hasActiveFilters={hasActiveFilters} handleClearFilters={handleClearFilters}
+                    />
                 )}
 
-                {/* Mobile Card View */}
+                {/* Mobile View */}
                 <div className="md:hidden p-3 space-y-2 stagger-choreograph">
                     {currentStudents.length > 0 ? (
                         currentStudents.map((student) => (
-                                                        <StudentCard
+                            <StudentCard
                                 key={student.id}
                                 student={student}
                                 status={getFeeStatusForMonth(student, filterMonth, currentMonth)}
@@ -415,190 +338,26 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
                     )}
                 </div>
 
-                {/* Desktop Bulk Action Bar */}
-                {selectedStudents.size > 0 && (
-                    <div className="hidden md:flex items-center gap-3 px-4 py-2.5 bg-[var(--accent-light)] border-b border-[var(--accent-primary)]/20">
-                        <span className="text-xs font-semibold text-[var(--accent-primary)]">{selectedStudents.size} selected</span>
-                        <button
-                            onClick={handleBulkExit}
-                            disabled={bulkPending}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-lg hover:bg-purple-500 hover:text-white transition-colors disabled:opacity-50"
-                            aria-label="Mark selected students as exited"
-                        >
-                            <LogOut size={12} />
-                            Mark as Exited
-                        </button>
-                        <button
-                            onClick={handleBulkDelete}
-                            disabled={bulkPending}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg hover:bg-rose-500 hover:text-white transition-colors disabled:opacity-50"
-                            aria-label="Delete selected students"
-                        >
-                            <Trash2 size={12} />
-                            Delete
-                        </button>
-                        <button
-                            onClick={() => setSelectedStudents(new Set())}
-                            className="ml-auto p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
-                            aria-label="Clear selection"
-                        >
-                            <X size={14} />
-                        </button>
-                    </div>
-                )}
+                <BulkActionsBar 
+                    selectedStudents={selectedStudents}
+                    bulkPending={bulkPending}
+                    handleBulkExit={handleBulkExit}
+                    handleBulkDelete={handleBulkDelete}
+                    setSelectedStudents={setSelectedStudents}
+                />
 
-                {/* Desktop Table View - High Density */}
-                <div className="hidden md:block flex-1 overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-[var(--bg-main)] border-b border-[var(--border-subtle)]">
-                                <th className="px-4 py-3 w-10">
-                                    {(() => {
-                                        const visibleIds = currentStudents.map(s => s.id);
-                                        const allVisibleSelected = visibleIds.length > 0 && visibleIds.every(id => selectedStudents.has(id));
-                                        const someSelected = visibleIds.some(id => selectedStudents.has(id));
-                                        return (
-                                            <button
-                                                onClick={() => handleSelectAll(allVisibleSelected)}
-                                                className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors flex items-center justify-center"
-                                                aria-label={allVisibleSelected ? "Deselect all" : "Select all"}
-                                                aria-checked={allVisibleSelected ? "true" : someSelected ? "mixed" : "false"}
-                                                role="checkbox"
-                                            >
-                                                {allVisibleSelected ? (
-                                                    <CheckSquare size={16} className="text-[var(--accent-primary)]" />
-                                                ) : someSelected ? (
-                                                    <MinusSquare size={16} className="text-[var(--accent-primary)]" />
-                                                ) : (
-                                                    <Square size={16} />
-                                                )}
-                                            </button>
-                                        );
-                                    })()}
-                                </th>
-                                <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">Student</th>
-                                <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">Details</th>
-                                <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider text-center">Status</th>
-                                <th className="px-4 py-3 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[var(--border-subtle)] bg-[var(--bg-card)]">
-                            {currentStudents.map((student, idx) => {
-                                const status = getFeeStatusForMonth(student, filterMonth, currentMonth);
-                                const isSelected = selectedStudents.has(student.id);
-                                return (
-                                    <tr
-                                        key={student.id}
-                                        className={`hover:bg-[var(--bg-card-hover)] group transition-colors ${isSelected ? 'bg-[var(--accent-primary)]/5' : ''}`}
-                                        style={{ animation: `kinetic-enter 0.3s var(--kinetic-curve) both`, animationDelay: `${idx * 25}ms` }}
-                                    >
-                                        {/* Checkbox */}
-                                        <td className="px-4 py-3 w-10">
-                                            <button
-                                                onClick={() => toggleStudentSelection(student.id)}
-                                                className={`flex items-center justify-center transition-colors ${isSelected ? 'text-[var(--accent-primary)]' : 'text-[var(--border-strong)] hover:text-[var(--accent-primary)]'}`}
-                                                aria-label={isSelected ? `Deselect ${student.name}` : `Select ${student.name}`}
-                                                aria-pressed={isSelected}
-                                            >
-                                                {isSelected ? <CheckSquare size={16} /> : <Square size={16} />}
-                                            </button>
-                                        </td>
-                                        {/* Student Info */}
-                                        <td className="px-4 py-3">
-                                            <div className="flex items-center gap-3">
-                                                <div 
-                                                    className="w-8 h-8 rounded-full bg-[var(--bg-elevated)] border border-[var(--border-color)] text-[var(--text-primary)] flex items-center justify-center font-medium text-xs shrink-0"
-                                                >
-                                                    {student.name.charAt(0)}
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <p className="font-semibold text-[var(--text-primary)] text-sm truncate tracking-tight">{student.name}</p>
-                                                    <p className="text-[var(--text-muted)] text-[10px] font-mono mt-0.5 opacity-50">#{student.id.slice(0, 6)}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        
-                                        {/* Class & Roll */}
-                                        <td className="px-4 py-3">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-sm text-[var(--text-primary)] font-medium tracking-tight">{student.class}-{student.section}</span>
-                                                <span className="text-xs text-[var(--text-muted)] font-mono">#{student.rollNo}</span>
-                                            </div>
-                                        </td>
-                                        
-                                        {/* Status */}
-                                        <td className="px-4 py-3 text-center">
-                                            <span
-                                                className={`inline-flex items-center px-2.5 py-1 text-[10px] font-bold rounded-[5px] ${
-                                                    status === 'Paid'
-                                                        ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' :
-                                                        status === 'Overdue'
-                                                            ? 'bg-rose-500/10 border border-rose-500/20 text-rose-400' :
-                                                            'bg-amber-500/10 border border-amber-500/20 text-amber-400'
-                                                }`}
-                                            >
-                                                {status}
-                                            </span>
-                                            {Number(student.concessionAmount) > 0 && (
-                                                <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 text-[9px] font-bold rounded bg-purple-500/10 border border-purple-500/20 text-purple-400 font-mono">
-                                                    -{Number(student.concessionAmount)}
-                                                </span>
-                                            )}
-                                        </td>
-                                        
-                                        {/* Quick Actions */}
-                                        <td className="px-4 py-3 text-right">
-                                            <div className="flex gap-1.5 justify-end opacity-50 group-hover:opacity-100 transition-opacity">
-                                                <button
-                                                    onClick={() => handlePayFeeClick(student)}
-                                                    className="p-1.5 border border-transparent bg-transparent text-[var(--text-muted)] rounded-md hover:bg-[var(--hover-overlay)] hover:text-[var(--text-primary)] hover:border-[var(--border-subtle)] transition-all touch-target"
-                                                    title="Collect Fee"
-                                                    aria-label={`Collect fee for ${student.name}`}
-                                                >
-                                                    <IndianRupee size={13} />
-                                                </button>
-                                                <button
-                                                    onClick={() => onEdit(student)}
-                                                    className="p-1.5 border border-transparent bg-transparent text-[var(--text-muted)] rounded-md hover:bg-[var(--hover-overlay)] hover:text-[var(--text-primary)] hover:border-[var(--border-subtle)] transition-all touch-target"
-                                                    title="Edit"
-                                                    aria-label={`Edit record for ${student.name}`}
-                                                >
-                                                    <Edit2 size={13} />
-                                                </button>
-                                                <button
-                                                    onClick={() => onDelete(student.id)}
-                                                    className="p-1.5 border border-transparent bg-transparent text-[var(--text-muted)] rounded-md hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/20 transition-all touch-target"
-                                                    title="Delete"
-                                                    aria-label={`Delete record for ${student.name}`}
-                                                >
-                                                    <Trash2 size={13} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                            
-                            {currentStudents.length === 0 && (
-                                <tr>
-                                    <td colSpan="5" className="py-12 text-center bg-[var(--bg-main)]">
-                                        <div className="flex flex-col items-center gap-3">
-                                            <Zap size={24} className="text-[var(--text-muted)]" />
-                                            <p className="text-[var(--text-primary)] font-medium text-sm">No results found</p>
-                                            <p className="text-[var(--text-secondary)] text-xs">Try adjusting your filters</p>
-                                            <button
-                                                onClick={handleClearFilters}
-                                                className="text-[var(--accent-primary)] text-xs font-medium hover:underline mt-1"
-                                            >
-                                                Clear all filters
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                <StudentTable 
+                    currentStudents={currentStudents}
+                    selectedStudents={selectedStudents}
+                    handleSelectAll={handleSelectAll}
+                    toggleStudentSelection={toggleStudentSelection}
+                    getFeeStatusForMonth={getFeeStatusForMonth}
+                    filterMonth={filterMonth}
+                    currentMonth={currentMonth}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onPayFeeClick={handlePayFeeClick}
+                />
 
                 {/* Compact Pagination */}
                 <div className="px-4 py-3 bg-[var(--bg-card)] border-t border-[var(--border-subtle)]">
@@ -620,7 +379,6 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
                 />
             )}
 
-            {/* Bulk Action Confirmation Modal */}
             <ConfirmationModal
                 isOpen={!!confirmAction}
                 onClose={() => setConfirmAction(null)}
@@ -633,7 +391,7 @@ const StudentList = ({ students, onEdit, onDelete, onBulkDelete, onAdd, onPayFee
                 confirmText={confirmAction === 'exit' ? 'Mark Exited' : 'Delete'}
                 isDestructive={confirmAction === 'delete'}
             />
-</div>
+        </div>
     );
 };
 
