@@ -25,18 +25,21 @@ DROP POLICY IF EXISTS "authenticated_delete_fees" ON public.fees;
 
 -- 4. Create strict multi-tenant RLS Policies
 -- Students
+DROP POLICY IF EXISTS "user_read_own_students" ON public.students;
 CREATE POLICY "user_read_own_students"
   ON public.students
   FOR SELECT
   TO authenticated
   USING ( user_id = auth.uid() );
 
+DROP POLICY IF EXISTS "user_insert_own_students" ON public.students;
 CREATE POLICY "user_insert_own_students"
   ON public.students
   FOR INSERT
   TO authenticated
   WITH CHECK ( user_id = auth.uid() );
 
+DROP POLICY IF EXISTS "user_update_own_students" ON public.students;
 CREATE POLICY "user_update_own_students"
   ON public.students
   FOR UPDATE
@@ -44,6 +47,7 @@ CREATE POLICY "user_update_own_students"
   USING ( user_id = auth.uid() )
   WITH CHECK ( user_id = auth.uid() );
 
+DROP POLICY IF EXISTS "user_delete_own_students" ON public.students;
 CREATE POLICY "user_delete_own_students"
   ON public.students
   FOR DELETE
@@ -51,18 +55,21 @@ CREATE POLICY "user_delete_own_students"
   USING ( user_id = auth.uid() );
 
 -- Fees
+DROP POLICY IF EXISTS "user_read_own_fees" ON public.fees;
 CREATE POLICY "user_read_own_fees"
   ON public.fees
   FOR SELECT
   TO authenticated
   USING ( user_id = auth.uid() );
 
+DROP POLICY IF EXISTS "user_insert_own_fees" ON public.fees;
 CREATE POLICY "user_insert_own_fees"
   ON public.fees
   FOR INSERT
   TO authenticated
   WITH CHECK ( user_id = auth.uid() );
 
+DROP POLICY IF EXISTS "user_update_own_fees" ON public.fees;
 CREATE POLICY "user_update_own_fees"
   ON public.fees
   FOR UPDATE
@@ -70,6 +77,7 @@ CREATE POLICY "user_update_own_fees"
   USING ( user_id = auth.uid() )
   WITH CHECK ( user_id = auth.uid() );
 
+DROP POLICY IF EXISTS "user_delete_own_fees" ON public.fees;
 CREATE POLICY "user_delete_own_fees"
   ON public.fees
   FOR DELETE

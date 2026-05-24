@@ -33,9 +33,11 @@ CREATE TABLE IF NOT EXISTS public.leads (
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for public access to leads (anon inserts)
+DROP POLICY IF EXISTS "Allow anonymous inserts to leads" ON public.leads;
 CREATE POLICY "Allow anonymous inserts to leads" ON public.leads
     FOR INSERT WITH CHECK (true);
 
 -- Create policies for public access to llms_files (since edge worker and public AI crawlers need to read it)
+DROP POLICY IF EXISTS "Allow public read access to llms_files" ON public.llms_files;
 CREATE POLICY "Allow public read access to llms_files" ON public.llms_files
     FOR SELECT USING (true);
