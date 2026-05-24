@@ -19,11 +19,3 @@
 **Vulnerability:** Migration history divergence between local files and remote state due to manual database changes or uncommitted migration files.
 **Learning:** This can break automated deployments or CI checks, as CI assumes the migration files present locally reflect the current state of the remote database. If a migration is recorded in `supabase_migrations.schema_migrations` but no corresponding file exists in `supabase/migrations`, tools will flag a mismatch.
 **Prevention:** Always ensure any schema modification in production or remote environments is backed by a corresponding timestamped migration file in the source repository.
-## 2024-05-24 - [CI Preview Database Failure] Missing Base Schema Migrations
-**Vulnerability:** CI environments spinning up fresh preview databases (e.g., Supabase Preview) failed to execute migration `20240505_add_fees_cascade_delete.sql` because it referenced `public.fees`, which didn't exist.
-**Learning:** If a repository doesn't contain the very first "initial schema" migration that creates the base tables (like `students` and `fees`), setting up a fresh database from scratch in CI will fail at the first `ALTER TABLE` or `UPDATE` statement.
-**Prevention:** Always ensure the migrations directory contains the entire linear history needed to bootstrap a database from an empty state, starting with a `CREATE TABLE` migration for all entities.
-## 2024-05-24 - [Duplicate Migration Version] Migration filename conflict
-**Vulnerability:** Having multiple migration files with the same version prefix (e.g., `20240505_add_fees_cascade_delete.sql` and `20240505_add_sync_batch_rpc.sql`) causes Supabase migrations to fail with a `duplicate key value violates unique constraint "schema_migrations_pkey"` error.
-**Learning:** Supabase uses the timestamp prefix (up to the first underscore) as the unique version ID in the `schema_migrations` table. If two files have the identical prefix, it attempts to insert the same ID twice.
-**Prevention:** Ensure each migration file has a unique timestamp prefix (e.g., append hours/minutes `YYYYMMDDHHMMSS_name.sql`).
