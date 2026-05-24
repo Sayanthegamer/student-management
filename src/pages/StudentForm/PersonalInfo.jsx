@@ -2,7 +2,7 @@ import React from 'react';
 import { User } from 'lucide-react';
 import InputField from './InputField';
 import CustomDatePicker from '../../components/CustomDatePicker';
-import { CLASS_FEES } from '../../../utils/constants';
+import { CLASS_FEES } from '../../utils/constants';
 
 const PersonalInfo = ({ formData, handleChange }) => {
     return (
@@ -82,9 +82,3 @@ const PersonalInfo = ({ formData, handleChange }) => {
 };
 
 export default PersonalInfo;
-/home/engine/.bashrc: line 1: syntax error near unexpected token `('
-/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
-/home/engine/.bashrc: line 1: syntax error near unexpected token `('
-/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
-/home/engine/.bashrc: line 1: syntax error near unexpected token `('
-/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'

@@ -22,7 +22,7 @@ describe('csvHelpers', () => {
         });
 
         it('should handle quotes in values', () => {
-            const data = [{ name: 'John \"Boss\" Doe', class: '10' }];
+            const data = [{ name: 'John "Boss" Doe', class: '10' }];
             const csv = convertToCSV(data);
             expect(csv).toBe('name,class\n"John ""Boss"" Doe",10');
         });
@@ -38,24 +38,24 @@ describe('csvHelpers', () => {
         });
 
         it('should parse CSV with quoted values containing commas', () => {
-            const csv = 'name,class,section,rollNo\n\"Doe, John\",10,A,1';
+            const csv = 'name,class,section,rollNo\n"Doe, John",10,A,1';
             const result = parseCSV(csv);
             expect(result).toHaveLength(1);
             expect(result[0].name).toBe('Doe, John');
         });
 
         it('should parse CSV with quoted values containing newlines', () => {
-            const csv = 'name,class,section,rollNo\n\"John\nDoe\",10,A,1';
+            const csv = 'name,class,section,rollNo\n"John\nDoe",10,A,1';
             const result = parseCSV(csv);
             expect(result).toHaveLength(1);
             expect(result[0].name).toBe('John\nDoe');
         });
 
         it('should parse CSV with escaped quotes', () => {
-            const csv = 'name,class,section,rollNo\n\"John ""Boss"" Doe\",10,A,1';
+            const csv = 'name,class,section,rollNo\n"John ""Boss"" Doe",10,A,1';
             const result = parseCSV(csv);
             expect(result).toHaveLength(1);
-            expect(result[0].name).toBe('John \"Boss\" Doe');
+            expect(result[0].name).toBe('John "Boss" Doe');
         });
     });
 });
