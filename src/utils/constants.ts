@@ -2,7 +2,7 @@
  * Standard monthly fee schedule by class.
  * Single source of truth — used by StudentForm, syncHelpers, FeePaymentModal.
  */
-export const CLASS_FEES = {
+export const CLASS_FEES: Record<string, string> = {
   'Play School': '350',
   'Nursery': '440',
   'kg-1': '440',
@@ -29,7 +29,7 @@ export const CLASS_FEES = {
  * Fill in values here to auto-populate the admission fee field per class.
  * Example: 'Play School': '5000'
  */
-export const ADMISSION_FEES = {
+export const ADMISSION_FEES: Record<string, string> = {
   // 'Play School': '',
   // 'Nursery': '',
   // Add values here when ready for auto-fill
@@ -40,14 +40,14 @@ export const ADMISSION_FEES = {
  * Empty for now — user must enter manually during promotion.
  * Fill in values here to auto-populate the promotion fee field per destination class.
  */
-export const PROMOTION_FEES = {
+export const PROMOTION_FEES: Record<string, string> = {
   // '1': '1500',
 };
 
 /**
  * Standard categories for annual charges.
  */
-export const ANNUAL_CHARGE_CATEGORIES = [
+export const ANNUAL_CHARGE_CATEGORIES: string[] = [
   'Christmas Festival',
   'Magazine Fee',
   'Development',
@@ -62,7 +62,7 @@ export const ANNUAL_CHARGE_CATEGORIES = [
 /**
  * Standard categories for subsidiary items.
  */
-export const SUBSIDIARY_CATEGORIES = [
+export const SUBSIDIARY_CATEGORIES: string[] = [
   'Khata',
   'Tie',
   'Belt',
@@ -72,7 +72,7 @@ export const SUBSIDIARY_CATEGORIES = [
 /**
  * Annual charges mapped by class. Defaults to 0 if not specified.
  */
-export const ANNUAL_CHARGES = {
+export const ANNUAL_CHARGES: Record<string, Record<string, number>> = {
   // 'Play School': { 'Sports': 100, 'ID Card': 50 },
   // '1': { 'Building': 500, 'Exam Fee': 200 }
 };
@@ -80,7 +80,7 @@ export const ANNUAL_CHARGES = {
 /**
  * Subsidiary charges mapped by class. Defaults to 0 if not specified.
  */
-export const SUBSIDIARY_CHARGES = {
+export const SUBSIDIARY_CHARGES: Record<string, Record<string, number>> = {
   // 'Play School': { 'Tie': 50, 'Belt': 50 },
 };
 
@@ -89,7 +89,7 @@ export const SUBSIDIARY_CHARGES = {
  * Used for automatic next-class calculation during student promotion.
  * @type {string[]}
  */
-export const CLASS_ORDER = [
+export const CLASS_ORDER: string[] = [
   'Play School',
   'Nursery',
   'kg-1',
@@ -117,7 +117,7 @@ export const CLASS_ORDER = [
  * @param {string} currentClass - The current class of the student.
  * @returns {string|null} The next class, or null if highest/not found.
  */
-export const getNextClass = (currentClass) => {
+export const getNextClass = (currentClass: string): string | null => {
   const currentIndex = CLASS_ORDER.indexOf(currentClass);
   if (currentIndex === -1 || currentIndex === CLASS_ORDER.length - 1) {
     return null;
@@ -137,7 +137,7 @@ export const getNextClass = (currentClass) => {
  * @param {string} payDate  - Payment date in YYYY-MM-DD format
  * @returns {number}        - Fine amount in ₹
  */
-export const calculateFine = (month, payDate) => {
+export const calculateFine = (month: string, payDate: string): number => {
   if (!month || !payDate) return 0;
 
   const [year, monthNum] = month.split('-').map(Number);
