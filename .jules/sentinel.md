@@ -23,3 +23,7 @@
 **Vulnerability:** CI environments spinning up fresh preview databases (e.g., Supabase Preview) failed to execute migration `20240505_add_fees_cascade_delete.sql` because it referenced `public.fees`, which didn't exist.
 **Learning:** If a repository doesn't contain the very first "initial schema" migration that creates the base tables (like `students` and `fees`), setting up a fresh database from scratch in CI will fail at the first `ALTER TABLE` or `UPDATE` statement.
 **Prevention:** Always ensure the migrations directory contains the entire linear history needed to bootstrap a database from an empty state, starting with a `CREATE TABLE` migration for all entities.
+## 2024-05-24 - [Duplicate Migration Version] Migration filename conflict
+**Vulnerability:** Having multiple migration files with the same version prefix (e.g., `20240505_add_fees_cascade_delete.sql` and `20240505_add_sync_batch_rpc.sql`) causes Supabase migrations to fail with a `duplicate key value violates unique constraint "schema_migrations_pkey"` error.
+**Learning:** Supabase uses the timestamp prefix (up to the first underscore) as the unique version ID in the `schema_migrations` table. If two files have the identical prefix, it attempts to insert the same ID twice.
+**Prevention:** Ensure each migration file has a unique timestamp prefix (e.g., append hours/minutes `YYYYMMDDHHMMSS_name.sql`).
