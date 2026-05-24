@@ -15,3 +15,7 @@
 **Vulnerability:** Memory leak from unreleased blob URLs
 **Learning:** In a single-page application (SPA), unreleased blob URLs using `URL.createObjectURL(blob)` can cause memory bloat over time.
 **Prevention:** Always call `window.URL.revokeObjectURL(url)` after downloading a file generated with `URL.createObjectURL(blob)`.
+## 2024-05-24 - [Migration Drift] Database state divergence
+**Vulnerability:** Migration history divergence between local files and remote state due to manual database changes or uncommitted migration files.
+**Learning:** This can break automated deployments or CI checks, as CI assumes the migration files present locally reflect the current state of the remote database. If a migration is recorded in `supabase_migrations.schema_migrations` but no corresponding file exists in `supabase/migrations`, tools will flag a mismatch.
+**Prevention:** Always ensure any schema modification in production or remote environments is backed by a corresponding timestamped migration file in the source repository.
